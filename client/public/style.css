@@ -1,0 +1,10 @@
+.action-btn
+{
+    opacity: .8;
+    cursor: pointer;
+}
+
+.action-btn:hover
+{
+    opacity: 1;
+}
