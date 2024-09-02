@@ -3,52 +3,57 @@
 namespace App\Http\Controllers\OrderMetrologistCalc;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+
 class OrderMetrologistCalcController extends Controller
 {
-    public function getOrdersData(Request $request)
+    public function getOrdersData(Request $request): JsonResponse
     {
-        $dateFrom = $request->input('date_from');
-        $dateTo = $request->input('date_to');
-        $perPage = $request->input('per_page', 10);
+        try {
+            $params = $request->query(); // Используем $request->query() для параметров GET
+            $search = $params['search'] ?? null;
+            $page = (int)($params['page'] ?? 1);
+            $limit = (int)($params['limit'] ?? 15);
+            $offset = ($page - 1) * $limit;
 
-        // 1. Load the SQL from the file
-        $sql = file_get_contents(database_path('sql\getOrdersData.sql'));
+            $sql = file_get_contents(database_path('sql/ordersList.sql'));
+            $bindings = [];
 
-        // 2. Build dynamic WHERE clause
-        if ($dateFrom && $dateTo) {
-            $sql .= " AND o.date BETWEEN ? AND ? ";
-        }
+            // Search Filtering
+            if ($search) {
+                $sql .= " AND (orders.id::text ILIKE ? OR clients.name ILIKE ?)";
+                $bindings[] = "%$search%";
+                $bindings[] = "%$search%";
+            }
 
-        // 3. Calculate offset for pagination
-        $offset = ($request->input('page', 1) - 1) * $perPage;
+            // Count total results before applying LIMIT/OFFSET
+            $totalResultsSql = preg_replace('/LIMIT\s+\d+\s+OFFSET\s+\d+/i', '', $sql);
+            $totalResults = count(DB::select(DB::raw($totalResultsSql), $bindings));
 
-        // 4. Add LIMIT and OFFSET for pagination
-        $sql .= " LIMIT {$perPage} OFFSET {$offset}";
+            // Apply LIMIT/OFFSET for pagination
+            $sql .= " LIMIT {$limit} OFFSET {$offset}";
 
-        $bindings = [];
-        if ($dateFrom && $dateTo) {
-            $bindings[] = $dateFrom;
-            $bindings[] = $dateTo;
-        }
+            $orders = DB::select(DB::raw($sql), $bindings);
 
-        $allOrders = DB::select(DB::raw($sql), $bindings);
-        $total = count($allOrders); // Assuming you are not retrieving a massive dataset
-
-        $orders = new LengthAwarePaginator(
-            $allOrders,
-            $total,
-            $perPage,
-            $request->input('page', 1),
-            [
+            // Create Paginator
+            $paginator = new LengthAwarePaginator($orders, $totalResults, $limit, $page, [
                 'path' => $request->url(),
                 'query' => $request->query(),
-            ]
-        );
+            ]);
 
-        return response()->json(['orders' => $orders]);
+            return response()->json([
+                'currentPage' => $paginator->currentPage(),
+                'itemsPerPage' => $paginator->perPage(),
+                'totalCount' => $paginator->total(),
+                'orders' => $paginator->items()
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Ошибка при получении информации о заказах'], 500);
+        }
     }
 }
