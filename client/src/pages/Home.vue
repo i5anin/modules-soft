@@ -1,5 +1,5 @@
 <template>
-  <h1>Home page</h1>
+<!--  <h1>Расчет Заказа Метролог</h1>-->
 
   <router-link to="/add" class="btn btn-primary">Add</router-link>
 
@@ -33,8 +33,8 @@
 
 import Table from '../components/Table.vue'
 
-import useHome from '../store/home.module.js'
-const _home = useHome()
+// import useHome from '../store/home.module.js'
+// const _home = useHome()
 
 
 </script>

@@ -1,5 +1,109 @@
 <template>
-  <table class="table table-striped">
-    <slot />
-  </table>
+  <div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ready</th>
+        <th>cal</th>
+        <th>instr</th>
+        <th>draft</th>
+        <th>metall</th>
+        <th>kp</th>
+        <th>№</th>
+        <th>Дата</th>
+        <th class="bg-light">Контрагент</th>
+        <th>Срок</th>
+        <th>Менеджер</th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="order in orders" :key="order.id">
+        <td>
+          <input type="checkbox" :checked="order.status_ready" disabled>
+        </td>
+        <td :class="{ 'table-danger': order.status_cal}">{{ order.status_cal }}</td>
+        <td>{{ order.status_instr }}</td>
+        <td>{{ order.status_draft }}</td>
+        <td :class="{ 'table-danger': order.status_metall}">{{ order.status_metall }}</td>
+        <td>{{ order.status_kp }}</td>
+        <td>{{ order.id }}</td>
+        <td>{{ order.date }}</td>
+        <td :class="{ 'table-success': order.goz }">{{ order.name }}</td>
+        <td>{{ order.cal_buy_time }}</td>
+        <td>{{ order.order_manager }}</td>
+
+      </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <button class="page-link" @click="prevPage">Предыдущая</button>
+        </li>
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ currentPage }}</span>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <button class="page-link" @click="nextPage">Следующая</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </template>
+
+<script>
+import {computed, onMounted, ref} from 'vue';
+import {useHomeStore} from "../store/home.module.js";
+import {getOrders} from "../api/orders";
+
+export default {
+  setup() {
+    const homeStore = useHomeStore();
+    const orders = ref([]);
+    const currentPage = ref(1);
+    const itemsPerPage = ref(15);
+    const totalOrders = ref(0);
+    const searchQuery = ref('');
+
+    const totalPages = computed(() => Math.ceil(totalOrders.value / itemsPerPage.value));
+
+    const fetchOrders = async () => {
+      try {
+        const data = await getOrders(currentPage.value, itemsPerPage.value, searchQuery.value);
+        orders.value = data.orders;
+        totalOrders.value = data.totalCount;
+      } catch (error) {
+        console.error('Ошибка:', error);
+        // Обработка ошибки, например, отображение сообщения пользователю
+      }
+    };
+
+    const nextPage = () => {
+      if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+        fetchOrders();
+      }
+    };
+
+    const prevPage = () => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+        fetchOrders();
+      }
+    };
+
+    onMounted(fetchOrders);
+
+    return {
+      orders,
+      currentPage,
+      totalPages,
+      nextPage,
+      prevPage,
+      searchQuery,
+      homeStore, // Если нужно использовать данные из Pinia store
+    };
+  },
+};
+</script>
