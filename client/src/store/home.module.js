@@ -1,32 +1,27 @@
-import { defineStore } from "pinia";
+// src/store/home.module.js
+import { defineStore } from 'pinia';
 
 export const useHomeStore = defineStore('home', {
     state: () => ({
         title: 'some title',
         Form: {
             title: '',
-            description: ''
+            description: '',
         },
-        // Состояние для пагинации
         currentPage: 1,
         itemsPerPage: 15,
         searchQuery: '',
     }),
     actions: {
-        add() {
-            console.log(this.Form);
-        },
-        // Действия для пагинации
         nextPage() {
             this.currentPage++;
+            console.log('Текущая страница в store:', this.currentPage);
         },
         prevPage() {
-            if (this.currentPage > 1) {
+            if (this.currentPage > 0) {
                 this.currentPage--;
+                console.log('Текущая страница в store:', this.currentPage);
             }
         },
-        setSearchQuery(query) {
-            this.searchQuery = query;
-        }
     },
 });

@@ -4,12 +4,18 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
 });
 
-export const getOrders = (page, limit, search) =>
-    api.get('/order_metrologist_calc/table', {
-        params: {page, limit, search},
+export const getOrders = (page, limit, search) => {
+    console.log('getOrders вызван с параметрами:', { page, limit, search }); // Лог перед запросом
+
+    return api.get('/order_metrologist_calc/table', {
+        params: { page, limit, search },
     })
-        .then(response => response.data)
+        .then(response => {
+            console.log('Ответ сервера:', response); // Лог ответа сервера
+            return response.data;
+        })
         .catch(error => {
-            console.error('Ошибка при получении заказов:', error)
+            console.error('Ошибка при получении заказов:', error);
             throw error;
         });
+};
