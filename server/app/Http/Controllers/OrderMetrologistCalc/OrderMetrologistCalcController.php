@@ -37,7 +37,11 @@ class OrderMetrologistCalcController extends Controller
 
             $orders = DB::select($sql, $parameters);
 
-            return response()->json($orders);
+            return response()->json([
+                'currentPage' => $page,
+                'itemsPerPage' => $limit,
+                'orders' => $orders
+            ]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
