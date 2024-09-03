@@ -3,12 +3,12 @@
     <table class="table table-striped">
       <thead>
       <tr>
-        <th>ready</th>
-        <th>cal</th>
-        <th>instr</th>
-        <th>draft</th>
-        <th>metall</th>
-        <th>kp</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
         <th>№</th>
         <th>Дата</th>
         <th class="bg-light">Контрагент</th>
@@ -23,10 +23,10 @@
           <input type="checkbox" :checked="order.status_ready" disabled>
         </td>
         <td :class="{ 'table-danger': order.status_cal}">{{ order.status_cal }}</td>
-        <td>{{ order.status_instr }}</td>
-        <td>{{ order.status_draft }}</td>
-        <td :class="{ 'table-danger': order.status_metall}">{{ order.status_metall }}</td>
-        <td>{{ order.status_kp }}</td>
+        <td :class="{ 'table-warning': order.status_instr}">{{ order.status_instr }}</td>
+        <td :class="{ 'table-secondary': order.status_draft}">{{ order.status_draft }}</td>
+        <td :class="{ 'table-dark': order.status_metall}">{{ order.status_metall }}</td>
+        <td :class="{ 'table-success': order.status_kp}">{{ order.status_kp }}</td>
         <td>{{ order.id }}</td>
         <td>{{ order.date }}</td>
         <td :class="{ 'table-success': order.goz }">{{ order.name }}</td>
