@@ -5,11 +5,11 @@
       <thead>
       <tr>
         <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th>К</th>
+        <th>И</th>
+        <th>Ч</th>
+        <th>М</th>
+        <th>П</th>
         <th>№</th>
         <th>Дата</th>
         <th class="bg-light">Контрагент</th>
@@ -19,15 +19,29 @@
       </thead>
       <tbody>
       <tr v-for="order in orders" :key="order.id">
-        <td><input type="checkbox" :checked="order.status_ready" disabled></td>
-        <td :class="{ 'table-danger': order.status_cal }">{{ order.status_cal }}</td>
-        <td :class="{ 'table-warning': order.status_instr }">{{ order.status_instr }}</td>
-        <td :class="{ 'table-secondary': order.status_draft }">{{ order.status_draft }}</td>
-        <td :class="{ 'table-dark': order.status_metall }">{{ order.status_metall }}</td>
-        <td :class="{ 'table-success': order.status_kp }">{{ order.status_kp }}</td>
+        <td>
+          <input type="checkbox" :checked="order.status_ready" disabled>
+        </td>
+        <td :class="{ 'table-danger': order.status_cal }" class="text-center">
+          {{ order.status_cal }}
+        </td>
+        <td :class="{ 'table-warning': order.status_instr }" class="text-center">
+          {{ order.status_instr }}
+        </td>
+        <td :class="{ 'table-secondary': order.status_draft }" class="text-center">
+          {{ order.status_draft }}
+        </td>
+        <td :class="{ 'table-dark': order.status_metall }" class="text-center">
+          {{ order.status_metall }}
+        </td>
+        <td :class="{ 'table-success': order.status_kp }" class="text-center">
+          {{ order.status_kp }}
+        </td>
         <td>{{ order.id }}</td>
         <td>{{ order.date }}</td>
-        <td :class="{ 'table-success': order.goz }">{{ order.name }}</td>
+        <td :class="{ 'table-success': order.goz }">
+          {{ order.name }}
+        </td>
         <td>{{ order.cal_buy_time }}</td>
         <td>{{ order.order_manager }}</td>
       </tr>
