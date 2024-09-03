@@ -1,4 +1,3 @@
-// src/components/OrderTable.vue
 <template>
   <div>
     <table class="table table-striped">
@@ -38,7 +37,7 @@
           {{ order.status_kp }}
         </td>
         <td>{{ order.id }}</td>
-        <td>{{ order.date }}</td>
+        <td>{{ formatDate(order.date) }}</td>
         <td :class="{ 'table-success': order.goz }">
           {{ order.name }}
         </td>
@@ -63,20 +62,25 @@
     </nav>
   </div>
 </template>
+
 <script>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useHomeStore } from '../store/home.module';
 import { getOrders } from '../api/orders';
+import { format } from 'date-fns'; // Импортируем format из date-fns
+import { ru } from 'date-fns/locale/ru'; // Импортируем русскую локаль
 
 export default {
   setup() {
     const homeStore = useHomeStore();
-    const orders = ref([]);
-    const totalOrders = ref(0);
+    const orders = ref([]); // Реактивный массив для хранения заказов
+    const totalOrders = ref(0); // Реактивная переменная для общего количества заказов
 
+    // Вычисляемые свойства для текущей страницы и общего количества страниц
     const currentPage = computed(() => homeStore.currentPage);
     const totalPages = computed(() => Math.ceil(totalOrders.value / homeStore.itemsPerPage));
 
+    // Функция для загрузки заказов
     const fetchOrders = async () => {
       try {
         const data = await getOrders(homeStore.currentPage, homeStore.itemsPerPage, homeStore.searchQuery);
@@ -87,22 +91,29 @@ export default {
       }
     };
 
+    // Функция для форматирования даты с помощью date-fns
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'dd.MM.yyyy', { locale: ru }); // Форматируем в "ДД.ММ.ГГГГ"
+    };
+
+    // Следим за изменениями currentPage и searchQuery для загрузки заказов
     watch([currentPage, () => homeStore.searchQuery], fetchOrders);
 
+    // Функции для перехода на следующую и предыдущую страницы
     const nextPage = () => {
       if (homeStore.currentPage < totalPages.value) {
         homeStore.nextPage();
-        console.log('Переход на следующую страницу. Текущая:', homeStore.currentPage);
       }
     };
 
     const prevPage = () => {
       if (homeStore.currentPage > 1) {
         homeStore.prevPage();
-        console.log('Переход на предыдущую страницу. Текущая:', homeStore.currentPage);
       }
     };
 
+    // Загружаем заказы при монтировании компонента
     onMounted(fetchOrders);
 
     return {
@@ -111,6 +122,7 @@ export default {
       totalPages,
       nextPage,
       prevPage,
+      formatDate // Добавляем formatDate в возвращаемый объект
     };
   },
 };

@@ -27,8 +27,8 @@
 
 
 <script setup>
-import useHome from '../store/home.module.js'
-const _home = useHome()
+// import { useHomeStore } from '../store/home.module.js'
+// const _home = useHome()
 
 
 
