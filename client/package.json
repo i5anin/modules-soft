@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "datatables.net-bs5": "^2.1.5",
+    "datatables.net-dt": "^2.1.5",
     "date-fns": "^3.6.0",
+    "jquery": "^3.7.1",
     "pinia": "^2.2.2",
     "vue": "^3.4.37",
     "vue-router": "^4.4.3"
