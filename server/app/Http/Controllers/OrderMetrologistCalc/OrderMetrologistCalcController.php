@@ -40,7 +40,9 @@ class OrderMetrologistCalcController extends Controller
             return response()->json([
                 'currentPage' => $page,
                 'itemsPerPage' => $limit,
+                // 'totalCount' =>$totalCount, todo: нужно сделать под запрос типа  SELECT COUNT(*) AS total_count FROM dbo.orders WHERE orders.deleted = false;
                 'orders' => $orders
+
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
