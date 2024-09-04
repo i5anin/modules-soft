@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import DataTable from 'datatables.net-dt'; // todo: import DataTable from 'datatables.net-vue3';
+import DataTable from 'datatables.net-dt';
 import { onMounted, ref, watch } from 'vue';
 import { useHomeStore } from '../store/home.module';
 import { getOrders } from '../api/orders';
@@ -37,15 +37,13 @@ import 'datatables.net-bs5';
 export default {
   setup() {
     const homeStore = useHomeStore();
-    const ordersTable = ref(null); // Реактивная переменная для таблицы DataTables
+    const ordersTable = ref(null);
 
-    // Функция для инициализации DataTables
     const initDataTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
-        processing: true, // Включаем индикатор загрузки
-        serverSide: true, // Включаем серверную обработку
+        processing: true,
+        serverSide: true,
         ajax: (data, callback, settings) => {
-          // Функция для обработки AJAX-запроса DataTables
           const page = Math.floor(data.start / data.length) + 1;
           getOrders(page, data.length, homeStore.searchQuery)
               .then(response => {
@@ -66,32 +64,32 @@ export default {
           },
           {
             data: 'status_cal', className: 'text-center',
-            render: (data, type, row) => `<td class="${data ? 'table-danger' : ''} text-center">${data}</td>`
+            render: (data, type, row) => `<td class="${data ? 'table-danger' : ''} text-center">${data || ''}</td>`
           },
           {
             data: 'status_instr', className: 'text-center',
-            render: (data, type, row) => `<td class="${data ? 'table-warning' : ''} text-center">${data}</td>`
+            render: (data, type, row) => `<td class="${data ? 'table-warning' : ''} text-center">${data || ''}</td>`
           },
           {
             data: 'status_draft', className: 'text-center',
-            render: (data, type, row) => `<td class="${data ? 'table-secondary' : ''} text-center">${data}</td>`
+            render: (data, type, row) => `<td class="${data ? 'table-secondary' : ''} text-center">${data || ''}</td>`
           },
           {
             data: 'status_metall', className: 'text-center',
-            render: (data, type, row) => `<td class="${data ? 'table-dark' : ''} text-center">${data}</td>`
+            render: (data, type, row) => `<td class="${data ? 'table-dark' : ''} text-center">${data || ''}</td>`
           },
           {
             data: 'status_kp', className: 'text-center',
-            render: (data, type, row) => `<td class="${data ? 'table-success' : ''} text-center">${data}</td>`
+            render: (data, type, row) => `<td class="${data ? 'table-success' : ''} text-center">${data || ''}</td>`
           },
-          {data: 'id'},
-          {data: 'date', render: data => format(new Date(data), 'dd.MM.yyyy', {locale: ru})},
+          {data: 'id', render: data => data || ''},
+          {data: 'date', render: data => data ? format(new Date(data), 'dd.MM.yyyy', {locale: ru}) : ''},
           {
             data: 'name',
-            render: (data, type, row) => `<td class="${row.goz ? 'table-success' : ''}">${data}</td>`
+            render: (data, type, row) => `<td class="${row.goz ? 'table-success' : ''}">${data || ''}</td>`
           },
-          {data: 'cal_buy_time'},
-          {data: 'order_manager'},
+          {data: 'cal_buy_time', render: data => data || ''},
+          {data: 'order_manager', render: data => data || ''}
         ],
         language: {
           url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
@@ -99,13 +97,11 @@ export default {
       });
     };
 
-    // Следим за изменением searchQuery для обновления таблицы
     watch(() => homeStore.searchQuery, () => {
       ordersTable.value.ajax.reload();
     });
 
     onMounted(() => {
-      // Инициализируем DataTables после монтирования компонента
       initDataTable();
     });
 
