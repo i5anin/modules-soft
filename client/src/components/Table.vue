@@ -4,11 +4,7 @@
       <thead>
       <tr>
         <th></th>
-        <th>К</th>
-        <th>И</th>
-        <th>Ч</th>
-        <th>М</th>
-        <th>П</th>
+        <th>Статусы</th>
         <th>№</th>
         <th>Дата</th>
         <th class="bg-light">Контрагент</th>
