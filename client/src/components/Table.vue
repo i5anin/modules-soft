@@ -1,17 +1,6 @@
 <template>
   <div>
     <table id="ordersTable" class="table table-striped">
-      <thead>
-      <tr>
-        <th></th>
-        <th>Статусы</th>
-        <th>№</th>
-        <th>Дата</th>
-        <th class="bg-light">Контрагент</th>
-        <th>Срок</th>
-        <th>Менеджер</th>
-      </tr>
-      </thead>
       <tbody>
       </tbody>
     </table>

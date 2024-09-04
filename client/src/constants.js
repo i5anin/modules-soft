@@ -1,16 +1,17 @@
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale/ru';
+import {format} from 'date-fns';
+import {ru} from 'date-fns/locale/ru';
 
 export const DATE_FORMAT = 'dd.MM.yyyy';
 
 export const ORDERS_TABLE_COLUMNS = [
     {
-        data: 'status_ready',
         orderable: false,
+        data: 'status_ready',
         className: 'text-center',
         render: data => `<input type="checkbox" ${data ? 'checked' : ''} disabled>`
     },
     {
+        orderable: false,
         data: 'statuses',
         title: 'Статусы',
         className: 'text-center',
@@ -34,14 +35,19 @@ export const ORDERS_TABLE_COLUMNS = [
             return `<td class="text-center">${statusesHTML}</td>`;
         }
     },
-    { data: 'id', title: '№', render: data => data || '' },
-    { data: 'date', title: 'Дата', render: data => data ? format(new Date(data), 'dd.MM.yyyy', { locale: ru }) : '' },
+    {data: 'id', title: '№', render: data => data || '', type: 'number'},
+    {
+        data: 'date',
+        title: 'Дата',
+        render: data => data ? format(new Date(data), 'dd.MM.yyyy', {locale: ru}) : '',
+        type: 'data'
+    },
     {
         data: 'name', title: 'Контрагент',
-        render: (data, type, row) => `<td class="${row.goz ? 'table-success' : ''}">${data || ''}</td>`
+        render: (data, type, row) => `<td class="${row.goz ? 'table-success' : ''}">${data || ''}</td>`, type: 'number'
     },
-    { data: 'cal_buy_time', title: 'Срок', render: data => data || '' },
-    { data: 'order_manager', title: 'Менеджер', render: data => data || '' }
+    {title: 'Срок', data: 'cal_buy_time', render: data => data || '', type: 'number'},
+    {title: 'Менеджер', orderable: false, data: 'order_manager', render: data => data || '', type: 'string'}
 ];
 
 export const LANGUAGE_CONFIG = {
