@@ -23,13 +23,15 @@
 </template>
 
 <script>
-import DataTable from 'datatables.net-dt';
+import DataTable from 'datatables.net-dt'; // todo: import DataTable from 'datatables.net-vue3';
 import { onMounted, ref, watch } from 'vue';
 import { useHomeStore } from '../store/home.module';
 import { getOrders } from '../api/orders';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale/ru';
 
+// Импортируем стили DataTables и Bootstrap 5
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 
 export default {
