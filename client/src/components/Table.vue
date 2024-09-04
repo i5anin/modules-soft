@@ -91,8 +91,8 @@ export default {
           {data: 'cal_buy_time'},
           {data: 'order_manager'},
         ],
-        language: { // Настройки языка для DataTables (опционально)
-          url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
         }
       });
     };
