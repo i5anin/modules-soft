@@ -18,12 +18,15 @@ class OrderMetrologistCalcController extends Controller
             $offset = ($page - 1) * $limit;
 
             $sql = file_get_contents(database_path('sql\getOrdersData.sql'));
+            $countSql = file_get_contents(database_path('sql\getOrdersDataCount.sql')); // Новый SQL для подсчета
 
             if ($search) {
                 $searchSQL = "AND (orders.id::text ILIKE :search OR clients.name ILIKE :search)";
                 $sql = str_replace('-- SEARCH_CONDITION', $searchSQL, $sql);
+                $countSql = str_replace('-- SEARCH_CONDITION', $searchSQL, $countSql); // Добавляем условие поиска в countSql
             } else {
                 $sql = str_replace('-- SEARCH_CONDITION', '', $sql);
+                $countSql = str_replace('-- SEARCH_CONDITION', '', $countSql);
             }
 
             $parameters = [
@@ -37,12 +40,17 @@ class OrderMetrologistCalcController extends Controller
 
             $orders = DB::select($sql, $parameters);
 
+// Параметры только для поиска, если он есть
+            $countParameters = $search ? ['search' => $parameters['search']] : [];
+
+            $totalCountResult = DB::selectOne($countSql, $countParameters);
+            $totalCount = $totalCountResult->total_count;
+
             return response()->json([
                 'currentPage' => $page,
                 'itemsPerPage' => $limit,
-                // 'totalCount' =>$totalCount, todo: нужно сделать под запрос типа  SELECT COUNT(*) AS total_count FROM dbo.orders WHERE orders.deleted = false;
+                'totalCount' => $totalCount, // Добавляем totalCount в ответ
                 'orders' => $orders
-
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
