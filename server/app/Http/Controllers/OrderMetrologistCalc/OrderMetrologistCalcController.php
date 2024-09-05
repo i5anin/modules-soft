@@ -16,40 +16,36 @@ class OrderMetrologistCalcController extends Controller
             $page = (int)($request->query('page') ?? 1);
             $limit = (int)($request->query('limit') ?? 15);
             $offset = ($page - 1) * $limit;
+            $manager = $request->query('manager'); // получаем менеджера
 
-            $sql = file_get_contents(database_path('sql\getOrdersData.sql'));
-            $countSql = file_get_contents(database_path('sql\getOrdersDataCount.sql')); // Новый SQL для подсчета
-
-            if ($search) {
-                $searchSQL = "AND (orders.id::text ILIKE :search OR clients.name ILIKE :search)";
-                $sql = str_replace('-- SEARCH_CONDITION', $searchSQL, $sql);
-                $countSql = str_replace('-- SEARCH_CONDITION', $searchSQL, $countSql); // Добавляем условие поиска в countSql
-            } else {
-                $sql = str_replace('-- SEARCH_CONDITION', '', $sql);
-                $countSql = str_replace('-- SEARCH_CONDITION', '', $countSql);
-            }
+            $ordersSql = file_get_contents(database_path('sql/getOrdersData.sql'));
+            $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
 
             $parameters = [
                 'limit' => $limit,
-                'offset' => $offset
+                'offset' => $offset,
             ];
 
+            $countParameters = [];
+
             if ($search) {
-                $parameters['search'] = "%{$search}%";
+                $searchCondition = "AND ("
+                    ."orders.id::text ILIKE :search OR "
+                    ."clients.name ILIKE :search)";
+                $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $ordersSql);
+                $countSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $countSql);
+                $parameters['search'] = "%$search%";
+                $countParameters['search'] = "%$search%";
             }
 
-            $orders = DB::select($sql, $parameters);
-
-// Параметры только для поиска, если он есть
-            $countParameters = $search ? ['search' => $parameters['search']] : [];
-
+            $orders = DB::select($ordersSql, $parameters);
             $totalCountResult = DB::selectOne($countSql, $countParameters);
             $totalCount = $totalCountResult->total_count;
 
             return response()->json([
                 'currentPage' => $page,
                 'itemsPerPage' => $limit,
-                'totalCount' => $totalCount, // Добавляем totalCount в ответ
+                'totalCount' => $totalCount,
                 'orders' => $orders
             ]);
         } catch (\Exception $e) {

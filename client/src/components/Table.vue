@@ -9,27 +9,30 @@
 
 <script>
 import DataTable from 'datatables.net-dt';
-import {onMounted, ref, watch} from 'vue';
-import {useHomeStore} from '../store/home.module';
+import {onMounted, ref} from 'vue';
 import {getOrders} from '../api/orders';
 
 // Импортируем стили DataTables и Bootstrap 5
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {LANGUAGE_CONFIG, ORDERS_TABLE_COLUMNS} from "../constants.js";
+import {LANGUAGE_CONFIG, ORDERS_TABLE_COLUMNS} from "./constants.js";
 
 export default {
   setup() {
-    const homeStore = useHomeStore();
     const ordersTable = ref(null);
 
+    // Инициализация DataTable с встроенным поиском
     const initDataTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
+        searching: true,
         processing: true,
         serverSide: true,
-        ajax: (data, callback, settings) => {
+        ajax: (data, callback) => {
           const page = Math.floor(data.start / data.length) + 1;
-          getOrders(page, data.length, homeStore.searchQuery)
+          const searchQuery = data.search.value;
+
+          // Запрос на сервер
+          getOrders(page, data.length, searchQuery)
               .then(response => {
                 callback({
                   data: response.orders,
@@ -45,10 +48,6 @@ export default {
         language: LANGUAGE_CONFIG
       });
     };
-
-    watch(() => homeStore.searchQuery, () => {
-      ordersTable.value.ajax.reload();
-    });
 
     onMounted(() => {
       initDataTable();

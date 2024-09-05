@@ -5,8 +5,6 @@ const api = axios.create({
 });
 
 export const getOrders = (page, limit, search) => {
-    console.log('getOrders вызван с параметрами:', { page, limit, search }); // Лог перед запросом
-
     return api.get('/order_metrologist_calc/table', {
         params: { page, limit, search },
     })

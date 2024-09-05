@@ -23,5 +23,8 @@ export const useHomeStore = defineStore('home', {
                 console.log('Текущая страница в store:', this.currentPage);
             }
         },
+        updateSearchQuery(query) {
+            this.searchQuery = query; // Обновление поискового запроса
+        },
     },
 });
