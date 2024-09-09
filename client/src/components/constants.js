@@ -47,4 +47,4 @@ export const ORDERS_TABLE_COLUMNS = [
     {title: 'Менеджер', orderable: false, data: 'order_manager', render: data => data || '', type: 'string'}
 ];
 
-export const LANGUAGE_CONFIG = {url: 'Russian.json'};
+export const LANG_CONFIG = {url: 'Russian.json'};
