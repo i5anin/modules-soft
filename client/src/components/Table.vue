@@ -8,6 +8,7 @@
 
 <script>
 import DataTable from 'datatables.net-dt';
+import $ from 'jquery'; // Добавьте эту строку
 import {onMounted, ref} from 'vue';
 import {getOrders} from '../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
@@ -42,6 +43,13 @@ export default {
         },
         columns: ORDERS_TABLE_COLUMNS,
         language: LANG_CONFIG,
+        createdRow: function (row, data, dataIndex) {
+          if (data.locked) {
+            $(row)
+                .find('td') // Выбираем все ячейки (<td>) внутри строки
+                .css('color', '#aaaaaa');
+          }
+        }
       });
     };
 
