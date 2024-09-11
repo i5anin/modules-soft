@@ -1,77 +1,44 @@
 <template>
-  <div>
-    <table id="ordersTable" class="table table-striped">
-      <tbody/>
-    </table>
+  <div v-if="order">
+    <h2>Детали заказа #{{ order.id }}</h2>
+    <p>Контрагент: {{ order.name }}</p>
+    <p>Дата: {{ order.date }}</p>
+    <!-- Отобразите другие детали заказа -->
 
-    <OrderDetailsModal :order="selectedOrder" />
+    <button @click="openModal = true" class="btn btn-primary mt-3">
+      Открыть модальное окно
+    </button>
+
+    <OrderDetailsModal :order="order" v-model:show="openModal" />
   </div>
+  <p v-else>Загрузка заказа...</p>
 </template>
 
 <script>
-import DataTable from 'datatables.net-dt';
-import $ from 'jquery';
-import { onMounted, ref } from 'vue';
-import { getOrders } from '../api/orders';
-import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
-import 'datatables.net-bs5';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constants.js";
+import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { getOrderById } from '../api/orders'; // Путь к вашему файлу с API
 import OrderDetailsModal from './OrderDetailsModal.vue';
-import * as bootstrap from 'bootstrap';
 
 export default {
   components: {
     OrderDetailsModal
   },
   setup() {
-    const ordersTable = ref(null);
-    const selectedOrder = ref(null);
-    let detailsModal = null;
+    const route = useRoute();
+    const orderId = ref(route.params.orderId);
+    const order = ref(null);
+    const openModal = ref(false);
 
-    const fetchOrders = (page, length, searchQuery, callback) => {
-      getOrders(page, length, searchQuery)
-          .then(response => {
-            callback({
-              data: response.orders,
-              recordsTotal: response.totalCount,
-              recordsFiltered: response.totalCount,
-            });
-          })
-          .catch(error => console.error('Ошибка при загрузке заказов:', error));
-    };
-
-    const initializeTable = () => {
-      ordersTable.value = new DataTable('#ordersTable', {
-        searching: true,
-        processing: true,
-        serverSide: true,
-        ajax: (data, callback) => {
-          const page = Math.floor(data.start / data.length) + 1;
-          const searchQuery = data.search.value;
-          fetchOrders(page, data.length, searchQuery, callback);
-        },
-        columns: ORDERS_TABLE_COLUMNS,
-        language: LANG_CONFIG,
-        createdRow: function (row, data, dataIndex) {
-          if (data.locked) {
-            $(row)
-                .find('td')
-                .css('color', '#aaaaaa');
-          }
-          $(row).on('click.dt', () => { // Используем пространство имен .dt
-            selectedOrder.value = data;
-            detailsModal.show();
-          });
-        }
-      });
-    };
-
-    onMounted(() => {
-      detailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-      initializeTable();
+    onMounted(async () => {
+      try {
+        order.value = await getOrderById(orderId.value);
+      } catch (error) {
+        console.error('Ошибка при загрузке заказа:', error);
+      }
     });
 
-    return { ordersTable, selectedOrder };
-  },
+    return { order, openModal };
+  }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <table id="ordersTable" class="table table-striped">
-      <tbody/>
+      <tbody />
     </table>
   </div>
 </template>
@@ -9,8 +9,8 @@
 <script>
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import { onMounted, ref } from 'vue';
-import { getOrders } from '../api/orders';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
+import { getOrders } from '../api/orders'; // Путь к вашему файлу с API
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constants.js";
@@ -45,11 +45,9 @@ export default {
         },
         columns: ORDERS_TABLE_COLUMNS,
         language: LANG_CONFIG,
-        createdRow: function (row, data, dataIndex) {
+        createdRow: function (row, data) {
           if (data.locked) {
-            $(row)
-                .find('td')
-                .css('color', '#aaaaaa');
+            $(row).find('td').css('color', '#aaaaaa');
           }
           $(row).on('click.dt', () => {
             router.push({name: 'OrderDetails', params: {orderId: data.id}});
@@ -62,7 +60,13 @@ export default {
       initializeTable();
     });
 
+    onBeforeUnmount(() => {
+      if (ordersTable.value) {
+        ordersTable.value.destroy();
+      }
+    });
+
     return {ordersTable};
-  },
+  }
 };
 </script>

@@ -17,3 +17,15 @@ export const getOrders = (page, limit, search) => {
             throw error;
         });
 };
+
+export const getOrderById = (orderId) => {
+    return api.get(`/order_metrologist_calc/order?order_id=${orderId}`) // Предполагаемый путь к API
+        .then(response => {
+            console.log('Ответ сервера:', response);
+            return response.data;
+        })
+        .catch(error => {
+            console.error('Ошибка при получении заказа:', error);
+            throw error;
+        });
+};
