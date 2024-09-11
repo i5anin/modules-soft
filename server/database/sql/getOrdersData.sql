@@ -1,70 +1,98 @@
-SELECT dbo.orders.status_ready,
-       CASE
-           WHEN COUNT(*) FILTER (WHERE ordersnom.status_cal = 'К' AND ordersnom.kolvo > 0 AND NOT status_ready) > 0
-               THEN 'К'
-           END                         AS status_cal,
-       CASE
-           WHEN COUNT(*) FILTER (WHERE ordersnom.status_instr = 'И' AND ordersnom.kolvo > 0) > 0
-               THEN 'И'
-           END                         AS status_instr,
-       CASE
-           WHEN COUNT(*) FILTER (WHERE ordersnom.status_draft = 'Ч' AND ordersnom.kolvo > 0) > 0
-               THEN 'Ч'
-           END                         AS status_draft,
-       CASE
-           WHEN COUNT(*) FILTER (WHERE ordersnom.status_metall = 'М' AND ordersnom.kolvo > 0) > 0 OR
-                NOT dbo.st_set(orders.id)
-               THEN 'М'
-           END                         AS status_metall,
-       CASE
-           WHEN COUNT(*) FILTER (WHERE ordersnom.status_kp = 'КП' AND ordersnom.kolvo > 0 AND NOT status_ready) > 0
-               AND COUNT(*) FILTER (
-                   WHERE ordersnom.kolvo > 0
-                       AND (
-                             ordersnom.status_cal = 'К'
-                                 OR ordersnom.status_instr = 'И'
-                                 OR ordersnom.status_draft = 'Ч'
-                                 OR ordersnom.status_metall = 'М'
-                             )
-                   ) = 0
-               AND dbo.st_set(orders.id)
-               THEN 'КП'
-           END                         AS status_kp,
-       dbo.orders.id,
-       dbo.orders.date,
-       dbo.clients.name,
-       dbo.orders.client_id,
-       MAX(dbo.ordersnom.cal_buy_time) AS cal_buy_time,
-       orders.order_manager,
-       dbo.orders.locked,
-       dbo.orders.is_complete,
-       dbo.orders.count_pos,
-       dbo.orders.comments,
-       orders.goz
-FROM dbo.orders
-         INNER JOIN dbo.clients ON orders.client_id = clients.id
-         INNER JOIN dbo.ordersnom ON ordersnom.order_id = orders.id
-         LEFT JOIN dbo.mats ON mats.id = ordersnom.zag_tech_material_id
-         LEFT JOIN dbo.cal_info ON ordersnom.id = cal_info.ordersnom_id
-         LEFT JOIN dbo.calibres ON cal_info.cal_id = calibres.id
-WHERE dbo.orders.deleted = FALSE
---   AND date BETWEEN @date_from AND @date_to
--- SEARCH_CONDITION
-GROUP BY orders.order_manager,
-         dbo.orders.status_ready,
-         dbo.orders.status_cal,
-         dbo.orders.status_instr,
-         dbo.orders.status_draft,
-         dbo.orders.status_metall,
-         dbo.orders.status_kp,
-         dbo.orders.id,
-         dbo.orders.date,
-         dbo.clients.name,
-         dbo.orders.client_id,
-         dbo.orders.locked,
-         dbo.orders.is_complete,
-         dbo.orders.count_pos,
-         dbo.orders.comments,
-         orders.goz
-ORDER BY dbo.orders.id DESC
-LIMIT :limit OFFSET :offset;
+WITH order_details AS (
+    SELECT
+        orders.id,
+        orders.status_ready,
+        COUNT(*) FILTER (WHERE ordersnom.status_cal='К' AND NOT orders.status_ready AND ordersnom.kolvo > 0) AS count_status_cal,
+        COUNT(*) FILTER (WHERE ordersnom.status_instr='И' AND NOT orders.status_ready AND ordersnom.kolvo > 0) AS count_status_instr,
+        COUNT(*) FILTER (WHERE ordersnom.status_draft='Ч' AND NOT orders.status_ready AND ordersnom.kolvo > 0) AS count_status_draft,
+        COUNT(*) FILTER (WHERE ordersnom.status_metall='М' AND NOT orders.status_ready AND ordersnom.kolvo > 0) AS count_status_metall,
+        COUNT(*) FILTER (WHERE ordersnom.status_kp='КП' AND ordersnom.kolvo > 0 AND NOT orders.status_ready) AS count_status_kp,
+        orders.date,
+        clients.name,
+        orders.nds,
+        orders.comments,
+        orders.tech_fio,
+        clients.contact,
+        orders.client_id,
+        SUM(ordersnom.metall_price_total) AS metall_price_total,
+        orders.logistics_price,
+        MAX(ordersnom.metall_buy_time) AS metall_buy_time,
+        orders.locked,
+        orders.logistics_price_per_detail,
+        clients.phone,
+        clients.email,
+        orders.is_complete,
+        orders.count_pos,
+        orders.omts_comments,
+        orders.order_manager,
+        MAX(dbo.ordersnom.cal_buy_time) AS cal_buy_time,
+        orders.goz
+    FROM
+        dbo.orders
+            INNER JOIN dbo.clients ON orders.client_id = clients.id
+            INNER JOIN dbo.ordersnom ON ordersnom.order_id = orders.id
+            LEFT JOIN dbo.mats ON mats.id = ordersnom.zag_tech_material_id
+            LEFT JOIN dbo.cal_info ON ordersnom.id = cal_info.ordersnom_id
+            LEFT JOIN dbo.calibres ON cal_info.cal_id = calibres.id
+    WHERE
+        orders.deleted = false
+    -- SEARCH_CONDITION
+    GROUP BY
+        orders.id,
+        orders.status_ready,
+        orders.date,
+        clients.name,
+        orders.nds,
+        orders.comments,
+        orders.tech_fio,
+        clients.contact,
+        orders.client_id,
+        orders.logistics_price,
+        orders.locked,
+        orders.logistics_price_per_detail,
+        clients.phone,
+        clients.email,
+        orders.is_complete,
+        orders.count_pos,
+        orders.omts_comments,
+        orders.order_manager,
+        orders.goz
+),
+     total_count AS (
+         SELECT COUNT(DISTINCT id) AS total_count
+         FROM order_details
+     )
+SELECT
+    total_count.total_count,
+    order_details.status_ready,
+    CASE WHEN order_details.count_status_cal > 0 AND NOT order_details.status_ready THEN 'К' ELSE ' ' END AS status_cal,
+    CASE WHEN order_details.count_status_instr > 0 AND NOT order_details.status_ready THEN 'И' ELSE ' ' END AS status_instr,
+    CASE WHEN order_details.count_status_draft > 0 AND NOT order_details.status_ready THEN 'Ч' ELSE ' ' END AS status_draft,
+    CASE WHEN order_details.count_status_metall > 0 OR NOT dbo.st_set(order_details.id) THEN 'М' ELSE ' ' END AS status_metall,
+    CASE WHEN order_details.count_status_kp > 0 AND order_details.count_status_cal = 0 AND order_details.count_status_instr = 0 AND order_details.count_status_draft = 0 AND order_details.count_status_metall = 0 AND dbo.st_set(order_details.id) THEN 'КП' ELSE ' ' END AS status_kp,
+    order_details.id,
+    order_details.date,
+    order_details.name,
+    order_details.nds,
+    order_details.comments,
+    order_details.tech_fio,
+    order_details.contact,
+    order_details.client_id,
+    order_details.metall_price_total,
+    order_details.logistics_price,
+    order_details.metall_buy_time,
+    order_details.locked,
+    order_details.logistics_price_per_detail,
+    order_details.phone,
+    order_details.email,
+    order_details.is_complete,
+    order_details.count_pos,
+    order_details.omts_comments,
+    order_details.order_manager,
+    order_details.goz
+FROM
+    order_details, total_count
+ORDER BY
+    order_details.id DESC
+LIMIT :limit
+    OFFSET :offset

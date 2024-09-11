@@ -18,7 +18,7 @@ class OrderMetrologistCalcController extends Controller
             $offset = ($page - 1) * $limit;
 
             $ordersSql = file_get_contents(database_path('sql/getOrdersData.sql'));
-            $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
+//            $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
 
             $parameters = [
                 'limit' => $limit,
@@ -43,15 +43,19 @@ class OrderMetrologistCalcController extends Controller
                 ";
 
                 $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $ordersSql);
-                $countSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $countSql);
+//                $countSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $countSql);
+
 
                 $parameters['search'] = $searchValue;
                 $countParameters['search'] = $searchValue;
             }
 
             $orders = DB::select($ordersSql, $parameters);
-            $totalCountResult = DB::selectOne($countSql, $countParameters);
-            $totalCount = $totalCountResult->total_count;
+//            $totalCountResult = DB::selectOne($countSql, $countParameters);
+//            $totalCount = $totalCountResult->total_count;
+
+            // Извлечение общего количества записей из первого элемента результата
+            $totalCount = !empty($orders) ? $orders[0]->total_count : 0;
 
             return response()->json([
                 'currentPage' => $page,
@@ -59,6 +63,8 @@ class OrderMetrologistCalcController extends Controller
                 'totalCount' => $totalCount,
                 'orders' => $orders
             ]);
+
+
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

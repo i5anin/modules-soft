@@ -25,9 +25,10 @@ export const ORDERS_TABLE_COLUMNS = [
             ];
 
             return statuses
-                .filter(s => row[`status_${s.status}`])
-                .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`)
-                .join('');
+                .filter(s => row[`status_${s.status}`]?.trim()) // Удаляем пробелы и фильтруем пустые строки
+                .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`) // Генерация HTML-разметки
+                .join(''); // Объединение в одну строку
+
         }
     },
     {data: 'id', title: '№', render: data => data || '', type: 'number'},
