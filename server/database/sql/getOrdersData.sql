@@ -41,13 +41,12 @@ SELECT dbo.orders.status_ready,
        dbo.orders.count_pos,
        dbo.orders.comments,
        orders.goz
-FROM dbo.clients
-         INNER JOIN dbo.orders
-                    ON dbo.orders.client_id = dbo.clients.id
-         INNER JOIN dbo.ordersnom
-                    ON dbo.ordersnom.order_id = dbo.orders.id
-         INNER JOIN dbo.cal_info
-                    ON dbo.ordersnom.id = dbo.cal_info.ordersnom_id
+FROM dbo.orders
+         INNER JOIN dbo.clients ON orders.client_id = clients.id
+         INNER JOIN dbo.ordersnom ON ordersnom.order_id = orders.id
+         LEFT JOIN dbo.mats ON mats.id = ordersnom.zag_tech_material_id
+         LEFT JOIN dbo.cal_info ON ordersnom.id = cal_info.ordersnom_id
+         LEFT JOIN dbo.calibres ON cal_info.cal_id = calibres.id
 WHERE dbo.orders.deleted = FALSE
 --   AND date BETWEEN @date_from AND @date_to
 -- SEARCH_CONDITION
