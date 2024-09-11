@@ -20,7 +20,6 @@ class OrderMetrologistCalcController extends Controller
             $ordersSql = file_get_contents(database_path('sql/getOrdersData.sql'));
             $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
 
-
             $parameters = [
                 'limit' => $limit,
                 'offset' => $offset,
@@ -28,21 +27,26 @@ class OrderMetrologistCalcController extends Controller
 
             $countParameters = [];
 
-
             // Проверка и добавление фильтра поиска
             if ($search) {
-                $searchCondition =
-                "AND (orders.id::text ILIKE :search
-                OR orders.order_manager ILIKE :search
-                OR clients.name ILIKE :search
-                OR mats.name ILIKE :search
-                OR ordersnom.name ILIKE :search
-                OR ordersnom.description ILIKE :search
-                OR UPPER(calibres.name) LIKE :search
-                OR UPPER(parameter) LIKE :search
-                OR UPPER(quality) LIKE :search)
+                $searchValue = '%' . $search . '%';
+                $searchCondition = "
+                    AND (orders.id::text ILIKE :search
+                    OR orders.order_manager ILIKE :search
+                    OR clients.name ILIKE :search
+                    OR mats.name ILIKE :search
+                    OR ordersnom.name ILIKE :search
+                    OR ordersnom.description ILIKE :search
+                    OR UPPER(calibres.name) LIKE :search
+                    OR UPPER(parameter) LIKE :search
+                    OR UPPER(quality) LIKE :search)
                 ";
-                $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition , $ordersSql);
+
+                $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $ordersSql);
+                $countSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $countSql);
+
+                $parameters['search'] = $searchValue;
+                $countParameters['search'] = $searchValue;
             }
 
             $orders = DB::select($ordersSql, $parameters);
