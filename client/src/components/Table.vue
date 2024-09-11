@@ -1,23 +1,46 @@
 <template>
   <div>
     <table id="ordersTable" class="table table-striped">
-      <tbody/>
+      <tbody />
     </table>
+
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="orderDetailsModalLabel">Детали заказа</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            <p>ID заказа: {{ selectedOrder?.id }}</p>
+            <p>Контрагент: {{ selectedOrder?.name }}</p>
+            <p>Дата: {{ selectedOrder?.date }}</p>
+            <!-- Добавьте другие поля заказа по мере необходимости -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import DataTable from 'datatables.net-dt';
-import $ from 'jquery'; // Добавьте эту строку
-import {onMounted, ref} from 'vue';
-import {getOrders} from '../api/orders';
+import $ from 'jquery';
+import { onMounted, ref, onBeforeUpdate } from 'vue';
+import { getOrders } from '../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constants.js";
+import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constants.js";
+import * as bootstrap from 'bootstrap';
 
 export default {
   setup() {
     const ordersTable = ref(null);
+    const selectedOrder = ref(null);
+    let detailsModal = null;
 
     const fetchOrders = (page, length, searchQuery, callback) => {
       getOrders(page, length, searchQuery)
@@ -46,16 +69,27 @@ export default {
         createdRow: function (row, data, dataIndex) {
           if (data.locked) {
             $(row)
-                .find('td') // Выбираем все ячейки (<td>) внутри строки
+                .find('td')
                 .css('color', '#aaaaaa');
           }
+          $(row).on('click', () => {
+            selectedOrder.value = data
+            detailsModal.show()
+          });
         }
       });
     };
+    // onBeforeUpdate(() => {
+    //   detailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'))
+    // })
+    onMounted(() => {
+      // Инициализируем модальное окно здесь:
+      detailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
 
-    onMounted(initializeTable);
+      initializeTable(); // Инициализируем DataTables после модального окна
+    });
 
-    return {ordersTable};
+    return {ordersTable, selectedOrder};
   },
 };
 </script>
