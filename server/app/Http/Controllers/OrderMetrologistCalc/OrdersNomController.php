@@ -1,20 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
-/**
- * @OA\Info(
- *     title="Список номенклатуры в заказе API",
- *     version="1.0.0",
- *     description="API для вывода номенклатуры в заказе."
- * )
- */
+namespace App\Http\Controllers\OrderMetrologistCalc;
 
-use Illuminate\Database\QueryException;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 
 class OrdersNomController extends Controller
 {
