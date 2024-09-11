@@ -37,9 +37,11 @@ class OrderMetrologistCalcController extends Controller
                     OR mats.name ILIKE :search
                     OR ordersnom.name ILIKE :search
                     OR ordersnom.description ILIKE :search
-                    OR UPPER(calibres.name) LIKE :search
-                    OR UPPER(parameter) LIKE :search
-                    OR UPPER(quality) LIKE :search)
+                    OR calibres.name ILIKE :search
+                    OR parameter ILIKE :search
+                    OR quality ILIKE :search
+                    OR TO_CHAR(date,'dd.mm.yyyy') ILIKE :search
+                    )
                 ";
 
                 $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $ordersSql);
