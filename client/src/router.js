@@ -8,8 +8,14 @@ const routes = [
     {
         path: '/add',
         component: () => import('./pages/Add.vue'),
+    },
+    // Добавленный маршрут для OrderDetails
+    {
+        path: '/order-details/:orderId',
+        name: 'OrderDetails',
+        component: () => import('./components/OrderDetails.vue')
     }
-]
+];
 
 export default createRouter({
     routes,

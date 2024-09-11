@@ -3,6 +3,8 @@
     <table id="ordersTable" class="table table-striped">
       <tbody/>
     </table>
+
+    <OrderDetailsModal :order="selectedOrder" />
   </div>
 </template>
 
@@ -14,12 +16,17 @@ import { getOrders } from '../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constants.js";
-import { useRouter } from 'vue-router';
+import OrderDetailsModal from './OrderDetailsModal.vue';
+import * as bootstrap from 'bootstrap';
 
 export default {
+  components: {
+    OrderDetailsModal
+  },
   setup() {
     const ordersTable = ref(null);
-    const router = useRouter();
+    const selectedOrder = ref(null);
+    let detailsModal = null;
 
     const fetchOrders = (page, length, searchQuery, callback) => {
       getOrders(page, length, searchQuery)
@@ -51,18 +58,20 @@ export default {
                 .find('td')
                 .css('color', '#aaaaaa');
           }
-          $(row).on('click.dt', () => {
-            router.push({name: 'OrderDetails', params: {orderId: data.id}});
+          $(row).on('click.dt', () => { // Используем пространство имен .dt
+            selectedOrder.value = data;
+            detailsModal.show();
           });
         }
       });
     };
 
     onMounted(() => {
+      detailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
       initializeTable();
     });
 
-    return {ordersTable};
+    return { ordersTable, selectedOrder };
   },
 };
 </script>
