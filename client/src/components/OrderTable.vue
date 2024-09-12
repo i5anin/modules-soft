@@ -9,8 +9,8 @@
 <script>
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import { onMounted, ref, onBeforeUnmount } from 'vue';
-import { getOrders } from '../api/orders'; // Путь к вашему файлу с API
+import { onMounted, ref, onBeforeUnmount, computed } from 'vue';
+import { getOrderById } from '../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrderTable.js";
@@ -20,29 +20,29 @@ export default {
   setup() {
     const orderTable = ref(null);
     const router = useRouter();
+    const orderId = useRoute().params.orderId; // Получаем orderId из маршрута
+    const orderData = ref(null); // Хранение данных заказа
 
     const fetchOrders = (page, length, searchQuery, callback) => {
-      getOrders(page, length, searchQuery)
+      // Передаем orderId в getOrderById
+      getOrderById(orderId, searchQuery)
           .then(response => {
+            orderData.value = response; // Сохраняем данные заказа
             callback({
-              data: response.orders,
-              recordsTotal: response.totalCount,
-              recordsFiltered: response.totalCount,
+              data: response.nomtable,
+              recordsTotal: response.nomtable.length,
+              recordsFiltered: response.nomtable.length,
             });
           })
-          .catch(error => console.error('Ошибка при загрузке заказов:', error));
+          .catch(error => console.error('Ошибка при загрузке заказа:', error));
     };
 
     const initializeTable = () => {
       orderTable.value = new DataTable('#orderTable', {
         searching: true,
         processing: true,
-        serverSide: true,
-        ajax: (data, callback) => {
-          const page = Math.floor(data.start / data.length) + 1;
-          const searchQuery = data.search.value;
-          fetchOrders(page, data.length, searchQuery, callback);
-        },
+        serverSide: false, // Отключаем serverSide, так как данные уже получены
+        data: orderData.value ? orderData.value.nomtable : [], // Используем данные из orderData.value.nomtable
         columns: ORDERS_TABLE_COLUMNS,
         language: LANG_CONFIG,
         createdRow: function (row, data) {
@@ -50,14 +50,16 @@ export default {
             $(row).find('td').css('color', '#aaaaaa');
           }
           $(row).on('click.dt', () => {
-            router.push({name: 'OrderDetails', params: {orderId: data.id}});
+            router.push({ name: 'OrderDetails', params: { orderId: data.id } });
           });
         }
       });
     };
 
     onMounted(() => {
-      initializeTable();
+      fetchOrders(1, 10, '', () => { // Загружаем данные при монтировании
+        initializeTable();
+      });
     });
 
     onBeforeUnmount(() => {
@@ -66,7 +68,7 @@ export default {
       }
     });
 
-    return {orderTable};
+    return { orderTable };
   }
 };
 </script>
