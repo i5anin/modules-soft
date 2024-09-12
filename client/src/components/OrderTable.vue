@@ -1,7 +1,8 @@
 <template>
   <div>
+    <pre v-if="nomtable"> {{ nomtable }}</pre>
     <table id="orderTable" class="table table-striped">
-      <tbody />
+      <tbody/>
     </table>
   </div>
 </template>
@@ -9,25 +10,27 @@
 <script>
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import { onMounted, ref, onBeforeUnmount } from 'vue';
-import { getOrders } from '../api/orders'; // Путь к вашему файлу с API
+import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {getOrderById} from '../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrderTable.js";
-import { useRouter } from 'vue-router';
+import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrderTable.js";
+import {useRouter} from 'vue-router';
 
 export default {
   setup() {
     const orderTable = ref(null);
     const router = useRouter();
+    const nomtable = ref([]); // Массив для данных заказов
 
     const fetchOrders = (page, length, searchQuery, callback) => {
-      getOrders(page, length, searchQuery)
+      getOrderById(page, length, searchQuery)
           .then(response => {
+            nomtable.value = response.nomtable;
             callback({
-              data: response.orders,
-              recordsTotal: response.totalCount,
-              recordsFiltered: response.totalCount,
+              data: response.nomtable,
+              recordsTotal: response.nomtable.length, // Поправляем значение
+              recordsFiltered: response.nomtable.length, // Поправляем значение
             });
           })
           .catch(error => console.error('Ошибка при загрузке заказов:', error));
@@ -35,13 +38,12 @@ export default {
 
     const initializeTable = () => {
       orderTable.value = new DataTable('#orderTable', {
-        searching: true,
         processing: true,
-        serverSide: true,
+        searching: false,
+        serverSide: false,
+        data: nomtable.value, // Используем nomtable.value вместо response.nomtable
         ajax: (data, callback) => {
-          const page = Math.floor(data.start / data.length) + 1;
-          const searchQuery = data.search.value;
-          fetchOrders(page, data.length, searchQuery, callback);
+          fetchOrders(data.length, null, null, callback); // Передаем правильные параметры
         },
         columns: ORDERS_TABLE_COLUMNS,
         language: LANG_CONFIG,
@@ -66,7 +68,7 @@ export default {
       }
     });
 
-    return {orderTable};
+    return {orderTable, nomtable};
   }
 };
 </script>
