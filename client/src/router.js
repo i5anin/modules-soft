@@ -11,9 +11,9 @@ const routes = [
     },
     // Добавленный маршрут для OrderDetails
     {
-        path: '/order-details/:orderId',
+        path: '/:orderId',
         name: 'OrderDetails',
-        component: () => import('./components/OrderDetails.vue')
+        component: () => import('./components/OrderTable.vue')
     }
 ];
 

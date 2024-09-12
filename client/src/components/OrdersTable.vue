@@ -13,7 +13,7 @@ import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { getOrders } from '../api/orders'; // Путь к вашему файлу с API
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constants.js";
+import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrdersTable.js";
 import { useRouter } from 'vue-router';
 
 export default {
