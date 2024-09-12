@@ -4,28 +4,22 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
 });
 
+const handleResponse = (response) => {
+    return response.data;
+};
+
+const handleError = (error) => {
+    throw error;
+};
+
 export const getOrders = (page, limit, search) => {
-    return api.get('/order_metrologist_calc/table', {
-        params: { page, limit, search },
-    })
-        .then(response => {
-            console.log('Ответ сервера:', response); // Лог ответа сервера
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Ошибка при получении заказов:', error);
-            throw error;
-        });
+    return api.get('order_metrologist/orders', {
+        params: {page, limit, search},
+    }).then(handleResponse).catch(handleError);
 };
 
 export const getOrderById = (orderId) => {
-    return api.get(`/order_metrologist_calc/order?order_id=${orderId}`) // Предполагаемый путь к API
-        .then(response => {
-            console.log('Ответ сервера:', response);
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Ошибка при получении заказа:', error);
-            throw error;
-        });
+    return api.get('order_metrologist/order', {
+        params: {order_id: orderId},
+    }).then(handleResponse).catch(handleError);
 };

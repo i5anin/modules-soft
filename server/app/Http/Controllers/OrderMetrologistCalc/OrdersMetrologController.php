@@ -17,7 +17,7 @@ class OrdersMetrologController extends Controller
             $limit = (int)($request->query('limit') ?? 15);
             $offset = ($page - 1) * $limit;
 
-            $ordersSql = file_get_contents(database_path('sql/getOrdersData.sql'));
+            $ordersSql = file_get_contents(database_path('sql/getOrdersNomList.sql'));
 //            $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
 
             $parameters = [
@@ -82,7 +82,7 @@ class OrdersMetrologController extends Controller
             ]);
 
             // Загружаем SQL запрос из файла
-            $sql = file_get_contents(database_path('sql/orderNomList.sql'));
+            $sql = file_get_contents(database_path('sql/getOrderNomList.sql'));
 
             $search_string = $parameters['search_string'] ?? null;
 
