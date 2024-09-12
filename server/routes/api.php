@@ -1,14 +1,14 @@
 <?php
 
 
-use App\Http\Controllers\OrderMetrologistCalc\OrderMetrologistCalcController;
+use App\Http\Controllers\OrderMetrologistCalc\OrdersMetrologController;
 use App\Http\Controllers\OrderMetrologistCalc\OrdersNomController;
 
 
 // Add the /OrderMetrologistCalc group
-Route::group(['prefix' => 'order_metrologist_calc'], function () {
-    Route::get('/table', [OrderMetrologistCalcController::class, 'getOrdersData']);
-    Route::get('/order', [OrdersNomController::class, 'getOrderNomList']);
+Route::group(['prefix' => 'order_metrologist'], function () {
+    Route::get('/orders', [OrdersMetrologController::class, 'getOrdersData']);
+    Route::get('/orders/{id}', [OrdersMetrologController::class, 'getOrderData']);
 });
 
 // Ресурсный маршрут

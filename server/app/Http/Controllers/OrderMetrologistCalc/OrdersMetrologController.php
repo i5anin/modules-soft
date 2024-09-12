@@ -7,71 +7,72 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class OrdersNomController extends Controller
+class OrdersMetrologController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/orders_nom_list",
-     *     summary="Получить список номенклатуры для заказа",
-     *     description="Возвращает информацию о заказе и номенклатуре в заказе, с возможностью поиска по имени, описанию и ID номенклатуры.",
-     *     tags={"Cписок номенклатуры для заказа"},
-     *     @OA\Parameter(
-     *         name="order_id",
-     *         in="query",
-     *         description="ID заказа",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="search_string",
-     *         in="query",
-     *         description="Строка поиска для фильтрации по имени, описанию или ID номенклатуры",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Успешный ответ",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="header",
-     *                 type="object",
-     *                 description="Информация о заказе",
-     *                 @OA\Property(property="order_id", type="integer", description="ID заказа"),
-     *                 @OA\Property(property="order_date", type="string", description="Дата заказа"),
-     *                 @OA\Property(property="order_manager", type="string", description="Менеджер заказа"),
-     *                 @OA\Property(property="client_name", type="string", description="Имя клиента"),
-     *                 @OA\Property(property="contact", type="string", description="Контактное лицо"),
-     *                 @OA\Property(property="tech_fio", type="string", description="Технический ответственный"),
-     *                 @OA\Property(property="metall_buy_time", type="integer", description="Срок покупки металла"),
-     *                 @OA\Property(property="comments", type="string", description="Комментарии к заказу"),
-     *                 @OA\Property(property="omts_comments", type="string", description="Комментарии ОМТС"),
-     *                 @OA\Property(property="st_price", type="integer", description="Стоимость стандартных изделий в заказе"),
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Ошибка валидации",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="validation_errors", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Ошибка сервера",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getOrderNomList(Request $request): JsonResponse
+    public function getOrdersData(Request $request): JsonResponse
+    {
+        try {
+            $search = $request->query('search');
+            $page = (int)($request->query('page') ?? 1);
+            $limit = (int)($request->query('limit') ?? 15);
+            $offset = ($page - 1) * $limit;
+
+            $ordersSql = file_get_contents(database_path('sql/getOrdersData.sql'));
+//            $countSql = file_get_contents(database_path('sql/getOrdersDataCount.sql'));
+
+            $parameters = [
+                'limit' => $limit,
+                'offset' => $offset,
+            ];
+
+            $countParameters = [];
+
+            // Проверка и добавление фильтра поиска
+            if ($search) {
+                $searchValue = '%' . $search . '%';
+                $searchCondition = "
+                    AND (orders.id::text ILIKE :search
+                    OR orders.order_manager ILIKE :search
+                    OR clients.name ILIKE :search
+                    OR mats.name ILIKE :search
+                    OR ordersnom.name ILIKE :search
+                    OR ordersnom.description ILIKE :search
+                    OR calibres.name ILIKE :search
+                    OR parameter ILIKE :search
+                    OR quality ILIKE :search
+                    OR TO_CHAR(date,'dd.mm.yyyy') ILIKE :search
+                    )
+                ";
+
+                $ordersSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $ordersSql);
+//                $countSql = str_replace('-- SEARCH_CONDITION', $searchCondition, $countSql);
+
+
+                $parameters['search'] = $searchValue;
+                $countParameters['search'] = $searchValue;
+            }
+
+            $orders = DB::select($ordersSql, $parameters);
+//            $totalCountResult = DB::selectOne($countSql, $countParameters);
+//            $totalCount = $totalCountResult->total_count;
+
+            // Извлечение общего количества записей из первого элемента результата
+            $totalCount = !empty($orders) ? $orders[0]->total_count : 0;
+
+            return response()->json([
+                'currentPage' => $page,
+                'itemsPerPage' => $limit,
+                'totalCount' => $totalCount,
+                'orders' => $orders
+            ]);
+
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getOrderData(Request $request): JsonResponse
     {
         try {
             // Получаем параметры из запроса
