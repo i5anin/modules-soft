@@ -1,5 +1,6 @@
 <template>
   <div>
+    <pre v-if="header"> {{ header }}</pre>
     <pre v-if="nomtable"> {{ nomtable }}</pre>
     <table id="orderTable" class="table table-striped">
       <tbody/>
@@ -22,11 +23,14 @@ export default {
     const orderTable = ref(null);
     const router = useRouter();
     const nomtable = ref([]); // Массив для данных заказов
+    const header = ref([]); // Массив для данных заказов
 
-    const fetchOrders = (page, length, searchQuery, callback) => {
-      getOrderById(page, length, searchQuery)
+    const fetchOrders = (callback) => {
+      const orderId = router.currentRoute.value.params.orderId; // Получаем orderId
+      getOrderById(orderId) // Передаем orderId как аргумент
           .then(response => {
             nomtable.value = response.nomtable;
+            header.value = response.header;
             callback({
               data: response.nomtable,
               recordsTotal: response.nomtable.length, // Поправляем значение
