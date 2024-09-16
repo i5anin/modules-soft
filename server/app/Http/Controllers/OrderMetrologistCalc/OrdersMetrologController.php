@@ -105,18 +105,27 @@ class OrdersMetrologController extends Controller
                 $header = [
                     'order_id' => $results[0]->order_id,
                     'order_date' => $results[0]->order_date,
-                    'order_manager' => $results[0]->order_manager,
+                    'max_cal_buy_time' => $results[0]->max_cal_buy_time, //  перенесено
+
+                    // Информация о клиенте
                     'client_name' => $results[0]->client_name,
                     'contact' => $results[0]->contact,
+
+                    // Ответственные лица
+                    'order_manager' => $results[0]->order_manager,
                     'tech_fio' => $results[0]->tech_fio,
-                    'metall_buy_time' => $results[0]->metall_buy_time,
+
+                    // Финансовая информация
+                    'total_cal_price' => $results[0]->total_cal_price,
+                    'st_price' => $results[0]->st_price,
+
+                    // Комментарии
                     'comments' => $results[0]->comments,
                     'omts_comments' => $results[0]->omts_comments,
-                    'st_price' => $results[0]->st_price,
                 ];
 
                 // Создаем массив для таблицы номенклатур, убирая из каждой записи поля, которые есть в хедере
-                $nomtable = array_map(function($row) use ($header) {
+                $nomtable = array_map(function ($row) use ($header) {
                     return array_diff_key((array)$row, $header);
                 }, $results);
 

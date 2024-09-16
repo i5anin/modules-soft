@@ -41,11 +41,16 @@ export const ORDERS_TABLE_COLUMNS = [
     },
     {
         data: 'name',
-        title: 'Контрагент',
+        title: 'Наименование',
+        render: (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
+    },
+    {
+        data: 'description',
+        title: 'Обозначение',
         render: (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
     },
     {title: 'Срок', data: 'cal_buy_time', render: data => data || '', type: 'number'},
-    {title: 'Менеджер', orderable: false, data: 'order_manager', render: data => data || '', type: 'string'}
+    {title: 'Кол-вл',  data: 'kolvo', render: data => data || '', type: 'string'}
 ];
 
 export const LANG_CONFIG = {url: 'Russian.json'};
