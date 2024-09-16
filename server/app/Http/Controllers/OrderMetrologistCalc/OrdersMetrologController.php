@@ -17,7 +17,6 @@ class OrdersMetrologController extends Controller
             $limit = (int)($request->query('limit') ?? 15);
             $offset = ($page - 1) * $limit;
 
-            // Получаем параметры сортировки
             $sortColumn = $request->input('sortCol', 'status_cal');
             $sortDirection = $request->input('sortDir', 'DESC NULLS LAST');
 
@@ -28,8 +27,8 @@ class OrdersMetrologController extends Controller
                 $parameters['search'] = '%' . $search . '%';
                 $ordersSql = str_replace(
                     '-- SEARCH_CONDITION',
-                    "
-                    AND (orders.id::text ILIKE :search
+                    "AND (
+                    orders.id::text ILIKE :search
                     OR orders.order_manager ILIKE :search
                     OR clients.name ILIKE :search
                     OR mats.name ILIKE :search
@@ -39,30 +38,17 @@ class OrdersMetrologController extends Controller
                     OR parameter ILIKE :search
                     OR quality ILIKE :search
                     OR TO_CHAR(date,'dd.mm.yyyy') ILIKE :search
-                    )
-                ",
+                )",
                     $ordersSql
                 );
             }
 
             if ($sortColumn && $sortDirection) {
-                $ordersSql = str_replace(
-                    '-- SORTING',
-
-                    $sortColumn . ' ' . $sortDirection . ','
-                    ,
-                    $ordersSql
-                );
+                $ordersSql = str_replace('-- SORTING', "$sortColumn $sortDirection,", $ordersSql);
             }
 
             $orders = DB::select($ordersSql, $parameters);
             $totalCount = $orders[0]->total_count ?? 0;
-
-//            // Сортировка с помощью usort
-//            usort($orders, function ($a, $b) use ($sortColumn, $sortDirection) {
-//                $direction = $sortDirection === 'ASC' ? 1 : -1;
-//                return ($a->$sortColumn <=> $b->$sortColumn) * $direction;
-//            });
 
             return response()->json([
                 'currentPage' => $page,
