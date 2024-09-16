@@ -56,6 +56,7 @@ SELECT
 FROM
     order_details, total_count
 ORDER BY
+    --SORTING
     order_details.id DESC
 LIMIT :limit
     OFFSET :offset

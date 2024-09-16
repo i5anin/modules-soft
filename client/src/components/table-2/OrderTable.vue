@@ -1,32 +1,32 @@
 <template>
   <div class="container">
-    <h2 class="mt-4">Заказ</h2>
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+      <h2>Заказ</h2>
+      <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary">Назад к заказам</router-link>
+    </div>
 
-    <OrderInfoCard :header="header" />
+    <OrderInfoCard :header="header"/>
 
     <table id="orderTable" class="table table-striped">
       <tbody/>
     </table>
-
-    <DeliveryInfoCard :header="header" />
   </div>
 </template>
 
 <script>
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { getOrderById } from '../../api/orders';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {getOrderById} from '../../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrderTable.js";
-import { useRouter } from 'vue-router';
+import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrderTable.js";
+import {useRouter} from 'vue-router';
 import OrderInfoCard from "./OrderInfoCard.vue"
-import DeliveryInfoCard from "./DeliveryInfoCard.vue"
 
 export default {
   components: {
-    OrderInfoCard, DeliveryInfoCard
+    OrderInfoCard,
   },
   setup() {
     const orderTable = ref(null);
@@ -63,7 +63,7 @@ export default {
             $(row).find('td').css('color', '#aaaaaa');
           }
           $(row).on('click.dt', () => {
-            router.push({ name: 'OrderDetails', params: { orderId: data.id } });
+            router.push({name: 'OrderDetails', params: {orderId: data.id}});
           });
         }
       });
@@ -79,7 +79,7 @@ export default {
       }
     });
 
-    return { orderTable, nomtable, header };
+    return {orderTable, nomtable, header};
   }
 };
 </script>
