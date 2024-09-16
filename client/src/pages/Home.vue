@@ -1,9 +1,9 @@
 <template>
 <!--  <h1>Расчет Заказа Метролог</h1>-->
 
-  <router-link to="/add" class="btn btn-primary">Add</router-link>
+<!--  <router-link to="/add" class="btn btn-primary">Add</router-link>-->
 
-  <hr>
+<!--  <hr>-->
 
   <Table>
       <thead>
