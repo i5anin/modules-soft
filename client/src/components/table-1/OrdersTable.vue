@@ -10,7 +10,7 @@
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import { onMounted, ref, onBeforeUnmount } from 'vue';
-import { getOrders } from '../api/orders'; // Путь к вашему файлу с API
+import { getOrders } from '../../api/orders.js'; // Путь к вашему файлу с API
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrdersTable.js";
