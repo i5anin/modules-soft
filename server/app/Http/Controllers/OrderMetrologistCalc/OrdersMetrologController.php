@@ -16,7 +16,10 @@ class OrdersMetrologController extends Controller
             $page = (int)($request->query('page') ?? 1);
             $limit = (int)($request->query('limit') ?? 15);
             $offset = ($page - 1) * $limit;
-            $sortBy = $request->query('sort') ? explode(' ', $request->query('sort')) : ['id', 'DESC'];
+
+            // Получаем параметры сортировки
+            $sortColumn = $request->input('sortCol', 'status_cal');
+            $sortDirection = $request->input('sortDir', 'DESC NULLS LAST');
 
             $ordersSql = file_get_contents(database_path('sql/getOrdersList.sql'));
             $parameters = ['limit' => $limit, 'offset' => $offset];
@@ -42,15 +45,24 @@ class OrdersMetrologController extends Controller
                 );
             }
 
+            if ($sortColumn && $sortDirection) {
+                $ordersSql = str_replace(
+                    '-- SORTING',
+
+                    $sortColumn . ' ' . $sortDirection . ','
+                    ,
+                    $ordersSql
+                );
+            }
+
             $orders = DB::select($ordersSql, $parameters);
             $totalCount = $orders[0]->total_count ?? 0;
 
-            // Сортировка с помощью usort
-            usort($orders, function ($a, $b) use ($sortBy) {
-                $column = $sortBy[0];
-                $direction = $sortBy[1] === 'ASC' ? 1 : -1;
-                return ($a->$column <=> $b->$column) * $direction;
-            });
+//            // Сортировка с помощью usort
+//            usort($orders, function ($a, $b) use ($sortColumn, $sortDirection) {
+//                $direction = $sortDirection === 'ASC' ? 1 : -1;
+//                return ($a->$sortColumn <=> $b->$sortColumn) * $direction;
+//            });
 
             return response()->json([
                 'currentPage' => $page,

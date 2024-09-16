@@ -44,8 +44,8 @@ export const ORDERS_TABLE_COLUMNS = [
         title: 'Контрагент',
         render: (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
     },
-    {title: 'Срок', data: 'cal_buy_time', render: data => data || '', type: 'number'},
-    {title: 'Менеджер', orderable: false, data: 'order_manager', render: data => data || '', type: 'string'}
+    {title: 'Срок', data: 'cal_buy_time', render: data => data || '', type: 'number', orderable: false,},
+    {title: 'Менеджер', data: 'order_manager', render: data => data || '', type: 'string'}
 ];
 
 export const LANG_CONFIG = {url: 'Russian.json'};
