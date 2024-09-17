@@ -3,11 +3,11 @@
     <div class="row mb-3">
       <div class="col-md-3">
         <label for="startDate" class="form-label">Дата начала:</label>
-        <input type="text" class="form-control datepicker" id="startDate" ref="startDateRef">
+        <input type="text" class="form-control" id="startDate" data-provide="datepicker">
       </div>
       <div class="col-md-3">
         <label for="endDate" class="form-label">Дата окончания:</label>
-        <input type="text" class="form-control datepicker" id="endDate" ref="endDateRef">
+        <input type="text" class="form-control" id="endDate" data-provide="datepicker">
       </div>
     </div>
 
@@ -30,8 +30,6 @@ import {useRouter} from 'vue-router';
 export default {
   setup() {
     const ordersTable = ref(null);
-    const startDateRef = ref(null);
-    const endDateRef = ref(null);
     const router = useRouter();
 
     const fetchOrders = (page, limit, searchQuery, sortBy, sortDir, callback) => {
@@ -69,36 +67,13 @@ export default {
       });
     };
 
-    const initializeDatepicker = () => {
-      $(startDateRef.value).datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true,
-        language: 'ru',
-        weekStart: 1
-      });
-
-      $(endDateRef.value).datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true,
-        language: 'ru',
-        weekStart: 1
-      });
-    };
-
-    onMounted(() => {
-      initializeTable();
-      initializeDatepicker();
-    });
+    onMounted(initializeTable);
 
     onBeforeUnmount(() => {
       ordersTable.value && ordersTable.value.destroy();
-      $(startDateRef.value).datepicker('destroy');
-      $(endDateRef.value).datepicker('destroy');
     });
 
-    return {ordersTable, startDateRef, endDateRef};
+    return {ordersTable};
   }
 };
 </script>
