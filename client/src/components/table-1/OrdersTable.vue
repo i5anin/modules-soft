@@ -1,15 +1,6 @@
 <template>
   <div>
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label for="startDate" class="form-label">Дата начала:</label>
-        <input type="text" class="form-control" id="startDate" data-provide="datepicker">
-      </div>
-      <div class="col-md-3">
-        <label for="endDate" class="form-label">Дата окончания:</label>
-        <input type="text" class="form-control" id="endDate" data-provide="datepicker">
-      </div>
-    </div>
+<DateRangeFilter/>
 
     <table id="ordersTable" class="table table-striped">
       <tbody/>
@@ -18,6 +9,7 @@
 </template>
 
 <script>
+import DateRangeFilter from './../DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import {onBeforeUnmount, onMounted, ref} from 'vue';
@@ -44,6 +36,8 @@ export default {
 
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
+        pageLength: 15,
+        lengthMenu:  [15, 30, 60, 100],
         searching: true,
         processing: true,
         serverSide: true,
