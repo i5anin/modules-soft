@@ -1,7 +1,6 @@
 <template>
   <div>
-<DateRangeFilter/>
-
+    <DateRangeFilter/>
     <table id="ordersTable" class="table table-striped">
       <tbody/>
     </table>
@@ -20,6 +19,7 @@ import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrdersTable.js";
 import {useRouter} from 'vue-router';
 
 export default {
+  components: {DateRangeFilter},
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
@@ -37,7 +37,7 @@ export default {
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
         pageLength: 15,
-        lengthMenu:  [15, 30, 60, 100],
+        lengthMenu: [15, 30, 60, 100],
         searching: true,
         processing: true,
         serverSide: true,
