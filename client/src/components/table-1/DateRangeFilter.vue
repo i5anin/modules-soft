@@ -11,43 +11,50 @@
             :locale="customRuLocale"
             :calendar-class="'custom-calendar'"
             :clearable="true"
-            class="form-control bi bi-x btn btn-outline-secondary"
-        />
+            class="form-control"
+        >
+        </Datepicker>
+        <font-awesome-icon :icon="['fas', 'xmark']"/>
       </div>
+      <p v-if="selectedDate">Выбранная дата: {{ formattedDate }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import Datepicker from 'vue3-datepicker';
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import customRuLocale from './custom-ru.js';
+import {FontAwesomeIcon} from './fontawesome';
 
 export default {
   components: {
     Datepicker,
+    FontAwesomeIcon
   },
   setup() {
-    const selectedDate = ref(new Date());
+    const selectedDate = ref(null);
     const dateFormat = 'dd.MM.yyyy';
 
+    const formattedDate = computed(() => {
+      if (!selectedDate.value) return '';
+      const day = selectedDate.value.getDate().toString().padStart(2, '0');
+      const month = (selectedDate.value.getMonth() + 1).toString().padStart(2, '0');
+      const year = selectedDate.value.getFullYear();
+      return `${day}.${month}.${year}`;
+    });
+
     const clearDate = () => {
-      selectedDate.value = null;
-    };
+      selectedDate.value = null
+    }
 
     return {
       selectedDate,
       dateFormat,
       customRuLocale,
-      clearDate,
+      formattedDate,
+      clearDate
     };
   },
 };
 </script>
-
-<style scoped>
-/* Добавьте стили, если необходимо */
-.custom-calendar {
-  /* Добавьте стили для календаря, если необходимо */
-}
-</style>
