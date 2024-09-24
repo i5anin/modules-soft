@@ -2,28 +2,26 @@
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="singleDate" class="form-label">Выберите дату:</label>
-      <Datepicker
-          id="singleDate"
-          v-model="selectedDate"
-          :enableTimePicker="false"
-          :format="dateFormat"
-          :locale="ruLocale"
-          :calendar-class="'custom-calendar'"
-          :clearable="true"
-      />
+      <div class="input-group">
+        <Datepicker
+            id="singleDate"
+            v-model="selectedDate"
+            :enableTimePicker="false"
+            :format="dateFormat"
+            :locale="customRuLocale"
+            :calendar-class="'custom-calendar'"
+            :clearable="true"
+            class="form-control bi bi-x btn btn-outline-secondary"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import $ from 'jquery';
-import moment from 'moment';
-import 'bootstrap-daterangepicker/daterangepicker.css';
-import 'bootstrap-daterangepicker';
-import localeSettings from './daterangepicker-locale.js';
 import Datepicker from 'vue3-datepicker';
 import { ref } from 'vue';
-import { ru } from 'date-fns/locale';
+import customRuLocale from './custom-ru.js';
 
 export default {
   components: {
@@ -32,33 +30,17 @@ export default {
   setup() {
     const selectedDate = ref(new Date());
     const dateFormat = 'dd.MM.yyyy';
-    const ruLocale = ru;
+
+    const clearDate = () => {
+      selectedDate.value = null;
+    };
 
     return {
       selectedDate,
       dateFormat,
-      ruLocale,
+      customRuLocale,
+      clearDate,
     };
-  },
-  mounted() {
-    this.initializeDateRangePicker();
-  },
-  methods: {
-    initializeDateRangePicker() {
-      // Убедитесь, что moment импортирован и используется правильно
-      console.log(typeof moment); // Проверка, что moment доступен и является функцией
-
-      $('input[name="daterange"]').daterangepicker({
-        showDropdowns: true,
-        autoApply: true,
-        locale: localeSettings,
-        linkedCalendars: false,
-        showCustomRangeLabel: false,
-        opens: 'left'
-      }, (start, end) => {
-        console.log('Выбранный диапазон:', start.format('YYYY-MM-DD'), 'до', end.format('YYYY-MM-DD'));
-      });
-    },
   },
 };
 </script>
