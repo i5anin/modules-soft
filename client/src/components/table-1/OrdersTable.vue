@@ -1,6 +1,13 @@
 <template>
   <div>
-    <DateRangeFilter/>
+    <div class="date-range-filters row col-md-12">
+      <div class="col-md-5">
+        <DateRangeFilter/>
+      </div>
+      <div class="col-md-5">
+        <DateRangeFilter/>
+      </div>
+    </div>
     <table id="ordersTable" class="table table-striped">
       <tbody/>
     </table>
@@ -71,3 +78,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.date-range-filters {
+  display: flex; /* Включаем flexbox разметку */
+  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
+}
+</style>

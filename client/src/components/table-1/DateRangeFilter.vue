@@ -1,22 +1,22 @@
 <template>
   <div class="row mb-3">
     <div class="col-md-6">
-      <label for="singleDate" class="form-label">Выберите дату:</label>
       <div class="input-group">
         <Datepicker
             id="singleDate"
             v-model="selectedDate"
             :enableTimePicker="false"
             :format="dateFormat"
+            :value="formattedDate"
             :locale="customRuLocale"
             :calendar-class="'custom-calendar'"
-            :clearable="true"
+            :clearable="false"
             class="form-control"
-        >
-        </Datepicker>
-        <font-awesome-icon :icon="['fas', 'xmark']"/>
+        />
+        <button v-if="formattedDate" type="button" class="btn btn-secondary" @click="clearDate">
+          <font-awesome-icon :icon="['fas', 'xmark']"/>
+        </button>
       </div>
-      <p v-if="selectedDate">Выбранная дата: {{ formattedDate }}</p>
     </div>
   </div>
 </template>
@@ -58,3 +58,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.form-control {
+  flex: 1;
+}
+
+.btn {
+  margin-left: 0.5rem;
+}
+</style>
