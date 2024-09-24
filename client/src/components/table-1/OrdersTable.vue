@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import DateRangeFilter from './../DateRangeFilter.vue';
+import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import {onBeforeUnmount, onMounted, ref} from 'vue';
