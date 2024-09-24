@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <div class="mt-4 d-flex justify-content-between align-items-center">
-      <h2>Заказ</h2>
-      <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary">Назад к заказам</router-link>
+    <div class="mt-4 d-flex align-items-center mb-2">
+      <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary me-3">
+        Назад к заказам
+      </router-link>
     </div>
 
     <OrderInfoCard :header="header"/>
