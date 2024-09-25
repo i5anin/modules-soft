@@ -1,5 +1,10 @@
 <template>
   <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <font-awesome-icon :icon="['far', 'calendar']" />
+      </span>
+    </div>
     <Datepicker
         id="singleDate"
         v-model="selectedDate"
@@ -84,5 +89,15 @@ export default {
 
 .btn {
   margin-left: 0.5rem;
+}
+
+.input-group-prepend {
+  margin-right: 0.5rem;
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
 }
 </style>
