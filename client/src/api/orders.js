@@ -12,14 +12,16 @@ const handleError = (error) => {
     throw error;
 };
 
-export const getOrders = (page, limit, search, sortCol, sortDir) => {
+export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) => {
     return api.get('order_metrologist/orders', {
         params: {
             page,
             limit,
             search,
             sortCol,
-            sortDir
+            sortDir,
+            date1,
+            date2
         }
     }).then(handleResponse).catch(handleError);
 };

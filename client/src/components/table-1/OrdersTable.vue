@@ -3,11 +3,11 @@
     <div class="date-range-filters row justify-content-between align-items-center">
       <div class="col-md-5 mb-3">
         <label for="start-date" class="form-label fw-bold">Начало</label>
-        <DateRangeFilter id="start-date" class="custom-date-range-filter" />
+        <DateRangeFilter id="start-date" class="custom-date-range-filter" v-model="startDate" />
       </div>
       <div class="col-md-5 mb-3">
         <label for="end-date" class="form-label fw-bold">Конец</label>
-        <DateRangeFilter id="end-date" class="custom-date-range-filter" />
+        <DateRangeFilter id="end-date" class="custom-date-range-filter" v-model="endDate" />
       </div>
     </div>
     <table id="ordersTable" class="table table-striped">
@@ -20,7 +20,7 @@
 import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {getOrders} from '../../api/orders.js';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
@@ -32,9 +32,18 @@ export default {
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
+    const startDate = ref(null);
+    const endDate = ref(null);
+
+    // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
+    const today = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(today.getMonth() - 3);
+    startDate.value = threeMonthsAgo.toISOString().split('T')[0];
+    endDate.value = today.toISOString().split('T')[0];
 
     const fetchOrders = (page, limit, searchQuery, sortBy, sortDir, callback) => {
-      getOrders(page, limit, searchQuery, sortBy, sortDir)
+      getOrders(page, limit, searchQuery, sortBy, sortDir, startDate.value, endDate.value)
           .then(response => callback({
             data: response.orders,
             recordsTotal: response.totalCount,
@@ -76,7 +85,14 @@ export default {
       ordersTable.value && ordersTable.value.destroy();
     });
 
-    return {ordersTable};
+    // Обновляем таблицу при изменении дат
+    watch([startDate, endDate], () => {
+      if (ordersTable.value) {
+        ordersTable.value.ajax.reload();
+      }
+    });
+
+    return {ordersTable, startDate, endDate};
   }
 };
 </script>

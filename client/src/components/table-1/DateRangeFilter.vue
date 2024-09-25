@@ -1,29 +1,25 @@
 <template>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <div class="input-group">
-        <Datepicker
-            id="singleDate"
-            v-model="selectedDate"
-            :enableTimePicker="false"
-            :format="dateFormat"
-            :value="formattedDate"
-            :locale="customRuLocale"
-            :calendar-class="'custom-calendar'"
-            :clearable="false"
-            class="form-control"
-        />
-        <button v-if="formattedDate" type="button" class="btn btn-secondary" @click="clearDate">
-          <font-awesome-icon :icon="['fas', 'xmark']"/>
-        </button>
-      </div>
-    </div>
+  <div class="input-group">
+    <Datepicker
+        id="singleDate"
+        v-model="selectedDate"
+        :enableTimePicker="false"
+        :format="dateFormat"
+        :value="formattedDate"
+        :locale="customRuLocale"
+        :calendar-class="'custom-calendar'"
+        :clearable="false"
+        class="form-control"
+    />
+    <button v-if="formattedDate" type="button" class="btn btn-secondary" @click="clearDate">
+      <font-awesome-icon :icon="['fas', 'xmark']"/>
+    </button>
   </div>
 </template>
 
 <script>
 import Datepicker from 'vue3-datepicker';
-import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import customRuLocale from '../shared/custom-ru.js';
 import {FontAwesomeIcon} from '../shared/fontawesome.js';
 
@@ -32,8 +28,15 @@ export default {
     Datepicker,
     FontAwesomeIcon
   },
-  setup() {
-    const selectedDate = ref(null);
+  props: {
+    modelValue: {
+      type: String,
+      default: null
+    }
+  },
+  emits: ['update:modelValue'],
+  setup(props, {emit}) {
+    const selectedDate = ref(props.modelValue ? new Date(props.modelValue) : null);
     const dateFormat = 'dd.MM.yyyy';
 
     const formattedDate = computed(() => {
@@ -45,8 +48,18 @@ export default {
     });
 
     const clearDate = () => {
-      selectedDate.value = null
-    }
+      selectedDate.value = null;
+      emit('update:modelValue', null);
+    };
+
+    watch(selectedDate, (newDate) => {
+      if (newDate) {
+        const formatted = newDate.toISOString().split('T')[0];
+        emit('update:modelValue', formatted);
+      } else {
+        emit('update:modelValue', null);
+      }
+    });
 
     return {
       selectedDate,
@@ -59,15 +72,17 @@ export default {
 };
 </script>
 
+<style scoped>
 .input-group {
-display: flex;
-align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .form-control {
-flex: 1;
+  flex: 1;
 }
 
 .btn {
-margin-left: 0.5rem;
+  margin-left: 0.5rem;
 }
+</style>
