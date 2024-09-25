@@ -59,17 +59,15 @@ export default {
 };
 </script>
 
-<style scoped>
 .input-group {
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
 }
 
 .form-control {
-  flex: 1;
+flex: 1;
 }
 
 .btn {
-  margin-left: 0.5rem;
+margin-left: 0.5rem;
 }
-</style>
