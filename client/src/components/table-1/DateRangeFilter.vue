@@ -24,8 +24,8 @@
 <script>
 import Datepicker from 'vue3-datepicker';
 import {computed, ref} from 'vue';
-import customRuLocale from './custom-ru.js';
-import {FontAwesomeIcon} from './fontawesome';
+import customRuLocale from '../shared/custom-ru.js';
+import {FontAwesomeIcon} from '../shared/fontawesome.js';
 
 export default {
   components: {
