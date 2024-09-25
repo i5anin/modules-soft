@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div class="date-range-filters row col-md-12">
-      <div class="col-md-5">
-        <DateRangeFilter/>
+    <div class="date-range-filters row justify-content-between align-items-center">
+      <div class="col-md-5 mb-3">
+        <label for="start-date" class="form-label fw-bold">Начало</label>
+        <DateRangeFilter id="start-date" class="custom-date-range-filter" />
       </div>
-      <div class="col-md-5">
-        <DateRangeFilter/>
+      <div class="col-md-5 mb-3">
+        <label for="end-date" class="form-label fw-bold">Конец</label>
+        <DateRangeFilter id="end-date" class="custom-date-range-filter" />
       </div>
     </div>
     <table id="ordersTable" class="table table-striped">
