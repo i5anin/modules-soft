@@ -13,7 +13,9 @@ WITH order_details AS (
         orders.count_pos,
         orders.order_manager,
         MAX(dbo.ordersnom.cal_buy_time) AS cal_buy_time,
-        orders.goz
+        orders.goz,
+        orders.date AS date1,
+        orders.date AS date2
     FROM
         dbo.orders
             INNER JOIN dbo.clients ON orders.client_id = clients.id
@@ -24,6 +26,7 @@ WITH order_details AS (
     WHERE
         orders.deleted = false
     -- SEARCH_CONDITION
+    -- DATE_CONDITION
     GROUP BY
         orders.id,
         orders.status_ready,
@@ -57,7 +60,8 @@ FROM
     order_details, total_count
 ORDER BY
     -- SORTING
-    order_details.id DESC
+    order_details.date1 DESC,
+    order_details.date2 DESC
 LIMIT :limit
     OFFSET :offset
 

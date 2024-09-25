@@ -19,6 +19,13 @@ class OrdersMetrologController extends Controller
 
             $sortColumn = $request->input('sortCol', 'status_cal');
             $sortDirection = $request->input('sortDir', 'DESC NULLS LAST');
+            $sortColumn1 = $request->input('sortCol1', 'date1');
+            $sortDirection1 = $request->input('sortDir1', 'DESC NULLS LAST');
+            $sortColumn2 = $request->input('sortCol2', 'date2');
+            $sortDirection2 = $request->input('sortDir2', 'DESC NULLS LAST');
+
+            $date1 = $request->input('date1');
+            $date2 = $request->input('date2');
 
             $ordersSql = file_get_contents(database_path('sql/getOrdersList.sql'));
             $parameters = ['limit' => $limit, 'offset' => $offset];
@@ -43,8 +50,26 @@ class OrdersMetrologController extends Controller
                 );
             }
 
+            if ($date1 && $date2) {
+                $parameters['date1'] = $date1;
+                $parameters['date2'] = $date2;
+                $ordersSql = str_replace(
+                    '-- DATE_CONDITION',
+                    "AND orders.date BETWEEN :date1 AND :date2",
+                    $ordersSql
+                );
+            }
+
             if ($sortColumn && $sortDirection) {
                 $ordersSql = str_replace('-- SORTING', "$sortColumn $sortDirection,", $ordersSql);
+            }
+
+            if ($sortColumn1 && $sortDirection1) {
+                $ordersSql = str_replace('-- SORTING', "$sortColumn1 $sortDirection1,", $ordersSql);
+            }
+
+            if ($sortColumn2 && $sortDirection2) {
+                $ordersSql = str_replace('-- SORTING', "$sortColumn2 $sortDirection2,", $ordersSql);
             }
 
             $orders = DB::select($ordersSql, $parameters);
@@ -61,7 +86,6 @@ class OrdersMetrologController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-
     public function getOrderData(Request $request): JsonResponse
     {
         try {
