@@ -1,10 +1,6 @@
 <template>
   <div class="input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text">
-        <font-awesome-icon :icon="['far', 'calendar']"/>
-      </span>
-    </div>
+    <span class="input-group-text"> <font-awesome-icon :icon="['far', 'calendar']"/></span>
     <Datepicker
         id="singleDate"
         :value="formattedDate"
@@ -16,11 +12,10 @@
         :clearable="false"
         class="form-control"
     />
-
-
     <button v-if="selectedDate" type="button" class="btn btn-secondary" @click="clearDate">
       <font-awesome-icon :icon="['fas', 'xmark']"/>
     </button>
+
   </div>
 </template>
 
@@ -72,3 +67,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.input-group-text {
+  align-items: center;
+  display: flex;
+}
+</style>

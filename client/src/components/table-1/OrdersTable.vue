@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="date-range-filters row justify-content-between align-items-center">
-      <div class="col-md-5 mb-3">
-        <label for="start-date" class="form-label fw-bold">Начало</label>
-        <DateRangeFilter id="start-date" class="custom-date-range-filter" v-model="startDate" />
+    <div class="date-range-filters d-flex align-items-center justify-content-start">
+      <div class="d-flex align-items-center">
+        <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
+        <DateRangeFilter id="start-date" class="custom-date-range-filter flex-grow-1" v-model="startDate" />
       </div>
-      <div class="col-md-5 mb-3">
-        <label for="end-date" class="form-label fw-bold">Конец</label>
-        <DateRangeFilter id="end-date" class="custom-date-range-filter" v-model="endDate" />
+      <div class="d-flex align-items-center ms-3">
+        <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
+        <DateRangeFilter id="end-date" class="custom-date-range-filter flex-grow-1" v-model="endDate" />
       </div>
     </div>
     <table id="ordersTable" class="table table-striped">
