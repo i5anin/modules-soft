@@ -2,21 +2,23 @@
   <div class="input-group">
     <div class="input-group-prepend">
       <span class="input-group-text">
-        <font-awesome-icon :icon="['far', 'calendar']" />
+        <font-awesome-icon :icon="['far', 'calendar']"/>
       </span>
     </div>
     <Datepicker
         id="singleDate"
+        :value="formattedDate"
         v-model="selectedDate"
         :enableTimePicker="false"
         :format="dateFormat"
-        :value="formattedDate"
         :locale="customRuLocale"
         :calendar-class="'custom-calendar'"
         :clearable="false"
         class="form-control"
     />
-    <button v-if="formattedDate" type="button" class="btn btn-secondary" @click="clearDate">
+
+
+    <button v-if="selectedDate" type="button" class="btn btn-secondary" @click="clearDate">
       <font-awesome-icon :icon="['fas', 'xmark']"/>
     </button>
   </div>
@@ -44,26 +46,20 @@ export default {
     const selectedDate = ref(props.modelValue ? new Date(props.modelValue) : null);
     const dateFormat = 'dd.MM.yyyy';
 
+    //  Форматируем дату для отображения в Datepicker
     const formattedDate = computed(() => {
-      if (!selectedDate.value) return '';
-      const day = selectedDate.value.getDate().toString().padStart(2, '0');
-      const month = (selectedDate.value.getMonth() + 1).toString().padStart(2, '0');
-      const year = selectedDate.value.getFullYear();
-      return `${day}.${month}.${year}`;
+      return selectedDate.value ? selectedDate.value.toLocaleDateString('ru-RU', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      }) : '';
     });
 
     const clearDate = () => {
       selectedDate.value = null;
-      emit('update:modelValue', null);
     };
 
     watch(selectedDate, (newDate) => {
-      if (newDate) {
-        const formatted = newDate.toISOString().split('T')[0];
-        emit('update:modelValue', formatted);
-      } else {
-        emit('update:modelValue', null);
-      }
+      // Эмиттим событие обновления модели с отформатированной датой
+      emit('update:modelValue', newDate ? newDate.toISOString().split('T')[0] : null);
     });
 
     return {
@@ -76,28 +72,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.input-group {
-  display: flex;
-  align-items: center;
-}
-
-.form-control {
-  flex: 1;
-}
-
-.btn {
-  margin-left: 0.5rem;
-}
-
-.input-group-prepend {
-  margin-right: 0.5rem;
-}
-
-.input-group-text {
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-}
-</style>
