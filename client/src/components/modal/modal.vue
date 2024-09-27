@@ -1,3 +1,4 @@
+
 <template>
   <div class="modal fade"
        id="orderModal"
@@ -20,6 +21,7 @@
           <p v-if="selectedOrder">
             <strong>ID:</strong> {{ selectedOrder.id }}
           </p>
+          <!-- ... other content ... -->
         </div>
         <div class="modal-footer">
           <button type="button"
@@ -36,7 +38,7 @@
 
 <script>
 import { ref, onMounted, nextTick } from 'vue';
-import { Modal } from 'bootstrap'; // Import Bootstrap Modal
+import { Modal } from 'bootstrap';
 
 export default {
   props: {
@@ -50,13 +52,14 @@ export default {
     let modalInstance = null;
 
     onMounted(() => {
-      nextTick(() => { // Ждём завершения обновления DOM
-        const modalEl = modalContainer.value;
-        modalInstance = new Modal(modalEl, {
-          backdrop: true, // Ensure backdrop is set to true or 'static' as needed
-          keyboard: true // Ensure keyboard interaction is enabled
-        });
-        modalInstance.show();
+      // Initialize the modal immediately
+      modalInstance = new Modal(modalContainer.value);
+
+      // Show the modal when selectedOrder prop changes
+      watch(() => props.selectedOrder, (newVal) => {
+        if (newVal) {
+          modalInstance.show();
+        }
       });
     });
 
@@ -67,7 +70,7 @@ export default {
       emit('close');
     };
 
-    return { closeModal };
+    return { closeModal, modalContainer };
   }
 };
 </script>
