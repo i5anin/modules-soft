@@ -1,4 +1,3 @@
-
 <template>
   <div class="modal fade"
        id="orderModal"
@@ -21,7 +20,6 @@
           <p v-if="selectedOrder">
             <strong>ID:</strong> {{ selectedOrder.id }}
           </p>
-          <!-- ... other content ... -->
         </div>
         <div class="modal-footer">
           <button type="button"
@@ -37,30 +35,41 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue';
-import { Modal } from 'bootstrap';
+import {onMounted, ref, watch} from 'vue';
+import {Modal} from 'bootstrap';
 
 export default {
   props: {
     selectedOrder: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const modalContainer = ref(null);
     let modalInstance = null;
 
     onMounted(() => {
-      // Initialize the modal immediately
-      modalInstance = new Modal(modalContainer.value);
+      console.log('Modal component mounted'); // Debugging
 
-      // Show the modal when selectedOrder prop changes
-      watch(() => props.selectedOrder, (newVal) => {
-        if (newVal) {
-          modalInstance.show();
-        }
-      });
+      // Check if modalContainer is available
+      if (modalContainer.value) {
+        modalInstance = new Modal(modalContainer.value);
+        console.log('Modal instance created', modalInstance); // Debugging
+      } else {
+        console.error('Modal container not found!');
+      }
+
+      // Watch for changes in selectedOrder
+      watch(
+          () => props.selectedOrder,
+          (newVal) => {
+            console.log('selectedOrder changed:', newVal); // Debugging
+            if (newVal && modalInstance) {
+              modalInstance.show();
+            }
+          }
+      );
     });
 
     const closeModal = () => {
@@ -70,7 +79,7 @@ export default {
       emit('close');
     };
 
-    return { closeModal, modalContainer };
-  }
+    return {closeModal, modalContainer};
+  },
 };
 </script>
