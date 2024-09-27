@@ -50,7 +50,7 @@ export const ORDERS_TABLE_COLUMNS = [
         render: (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
     },
     {title: 'Срок', data: 'cal_buy_time', render: data => data || '', type: 'number'},
-    {title: 'Кол-вл',  data: 'kolvo', render: data => data || '', type: 'string'}
+    {title: 'Кол-во',  data: 'kolvo', render: data => data || '', type: 'string'}
 ];
 
 export const LANG_CONFIG = {url: 'Russian.json'};
