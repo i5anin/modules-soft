@@ -11,76 +11,71 @@
     <table id="orderTable" class="table table-striped">
       <tbody/>
     </table>
+
+    <OrderModal
+        :selectedOrder="selectedOrder"
+        @close="selectedOrder = null"
+    />
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import {onBeforeUnmount, onMounted, ref} from 'vue';
-import {getOrderById} from '../../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrderTable.js";
-import {useRouter} from 'vue-router';
-import OrderInfoCard from "./OrderInfoCard.vue"
+import { getOrderById } from '../../api/orders';
+import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from './constOrderTable.js';
+import OrderInfoCard from './OrderInfoCard.vue';
+import OrderModal from '../modal/modal.vue';
 
-export default {
-  components: {
-    OrderInfoCard,
-  },
-  setup() {
-    const orderTable = ref(null);
-    const router = useRouter();
-    const nomtable = ref([]);
-    const header = ref([]);
+const router = useRouter();
+const orderTable = ref(null);
+const nomtable = ref([]);
+const header = ref([]);
+const selectedOrder = ref(null);
 
-    const fetchOrderData = () => {
-      const orderId = router.currentRoute.value.params.orderId;
-      getOrderById(orderId)
-          .then(response => {
-            nomtable.value = response.nomtable;
-            header.value = response.header;
-
-            if (!orderTable.value) {
-              initializeTable();
-            } else {
-              orderTable.value.clear().rows.add(nomtable.value).draw();
-            }
-          })
-          .catch(error => console.error('Ошибка при загрузке заказа:', error));
-    };
-
-    const initializeTable = () => {
-      orderTable.value = new DataTable('#orderTable', {
-        processing: true,
-        searching: false,
-        serverSide: false,
-        data: nomtable.value,
-        columns: ORDERS_TABLE_COLUMNS,
-        language: LANG_CONFIG,
-        createdRow: function (row, data) {
-          if (data.locked) {
-            $(row).find('td').css('color', '#aaaaaa');
-          }
-          $(row).on('click.dt', () => {
-            router.push({name: 'OrderDetails', params: {orderId: data.id}});
-          });
-        }
-      });
-    };
-
-    onMounted(() => {
-      fetchOrderData();
-    });
-
-    onBeforeUnmount(() => {
-      if (orderTable.value) {
-        orderTable.value.destroy();
+const fetchOrderData = async () => {
+  const orderId = router.currentRoute.value.params.orderId;
+  try {
+    const response = await getOrderById(orderId);
+    nomtable.value = response.nomtable;
+    header.value = response.header;
+    nextTick(() => {
+      if (!orderTable.value) {
+        initializeTable();
+      } else {
+        orderTable.value.clear().rows.add(nomtable.value).draw();
       }
     });
-
-    return {orderTable, nomtable, header};
+  } catch (error) {
+    console.error('Ошибка при загрузке заказа:', error);
   }
 };
+
+const initializeTable = () => {
+  orderTable.value = new DataTable('#orderTable', {
+    processing: true,
+    searching: false,
+    serverSide: false,
+    data: nomtable.value,
+    columns: ORDERS_TABLE_COLUMNS,
+    language: LANG_CONFIG,
+    createdRow: function (row, data) {
+      if (data.locked) {
+        $(row).find('td').css('color', '#aaaaaa');
+      }
+      $(row).on('click.dt', () => {
+        console.log(`Нажата строка с ID: ${data.id}`);
+        selectedOrder.value = data;
+      });
+    }
+  });
+};
+
+onMounted(() => {
+  fetchOrderData();
+});
 </script>
