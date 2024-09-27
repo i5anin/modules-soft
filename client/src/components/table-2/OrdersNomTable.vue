@@ -6,39 +6,43 @@
       </router-link>
     </div>
 
-    <OrderInfoCard :header="header"/>
+    <OrderInfoCard :header="header" />
 
     <table id="orderTable" class="table table-striped">
       <tbody/>
     </table>
 
-    <!-- Модальное окно -->
-    <modal :selectedOrder="selectedOrder" />
+    <OrderModal
+        v-if="selectedOrder"
+        :selectedOrder="selectedOrder"
+        @close="selectedOrder = null"
+    />
   </div>
 </template>
 
 <script>
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import {onBeforeUnmount, onMounted, ref} from 'vue';
-import {getOrderById} from '../../api/orders';
+import { onMounted, ref, nextTick } from 'vue';
+import { getOrderById } from '../../api/orders';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrderTable.js";
-import {useRouter} from 'vue-router';
-import OrderInfoCard from "./OrderInfoCard.vue"
-import modal from "../modal/modal.vue"
+import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrderTable.js";
+import { useRouter } from 'vue-router';
+import OrderInfoCard from "./OrderInfoCard.vue";
+import OrderModal from "../modal/modal.vue";
 
 export default {
   components: {
-    OrderInfoCard, modal
+    OrderInfoCard,
+    OrderModal
   },
   setup() {
     const orderTable = ref(null);
     const router = useRouter();
     const nomtable = ref([]);
     const header = ref([]);
-    const selectedOrder = ref({});
+    const selectedOrder = ref(null);
 
     const fetchOrderData = () => {
       const orderId = router.currentRoute.value.params.orderId;
@@ -47,11 +51,13 @@ export default {
             nomtable.value = response.nomtable;
             header.value = response.header;
 
-            if (!orderTable.value) {
-              initializeTable();
-            } else {
-              orderTable.value.clear().rows.add(nomtable.value).draw();
-            }
+            nextTick(() => {
+              if (!orderTable.value) {
+                initializeTable();
+              } else {
+                orderTable.value.clear().rows.add(nomtable.value).draw();
+              }
+            });
           })
           .catch(error => console.error('Ошибка при загрузке заказа:', error));
     };
@@ -70,9 +76,6 @@ export default {
           }
           $(row).on('click.dt', () => {
             selectedOrder.value = data;
-            console.log('Выбранная позиция:', data); // Вывод данных в консоль
-            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
-            modal.show();
           });
         }
       });
@@ -80,12 +83,6 @@ export default {
 
     onMounted(() => {
       fetchOrderData();
-    });
-
-    onBeforeUnmount(() => {
-      if (orderTable.value) {
-        orderTable.value.destroy();
-      }
     });
 
     return {orderTable, nomtable, header, selectedOrder};
