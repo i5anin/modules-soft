@@ -11,6 +11,9 @@
     <table id="orderTable" class="table table-striped">
       <tbody/>
     </table>
+
+    <!-- Модальное окно -->
+    <modal :selectedOrder="selectedOrder" />
   </div>
 </template>
 
@@ -24,16 +27,18 @@ import 'datatables.net-bs5';
 import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrderTable.js";
 import {useRouter} from 'vue-router';
 import OrderInfoCard from "./OrderInfoCard.vue"
+import modal from "../modal/modal.vue"
 
 export default {
   components: {
-    OrderInfoCard,
+    OrderInfoCard, modal
   },
   setup() {
     const orderTable = ref(null);
     const router = useRouter();
     const nomtable = ref([]);
     const header = ref([]);
+    const selectedOrder = ref({});
 
     const fetchOrderData = () => {
       const orderId = router.currentRoute.value.params.orderId;
@@ -64,7 +69,10 @@ export default {
             $(row).find('td').css('color', '#aaaaaa');
           }
           $(row).on('click.dt', () => {
-            router.push({name: 'OrderDetails', params: {orderId: data.id}});
+            selectedOrder.value = data;
+            console.log('Выбранная позиция:', data); // Вывод данных в консоль
+            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+            modal.show();
           });
         }
       });
@@ -80,7 +88,7 @@ export default {
       }
     });
 
-    return {orderTable, nomtable, header};
+    return {orderTable, nomtable, header, selectedOrder};
   }
 };
 </script>
