@@ -1,33 +1,25 @@
 <template>
-  <div class="modal fade"
-       id="orderModal"
-       tabindex="-1"
-       aria-labelledby="orderModalLabel"
-       aria-hidden="true"
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true"
        ref="modalContainer">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="orderModalLabel">Детали заказа</h5>
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  @click="closeModal">
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  @click="closeModal"></button>
         </div>
         <div class="modal-body">
-          <p v-if="selectedOrder">
-            <strong>ID:</strong> {{ selectedOrder.id }}
-          </p>
+          <div v-if="selectedOrder">
+            <p v-for="(value, key) in filteredOrder" :key="key">
+              <strong>{{ key }}:</strong> {{ value }}
+            </p>
+          </div>
+          <div v-else>
+            <p>Загрузка данных...</p>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                  @click="closeModal">
-            Закрыть
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="closeModal">Закрыть</button>
         </div>
       </div>
     </div>
@@ -35,42 +27,42 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
+import {getModalOrderById} from '../../api/orders';
 
 const props = defineProps({
-  selectedOrder: {
-    type: Object,
-    default: () => null
-  },
+  orderId: {type: Number, required: true}
 });
 
 const emit = defineEmits(['close']);
 
 const modalContainer = ref(null);
 let modalInstance = null;
+const selectedOrder = ref(null);
 
 onMounted(() => {
-  if (modalContainer.value) {
-    modalInstance = new Modal(modalContainer.value);
-  }
+  modalInstance = new Modal(modalContainer.value);
 });
 
 watch(
-    () => props.selectedOrder,
-    (newVal) => {
-      if (newVal && modalInstance) {
-        console.log(`Модальное окно открыто для заказа с ID: ${newVal.id}`);
+    () => props.orderId,
+    async (newOrderId) => {
+      if (newOrderId) {
+        selectedOrder.value = await getModalOrderById(newOrderId);
         modalInstance.show();
       }
-    }
+    },
+    {immediate: true}
 );
 
 const closeModal = () => {
-  if (modalInstance) {
-    console.log(`Модальное окно закрыто для заказа с ID: ${props.selectedOrder.id}`);
-    modalInstance.hide();
-  }
+  modalInstance.hide();
   emit('close');
 };
+
+const filteredOrder = computed(() => {
+  const {recalc, ...rest} = selectedOrder.value || {};
+  return rest;
+});
 </script>

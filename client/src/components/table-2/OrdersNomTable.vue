@@ -13,21 +13,21 @@
     </table>
 
     <OrderModal
-        :selectedOrder="selectedOrder"
+        :orderId="selectedOrder?.id"
         @close="selectedOrder = null"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
+import {nextTick, onMounted, ref} from 'vue';
+import {useRouter} from 'vue-router';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import { getOrderById } from '../../api/orders';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from './constOrderTable.js';
+import {getOrderById} from '../../api/orders';
+import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from './constOrderTable.js';
 import OrderInfoCard from './OrderInfoCard.vue';
 import OrderModal from '../modal/modal.vue';
 
