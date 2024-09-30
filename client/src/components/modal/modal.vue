@@ -10,8 +10,8 @@
         </div>
         <div class="modal-body">
           <div v-if="selectedOrder">
-            <p v-for="(value, key) in filteredOrder" :key="key">
-              <strong>{{ key }}:</strong> {{ value }}
+            <p v-for="item in formattedOrder" :key="item.key">
+              <strong>{{ item.label }}:</strong> {{ item.value }}
             </p>
           </div>
           <div v-else>
@@ -61,8 +61,33 @@ const closeModal = () => {
   emit('close');
 };
 
-const filteredOrder = computed(() => {
-  const {recalc, ...rest} = selectedOrder.value || {};
-  return rest;
+const formattedOrder = computed(() => {
+  if (!selectedOrder.value) return [];
+
+  const {
+    name,
+    description,
+    instr_info,
+    comments,
+    zag_comments,
+    tech_fio,
+    tech_id,
+    p_info_orders
+  } = selectedOrder.value;
+
+  return [
+    {label: 'Наименование', key: 'name', value: name},
+    {label: 'Обозначение', key: 'description', value: description},
+    {label: 'Изм инструмента для заказа', key: 'instr_info', value: instr_info},
+    {label: 'Комментарий по изм инструменту (технологи)', key: 'comments', value: comments},
+    {label: 'Комментарий по изм инструменту (ОТК)', key: 'zag_comments', value: zag_comments},
+    {label: 'Комментарий заготовки', key: 'zag_comments', value: zag_comments},
+    {label: 'Для слесаря', key: 'tech_fio', value: tech_fio},
+    {label: '№ тех процесса', key: 'tech_id', value: tech_id},
+    {label: '№ чертежа', key: 'tech_id', value: tech_id},
+    {label: 'ФИО ТП', key: 'tech_fio', value: tech_fio},
+    {label: 'Технологическая карта', key: 'p_info_orders', value: p_info_orders},
+    {label: 'Примечания', key: 'comments', value: comments}
+  ];
 });
 </script>
