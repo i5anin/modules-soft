@@ -86,7 +86,7 @@ const formattedOrder = computed(() => {
     {label: '№ тех процесса', key: 'tech_id', value: tech_id},
     {label: '№ чертежа', key: 'tech_id', value: tech_id},
     {label: 'ФИО ТП', key: 'tech_fio', value: tech_fio},
-    {label: 'Технологическая карта', key: 'p_info_orders', value: p_info_orders},
+    {label: 'Технологическая заготовка', key: 'p_info_orders', value: p_info_orders},
     {label: 'Примечания', key: 'comments', value: comments}
   ];
 });
