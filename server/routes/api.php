@@ -2,7 +2,7 @@
 
 
 use App\Http\Controllers\OrderMetrologistCalc\OrdersMetrologController;
-use App\Http\Controllers\OrderMetrologistCalc\OrdersNomController;
+use Illuminate\Support\Facades\Route;
 
 
 // Add the /OrderMetrologistCalc group
