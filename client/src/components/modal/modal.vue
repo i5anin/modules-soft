@@ -10,8 +10,8 @@
         </div>
         <div class="modal-body">
           <div v-if="selectedOrder">
-            <p v-for="item in formattedOrder" :key="item.key">
-              <strong>{{ item.label }}:</strong> {{ item.value }}
+            <p v-for="field in fields" :key="field.name">
+              <strong>{{ field.title }}:</strong> {{ selectedOrder[field.name] }}
             </p>
           </div>
           <div v-else>
@@ -27,12 +27,13 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
 import {getModalOrderById} from '../../api/orders';
 
 const props = defineProps({
-  orderId: {type: Number, required: true}
+  orderId: {type: Number, required: true},
+  fields: {type: Array, required: true}
 });
 
 const emit = defineEmits(['close']);
@@ -60,34 +61,4 @@ const closeModal = () => {
   modalInstance.hide();
   emit('close');
 };
-
-const formattedOrder = computed(() => {
-  if (!selectedOrder.value) return [];
-
-  const {
-    name,
-    description,
-    instr_info,
-    comments,
-    zag_comments,
-    tech_fio,
-    tech_id,
-    p_info_orders
-  } = selectedOrder.value;
-
-  return [
-    {label: 'Наименование', key: 'name', value: name},
-    {label: 'Обозначение', key: 'description', value: description},
-    {label: 'Изм инструмента для заказа', key: 'instr_info', value: instr_info},
-    {label: 'Комментарий по изм инструменту (технологи)', key: 'comments', value: comments},
-    {label: 'Комментарий по изм инструменту (ОТК)', key: 'zag_comments', value: zag_comments},
-    {label: 'Комментарий заготовки', key: 'zag_comments', value: zag_comments},
-    {label: 'Для слесаря', key: 'tech_fio', value: tech_fio},
-    {label: '№ тех процесса', key: 'tech_id', value: tech_id},
-    {label: '№ чертежа', key: 'tech_id', value: tech_id},
-    {label: 'ФИО ТП', key: 'tech_fio', value: tech_fio},
-    {label: 'Технологическая заготовка', key: 'p_info_orders', value: p_info_orders},
-    {label: 'Примечания', key: 'comments', value: comments}
-  ];
-});
 </script>
