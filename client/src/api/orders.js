@@ -27,8 +27,8 @@ export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) =
 };
 
 export const getOrderById = (orderId) => {
-    return api.get('order_metrologist/order', {
-        params: {order_id: orderId},
+    return api.get('order_nom_list', {
+        params: {order_id: orderId, flat: true},
     }).then(handleResponse).catch(handleError);
 };
 
