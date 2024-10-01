@@ -14,7 +14,7 @@ const routes = [
     {
         path: '/:orderId',
         name: 'OrderDetails',
-        component: () => import('./components/order-num-table/OrderNomTable.vue')
+        component: () => import('./components/form-2-order-num-table/OrderNomTable.vue')
     }
 ];
 

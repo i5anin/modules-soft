@@ -13,7 +13,7 @@ const handleError = (error) => {
 };
 
 export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) => {
-    return api.get('order_metrologist/orders', {
+    return api.get('/orders', {
         params: {
             page,
             limit,

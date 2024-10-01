@@ -31,7 +31,7 @@
 
 <script setup>
 
-import Table from '../components/orders-table/OrdersTable.vue'
+import Table from '../components/form-1-orders-table/OrdersTable.vue'
 
 // import useHome from '../store/home.module.js'
 // const _home = useHome()
