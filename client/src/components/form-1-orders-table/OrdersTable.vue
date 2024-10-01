@@ -1,16 +1,32 @@
 <template>
   <div>
-    <div class="date-range-filters d-flex align-items-center justify-content-start">
-      <div class="d-flex align-items-center">
-        <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
-        <DateRangeFilter id="start-date" class="custom-date-range-filter flex-grow-1" v-model="startDate" />
+    <div
+        class="date-range-filters d-flex align-items-center justify-content-start">
+      <div
+          class="d-flex align-items-center">
+        <label
+            for="start-date"
+            class="form-label fw-bold me-2 mb-0">С</label>
+        <DateRangeFilter
+            id="start-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="startDate"
+        />
       </div>
-      <div class="d-flex align-items-center ms-3">
-        <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
-        <DateRangeFilter id="end-date" class="custom-date-range-filter flex-grow-1" v-model="endDate" />
+      <div
+          class="d-flex align-items-center ms-3">
+        <label
+            for="end-date"
+            class="form-label fw-bold me-2 mb-0">По</label>
+        <DateRangeFilter
+            id="end-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="endDate"/>
       </div>
     </div>
-    <table id="ordersTable" class="table table-striped">
+    <table
+        id="ordersTable"
+        class="table table-striped">
       <tbody/>
     </table>
   </div>
@@ -44,11 +60,13 @@ export default {
 
     const fetchOrders = (page, limit, searchQuery, sortBy, sortDir, callback) => {
       getOrders(page, limit, searchQuery, sortBy, sortDir, startDate.value, endDate.value)
-          .then(response => callback({
-            data: response.orders,
-            recordsTotal: response.totalCount,
-            recordsFiltered: response.totalCount,
-          }))
+          .then(response => {
+            callback({
+              data: response.table.data,
+              recordsTotal: response.header.totalCount,
+              recordsFiltered: response.header.totalCount,
+            });
+          })
           .catch(error => console.error('Ошибка при загрузке заказов:', error));
     };
 
