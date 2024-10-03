@@ -8,12 +8,14 @@
         <div class="row">
           <div class="col-md-6">
             <p v-for="field in leftFields" :key="field.name" class="card-text">
-              <strong>{{ field.title }}:</strong> {{ formatValue(field.name, header.data[field.name]) }}
+              <strong>{{ field.title }}:</strong>
+              {{ formatValue(field.name, header.data[field.name]) }}
             </p>
           </div>
           <div class="col-md-6">
             <p v-for="field in rightFields" :key="field.name" class="card-text">
-              <strong>{{ field.title }}:</strong> {{ formatValue(field.name, header.data[field.name]) }}
+              <strong>{{ field.title }}:</strong>
+              {{ formatValue(field.name, header.data[field.name]) }}
             </p>
           </div>
         </div>
@@ -22,7 +24,8 @@
             <template v-for="commentField in commentFields" :key="commentField.name">
               <p v-if="header.data[commentField.name]" class="card-text">
                 <span>
-                  <strong>{{ commentField.title }}:</strong> {{ header.data[commentField.name] }}
+                  <strong>{{ commentField.title }}:</strong>
+                  {{ header.data[commentField.name] }}
                 </span>
               </p>
             </template>
