@@ -7,6 +7,10 @@ export function formatDate(dateString) {
     return moment(dateString).format('DD.MM.YYYY');
 }
 
+export function formatTime(dateString) {
+    return `${dateString} дней`;
+}
+
 export function formatPrice(price) {
     const formatter = new Intl.NumberFormat('ru-RU', {
         style: 'currency',
@@ -19,6 +23,7 @@ export function formatPrice(price) {
 
 // Экспортируем объект formatters по умолчанию
 export default {
+    formatTime,
     formatDate,
     formatPrice,
 };

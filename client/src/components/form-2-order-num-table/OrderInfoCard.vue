@@ -44,9 +44,6 @@ export default {
     },
   },
   computed: {
-    formattedDate() {
-      return formatters.formatDate(this.header.data?.date);
-    },
     hasNonEmptyComments() {
       return this.commentFields.some(field => this.header.data[field.name] && this.header.data[field.name].trim() !== '');
     },
@@ -70,6 +67,9 @@ export default {
       }
       if (fieldName.toLowerCase().includes('date')) {
         return formatters.formatDate(value);
+      }
+      if (fieldName.toLowerCase().includes('time')) {
+        return formatters.formatTime(value);
       }
       return value;
     },
