@@ -11,13 +11,14 @@
     <table id="orderTable" class="table table-striped">
       <thead>
       <tr>
-        <th v-for="field in tableFields" :key="field.name">{{ field.title }}</th>
+        <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="row in nomtable" :key="row.ordersnom_id">
-        <td v-for="field in tableFields" :key="field.name">
-          {{ row[field.name] }}
+        <td v-for="field in filteredTableFields" :key="field.name">
+          <span v-if="field.name === 'status_cal'">{{ renderStatus(row) }}</span>
+          <span v-else>{{ row[field.name] }}</span>
         </td>
       </tr>
       </tbody>
@@ -31,14 +32,14 @@
 </template>
 
 <script setup>
-import {nextTick, onMounted, ref} from 'vue';
+import {computed, nextTick, onMounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import {getOrderById} from '../../api/orders';
-import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from './constOrderTable.js';
+import {LANG_CONFIG} from './constOrderTable.js';
 import OrderInfoCard from './OrderInfoCard.vue';
 import OrderModal from '../modal/modal.vue';
 
@@ -74,7 +75,12 @@ const initializeTable = () => {
     searching: false,
     serverSide: false,
     data: nomtable.value,
-    columns: tableFields.value.map(field => ({data: field.name, title: field.title})),
+    columns: filteredTableFields.value.map(field => ({
+      data: field.name,
+      title: field.name === 'statuses' ? 'Статусы' : field.title, // Изменено здесь
+      className: field.name === 'statuses' ? 'text-center' : '', // И здесь
+      render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null // И здесь
+    })),
     language: LANG_CONFIG,
     createdRow: function (row, data) {
       if (data.locked) {
@@ -86,6 +92,30 @@ const initializeTable = () => {
       });
     }
   });
+};
+
+const filteredTableFields = computed(() => {
+  return tableFields.value.filter(field => !field.name.startsWith('status_') || field.name === 'statuses');
+});
+
+const statuses = [
+  {status: 'cal', badgeClass: 'bg-danger', label: 'К'},
+  {status: 'instr', badgeClass: 'bg-warning', label: 'И'},
+  {status: 'draft', badgeClass: 'bg-secondary', label: 'Ч'},
+  {status: 'metall', badgeClass: 'bg-dark', label: 'М'},
+  {status: 'kp', badgeClass: 'bg-success', label: 'КП'}
+];
+
+const renderStatus = (row) => {
+  const activeStatuses = statuses.filter(s => row[`status_${s.status}`]?.trim());
+
+  if (activeStatuses.length > 0) {
+    return activeStatuses
+        .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`)
+        .join('');
+  } else {
+    return ''; // Возвращаем пустую строку, если нет активных статусов
+  }
 };
 
 onMounted(() => {
