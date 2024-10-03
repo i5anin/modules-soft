@@ -9,7 +9,18 @@
     <OrderInfoCard :header="header"/>
 
     <table id="orderTable" class="table table-striped">
-      <tbody/>
+      <thead>
+      <tr>
+        <th v-for="field in tableFields" :key="field.name">{{ field.title }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="row in nomtable" :key="row.ordersnom_id">
+        <td v-for="field in tableFields" :key="field.name">
+          {{ row[field.name] }}
+        </td>
+      </tr>
+      </tbody>
     </table>
 
     <OrderModal
@@ -36,13 +47,15 @@ const orderTable = ref(null);
 const nomtable = ref([]);
 const header = ref([]);
 const selectedOrder = ref(null);
+const tableFields = ref([]);
 
 const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId;
   try {
     const response = await getOrderById(orderId);
-    nomtable.value = response.nomtable;
+    nomtable.value = response.table.data;
     header.value = response.header;
+    tableFields.value = response.table.fields;
     nextTick(() => {
       if (!orderTable.value) {
         initializeTable();
@@ -61,7 +74,7 @@ const initializeTable = () => {
     searching: false,
     serverSide: false,
     data: nomtable.value,
-    columns: ORDERS_TABLE_COLUMNS,
+    columns: tableFields.value.map(field => ({data: field.name, title: field.title})),
     language: LANG_CONFIG,
     createdRow: function (row, data) {
       if (data.locked) {
