@@ -38,7 +38,6 @@ import $ from 'jquery';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import {getOrderById} from '../../api/orders';
-import {LANG_CONFIG} from './constOrderTable.js';
 import OrderInfoCard from './OrderInfo.vue';
 import OrderModal from '../modal/modal.vue';
 
@@ -80,7 +79,7 @@ const initializeTable = () => {
       className: field.name === 'statuses' ? 'text-center' : '',
       render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null
     })),
-    language: LANG_CONFIG,
+    language: {url: 'Russian.json'},
     createdRow: function (row, data) {
       if (data.locked) {
         $(row).find('td').css('color', '#aaaaaa');
