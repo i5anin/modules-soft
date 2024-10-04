@@ -17,13 +17,12 @@
       <tbody>
       <tr v-for="row in nomtable" :key="row.ordersnom_id">
         <td v-for="field in filteredTableFields" :key="field.name">
-          <span v-if="field.name === 'status_cal'">{{ renderStatus(row) }}</span>
+          <span v-if="field.name === 'statuses'">{{ renderStatus(row) }}</span>
           <span v-else>{{ row[field.name] }}</span>
         </td>
       </tr>
       </tbody>
     </table>
-
     <OrderModal
         :orderId="selectedOrder?.id"
         @close="selectedOrder = null"
@@ -40,7 +39,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import {getOrderById} from '../../api/orders';
 import {LANG_CONFIG} from './constOrderTable.js';
-import OrderInfoCard from './OrderInfoCard.vue';
+import OrderInfoCard from './OrderInfo.vue';
 import OrderModal from '../modal/modal.vue';
 
 const router = useRouter();
@@ -77,9 +76,9 @@ const initializeTable = () => {
     data: nomtable.value,
     columns: filteredTableFields.value.map(field => ({
       data: field.name,
-      title: field.name === 'statuses' ? 'Статусы' : field.title, // Изменено здесь
-      className: field.name === 'statuses' ? 'text-center' : '', // И здесь
-      render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null // И здесь
+      title: field.name === 'statuses' ? 'Статусы' : field.title,
+      className: field.name === 'statuses' ? 'text-center' : '',
+      render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null
     })),
     language: LANG_CONFIG,
     createdRow: function (row, data) {
@@ -95,7 +94,11 @@ const initializeTable = () => {
 };
 
 const filteredTableFields = computed(() => {
-  return tableFields.value.filter(field => !field.name.startsWith('status_') || field.name === 'statuses');
+  const fields = tableFields.value.filter(field =>
+      !field.name.startsWith('status_') && field.name !== 'ordersnom_id'
+  );
+  fields.unshift({name: 'statuses', title: 'Статусы'}); // Добавляем "statuses" в начало массива
+  return fields;
 });
 
 const statuses = [
@@ -107,14 +110,14 @@ const statuses = [
 ];
 
 const renderStatus = (row) => {
-  const activeStatuses = statuses.filter(s => row[`status_${s.status}`]?.trim());
+  const activeStatuses = statuses.filter(s => row[`status_${s.status}`] && row[`status_${s.status}`].trim() !== '');
 
   if (activeStatuses.length > 0) {
     return activeStatuses
         .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`)
         .join('');
   } else {
-    return ''; // Возвращаем пустую строку, если нет активных статусов
+    return '';
   }
 };
 
