@@ -13,9 +13,10 @@ const handleError = (error) => {
 };
 
 export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) => {
-    return api.get('orders', {
+    return api.get('list', {
         params: {
-            type: "metrolog",
+            type: "orders",
+            module: "metrolog",
             page,
             limit,
             search,
@@ -28,8 +29,8 @@ export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) =
 };
 
 export const getOrderById = (orderId) => {
-    return api.get('order_nom_list', {
-        params: {order_id: orderId, type: "metrolog", flat: 1},
+    return api.get('nom_list', {
+        params: {id: orderId, type: "orders", module: "metrolog", flat: 1},
     }).then(handleResponse).catch(handleError);
 };
 
