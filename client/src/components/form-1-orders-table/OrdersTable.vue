@@ -1,125 +1,123 @@
 <template>
-  <div class="container">
-    <div class="mt-4 d-flex align-items-center mb-2">
-      <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary me-3">
-        Назад к заказам
-      </router-link>
+  <div>
+    <div class="date-range-filters d-flex align-items-center justify-content-start">
+      <div class="d-flex align-items-center">
+        <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
+        <DateRangeFilter
+            id="start-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="startDate"
+        />
+      </div>
+      <div class="d-flex align-items-center ms-3">
+        <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
+        <DateRangeFilter
+            id="end-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="endDate"
+        />
+      </div>
     </div>
-
-    <OrderInfoCard :header="header"/>
-
-    <table id="orderTable" class="table table-striped">
-      <thead>
-      <tr>
-        <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
-      </tr>
-      </thead>
+    <table id="ordersTable" class="table table-striped">
       <tbody>
+      {{noData}}
       <tr v-if="noData">
         <td colspan="100%" class="text-center">Нет данных</td>
       </tr>
-      <tr v-for="row in nomtable" :key="row.ordersnom_id">
-        <td v-for="field in filteredTableFields" :key="field.name">
-          <span v-if="field.name === 'statuses'">{{ renderStatus(row) }}</span>
-          <span v-else>{{ row[field.name] }}</span>
-        </td>
-      </tr>
       </tbody>
     </table>
-    <OrderModal
-        :orderId="selectedOrder?.id"
-        @close="selectedOrder = null"
-    />
   </div>
 </template>
 
-<script setup>
-import {computed, nextTick, onMounted, ref} from 'vue';
-import {useRouter} from 'vue-router';
+<script>
+import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { getOrders } from '../../api/orders.js';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {getOrders} from '../../api/orders';
-import OrderModal from '../modal/modal.vue';
+import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrdersTable.js";
+import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const orderTable = ref(null);
-const nomtable = ref([]);
-const header = ref([]);
-const selectedOrder = ref(null);
-const tableFields = ref([]);
+export default {
+  components: { DateRangeFilter },
+  setup() {
+    const ordersTable = ref(null);
+    const router = useRouter();
+    const startDate = ref(null);
+    const endDate = ref(null);
+    const noData = ref(false);
 
-const fetchOrderData = async () => {
-  try {
-    const response = await getOrders();
-    nomtable.value = response.table.data;
-    header.value = response.header;
-    tableFields.value = response.table.fields;
-    nextTick(() => {
-      if (!orderTable.value) {
-        initializeTable();
-      } else {
-        orderTable.value.clear().rows.add(nomtable.value).draw();
+    // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
+    const today = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(today.getMonth() - 3);
+    startDate.value = threeMonthsAgo.toISOString().split('T')[0];
+    endDate.value = today.toISOString().split('T')[0];
+
+    const fetchOrders = (page, limit, searchQuery, sortBy, sortDir, callback) => {
+      getOrders(page, limit, searchQuery, sortBy, sortDir, startDate.value, endDate.value)
+          .then(response => {
+            noData.value = response.table.data.length === 0;
+            callback({
+              data: response.table.data,
+              recordsTotal: response.header.total_count,
+              recordsFiltered: response.header.total_count,
+            });
+          })
+          .catch(error => {
+            console.error('Ошибка при загрузке заказов:', error);
+            noData.value = true;
+          });
+    };
+
+    const initializeTable = () => {
+      ordersTable.value = new DataTable('#ordersTable', {
+        pageLength: 15,
+        lengthMenu: [15, 30, 60, 100],
+        searching: true,
+        processing: true,
+        serverSide: true,
+        ajax: (data, callback) => {
+          const page = Math.floor(data.start / data.length) + 1;
+          const searchQuery = data.search.value;
+          let sortBy = data.order[0]?.column;
+          let sortDir = data.order[0]?.dir;
+          fetchOrders(page, data.length, searchQuery, sortBy, sortDir, callback);
+        },
+        columns: ORDERS_TABLE_COLUMNS,
+        language: LANG_CONFIG,
+        createdRow: (row, data) => {
+          if (data.locked) {
+            $(row).find('td').css('color', '#aaaaaa');
+          }
+          $(row).on('click.dt', () => {
+            router.push({name: 'OrderDetails', params: {orderId: data.id}});
+          });
+        },
+        drawCallback: function () {
+          noData.value = this.api().rows({filter: 'applied'}).data().length === 0;
+        }
+      });
+    };
+
+    onMounted(initializeTable);
+
+    onBeforeUnmount(() => {
+      ordersTable.value && ordersTable.value.destroy();
+    });
+
+    // Обновляем таблицу при изменении дат
+    watch([startDate, endDate], () => {
+      if (ordersTable.value) {
+        ordersTable.value.ajax.reload();
       }
     });
-  } catch (error) {
-    console.error('Ошибка при загрузке заказов:', error);
-  }
+
+    return {ordersTable, startDate, endDate, noData};
+  },
 };
-
-const initializeTable = () => {
-  orderTable.value = new DataTable('#orderTable', {
-    processing: true,
-    searching: false,
-    serverSide: false,
-    data: nomtable.value,
-    columns: tableFields.value.map(field => ({
-      data: field.name,
-      title: field.name === 'statuses' ? 'Статусы' : field.title,
-      className: field.name === 'statuses' ? 'text-center' : '',
-      render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null
-    })),
-    language: {url: 'Russian.json'},
-    createdRow: function (row, data) {
-      if (data.locked) {
-        $(row).find('td').css('color', '#aaaaaa');
-      }
-      $(row).on('click.dt', () => {
-        console.log(`Нажата строка с ID: ${data.id}`);
-        selectedOrder.value = data;
-      });
-    }
-  });
-};
-
-const filteredTableFields = computed(() => {
-  return tableFields.value;
-});
-
-const statuses = [
-  {status: 'cal', badgeClass: 'bg-danger', label: 'К'},
-  {status: 'instr', badgeClass: 'bg-warning', label: 'И'},
-  {status: 'draft', badgeClass: 'bg-secondary', label: 'Ч'},
-  {status: 'metall', badgeClass: 'bg-dark', label: 'М'},
-  {status: 'kp', badgeClass: 'bg-success', label: 'КП'}
-];
-
-const renderStatus = (row) => {
-  const activeStatuses = statuses.filter(s => row && row[`ordersnom__status_${s.status}`] && row[`ordersnom__status_${s.status}`].trim() !== '');
-
-  if (activeStatuses.length > 0) {
-    return activeStatuses
-        .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`)
-        .join('');
-  } else {
-    return '';
-  }
-};
-
-onMounted(() => {
-  fetchOrderData();
-});
 </script>
 
 <style>
