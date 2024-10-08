@@ -41,13 +41,7 @@
                 <tbody>
                 <tr v-for="(row, rowIndex) in selectedOrder.table.data" :key="rowIndex">
                   <td v-for="(field, index) in uniqueTableFields" :key="index">
-                    <template v-if="typeof row[field.name] === 'boolean'">
-                      <span v-if="row[field.name]">✅</span>
-                      <span v-else>❌</span>
-                    </template>
-                    <template v-else>
-                      {{ row[field.name] }}
-                    </template>
+                    {{ formatBoolean(row[field.name]) }}
                   </td>
                 </tr>
                 </tbody>
@@ -140,4 +134,11 @@ const uniqueTableFields = computed(() => {
 
   return uniqueFields;
 });
+
+const formatBoolean = (value) => {
+  if (typeof value === 'boolean') {
+    return value ? '✅' : '❌';
+  }
+  return value;
+};
 </script>
