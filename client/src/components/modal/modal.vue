@@ -10,23 +10,44 @@
         </div>
         <div class="modal-body">
           <div v-if="selectedOrder && fields.length">
-            <table class="table">
-              <thead>
-              <tr>
-                <th>Поле</th>
-                <th>Значение</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="field in fields" :key="field.name">
-                <td><strong>{{ field.title }}</strong></td>
-                <td>
-                  <span v-if="selectedOrder[field.name] !== undefined">{{ selectedOrder[field.name] }}</span>
-                  <span v-else>Данные отсутствуют</span>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            <div v-if="selectedOrder.header">
+              <h5>Дополнительные данные</h5>
+              <table class="table mt-3">
+                <thead>
+                <tr>
+                  <th v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index">
+                    {{ field.title }}
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(row, rowIndex) in selectedOrder.header.data" :key="rowIndex">
+                  <td v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index">
+                    {{ row[field.name] }}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="selectedOrder.table">
+              <h5>Дополнительные данные</h5>
+              <table class="table mt-3">
+                <thead>
+                <tr>
+                  <th v-for="(field, index) in Object.values(selectedOrder.table.fields)" :key="index">
+                    {{ field.title }}
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(row, rowIndex) in selectedOrder.table.data" :key="rowIndex">
+                  <td v-for="(field, index) in Object.values(selectedOrder.table.fields)" :key="index">
+                    {{ row[field.name] }}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div v-else-if="!selectedOrder">
             <p>Загрузка данных...</p>
