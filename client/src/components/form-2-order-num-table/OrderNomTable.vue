@@ -17,14 +17,15 @@
       <tbody>
       <tr v-for="row in nomtable" :key="row.ordersnom_id">
         <td v-for="field in filteredTableFields" :key="field.name">
-          <span v-if="field.name === 'statuses'">{{ renderStatus(row) }}</span>
+          <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
           <span v-else>{{ row[field.name] }}</span>
         </td>
       </tr>
       </tbody>
     </table>
     <OrderModal
-        :orderId="selectedOrder?.id"
+        :orderId="selectedOrder?.ordersnom_id"
+        :fields="tableFields"
         @close="selectedOrder = null"
     />
   </div>
@@ -86,7 +87,7 @@ const initializeTable = _.once(() => {
         $(row).find('td').css('color', '#aaaaaa');
       }
       $(row).on('click.dt', _.throttle(() => {
-        console.log(`Нажата строка с ID: ${data.id}`);
+        console.log(`Нажата строка с ID: ${data.ordersnom_id}`);
         selectedOrder.value = data;
       }, 1000)); // Ограничение на клик через throttle
     }

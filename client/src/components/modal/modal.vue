@@ -9,13 +9,30 @@
                   @click="closeModal"></button>
         </div>
         <div class="modal-body">
-          <div v-if="selectedOrder">
-            <p v-for="field in fields" :key="field.name">
-              <strong>{{ field.title }}:</strong> {{ selectedOrder[field.name] }}
-            </p>
+          <div v-if="selectedOrder && fields.length">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Поле</th>
+                <th>Значение</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="field in fields" :key="field.name">
+                <td><strong>{{ field.title }}</strong></td>
+                <td>
+                  <span v-if="selectedOrder[field.name] !== undefined">{{ selectedOrder[field.name] }}</span>
+                  <span v-else>Данные отсутствуют</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-else-if="!selectedOrder">
+            <p>Загрузка данных...</p>
           </div>
           <div v-else>
-            <p>Загрузка данных...</p>
+            <p>Нет доступных полей для отображения.</p>
           </div>
         </div>
         <div class="modal-footer">
@@ -29,7 +46,7 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
-import {getModalOrderById} from '../../api/orders';
+import {getModalOrderById} from '@/api/orders.js';
 
 const props = defineProps({
   orderId: {type: Number, required: true},
@@ -50,8 +67,13 @@ watch(
     () => props.orderId,
     async (newOrderId) => {
       if (newOrderId) {
-        selectedOrder.value = await getModalOrderById(newOrderId);
-        modalInstance.show();
+        try {
+          selectedOrder.value = await getModalOrderById(newOrderId);
+          modalInstance.show();
+        } catch (error) {
+          console.error('Ошибка при загрузке деталей заказа:', error);
+          selectedOrder.value = null;
+        }
       }
     },
     {immediate: true}
