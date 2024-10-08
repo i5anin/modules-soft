@@ -20,7 +20,6 @@
     </div>
     <table id="ordersTable" class="table table-striped">
       <tbody>
-      {{noData}}
       <tr v-if="noData">
         <td colspan="100%" class="text-center">Нет данных</td>
       </tr>
@@ -33,15 +32,16 @@
 import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { getOrders } from '../../api/orders.js';
+import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {getOrders} from '../../api/orders.js';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import { LANG_CONFIG, ORDERS_TABLE_COLUMNS } from "./constOrdersTable.js";
-import { useRouter } from 'vue-router';
+import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrdersTable.js";
+import {useRouter} from 'vue-router';
+import _ from 'lodash'; // Импортируем Lodash
 
 export default {
-  components: { DateRangeFilter },
+  components: {DateRangeFilter},
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
@@ -56,7 +56,7 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0];
     endDate.value = today.toISOString().split('T')[0];
 
-    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
+    const fetchOrders = _.debounce((page, limit, searchQuery, sortCol, sortDir, callback) => {
       getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
@@ -70,11 +70,11 @@ export default {
             console.error('Ошибка при загрузке заказов:', error);
             noData.value = true;
           });
-    };
+    }, 300); // Оптимизация вызовов с помощью debounce
 
-    const getColumnNameByIndex = (index, columns) => {
+    const getColumnNameByIndex = _.memoize((index, columns) => {
       return columns[index]?.data || null;
-    };
+    }); // Кэширование результатов вызова
 
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
@@ -97,9 +97,9 @@ export default {
           if (data.locked) {
             $(row).find('td').css('color', '#aaaaaa');
           }
-          $(row).on('click.dt', () => {
+          $(row).on('click.dt', _.throttle(() => {
             router.push({name: 'OrderDetails', params: {orderId: data.id}});
-          });
+          }, 1000)); // Ограничение на клик через throttle
         },
         drawCallback: function () {
           noData.value = this.api().rows({filter: 'applied'}).data().length === 0;
@@ -114,11 +114,11 @@ export default {
     });
 
     // Обновляем таблицу при изменении дат
-    watch([startDate, endDate], () => {
+    watch([startDate, endDate], _.debounce(() => {
       if (ordersTable.value) {
         ordersTable.value.ajax.reload();
       }
-    });
+    }, 300));
 
     return {ordersTable, startDate, endDate, noData};
   },
