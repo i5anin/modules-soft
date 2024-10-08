@@ -15,8 +15,8 @@ const handleError = (error) => {
 export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) => {
     return api.get('list', {
         params: {
-            type: "orders",
-            module: "metrolog",
+            type: 'orders',
+            module: 'metrolog',
             page,
             limit,
             search,

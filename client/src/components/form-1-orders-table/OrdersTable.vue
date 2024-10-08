@@ -56,8 +56,8 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0];
     endDate.value = today.toISOString().split('T')[0];
 
-    const fetchOrders = (page, limit, searchQuery, sortBy, sortDir, callback) => {
-      getOrders(page, limit, searchQuery, sortBy, sortDir, startDate.value, endDate.value)
+    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
+      getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
             callback({
@@ -72,6 +72,10 @@ export default {
           });
     };
 
+    const getColumnNameByIndex = (index, columns) => {
+      return columns[index]?.data || null;
+    };
+
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
         pageLength: 15,
@@ -82,9 +86,10 @@ export default {
         ajax: (data, callback) => {
           const page = Math.floor(data.start / data.length) + 1;
           const searchQuery = data.search.value;
-          let sortBy = data.order[0]?.column;
+          let sortColIndex = data.order[0]?.column;
+          let sortCol = getColumnNameByIndex(sortColIndex, ORDERS_TABLE_COLUMNS); // Получаем имя столбца по индексу DataTable
           let sortDir = data.order[0]?.dir;
-          fetchOrders(page, data.length, searchQuery, sortBy, sortDir, callback);
+          fetchOrders(page, data.length, searchQuery, sortCol, sortDir, callback);
         },
         columns: ORDERS_TABLE_COLUMNS,
         language: LANG_CONFIG,
