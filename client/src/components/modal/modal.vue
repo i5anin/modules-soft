@@ -41,7 +41,13 @@
                 <tbody>
                 <tr v-for="(row, rowIndex) in selectedOrder.table.data" :key="rowIndex">
                   <td v-for="(field, index) in uniqueTableFields" :key="index">
-                    {{ row[field.name] }}
+                    <template v-if="typeof row[field.name] === 'boolean'">
+                      <span v-if="row[field.name]">✅</span>
+                      <span v-else>❌</span>
+                    </template>
+                    <template v-else>
+                      {{ row[field.name] }}
+                    </template>
                   </td>
                 </tr>
                 </tbody>
