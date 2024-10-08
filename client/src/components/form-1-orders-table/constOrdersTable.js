@@ -1,5 +1,6 @@
-import {format} from 'date-fns';
-import {ru} from 'date-fns/locale/ru';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale/ru';
+import { formatPrice } from '@/components/shared/formatters.js'; // Импортируем функцию formatPrice
 
 export const DATE_FORMAT = 'dd.MM.yyyy';
 
@@ -42,8 +43,14 @@ export const ORDERS_TABLE_COLUMNS = [
         title: 'Контрагент',
         render: (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
     },
-    {title: 'Срок', data: 'metall_buy_time', render: data => data || '', type: 'number', orderable: false}, // Исправлено на 'metall_buy_time'
-    {title: 'Менеджер', data: 'order_manager', render: data => data || '', type: 'string'}
+    {title: 'Срок', data: 'max_cal_buy_time', render: data => data || '', type: 'number', orderable: false}, // Исправлено на 'metall_buy_time'
+    {title: 'Менеджер', data: 'order_manager', render: data => data || '', type: 'string'},
+    {
+        title: 'Цена калибров в заказе',
+        data: 'order_cal_price',
+        render: data => formatPrice(parseFloat(data)), // Используем formatPrice для форматирования цены
+        type: 'string'
+    }
 ];
 
 export const LANG_CONFIG = {url: 'Russian.json'};
