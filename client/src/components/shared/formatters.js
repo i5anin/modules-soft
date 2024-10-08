@@ -21,9 +21,17 @@ export function formatPrice(price) {
     return formatter.format(price);
 }
 
+export function formatBoolean(value) {
+    if (typeof value === 'boolean') {
+        return value ? '✅' : '❌';
+    }
+    return value;
+}
+
 // Экспортируем объект formatters по умолчанию
 export default {
     formatTime,
     formatDate,
     formatPrice,
+    formatBoolean,
 };

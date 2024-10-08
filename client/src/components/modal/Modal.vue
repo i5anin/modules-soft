@@ -28,25 +28,9 @@
                 </div>
               </div>
             </div>
-            <div v-if="selectedOrder.table">
-              <h5 class="mt-4">Дополнительные данные</h5>
-              <table class="table mt-3">
-                <thead>
-                <tr>
-                  <th v-for="(field, index) in uniqueTableFields" :key="index">
-                    {{ field.title }}
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(row, rowIndex) in selectedOrder.table.data" :key="rowIndex">
-                  <td v-for="(field, index) in uniqueTableFields" :key="index">
-                    {{ formatBoolean(row[field.name]) }}
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+
+            {{selectedOrder.table.title}} - тут название таблицы
+            <OrderTable v-if="selectedOrder.table" :fields="uniqueTableFields" :data="selectedOrder.table.data"/>
           </div>
           <div v-else-if="!selectedOrder">
             <p>Загрузка данных...</p>
@@ -67,6 +51,7 @@
 import {computed, onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
 import {getModalOrderById} from '@/api/orders.js';
+import OrderTable from './OrderTable.vue';
 
 const props = defineProps({
   orderId: {type: Number, required: true},
@@ -85,10 +70,10 @@ onMounted(() => {
 
 watch(
     () => props.orderId,
-    async (newOrderId) => {
-      if (newOrderId) {
+    async (orderId) => {
+      if (orderId) {
         try {
-          selectedOrder.value = await getModalOrderById(newOrderId);
+          selectedOrder.value = await getModalOrderById(orderId);
           modalInstance.show();
         } catch (error) {
           console.error('Ошибка при загрузке деталей заказа:', error);
@@ -134,11 +119,4 @@ const uniqueTableFields = computed(() => {
 
   return uniqueFields;
 });
-
-const formatBoolean = (value) => {
-  if (typeof value === 'boolean') {
-    return value ? '✅' : '❌';
-  }
-  return value;
-};
 </script>

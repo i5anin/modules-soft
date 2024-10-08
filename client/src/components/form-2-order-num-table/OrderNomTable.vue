@@ -40,7 +40,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import {getOrderById} from '../../api/orders';
 import OrderInfoCard from './OrderInfo.vue';
-import OrderModal from '../modal/modal.vue';
+import OrderModal from '../modal/Modal.vue';
 import _ from 'lodash'; // Импортируем Lodash
 
 const router = useRouter();
