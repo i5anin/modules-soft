@@ -40,6 +40,7 @@ import 'datatables.net-bs5';
 import {getOrderById} from '../../api/orders';
 import OrderInfoCard from './OrderInfo.vue';
 import OrderModal from '../modal/modal.vue';
+import _ from 'lodash'; // Импортируем Lodash
 
 const router = useRouter();
 const orderTable = ref(null);
@@ -48,7 +49,7 @@ const header = ref([]);
 const selectedOrder = ref(null);
 const tableFields = ref([]);
 
-const fetchOrderData = async () => {
+const fetchOrderData = _.debounce(async () => {
   const orderId = router.currentRoute.value.params.orderId;
   try {
     const response = await getOrderById(orderId);
@@ -65,9 +66,9 @@ const fetchOrderData = async () => {
   } catch (error) {
     console.error('Ошибка при загрузке заказа:', error);
   }
-};
+}, 300); // Оптимизация вызовов с помощью debounce
 
-const initializeTable = () => {
+const initializeTable = _.once(() => {
   orderTable.value = new DataTable('#orderTable', {
     processing: true,
     searching: false,
@@ -84,16 +85,16 @@ const initializeTable = () => {
       if (data.locked) {
         $(row).find('td').css('color', '#aaaaaa');
       }
-      $(row).on('click.dt', () => {
+      $(row).on('click.dt', _.throttle(() => {
         console.log(`Нажата строка с ID: ${data.id}`);
         selectedOrder.value = data;
-      });
+      }, 1000)); // Ограничение на клик через throttle
     }
   });
-};
+});
 
 const filteredTableFields = computed(() => {
-  const fields = tableFields.value.filter(field =>
+  const fields = _.filter(tableFields.value, field =>
       !field.name.startsWith('status_') && field.name !== 'ordersnom_id'
   );
   fields.unshift({name: 'statuses', title: 'Статусы'}); // Добавляем "statuses" в начало массива
@@ -108,8 +109,8 @@ const statuses = [
   {status: 'kp', badgeClass: 'bg-success', label: 'КП'}
 ];
 
-const renderStatus = (row) => {
-  const activeStatuses = statuses.filter(s => row[`status_${s.status}`] && row[`status_${s.status}`].trim() !== '');
+const renderStatus = _.memoize((row) => {
+  const activeStatuses = _.filter(statuses, s => row[`status_${s.status}`] && row[`status_${s.status}`].trim() !== '');
 
   if (activeStatuses.length > 0) {
     return activeStatuses
@@ -118,7 +119,7 @@ const renderStatus = (row) => {
   } else {
     return '';
   }
-};
+});
 
 onMounted(() => {
   fetchOrderData();
