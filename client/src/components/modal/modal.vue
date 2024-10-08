@@ -11,10 +11,9 @@
         <div class="modal-body">
           <div v-if="selectedOrder && fields.length">
             <div v-if="selectedOrder.header">
-              <h5>Карточка заказа</h5>
               <div class="card">
                 <div class="card-body">
-                  <div v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index" class="mb-3">
+                  <div v-for="(field, index) in filteredHeaderFields" :key="index" class="mb-3">
                     <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
                   </div>
                 </div>
@@ -56,7 +55,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from 'vue';
+import {onMounted, ref, watch, computed} from 'vue';
 import {Modal} from 'bootstrap';
 import {getModalOrderById} from '@/api/orders.js';
 
@@ -95,11 +94,8 @@ const closeModal = () => {
   modalInstance.hide();
   emit('close');
 };
-</script>
 
-<style scoped>
-/* Дополнительные стили для карточки */
-.card {
-  margin-bottom: 20px;
-}
-</style>
+const filteredHeaderFields = computed(() => {
+  return selectedOrder.value?.header?.fields.filter(field => field.name !== 'nom_id_nom') || [];
+});
+</script>
