@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true"
        ref="modalContainer">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl"> <!-- Увеличиваем размер модального окна -->
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="orderModalLabel">Детали заказа</h5>
@@ -11,26 +11,17 @@
         <div class="modal-body">
           <div v-if="selectedOrder && fields.length">
             <div v-if="selectedOrder.header">
-              <h5>Дополнительные данные</h5>
-              <table class="table mt-3">
-                <thead>
-                <tr>
-                  <th v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index">
-                    {{ field.title }}
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(row, rowIndex) in selectedOrder.header.data" :key="rowIndex">
-                  <td v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index">
-                    {{ row[field.name] }}
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+              <h5>Карточка заказа</h5>
+              <div class="card">
+                <div class="card-body">
+                  <div v-for="(field, index) in Object.values(selectedOrder.header.fields)" :key="index" class="mb-3">
+                    <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                  </div>
+                </div>
+              </div>
             </div>
             <div v-if="selectedOrder.table">
-              <h5>Дополнительные данные</h5>
+              <h5 class="mt-4">Дополнительные данные</h5>
               <table class="table mt-3">
                 <thead>
                 <tr>
@@ -105,3 +96,10 @@ const closeModal = () => {
   emit('close');
 };
 </script>
+
+<style scoped>
+/* Дополнительные стили для карточки */
+.card {
+  margin-bottom: 20px;
+}
+</style>
