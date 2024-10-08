@@ -13,8 +13,17 @@
             <div v-if="selectedOrder.header">
               <div class="card">
                 <div class="card-body">
-                  <div v-for="(field, index) in filteredHeaderFields" :key="index" class="mb-3">
-                    <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                  <div class="row">
+                    <div class="col-6">
+                      <div v-for="(field, index) in leftColumnFields" :key="index" class="mb-3">
+                        <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div v-for="(field, index) in rightColumnFields" :key="index" class="mb-3">
+                        <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -24,14 +33,14 @@
               <table class="table mt-3">
                 <thead>
                 <tr>
-                  <th v-for="(field, index) in Object.values(selectedOrder.table.fields)" :key="index">
+                  <th v-for="(field, index) in uniqueTableFields" :key="index">
                     {{ field.title }}
                   </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(row, rowIndex) in selectedOrder.table.data" :key="rowIndex">
-                  <td v-for="(field, index) in Object.values(selectedOrder.table.fields)" :key="index">
+                  <td v-for="(field, index) in uniqueTableFields" :key="index">
                     {{ row[field.name] }}
                   </td>
                 </tr>
@@ -55,7 +64,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch, computed} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
 import {getModalOrderById} from '@/api/orders.js';
 
@@ -97,5 +106,32 @@ const closeModal = () => {
 
 const filteredHeaderFields = computed(() => {
   return selectedOrder.value?.header?.fields.filter(field => field.name !== 'nom_id_nom') || [];
+});
+
+const leftColumnFields = computed(() => {
+  const fields = filteredHeaderFields.value;
+  const half = Math.ceil(fields.length / 2);
+  return fields.slice(0, half);
+});
+
+const rightColumnFields = computed(() => {
+  const fields = filteredHeaderFields.value;
+  const half = Math.ceil(fields.length / 2);
+  return fields.slice(half);
+});
+
+const uniqueTableFields = computed(() => {
+  const fields = selectedOrder.value?.table?.fields || [];
+  const uniqueFields = [];
+  const seen = new Set();
+
+  fields.forEach(field => {
+    if (!seen.has(field.name)) {
+      seen.add(field.name);
+      uniqueFields.push(field);
+    }
+  });
+
+  return uniqueFields;
 });
 </script>
