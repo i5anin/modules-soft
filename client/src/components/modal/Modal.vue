@@ -28,9 +28,7 @@
                 </div>
               </div>
             </div>
-
-            {{selectedOrder.table.title}} - тут название таблицы
-            <OrderTable v-if="selectedOrder.table" :fields="uniqueTableFields" :data="selectedOrder.table.data"/>
+            <OrderTable v-if="selectedOrder.table" :fields="uniqueTableFields" :data="selectedOrder.table.data" :tableTitle="selectedOrder.table.title"/>
           </div>
           <div v-else-if="!selectedOrder">
             <p>Загрузка данных...</p>

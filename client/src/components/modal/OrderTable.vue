@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="mt-4"> {{selectedOrder.table.title}}</h5>
+    <h5 class="mt-4">{{ tableTitle || "Таблица" }}</h5> <!-- Название таблицы -->
     <table class="table mt-3">
       <thead>
       <tr>
@@ -24,9 +24,10 @@
 import { formatBoolean, formatDate, formatPrice, formatTime } from '@/components/shared/formatters.js';
 import _ from 'lodash';
 
-const props = defineProps({
+defineProps({
   fields: { type: Array, required: true },
-  data: { type: Array, required: true }
+  data: { type: Array, required: true },
+  tableTitle: { type: String, required: true } // Добавляем пропс для названия таблицы
 });
 
 const formatValue = (value, fieldName) => {
@@ -36,10 +37,12 @@ const formatValue = (value, fieldName) => {
     return formatDate(value);
   } else if (typeof value === 'string' && _.includes(fieldName.toLowerCase(), 'time')) {
     return formatTime(value);
-  } else if ( _.includes(fieldName.toLowerCase(), 'price')) {
-    return formatPrice(value);
-  } else {
-    return value;
+  } else if (_.includes(fieldName.toLowerCase(), 'price')) {
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+      return formatPrice(numericValue);
+    }
   }
+  return value;
 };
 </script>
