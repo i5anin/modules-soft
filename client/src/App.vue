@@ -1,7 +1,8 @@
 <template>
   <Navbar />
 
-  <div class="container py-3">
+  <div class="py-3">
+<!-- container -->
     <router-view />
   </div>
 

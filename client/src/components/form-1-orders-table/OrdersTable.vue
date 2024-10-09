@@ -1,5 +1,5 @@
 <template>
-  <table id="ordersTable" class="table table-striped">
+  <table id="ordersTable" class="table table-striped table-nowrap">
     <thead>
     <tr>
       <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
@@ -12,10 +12,9 @@
     <tr v-for="row in orders" :key="row.id">
       <td v-for="field in filteredTableFields" :key="field.name">
         <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
-        <span v-else-if="field.name === 'clients__name'"
-              :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
-          {{ formatValue(row[field.name], field.name) }}
-        </span>
+        <span v-else-if="field.name === 'clients__name'" :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
+            {{ formatValue(row[field.name], field.name) }}
+          </span>
         <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
       </td>
     </tr>
@@ -36,6 +35,7 @@ import 'datatables.net-bs5';
 
 const formatValue = (value, fieldName) => {
   if (typeof value === 'boolean') {
+    console.log(formatBoolean(value))
     return formatBoolean(value);
   } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
     return formatDate(value);
@@ -49,7 +49,7 @@ const formatValue = (value, fieldName) => {
 };
 
 export default {
-  methods: { formatValue},
+  methods: {formatValue},
   props: {
     startDate: {
       type: String,
@@ -182,3 +182,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.table-nowrap td, .table-nowrap th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
