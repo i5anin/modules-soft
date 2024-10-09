@@ -133,9 +133,15 @@ export default {
 
     const filteredTableFields = computed(() => {
       const fields = _.filter(tableFields.value, field =>
-          !field.name.startsWith('ordersnom__status_') && field.name !== 'id'
+          !field.name.startsWith('ordersnom__status_') && field.name !== 'id' && field.name !== 'goz'
       );
-      fields.unshift({name: 'statuses', title: 'Статусы'}); // Добавляем "statuses" в начало массива
+      fields.splice(1, 0, {name: 'statuses', title: 'Статусы'});
+      // Переименовываем столбец status_ready в пустую строку
+      fields.forEach(field => {
+        if (field.name === 'status_ready') {
+          field.title = '';
+        }
+      });
       return fields;
     });
 
