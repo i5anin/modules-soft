@@ -56,7 +56,7 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0];
     endDate.value = today.toISOString().split('T')[0];
 
-    const fetchOrders = _.debounce((page, limit, searchQuery, sortCol, sortDir, callback) => {
+    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
       getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
@@ -70,11 +70,7 @@ export default {
             console.error('Ошибка при загрузке заказов:', error);
             noData.value = true;
           });
-    }, 300); // Оптимизация вызовов с помощью debounce
-
-    const getColumnNameByIndex = _.memoize((index, columns) => {
-      return columns[index]?.data || null;
-    }); // Кэширование результатов вызова
+    }
 
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
@@ -96,9 +92,9 @@ export default {
           if (data.locked) {
             $(row).find('td').css('color', '#aaaaaa');
           }
-          $(row).on('click.dt', _.throttle(() => {
+          $(row).on('click.dt', () => {
             router.push({name: 'OrderDetails', params: {orderId: data.id}});
-          }, 1000)); // Ограничение на клик через throttle
+          });
         },
         drawCallback: function () {
           noData.value = this.api().rows({filter: 'applied'}).data().length === 0;
@@ -113,11 +109,11 @@ export default {
     });
 
     // Обновляем таблицу при изменении дат
-    watch([startDate, endDate], _.debounce(() => {
+    watch([startDate, endDate], () => {
       if (ordersTable.value) {
         ordersTable.value.ajax.reload();
       }
-    }, 300));
+    });
 
     return {ordersTable, startDate, endDate, noData};
   },
