@@ -31,7 +31,16 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 
 export default {
-  props: ['startDate', 'endDate'],
+  props: {
+    startDate: {
+      type: String,
+      required: true
+    },
+    endDate: {
+      type: String,
+      required: true
+    }
+  },
   setup(props) {
     const ordersTable = ref(null);
     const router = useRouter();
@@ -138,7 +147,7 @@ export default {
     });
 
     // Обновляем таблицу при изменении дат
-    watch([props.startDate, props.endDate], () => {
+    watch(() => [props.startDate, props.endDate], () => {
       if (ordersTable.value) {
         ordersTable.value.ajax.reload();
       }
