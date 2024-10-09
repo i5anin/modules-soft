@@ -19,9 +19,20 @@
       </div>
     </div>
     <table id="ordersTable" class="table table-striped">
+      <thead>
+      <tr>
+        <th v-for="field in tableFields" :key="field.name">{{ field.title }}</th>
+      </tr>
+      </thead>
       <tbody>
       <tr v-if="noData">
         <td colspan="100%" class="text-center">Нет данных</td>
+      </tr>
+      <tr v-for="row in orders" :key="row.id">
+        <td v-for="field in tableFields" :key="field.name">
+          <span v-if="field.name.startsWith('ordersnom__status_')" v-html="renderStatus(row, field.name)"></span>
+          <span v-else>{{ row[field.name] }}</span>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -36,7 +47,6 @@ import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {getOrders} from '../../api/orders.js';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {LANG_CONFIG, ORDERS_TABLE_COLUMNS} from "./constOrdersTable.js";
 import {useRouter} from 'vue-router';
 import _ from 'lodash'; // Импортируем Lodash
 
@@ -48,6 +58,8 @@ export default {
     const startDate = ref(null);
     const endDate = ref(null);
     const noData = ref(false);
+    const orders = ref([]);
+    const tableFields = ref([]);
 
     // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
     const today = new Date();
@@ -56,10 +68,20 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0];
     endDate.value = today.toISOString().split('T')[0];
 
+    const statuses = [
+      {status: 'ordersnom__status_cal', badgeClass: 'bg-danger', label: 'К'},
+      {status: 'ordersnom__status_instr', badgeClass: 'bg-warning', label: 'И'},
+      {status: 'ordersnom__status_draft', badgeClass: 'bg-secondary', label: 'Ч'},
+      {status: 'ordersnom__status_metall', badgeClass: 'bg-dark', label: 'М'},
+      {status: 'ordersnom__status_kp', badgeClass: 'bg-success', label: 'КП'}
+    ];
+
     const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
       getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
+            orders.value = response.table.data;
+            tableFields.value = response.table.fields;
             callback({
               data: response.table.data,
               recordsTotal: response.header.total_count,
@@ -86,8 +108,13 @@ export default {
           let sortDir = null;
           fetchOrders(page, data.length, searchQuery, sortCol, sortDir, callback);
         },
-        columns: ORDERS_TABLE_COLUMNS,
-        language: LANG_CONFIG,
+        columns: tableFields.value.map(field => ({
+          data: field.name,
+          title: field.title,
+          className: field.name.startsWith('ordersnom__status_') ? 'text-center' : '',
+          render: field.name.startsWith('ordersnom__status_') ? (data, type, row) => renderStatus(row, field.name) : null
+        })),
+        language: {url: 'Russian.json'},
         createdRow: (row, data) => {
           if (data.locked) {
             $(row).find('td').css('color', '#aaaaaa');
@@ -102,7 +129,20 @@ export default {
       });
     };
 
-    onMounted(initializeTable);
+    const renderStatus = (row, fieldName) => {
+      const status = statuses.find(s => s.status === fieldName);
+      if (row[fieldName] && row[fieldName].trim() !== '') {
+        return `<span class="badge ${status.badgeClass}">${status.label}</span>`;
+      } else {
+        return '';
+      }
+    };
+
+    onMounted(() => {
+      fetchOrders(1, 15, '', null, null, () => {
+        initializeTable();
+      });
+    });
 
     onBeforeUnmount(() => {
       ordersTable.value && ordersTable.value.destroy();
@@ -115,10 +155,24 @@ export default {
       }
     });
 
-    return {ordersTable, startDate, endDate, noData};
+    return {ordersTable, startDate, endDate, noData, orders, tableFields, renderStatus};
   },
 };
 </script>
+
+<style>
+.date-range-filters {
+  display: flex; /* Включаем flexbox разметку */
+  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
+}
+</style>
+
+<style>
+.date-range-filters {
+  display: flex; /* Включаем flexbox разметку */
+  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
+}
+</style>
 
 <style>
 .date-range-filters {
