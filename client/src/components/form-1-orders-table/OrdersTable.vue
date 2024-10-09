@@ -21,7 +21,7 @@
     <table id="ordersTable" class="table table-striped">
       <thead>
       <tr>
-        <th v-for="field in tableFields" :key="field.name">{{ field.title }}</th>
+        <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
       </tr>
       </thead>
       <tbody>
@@ -29,8 +29,9 @@
         <td colspan="100%" class="text-center">Нет данных</td>
       </tr>
       <tr v-for="row in orders" :key="row.id">
-        <td v-for="field in tableFields" :key="field.name">
-          <span v-if="field.name.startsWith('ordersnom__status_')" v-html="renderStatus(row, field.name)"></span>
+        <td v-for="field in filteredTableFields" :key="field.name">
+          <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
+          <span v-else-if="field.name === 'clients__name'" :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">{{ row[field.name] }}</span>
           <span v-else>{{ row[field.name] }}</span>
         </td>
       </tr>
@@ -43,7 +44,7 @@
 import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
-import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {onBeforeUnmount, onMounted, ref, watch, computed} from 'vue';
 import {getOrders} from '../../api/orders.js';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
@@ -108,11 +109,12 @@ export default {
           let sortDir = null;
           fetchOrders(page, data.length, searchQuery, sortCol, sortDir, callback);
         },
-        columns: tableFields.value.map(field => ({
+        columns: filteredTableFields.value.map(field => ({
           data: field.name,
-          title: field.title,
-          className: field.name.startsWith('ordersnom__status_') ? 'text-center' : '',
-          render: field.name.startsWith('ordersnom__status_') ? (data, type, row) => renderStatus(row, field.name) : null
+          title: field.name === 'statuses' ? 'Статусы' : field.title,
+          className: field.name === 'statuses' ? 'text-center' : '',
+          render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) :
+              field.name === 'clients__name' ? (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>` : null
         })),
         language: {url: 'Russian.json'},
         createdRow: (row, data) => {
@@ -129,14 +131,25 @@ export default {
       });
     };
 
-    const renderStatus = (row, fieldName) => {
-      const status = statuses.find(s => s.status === fieldName);
-      if (row[fieldName] && row[fieldName].trim() !== '') {
-        return `<span class="badge ${status.badgeClass}">${status.label}</span>`;
+    const filteredTableFields = computed(() => {
+      const fields = _.filter(tableFields.value, field =>
+          !field.name.startsWith('ordersnom__status_') && field.name !== 'id'
+      );
+      fields.unshift({name: 'statuses', title: 'Статусы'}); // Добавляем "statuses" в начало массива
+      return fields;
+    });
+
+    const renderStatus = _.memoize((row) => {
+      const activeStatuses = _.filter(statuses, s => row[s.status] && row[s.status].trim() !== '');
+
+      if (activeStatuses.length > 0) {
+        return activeStatuses
+            .map(s => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`)
+            .join('');
       } else {
         return '';
       }
-    };
+    });
 
     onMounted(() => {
       fetchOrders(1, 15, '', null, null, () => {
@@ -155,24 +168,10 @@ export default {
       }
     });
 
-    return {ordersTable, startDate, endDate, noData, orders, tableFields, renderStatus};
+    return {ordersTable, startDate, endDate, noData, orders, tableFields, renderStatus, filteredTableFields};
   },
 };
 </script>
-
-<style>
-.date-range-filters {
-  display: flex; /* Включаем flexbox разметку */
-  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
-}
-</style>
-
-<style>
-.date-range-filters {
-  display: flex; /* Включаем flexbox разметку */
-  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
-}
-</style>
 
 <style>
 .date-range-filters {
