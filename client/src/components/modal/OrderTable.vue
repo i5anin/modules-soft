@@ -35,7 +35,7 @@ const formatValue = (value, fieldName) => {
     return formatBoolean(value);
   } else if (typeof value === 'string' && _.includes(fieldName.toLowerCase(), 'date')) {
     return formatDate(value);
-  } else if (typeof value === 'string' && _.includes(fieldName.toLowerCase(), 'time')) {
+  } else if (typeof value === 'number' && _.includes(fieldName.toLowerCase(), 'time')) {
     return formatTime(value);
   } else if (_.includes(fieldName.toLowerCase(), 'price')) {
     const numericValue = parseFloat(value);
