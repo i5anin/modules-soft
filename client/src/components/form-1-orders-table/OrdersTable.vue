@@ -120,8 +120,8 @@ export default {
           fetchOrders(page, data.length, searchQuery, sortCol, sortDir).then(() => {
             callback({
               data: orders.value,
-              recordsTotal: totalCount.value, // Используем total_count
-              recordsFiltered: totalCount.value, // Используем total_count
+              recordsTotal: totalCount.value,
+              recordsFiltered: totalCount.value,
             });
           });
         },
