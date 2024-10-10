@@ -67,6 +67,7 @@ export default {
     const noData = ref(false);
     const orders = ref([]);
     const tableFields = ref([]);
+    const totalCount = ref(0); // Добавляем переменную для хранения total_count
 
     // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
     const today = new Date();
@@ -96,6 +97,7 @@ export default {
               return formattedOrder;
             });
             tableFields.value = response.table.fields;
+            totalCount.value = response.header.total_count; // Обновляем total_count
           })
           .catch(error => {
             console.error('Ошибка при загрузке заказов:', error);
@@ -118,8 +120,8 @@ export default {
           fetchOrders(page, data.length, searchQuery, sortCol, sortDir).then(() => {
             callback({
               data: orders.value,
-              recordsTotal: orders.value.length, // заменено на orders.value.length
-              recordsFiltered: orders.value.length, // заменено на orders.value.length
+              recordsTotal: totalCount.value, // Используем total_count
+              recordsFiltered: totalCount.value, // Используем total_count
             });
           });
         },
@@ -171,7 +173,7 @@ export default {
 
     const formatValue = (value, fieldName) => {
       if (typeof value === 'boolean' && fieldName !== 'goz') {
-        console.log(fieldName)
+        // console.log(fieldName)
         return formatBoolean(value); // выдает '✅' : '❌'
       } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
         return formatDate(value);
@@ -186,6 +188,7 @@ export default {
     onMounted(() => {
       // Сначала загружаем данные, потом инициализируем таблицу
       fetchOrders(1, 15, '', null, null).then(() => {
+        console.log("fetchOrders completed");
         initializeTable();
       });
     });
@@ -222,3 +225,4 @@ export default {
   gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
 }
 </style>
+
