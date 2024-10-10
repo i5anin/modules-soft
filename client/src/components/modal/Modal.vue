@@ -1,85 +1,121 @@
 <template>
-  <div class="modal fade"
-       id="orderModal"
-       tabindex="-1"
-       aria-labelledby="orderModalLabel"
-       aria-hidden="true"
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true"
        ref="modalContainer">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl"> <!-- Увеличиваем размер модального окна -->
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="orderModalLabel">Детали заказа</h5>
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  @click="closeModal">
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  @click="closeModal"></button>
         </div>
         <div class="modal-body">
-          <p v-if="selectedOrder">
-            <strong>ID:</strong> {{ selectedOrder.id }}
-          </p>
+          <div v-if="selectedOrder && fields.length">
+            <div v-if="selectedOrder.header">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6">
+                      <div v-for="(field, index) in leftColumnFields" :key="index" class="mb-3">
+                        <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div v-for="(field, index) in rightColumnFields" :key="index" class="mb-3">
+                        <strong>{{ field.title }}:</strong> {{ selectedOrder.header.data[0][field.name] }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <OrderTable v-if="selectedOrder.table" :fields="uniqueTableFields" :data="selectedOrder.table.data" :tableTitle="selectedOrder.table.title"/>
+          </div>
+          <div v-else-if="!selectedOrder">
+            <p>Загрузка данных...</p>
+          </div>
+          <div v-else>
+            <p>Нет доступных полей для отображения.</p>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                  @click="closeModal">
-            Закрыть
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="closeModal">Закрыть</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import {onMounted, ref, watch} from 'vue';
+<script setup>
+import {computed, onMounted, ref, watch} from 'vue';
 import {Modal} from 'bootstrap';
+import {getModalOrderById} from '@/api/orders.js';
+import OrderTable from './OrderTable.vue';
 
-export default {
-  props: {
-    selectedOrder: {
-      type: Object,
-      required: true,
+const props = defineProps({
+  orderId: {type: Number, required: true},
+  fields: {type: Array, required: true}
+});
+
+const emit = defineEmits(['close']);
+
+const modalContainer = ref(null);
+let modalInstance = null;
+const selectedOrder = ref(null);
+
+onMounted(() => {
+  modalInstance = new Modal(modalContainer.value);
+});
+
+watch(
+    () => props.orderId,
+    async (orderId) => {
+      if (orderId) {
+        try {
+          selectedOrder.value = await getModalOrderById(orderId);
+          modalInstance.show();
+        } catch (error) {
+          console.error('Ошибка при загрузке деталей заказа:', error);
+          selectedOrder.value = null;
+        }
+      }
     },
-  },
-  setup(props, {emit}) {
-    const modalContainer = ref(null);
-    let modalInstance = null;
+    {immediate: true}
+);
 
-    onMounted(() => {
-      console.log('Modal component mounted'); // Debugging
-
-      // Check if modalContainer is available
-      if (modalContainer.value) {
-        modalInstance = new Modal(modalContainer.value);
-        console.log('Modal instance created', modalInstance); // Debugging
-      } else {
-        console.error('Modal container not found!');
-      }
-
-      // Watch for changes in selectedOrder
-      watch(
-          () => props.selectedOrder,
-          (newVal) => {
-            console.log('selectedOrder changed:', newVal); // Debugging
-            if (newVal && modalInstance) {
-              modalInstance.show();
-            }
-          }
-      );
-    });
-
-    const closeModal = () => {
-      if (modalInstance) {
-        modalInstance.hide();
-      }
-      emit('close');
-    };
-
-    return {closeModal, modalContainer};
-  },
+const closeModal = () => {
+  modalInstance.hide();
+  emit('close');
 };
+
+const filteredHeaderFields = computed(() => {
+  return selectedOrder.value?.header?.fields.filter(field => field.name !== 'nom_id_nom') || [];
+});
+
+const leftColumnFields = computed(() => {
+  const fields = filteredHeaderFields.value;
+  const half = Math.ceil(fields.length / 2);
+  return fields.slice(0, half);
+});
+
+const rightColumnFields = computed(() => {
+  const fields = filteredHeaderFields.value;
+  const half = Math.ceil(fields.length / 2);
+  return fields.slice(half);
+});
+
+const uniqueTableFields = computed(() => {
+  const fields = selectedOrder.value?.table?.fields || [];
+  const uniqueFields = [];
+  const seen = new Set();
+
+  fields.forEach(field => {
+    if (!seen.has(field.name)) {
+      seen.add(field.name);
+      uniqueFields.push(field);
+    }
+  });
+
+  return uniqueFields;
+});
 </script>
