@@ -1,5 +1,5 @@
 <template>
-  <table id="ordersTable" class="table table-striped table-nowrap">
+  <table id="ordersTable" class="table table-striped">
     <thead>
     <tr>
       <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
@@ -15,7 +15,7 @@
         <span v-else-if="field.name === 'clients__name'" :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
             {{ formatValue(row[field.name], field.name) }}
           </span>
-        <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+        <span v-else>{{ formatValue(row[field.name], field.name) }} 123</span>
       </td>
     </tr>
     </tbody>

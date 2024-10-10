@@ -1,24 +1,28 @@
 <template>
-  <div>
-    <div class="date-range-filters d-flex align-items-center justify-content-start">
-      <div class="d-flex align-items-center">
-        <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
-        <DateRangeFilter
-            id="start-date"
-            class="custom-date-range-filter flex-grow-1"
-            v-model="startDate"
-        />
-      </div>
-      <div class="d-flex align-items-center ms-3">
-        <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
-        <DateRangeFilter
-            id="end-date"
-            class="custom-date-range-filter flex-grow-1"
-            v-model="endDate"
-        />
+  <div class="container-fluid ">
+    <div class="row">
+      <div class="col-12">
+        <div class="date-range-filters d-flex align-items-center justify-content-start">
+          <div class="d-flex align-items-center">
+            <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
+            <DateRangeFilter
+                id="start-date"
+                class="custom-date-range-filter flex-grow-1"
+                v-model="startDate"
+            />
+          </div>
+          <div class="d-flex align-items-center ms-3">
+            <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
+            <DateRangeFilter
+                id="end-date"
+                class="custom-date-range-filter flex-grow-1"
+                v-model="endDate"
+            />
+          </div>
+        </div>
+        <OrdersTable :startDate="startDate" :endDate="endDate"/>
       </div>
     </div>
-    <OrdersTable :startDate="startDate" :endDate="endDate" />
   </div>
 </template>
 
