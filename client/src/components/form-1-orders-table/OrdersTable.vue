@@ -174,7 +174,7 @@ export default {
         return formatBoolean(value);
       } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
         return formatDate(value);
-      } else if (typeof value === 'string' && _.includes(fieldName, 'time')) {
+      } else if (typeof value === 'number' && _.includes(fieldName, 'time')) {
         return formatTime(value);
       } else if (typeof value === 'string' && _.includes(fieldName, 'price')) {
         return formatPrice(value);

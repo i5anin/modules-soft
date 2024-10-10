@@ -8,7 +8,8 @@ export function formatDate(dateString) {
 }
 
 export function formatTime(dateString) {
-    return `${dateString} дней`;
+    const days = parseInt(dateString, 10);
+    return days === 0 ? "" : `${days} дней`;
 }
 
 export function formatPrice(price) {
