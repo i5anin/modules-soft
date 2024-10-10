@@ -55,6 +55,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
 import {useRouter} from 'vue-router';
 import _ from 'lodash';
+import {formatBoolean, formatDate, formatPrice, formatTime} from "@/components/shared/formatters.js";
 
 export default {
   components: {DateRangeFilter},
@@ -82,23 +83,25 @@ export default {
       {status: 'ordersnom__status_kp', badgeClass: 'bg-success', label: 'КП'}
     ];
 
-    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
-      getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
+    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir) => {
+      return getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
-            orders.value = response.table.data;
-            tableFields.value = response.table.fields;
-            callback({
-              data: response.table.data,
-              recordsTotal: response.header.total_count,
-              recordsFiltered: response.header.total_count,
+            orders.value = response.table.data.map(order => {
+              // Форматируем каждое поле перед сохранением в состояние
+              const formattedOrder = {};
+              tableFields.value.forEach(field => {
+                formattedOrder[field.name] = formatValue(order[field.name], field.name);
+              });
+              return formattedOrder;
             });
+            tableFields.value = response.table.fields;
           })
           .catch(error => {
             console.error('Ошибка при загрузке заказов:', error);
             noData.value = true;
           });
-    }
+    };
 
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
@@ -112,7 +115,13 @@ export default {
           const searchQuery = data.search.value;
           let sortCol = null;
           let sortDir = null;
-          fetchOrders(page, data.length, searchQuery, sortCol, sortDir, callback);
+          fetchOrders(page, data.length, searchQuery, sortCol, sortDir).then(() => {
+            callback({
+              data: orders.value,
+              recordsTotal: orders.value.length, // заменено на orders.value.length
+              recordsFiltered: orders.value.length, // заменено на orders.value.length
+            });
+          });
         },
         columns: filteredTableFields.value.map(field => ({
           data: field.name,
@@ -160,28 +169,22 @@ export default {
       }
     });
 
-    const formatBoolean = (value) => value ? 'Да' : 'Нет';
-    const formatDate = (value) => new Date(value).toLocaleDateString();
-    const formatTime = (value) => new Date(value).toLocaleTimeString();
-    const formatPrice = (value) => value.toLocaleString('ru-RU', {style: 'currency', currency: 'RUB'});
-
     const formatValue = (value, fieldName) => {
-      console.log("formatValue")
       if (typeof value === 'boolean') {
         return formatBoolean(value);
       } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
         return formatDate(value);
       } else if (typeof value === 'string' && _.includes(fieldName, 'time')) {
         return formatTime(value);
-      } else if (typeof value === ('string' || 'number') && _.includes(fieldName, 'price')) {
-        const numericValue = parseFloat(value);
-        if (!isNaN(numericValue)) return formatPrice(numericValue);
+      } else if (typeof value === 'string' && _.includes(fieldName, 'price')) {
+        return formatPrice(value);
       }
       return value;
     };
 
     onMounted(() => {
-      fetchOrders(1, 15, '', null, null, () => {
+      // Сначала загружаем данные, потом инициализируем таблицу
+      fetchOrders(1, 15, '', null, null).then(() => {
         initializeTable();
       });
     });
@@ -193,7 +196,7 @@ export default {
     // Обновляем таблицу при изменении дат
     watch([startDate, endDate], () => {
       if (ordersTable.value) {
-        ordersTable.value.ajax.reload();
+        ordersTable.value.ajax.reload(null, false);
       }
     });
 
