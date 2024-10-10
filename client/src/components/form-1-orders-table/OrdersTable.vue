@@ -1,77 +1,78 @@
 <template>
-  <table id="ordersTable" class="table table-striped">
-    <thead>
-    <tr>
-      <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-if="noData">
-      <td colspan="100%" class="text-center">Нет данных</td>
-    </tr>
-    <tr v-for="row in orders" :key="row.id">
-      <td v-for="field in filteredTableFields" :key="field.name">
-        <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
-        <span v-else-if="field.name === 'clients__name'" :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
-            {{ formatValue(row[field.name], field.name) }}
-          </span>
-        <span v-else>{{ formatValue(row[field.name], field.name) }} 123</span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="container-fluid ">
+    <div class="row">
+      <div class="col-12">
+        <div class="date-range-filters d-flex align-items-center justify-content-start">
+          <div class="d-flex align-items-center">
+            <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
+            <DateRangeFilter
+                id="start-date"
+                class="custom-date-range-filter flex-grow-1"
+                v-model="startDate"
+            />
+          </div>
+          <div class="d-flex align-items-center ms-3">
+            <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
+            <DateRangeFilter
+                id="end-date"
+                class="custom-date-range-filter flex-grow-1"
+                v-model="endDate"
+            />
+          </div>
+        </div>
+        <table id="ordersTable" class="table table-striped">
+          <thead>
+          <tr>
+            <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-if="noData">
+            <td colspan="100%" class="text-center">Нет данных</td>
+          </tr>
+          <tr v-for="row in orders" :key="row.id">
+            <td v-for="field in filteredTableFields" :key="field.name">
+              <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
+              <span v-else-if="field.name === 'clients__name'"
+                    :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">{{ row[field.name] }}</span>
+              <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import {formatBoolean, formatDate, formatPrice, formatTime} from '@/components/shared/formatters.js';
+import DateRangeFilter from './DateRangeFilter.vue';
 import DataTable from 'datatables.net-dt';
 import $ from 'jquery';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {getOrders} from '../../api/orders.js';
-import _ from 'lodash';
-import {useRouter} from 'vue-router';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-
-const formatValue = (value, fieldName) => {
-  if (typeof value === 'boolean') {
-    console.log(formatBoolean(value))
-    return formatBoolean(value);
-  } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
-    return formatDate(value);
-  } else if (typeof value === 'string' && _.includes(fieldName, 'time')) {
-    return formatTime(value);
-  } else if (typeof value === ('string' || 'number') && _.includes(fieldName, 'price')) {
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue)) return formatPrice(numericValue);
-  }
-  return value;
-};
+import {useRouter} from 'vue-router';
+import _ from 'lodash';
 
 export default {
-  methods: {formatValue},
-  props: {
-    startDate: {
-      type: String,
-      required: true,
-      default: ''
-    },
-    endDate: {
-      type: String,
-      required: true
-    },
-    orderId: {
-      type: Number,
-      required: false,
-      default: null
-    }
-  },
-  setup(props) {
+  components: {DateRangeFilter},
+  setup() {
     const ordersTable = ref(null);
     const router = useRouter();
+    const startDate = ref(null);
+    const endDate = ref(null);
     const noData = ref(false);
     const orders = ref([]);
     const tableFields = ref([]);
+
+    // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
+    const today = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(today.getMonth() - 3);
+    startDate.value = threeMonthsAgo.toISOString().split('T')[0];
+    endDate.value = today.toISOString().split('T')[0];
 
     const statuses = [
       {status: 'ordersnom__status_cal', badgeClass: 'bg-danger', label: 'К'},
@@ -82,7 +83,7 @@ export default {
     ];
 
     const fetchOrders = (page, limit, searchQuery, sortCol, sortDir, callback) => {
-      getOrders(page, limit, searchQuery, sortCol, sortDir, props.startDate, props.endDate)
+      getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value)
           .then(response => {
             noData.value = response.table.data.length === 0;
             orders.value = response.table.data;
@@ -97,7 +98,7 @@ export default {
             console.error('Ошибка при загрузке заказов:', error);
             noData.value = true;
           });
-    };
+    }
 
     const initializeTable = () => {
       ordersTable.value = new DataTable('#ordersTable', {
@@ -142,9 +143,7 @@ export default {
       fields.splice(1, 0, {name: 'statuses', title: 'Статусы'});
       // Переименовываем столбец status_ready в пустую строку
       fields.forEach(field => {
-        if (field.name === 'status_ready') {
-          field.title = '';
-        }
+        if (field.name === 'status_ready') field.title = '';
       });
       return fields;
     });
@@ -161,6 +160,26 @@ export default {
       }
     });
 
+    const formatBoolean = (value) => value ? 'Да' : 'Нет';
+    const formatDate = (value) => new Date(value).toLocaleDateString();
+    const formatTime = (value) => new Date(value).toLocaleTimeString();
+    const formatPrice = (value) => value.toLocaleString('ru-RU', {style: 'currency', currency: 'RUB'});
+
+    const formatValue = (value, fieldName) => {
+      console.log("formatValue")
+      if (typeof value === 'boolean') {
+        return formatBoolean(value);
+      } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
+        return formatDate(value);
+      } else if (typeof value === 'string' && _.includes(fieldName, 'time')) {
+        return formatTime(value);
+      } else if (typeof value === ('string' || 'number') && _.includes(fieldName, 'price')) {
+        const numericValue = parseFloat(value);
+        if (!isNaN(numericValue)) return formatPrice(numericValue);
+      }
+      return value;
+    };
+
     onMounted(() => {
       fetchOrders(1, 15, '', null, null, () => {
         initializeTable();
@@ -172,21 +191,30 @@ export default {
     });
 
     // Обновляем таблицу при изменении дат
-    watch(() => [props.startDate, props.endDate], () => {
+    watch([startDate, endDate], () => {
       if (ordersTable.value) {
         ordersTable.value.ajax.reload();
       }
     });
 
-    return {ordersTable, noData, orders, tableFields, renderStatus, filteredTableFields};
+    return {
+      ordersTable,
+      startDate,
+      endDate,
+      noData,
+      orders,
+      tableFields,
+      renderStatus,
+      filteredTableFields,
+      formatValue
+    };
   },
 };
 </script>
 
-<style scoped>
-.table-nowrap td, .table-nowrap th {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+<style>
+.date-range-filters {
+  display: flex; /* Включаем flexbox разметку */
+  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
 }
 </style>
