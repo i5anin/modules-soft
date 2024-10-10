@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid ">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-12">
         <div class="date-range-filters d-flex align-items-center justify-content-start">
@@ -31,10 +31,11 @@
             <td colspan="100%" class="text-center">Нет данных</td>
           </tr>
           <tr v-for="row in orders" :key="row.id">
-            <td v-for="field in filteredTableFields" :key="field.name">
+            <td
+                v-for="field in filteredTableFields"
+                :key="field.name"
+            >
               <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
-              <span v-else-if="field.name === 'clients__name'"
-                    :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">{{ row[field.name] }}</span>
               <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
             </td>
           </tr>
@@ -118,8 +119,8 @@ export default {
           fetchOrders(page, data.length, searchQuery, sortCol, sortDir).then(() => {
             callback({
               data: orders.value,
-              recordsTotal: orders.value.length, // заменено на orders.value.length
-              recordsFiltered: orders.value.length, // заменено на orders.value.length
+              recordsTotal: orders.value.length,
+              recordsFiltered: orders.value.length,
             });
           });
         },
@@ -127,8 +128,7 @@ export default {
           data: field.name,
           title: field.name === 'statuses' ? 'Статусы' : field.title,
           className: field.name === 'statuses' ? 'text-center' : '',
-          render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) :
-              field.name === 'clients__name' ? (data, type, row) => `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>` : null
+          render: field.name === 'statuses' ? (data, type, row) => renderStatus(row) : null
         })),
         language: {url: 'Russian.json'},
         createdRow: (row, data) => {
