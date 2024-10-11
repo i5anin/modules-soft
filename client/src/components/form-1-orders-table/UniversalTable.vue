@@ -1,44 +1,33 @@
 <template>
-  <div>
-    <pre>{{ data }}</pre>
-    <pre>{{ console.log(data) }}</pre>
-    <table class="table table-striped table-bordered">
-      <thead>
-      <tr>
-        <th v-for="field in fields"
-            :key="field.name">
-          {{ field.title }}
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(item, index) in data" :key="index">
-        <td v-for="field in fields"
-            :key="field.name">
-          {{ item[field.name] }}
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <ag-grid-vue
+      class="ag-theme-alpine"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+      :pagination="true"
+      :paginationPageSize="10"
+      style="width: 100%; height: 500px;"
+  ></ag-grid-vue>
 </template>
 
 <script>
-export default {
-  name: 'UniversalTable',
-  props: {
-    fields: {
-      type: Array,
-      required: true
-    },
-    data: {
-      type: Array,
-      required: true
-    }
-  }
-}
-</script>
+import { AgGridVue } from 'ag-grid-vue3';
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
 
-<style scoped>
-/* Дополнительные стили, если необходимо */
-</style>
+export default {
+  name: "MyComponent",
+  components: { AgGridVue },
+  data() {
+    return {
+      columnDefs: [
+        {headerName: 'ID', field: 'id'},
+        {headerName: 'Name', field: 'name'},
+      ],
+      rowData: [
+        {id: 1, name: 'Example 1'},
+        {id: 2, name: 'Example 2'},
+      ],
+    };
+  },
+};
+</script>
