@@ -4,7 +4,7 @@ const routes = [
     {
         path: '/Universal',
         name: 'UniversalGet',
-        component: () => import('./components/DataTable/UniversalGet.vue.vue'),
+        component: () => import('./components/DataTable/UniversalGet.vue'),
     },
     {
         path: '/',
@@ -15,7 +15,6 @@ const routes = [
         path: '/add',
         component: () => import('./pages/Add.vue'),
     },
-    // Добавленный маршрут для OrderDetails
     {
         path: '/:orderId',
         name: 'OrderDetails',
