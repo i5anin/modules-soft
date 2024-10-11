@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
+        path: '/Universal',
+        name: 'UniversalGet',
+        component: () => import('./components/DataTable/UniversalGet.vue.vue'),
+    },
+    {
         path: '/',
         name: 'OrdersTable',
         component: () => import('./pages/Home.vue'),

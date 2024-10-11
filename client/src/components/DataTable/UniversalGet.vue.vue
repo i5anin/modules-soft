@@ -20,34 +20,21 @@
             />
           </div>
         </div>
-        <table id="ordersTable" class="table table-striped">
-          <thead>
-          <tr>
-            <th v-for="field in filteredTableFields" :key="field.name">{{ field.title }}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-if="noData">
-            <td colspan="100%" class="text-center">Нет данных</td>
-          </tr>
-          <tr v-for="row in orders" :key="row.id">
-            <td v-for="field in filteredTableFields" :key="field.name">
-              <span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
-              <span v-else-if="field.name === 'clients__name'"
-                    :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">{{ row[field.name] }}</span>
-              <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <DataTable
+            :columns="columns"
+            :options="{ select: true }"
+            :ajax="{ url: '/data.json', dataSrc: 'data' }"
+            class="display"
+            width="100%"
+        />
+        <!-- <UniversalTable></UniversalTable>-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import DateRangeFilter from './DateRangeFilter.vue';
-import DataTable from 'datatables.net-dt';
+import DateRangeFilter from '../form-1-orders-table/DateRangeFilter.vue';
 import $ from 'jquery';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {getOrders} from '../../api/orders.js';
@@ -56,9 +43,10 @@ import 'datatables.net-bs5';
 import {useRouter} from 'vue-router';
 import _ from 'lodash';
 import {formatBoolean, formatDate, formatPrice, formatTime} from "@/components/shared/formatters.js";
+import DataTable from "@/components/DataTable/DataTable.vue";
 
 export default {
-  components: { DateRangeFilter},
+  components: {DataTable, DateRangeFilter},
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
