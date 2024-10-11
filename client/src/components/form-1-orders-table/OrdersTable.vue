@@ -40,6 +40,8 @@
           </tr>
           </tbody>
         </table>
+        <UniversalTable :data="orders" :fields="tableFields"></UniversalTable>
+        <pre>{{ orders}}</pre>
       </div>
     </div>
   </div>
@@ -56,9 +58,10 @@ import 'datatables.net-bs5';
 import {useRouter} from 'vue-router';
 import _ from 'lodash';
 import {formatBoolean, formatDate, formatPrice, formatTime} from "@/components/shared/formatters.js";
+import UniversalTable from "@/components/form-1-orders-table/UniversalTable.vue";
 
 export default {
-  components: {DateRangeFilter},
+  components: {UniversalTable, DateRangeFilter},
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
