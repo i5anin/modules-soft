@@ -22,12 +22,11 @@
         </div>
 
         <UniversalTable
+          v-if="dataLoaded"
           ref="ordersTable"
-
           :info="info"
           :fields="fields"
           :data-table="dataTable"
-
           class="display"
           width="100%"
         />
@@ -49,16 +48,20 @@ const endDate = ref(null)
 let info = ref([])
 let fields = ref([])
 let dataTable = ref([])
+let dataLoaded = ref(false) // Флаг для контроля загрузки данных
 
 // Функция для загрузки данных таблицы с сервера
 const loadOrders = async () => {
   try {
+    dataLoaded.value = false // Сбрасываем флаг перед загрузкой данных
     const response = await getOrders(1, 15, '', null, null, startDate.value, endDate.value)
+    console.log(response)
 
     info.value = response.header
     fields.value = response.table.fields
     dataTable.value = response.table.data
 
+    dataLoaded.value = true // Устанавливаем флаг после успешной загрузки данных
   } catch (error) {
     console.error('Ошибка загрузки данных заказов:', error)
   }
