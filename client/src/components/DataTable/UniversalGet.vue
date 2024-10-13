@@ -6,31 +6,31 @@
           <div class="d-flex align-items-center">
             <label for="start-date" class="form-label fw-bold me-2 mb-0">С</label>
             <DateRangeFilter
-                id="start-date"
-                class="custom-date-range-filter flex-grow-1"
-                v-model="startDate"
+              id="start-date"
+              class="custom-date-range-filter flex-grow-1"
+              v-model="startDate"
             />
           </div>
           <div class="d-flex align-items-center ms-3">
             <label for="end-date" class="form-label fw-bold me-2 mb-0">По</label>
             <DateRangeFilter
-                id="end-date"
-                class="custom-date-range-filter flex-grow-1"
-                v-model="endDate"
+              id="end-date"
+              class="custom-date-range-filter flex-grow-1"
+              v-model="endDate"
             />
           </div>
         </div>
+        {{headers}}
         <UniversalTable
-            ref="ordersTable"
-            :headers="headers"
-            :data="tableData"
-            :options="tableOptions"
-            class="display"
-            width="100%"
+          ref="ordersTable"
+          :headers="headers"
+          :data="tableData"
+          :options="tableOptions"
+          class="display"
+          width="100%"
         />
       </div>
     </div>
-    <pre>{{ response }}</pre>
   </div>
 </template>
 
@@ -51,50 +51,24 @@ export default {
     const startDate = ref(new Date().toISOString().substr(0, 10));
     const endDate = ref(new Date().toISOString().substr(0, 10));
 
-    // Placeholder for formatValue function (you'll need to implement this)
-    const formatValue = (value, fieldName) => {
-      // Add your logic to format values based on the field name
-      return value;
-    };
-
-    const fetchOrders = async (data, callback, settings) => {
+    const fetchOrders = async () => {
       try {
-        const page = (settings._iDisplayStart / settings._iDisplayLength) + 1;
-        const limit = settings._iDisplayLength;
-        const searchQuery = settings.oPreviousSearch.sSearch || '';
-        const sortCol = settings.aaSorting.length ? settings.aoColumns[settings.aaSorting[0][0]].data : null;
-        const sortDir = settings.aaSorting.length ? settings.aaSorting[0][1] : null;
-
-        const apiResponse = await getOrders(page, limit, searchQuery, sortCol, sortDir, startDate.value, endDate.value);
+        const apiResponse = await getOrders(1, 15, '', null, null, startDate.value, endDate.value);
         response.value = apiResponse;
 
-        if (apiResponse.table && Array.isArray(apiResponse.table.data)) {
-          headers.value = apiResponse.table.fields.map(field => field.title);
-
-          // Format data before assigning to tableData
-          tableData.value = apiResponse.table.data.map(order => {
-            const formattedOrder = {};
-            apiResponse.table.fields.forEach(field => {
-              formattedOrder[field.name] = formatValue(order[field.name], field.name);
-            });
-            return formattedOrder;
-          });
-
-          callback({
-            draw: settings.iDraw,
-            recordsTotal: apiResponse.table.recordsTotal,
-            recordsFiltered: apiResponse.table.recordsFiltered,
-            data: tableData.value // Pass the formatted data to DataTables
-          });
+        if (apiResponse) {
+          console.log(apiResponse)
+          headers.value = apiResponse;
+          tableData.value = apiResponse;
         } else {
           console.error("API response does not have the expected 'table.data' structure:", apiResponse);
-          // Handle the error appropriately (display message, set tableData = [], etc.)
         }
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
-        // Handle error appropriately
       }
     };
+
+    watch([startDate, endDate], fetchOrders);
 
     const tableOptions = computed(() => ({
       select: true,
@@ -103,12 +77,6 @@ export default {
       serverSide: true,
       ajax: fetchOrders // Pass the function reference
     }));
-
-    watch([startDate, endDate], () => {
-      if (ordersTable.value) {
-        ordersTable.value.table.ajax.reload();
-      }
-    });
 
     return {
       headers,

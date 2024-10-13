@@ -1,8 +1,11 @@
 <template>
   <DataTable :data="data" class="display" :options="options">
+    <pre>
+      {{ headers }}
+    </pre>
     <thead>
     <tr>
-      <th v-for="(header, index) in headers" :key="index">{{ header }}</th>
+      <th v-for="(header, index) in headers" :key="index">{{ headers }}</th>
     </tr>
     </thead>
   </DataTable>
