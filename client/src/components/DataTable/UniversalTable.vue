@@ -1,13 +1,14 @@
 <template>
-  <pre>{{ info }}</pre>
-  <DataTable :data="formattedData" class="display">
+  <DataTable
+    v-if="dataLoaded"
+    :data="formattedData"
+    class="display">
     <thead>
     <tr>
       <th v-for="(field, index) in headers" :key="index">{{ field.title }}</th>
     </tr>
     </thead>
   </DataTable>
-  <pre>{{ headers }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -23,9 +24,9 @@ const props = defineProps<{
   dataTable: any[];
 }>()
 
-// Создание массива headers из всех name полей
 const headers = ref([])
 const formattedData = ref([])
+const dataLoaded = ref(false) // Состояние для контроля загрузки данных
 
 const updateTableData = () => {
   headers.value = props.fields.map(field => ({ name: field.name, title: field.title }))
@@ -33,6 +34,9 @@ const updateTableData = () => {
 
   console.log('Обновлены заголовки:', headers.value)
   console.log('Обновлены отформатированные данные:', formattedData.value)
+
+  // Устанавливаем флаг после форматирования данных
+  dataLoaded.value = true
 }
 
 onMounted(() => {
