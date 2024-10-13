@@ -20,13 +20,14 @@
             />
           </div>
         </div>
-        <pre>{{ headers }}</pre>
-        <pre>{{ tableData }}</pre>
+
         <UniversalTable
           ref="ordersTable"
-          :headers="headers"
-          :data="tableData"
-          :options="tableOptions"
+
+          :info="info"
+          :fields="fields"
+          :data-table="dataTable"
+
           class="display"
           width="100%"
         />
@@ -44,18 +45,20 @@ import { getOrders } from '../../api/orders.js'
 
 const startDate = ref(null)
 const endDate = ref(null)
-let headers = ref([])
-let tableData = ref([])
-const tableOptions = ref({})
+
+let info = ref([])
+let fields = ref([])
+let dataTable = ref([])
 
 // Функция для загрузки данных таблицы с сервера
 const loadOrders = async () => {
   try {
     const response = await getOrders(1, 15, '', null, null, startDate.value, endDate.value)
-    console.log(response.header)
-    console.log(response.table)
-    headers.value = response.header
-    tableData.value = response.table
+
+    info.value = response.header
+    fields.value = response.table.fields
+    dataTable.value = response.table.data
+
   } catch (error) {
     console.error('Ошибка загрузки данных заказов:', error)
   }
