@@ -20,7 +20,8 @@
             />
           </div>
         </div>
-        {{headers}}
+        <pre>{{ headers }}</pre>
+        <pre>{{ tableData }}</pre>
         <UniversalTable
           ref="ordersTable"
           :headers="headers"
@@ -34,59 +35,52 @@
   </div>
 </template>
 
-<script>
-import DateRangeFilter from '../form-1-orders-table/DateRangeFilter.vue';
-import UniversalTable from "@/components/DataTable/UniversalTable.vue";
-import { computed, ref, watch } from 'vue';
-import { getOrders } from '../../api/orders.js';
+<script setup>
+import DateRangeFilter from '../form-1-orders-table/DateRangeFilter.vue'
+import UniversalTable from '@/components/DataTable/UniversalTable.vue'
+import { ref, watch, onMounted } from 'vue'
+import debounce from 'lodash/debounce'
+import { getOrders } from '../../api/orders.js'
 
-export default {
-  components: { UniversalTable, DateRangeFilter },
-  setup() {
-    const headers = ref([]);
-    const tableData = ref([]);
-    const response = ref(null);
-    const ordersTable = ref(null); // Ref to access the DataTable instance
+const startDate = ref(null)
+const endDate = ref(null)
+let headers = ref([])
+let tableData = ref([])
+const tableOptions = ref({})
 
-    const startDate = ref(new Date().toISOString().substr(0, 10));
-    const endDate = ref(new Date().toISOString().substr(0, 10));
+// Функция для загрузки данных таблицы с сервера
+const loadOrders = async () => {
+  try {
+    const response = await getOrders(1, 15, '', null, null, startDate.value, endDate.value)
+    console.log(response.header)
+    console.log(response.table)
+    headers.value = response.header
+    tableData.value = response.table
+  } catch (error) {
+    console.error('Ошибка загрузки данных заказов:', error)
+  }
+}
 
-    const fetchOrders = async () => {
-      try {
-        const apiResponse = await getOrders(1, 15, '', null, null, startDate.value, endDate.value);
-        response.value = apiResponse;
+// Дебаунс для минимизации количества запросов к серверу
+const debouncedLoadOrders = debounce(loadOrders, 500)
 
-        if (apiResponse) {
-          console.log(apiResponse)
-          headers.value = apiResponse;
-          tableData.value = apiResponse;
-        } else {
-          console.error("API response does not have the expected 'table.data' structure:", apiResponse);
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
-    };
+// Наблюдатели за датами, вызывающие загрузку данных при их изменении
+watch([startDate, endDate], () => {
+  debouncedLoadOrders()
+})
 
-    watch([startDate, endDate], fetchOrders);
-
-    const tableOptions = computed(() => ({
-      select: true,
-      pageLength: 15,
-      processing: true,
-      serverSide: true,
-      ajax: fetchOrders // Pass the function reference
-    }));
-
-    return {
-      headers,
-      tableData,
-      startDate,
-      endDate,
-      response,
-      tableOptions,
-      ordersTable, // Expose the ref
-    };
-  },
-};
+// Начальная загрузка данных при монтировании компонента
+onMounted(() => {
+  loadOrders()
+})
 </script>
+
+<style scoped>
+.container-fluid {
+  padding: 15px;
+}
+
+.date-range-filters {
+  margin-bottom: 15px;
+}
+</style>
