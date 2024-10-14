@@ -33,7 +33,7 @@ const noData = ref(false)
 const tableRef = ref(null)
 let loadRequestId = 0
 let currentController = null
-const totalCount = ref(0);
+const totalCount = ref(0)
 
 const processData = (data) => {
   headers.value = data.fields.map(f => ({name: f.name, title: f.title || f.name}))
@@ -47,11 +47,11 @@ const processData = (data) => {
 const fetchData = async () => {
   if (formattedData.value.length) return
   loadRequestId++
-  const currentRequestId = loadRequestId  // добавлено объявление переменной
+  const currentRequestId = loadRequestId
   if (currentController) currentController.abort()
   currentController = new AbortController()
   const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, {signal: currentController.signal})
-  totalCount.value = response.header.total_count; // всего записей 
+  totalCount.value = response.header.total_count
   if (loadRequestId === currentRequestId) processData(response.table)
 }
 
@@ -62,8 +62,8 @@ const dataTableOptions = ref({
     await fetchData()
     callback({
       draw: data.draw,
-      recordsTotal: formattedData.value.length,
-      recordsFiltered: formattedData.value.length,
+      recordsTotal: totalCount.value, // правильно отображает общее количество записей
+      recordsFiltered: totalCount.value, // правильно отображает количество отфильтрованных записей
       data: formattedData.value
     })
   },
