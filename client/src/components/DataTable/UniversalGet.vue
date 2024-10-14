@@ -22,11 +22,10 @@
         </div>
 
         <UniversalTable
-          v-if="dataLoaded"
           ref="ordersTable"
-          :info="info"
-          :fields="fields"
-          :data-table="dataTable"
+          :url="getOrders"
+          :start-date="startDate"
+          :end-date="endDate"
           class="display"
           width="100%"
         />
@@ -36,49 +35,14 @@
 </template>
 
 <script setup>
+import { getOrders } from '../../api/orders.js'
 import DateRangeFilter from '../form-1-orders-table/DateRangeFilter.vue'
 import UniversalTable from '@/components/DataTable/UniversalTable.vue'
-import { ref, watch, onMounted } from 'vue'
-import debounce from 'lodash/debounce'
-import { getOrders } from '../../api/orders.js'
+import { ref } from 'vue'
 
 const startDate = ref(null)
 const endDate = ref(null)
 
-let info = ref([])
-let fields = ref([])
-let dataTable = ref([])
-let dataLoaded = ref(false) // Флаг для контроля загрузки данных
-
-// Функция для загрузки данных таблицы с сервера
-const loadOrders = async () => {
-  try {
-    dataLoaded.value = false // Сбрасываем флаг перед загрузкой данных
-    const response = await getOrders(1, 15, '', null, null, startDate.value, endDate.value)
-    console.log(response)
-
-    info.value = response.header
-    fields.value = response.table.fields
-    dataTable.value = response.table.data
-
-    dataLoaded.value = true // Устанавливаем флаг после успешной загрузки данных
-  } catch (error) {
-    console.error('Ошибка загрузки данных заказов:', error)
-  }
-}
-
-// Дебаунс для минимизации количества запросов к серверу
-const debouncedLoadOrders = debounce(loadOrders, 500)
-
-// Наблюдатели за датами, вызывающие загрузку данных при их изменении
-watch([startDate, endDate], () => {
-  debouncedLoadOrders()
-})
-
-// Начальная загрузка данных при монтировании компонента
-onMounted(() => {
-  loadOrders()
-})
 </script>
 
 <style scoped>

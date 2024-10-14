@@ -1,8 +1,10 @@
 <template>
   <DataTable
-    v-if="dataLoaded"
-    :data="formattedData"
-    class="display">
+      v-if="dataLoaded"
+      :data="formattedData"
+      class="display"
+      :options="dataTableOptions"
+  >
     <thead>
     <tr>
       <th v-for="(field, index) in headers" :key="index">{{ field.title }}</th>
@@ -12,34 +14,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from 'vue'
+import {defineProps, onMounted, ref} from 'vue'
+import axios from 'axios'
+
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net'
+import 'datatables.net-bs5';
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
 DataTable.use(DataTablesCore)
 
 const props = defineProps<{
-  info: object;
-  fields: { name: string; title: string }[];
-  dataTable: any[];
-}>()
+  startDate: string;
+  endDate: string;
+  url: string;
+}>();
 
-const headers = ref([])
+const headers = ref(props.fields.map(field => ({name: field.name, title: field.title})))
 const formattedData = ref([])
 const dataLoaded = ref(false) // Состояние для контроля загрузки данных
 
-const updateTableData = () => {
-  headers.value = props.fields.map(field => ({ name: field.name, title: field.title }))
-  formattedData.value = props.dataTable.map(row => headers.value.map(header => row[header.name] || ''))
+const dataTableOptions = ref({
+  processing: true,
+  serverSide: true,
+  ajax: async (data, callback) => {
+    try {
+      const response = await [url](1, 15, '', null, null, startDate.value, endDate.value)
 
-  console.log('Обновлены заголовки:', headers.value)
-  console.log('Обновлены отформатированные данные:', formattedData.value)
+      const responseData = response.data
+      formattedData.value = responseData.data
 
-  // Устанавливаем флаг после форматирования данных
-  dataLoaded.value = true
-}
+      callback({
+        draw: responseData.draw,
+        recordsTotal: responseData.recordsTotal,
+        recordsFiltered: responseData.recordsFiltered,
+        data: formattedData.value
+      })
+
+      dataLoaded.value = true
+    } catch (error) {
+      console.error('Ошибка при загрузке данных с сервера:', error)
+    }
+  },
+  columns: props.fields.map(field => ({
+    data: field.name,
+    title: field.title
+  })),
+  language: {url: 'Russian.json'}
+})
 
 onMounted(() => {
-  updateTableData()
+  dataLoaded.value = true
 })
 </script>
