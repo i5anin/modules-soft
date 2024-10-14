@@ -1,15 +1,6 @@
 <template>
   <div>
-    <!-- Отображаем заголовки и форматированные данные для отладки -->
-    <p>Headers: {{ headers[0] }}</p>
-    <p>Formatted Data: {{ dataLoaded }}</p>
-
-    <DataTable
-        v-if="dataLoaded"
-        :data="formattedData"
-        class="display"
-        ref="tableRef"
-    >
+    <DataTable v-if="dataLoaded" :data="formattedData" class="display" ref="tableRef" :options="dataTableOptions">
       <thead>
       <tr>
         <th v-for="(heading, index) in headers" :key="index">{{ heading.title }}</th>
@@ -23,55 +14,43 @@
 import { defineProps, ref, onMounted, watch } from 'vue'
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net'
-import 'datatables.net-bs5'
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
 
 DataTable.use(DataTablesCore)
 
-const props = defineProps<{
-  startDate: string | null;
-  endDate: string | null;
-  url: Function;
-}>()
+const props = defineProps({
+  startDate: String,
+  endDate: String,
+  url: Function
+})
 
-const headers = ref([]) // Динамически определяем заголовки
+const headers = ref([])
 const formattedData = ref([])
 const dataLoaded = ref(false)
-const tableRef = ref(null) // Реф для доступа к таблице
+const tableRef = ref(null)
+
+const dataTableOptions = ref({
+  processing: true,
+  serverSide: true,
+  language: {url: 'Russian.json'},
+})
 
 const loadData = async () => {
-  try {
-    const response = await props.url(1, 10, '', '', '', props.startDate, props.endDate)
+  const response = await props.url(1, 15, '', '', '', props.startDate, props.endDate)
+  const responseData = response.table
 
-    if (!response || !response.table || !response.table.data || !response.table.fields) {
-      throw new Error('Некорректный ответ от сервера или отсутствует свойство "table"')
-    }
-
-    const responseData = response.table
-
-    // Устанавливаем данные для таблицы
-    formattedData.value = responseData.data || []
-
-    // Получаем заголовки из responseData.fields
+  if (responseData) {
+    formattedData.value = responseData.data
     headers.value = responseData.fields.map(field => ({
       name: field.name,
       title: field.title || field.name
     }))
 
-    // После загрузки данных вручную обновляем таблицу
-    const table = tableRef.value?.datatable
-    if (table) {
-      table.clear()
-      table.rows.add(formattedData.value).draw()
-    }
-
+    tableRef.value?.datatable?.clear().rows.add(formattedData.value).draw()
     dataLoaded.value = true
-  } catch (error) {
-    console.error('Ошибка при загрузке данных с сервера:', error)
   }
 }
 
 watch([() => props.startDate, () => props.endDate], loadData)
-
 onMounted(loadData)
 </script>
