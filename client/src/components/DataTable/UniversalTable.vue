@@ -33,12 +33,15 @@ const noData = ref(false)
 const tableRef = ref(null)
 let loadRequestId = 0
 let currentController = null
+const totalCount = ref(0);
 
 const processData = (data) => {
-  headers.value = data.fields.map(f => ({ name: f.name, title: f.title || f.name }))
+  headers.value = data.fields.map(f => ({name: f.name, title: f.title || f.name}))
   formattedData.value = data.data.map(item => headers.value.map(h => item[h.name]))
   noData.value = !formattedData.value.length
-  if (tableRef.value && formattedData.value.length) tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
+  if (tableRef.value && formattedData.value.length) {
+    tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
+  }
 }
 
 const fetchData = async () => {
@@ -47,7 +50,8 @@ const fetchData = async () => {
   const currentRequestId = loadRequestId  // добавлено объявление переменной
   if (currentController) currentController.abort()
   currentController = new AbortController()
-  const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, { signal: currentController.signal })
+  const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, {signal: currentController.signal})
+  totalCount.value = response.header.total_count; // всего записей 
   if (loadRequestId === currentRequestId) processData(response.table)
 }
 
@@ -56,9 +60,14 @@ const dataTableOptions = ref({
   serverSide: true,
   ajax: async (data, callback) => {
     await fetchData()
-    callback({ draw: data.draw, recordsTotal: formattedData.value.length, recordsFiltered: formattedData.value.length, data: formattedData.value })
+    callback({
+      draw: data.draw,
+      recordsTotal: formattedData.value.length,
+      recordsFiltered: formattedData.value.length,
+      data: formattedData.value
+    })
   },
-  language: { url: 'Russian.json' },
+  language: {url: 'Russian.json'},
 })
 
 onMounted(fetchData)
