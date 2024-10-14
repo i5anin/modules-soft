@@ -14,7 +14,8 @@
 import { defineProps, ref, onMounted, watch } from 'vue'
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net'
-import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-bs5';
 
 DataTable.use(DataTablesCore)
 
