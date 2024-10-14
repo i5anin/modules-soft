@@ -1,25 +1,23 @@
 <template>
   <div>
-    <DataTable v-if="!noData && formattedData.length > 0" :data="formattedData" class="table table-striped display"
+    <DataTable v-if="!noData && formattedData.length" :data="formattedData" class="table table-striped display"
                ref="tableRef" :options="dataTableOptions">
       <thead>
       <tr>
-        <th v-for="(heading, index) in headers" :key="index">{{ heading.title }}</th>
+        <th v-for="(heading, i) in headers" :key="i">{{ heading.title }}</th>
       </tr>
       </thead>
     </DataTable>
-    <div v-else-if="noData" class="text-center">
-      Нет данных
-    </div>
+    <div v-else class="text-center">Нет данных</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {defineProps, onMounted, ref} from 'vue'
 import DataTable from 'datatables.net-vue3'
-import DataTablesCore from 'datatables.net-bs5'  // Подключаем версию DataTables для Bootstrap 5
-import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'; // Подключаем CSS для DataTables с Bootstrap 5
-import 'bootstrap/dist/css/bootstrap.min.css';  // Подключаем основной Bootstrap 5
+import DataTablesCore from 'datatables.net-bs5'
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 DataTable.use(DataTablesCore)
 
@@ -36,58 +34,32 @@ const tableRef = ref(null)
 let loadRequestId = 0
 let currentController = null
 
-const processData = (responseData) => {
-  headers.value = responseData.fields.map(field => ({
-    name: field.name,
-    title: field.title || field.name
-  }))
-
-  formattedData.value = responseData.data.map(item => {
-    return headers.value.map(header => item[header.name])
-  })
-
-  noData.value = formattedData.value.length === 0
-
-  if (tableRef.value && formattedData.value.length > 0) {
-    tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
-  }
+const processData = (data) => {
+  headers.value = data.fields.map(f => ({ name: f.name, title: f.title || f.name }))
+  formattedData.value = data.data.map(item => headers.value.map(h => item[h.name]))
+  noData.value = !formattedData.value.length
+  if (tableRef.value && formattedData.value.length) tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
 }
 
 const fetchData = async () => {
-  if (formattedData.value.length > 0) return
-
+  if (formattedData.value.length) return
   loadRequestId++
-  const currentRequestId = loadRequestId
+  const currentRequestId = loadRequestId  // добавлено объявление переменной
   if (currentController) currentController.abort()
   currentController = new AbortController()
-
-  try {
-    const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, {signal: currentController.signal})
-    if (currentRequestId !== loadRequestId) return
-    processData(response.table)
-  } catch (error) {
-    if (error.name !== 'AbortError') {
-      console.error(error)
-    }
-  }
+  const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, { signal: currentController.signal })
+  if (loadRequestId === currentRequestId) processData(response.table)
 }
 
 const dataTableOptions = ref({
   processing: true,
   serverSide: true,
-  ajax: async function (data, callback) {
+  ajax: async (data, callback) => {
     await fetchData()
-    callback({
-      draw: data.draw,
-      recordsTotal: formattedData.value.length,
-      recordsFiltered: formattedData.value.length,
-      data: formattedData.value
-    })
+    callback({ draw: data.draw, recordsTotal: formattedData.value.length, recordsFiltered: formattedData.value.length, data: formattedData.value })
   },
-  language: {url: 'Russian.json'},
+  language: { url: 'Russian.json' },
 })
 
-onMounted(() => {
-  fetchData()
-})
+onMounted(fetchData)
 </script>
