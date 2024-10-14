@@ -21,7 +21,7 @@ DataTable.use(DataTablesCore)
 const props = defineProps({
   startDate: String,
   endDate: String,
-  url: Function
+  urlDate: Function
 })
 
 const headers = ref([])
@@ -36,15 +36,20 @@ const dataTableOptions = ref({
 })
 
 const loadData = async () => {
-  const response = await props.url(1, 15, '', '', '', props.startDate, props.endDate)
+  const response = await props.urlDate(1, 15, '', '', '', props.startDate, props.endDate)
   const responseData = response.table
 
   if (responseData) {
-    formattedData.value = responseData.data
+    // Assuming responseData.data is an array of objects
+    formattedData.value = responseData.data.map(item => {
+      // Assuming your headers.value contains 'name', 'email', etc.
+      return headers.value.map(header => item[header.name]);
+    });
+
     headers.value = responseData.fields.map(field => ({
       name: field.name,
       title: field.title || field.name
-    }))
+    }));
 
     tableRef.value?.datatable?.clear().rows.add(formattedData.value).draw()
     dataLoaded.value = true

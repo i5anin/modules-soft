@@ -24,7 +24,7 @@
 
         <UniversalTable
             ref="ordersTable"
-            :url="getOrdersUrl"
+            :url-date="getOrdersUrl"
             :start-date="startDate"
             :end-date="endDate"
             class="display"
