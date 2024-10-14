@@ -1,23 +1,25 @@
 <template>
   <div>
-    dataLoaded = {{ dataLoaded }}
-    <DataTable v-if="dataLoaded" :data="formattedData" class="display" ref="tableRef" :options="dataTableOptions">
+    <DataTable v-if="!noData && formattedData.length > 0" :data="formattedData" class="display" ref="tableRef"
+               :options="dataTableOptions">
       <thead>
       <tr>
         <th v-for="(heading, index) in headers" :key="index">{{ heading.title }}</th>
       </tr>
       </thead>
     </DataTable>
+    <div v-else-if="noData" class="text-center">
+      Нет данных
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {defineProps, onMounted, ref, watch} from 'vue'
+import {defineProps, onMounted, ref} from 'vue'
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net'
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-bs5';
-import {_} from 'lodash'
 
 DataTable.use(DataTablesCore)
 
@@ -29,113 +31,63 @@ const props = defineProps({
 
 const headers = ref([])
 const formattedData = ref([])
-const dataLoaded = ref(false);
+const noData = ref(false)
 const tableRef = ref(null)
-let loadRequestId = 0; // Флаг для отмены старых запросов
-let isLoading = false;  // Флаг для предотвращения многократных запросов
+let loadRequestId = 0
+let currentController = null
+
+const processData = (responseData) => {
+  headers.value = responseData.fields.map(field => ({
+    name: field.name,
+    title: field.title || field.name
+  }))
+
+  formattedData.value = responseData.data.map(item => {
+    return headers.value.map(header => item[header.name])
+  })
+
+  noData.value = formattedData.value.length === 0
+
+  if (tableRef.value && formattedData.value.length > 0) {
+    tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
+  }
+}
+
+const fetchData = async () => {
+  if (formattedData.value.length > 0) return
+
+  loadRequestId++
+  const currentRequestId = loadRequestId
+  if (currentController) currentController.abort()
+  currentController = new AbortController()
+
+  try {
+    const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, {signal: currentController.signal})
+    if (currentRequestId !== loadRequestId) return
+    processData(response.table)
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error(error)
+    }
+  }
+}
 
 const dataTableOptions = ref({
   processing: true,
   serverSide: true,
   ajax: async function (data, callback) {
-    if (isLoading) {
-      console.log('Запрос уже в процессе загрузки, отмена повторного запроса.');
-      return;
-    }
-    isLoading = true; // Устанавливаем флаг, чтобы предотвратить повторные запросы
-    loadRequestId++;
-    const currentRequestId = loadRequestId;
-    console.log('Начало загрузки данных через ajax...');
-    try {
-      const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate);
-      if (currentRequestId !== loadRequestId) {
-        console.log('Отменен устаревший запрос.');
-        isLoading = false;
-        return;
-      }
-      console.log('Данные получены через ajax:', response);
-      const responseData = response.table;
-      if (responseData) {
-        headers.value = responseData.fields.map(field => ({
-          name: field.name,
-          title: field.title || field.name
-        }));
-        console.log('Заголовки таблицы:', JSON.parse(JSON.stringify(headers.value)));
-        formattedData.value = responseData.data.map(item => {
-          return headers.value.map(header => item[header.name]);
-        });
-        console.log('Отформатированные данные:', JSON.parse(JSON.stringify(formattedData.value)));
-        callback({
-          draw: data.draw,
-          recordsTotal: responseData.recordsTotal,
-          recordsFiltered: responseData.recordsFiltered,
-          data: formattedData.value
-        });
-        dataLoaded.value = true;
-        console.log('Данные успешно загружены и обработаны.');
-      }
-    } catch (error) {
-      console.error('Ошибка при загрузке данных через ajax:', error);
-    } finally {
-      isLoading = false; // Разблокируем загрузку
-    }
+    await fetchData()
+    callback({
+      draw: data.draw,
+      recordsTotal: formattedData.value.length,
+      recordsFiltered: formattedData.value.length,
+      data: formattedData.value
+    })
   },
   language: {url: 'Russian.json'},
-});
-
-
-const loadData = async () => {
-  if (isLoading) {
-    console.log('Запрос уже в процессе загрузки, отмена повторного запроса.');
-    return;
-  }
-  isLoading = true; // Устанавливаем флаг, чтобы предотвратить повторные запросы
-  loadRequestId++;
-  const currentRequestId = loadRequestId;
-  console.log('Начало загрузки данных...');
-  dataLoaded.value = false;
-  try {
-    const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate);
-    if (currentRequestId !== loadRequestId) {
-      console.log('Отменен устаревший запрос.');
-      isLoading = false;
-      return;
-    }
-    console.log('Данные получены:', response);
-    const responseData = response.table;
-
-    if (responseData) {
-      headers.value = responseData.fields.map(field => ({
-        name: field.name,
-        title: field.title || field.name
-      }));
-      console.log('Заголовки таблицы:', JSON.parse(JSON.stringify(headers.value)));
-      formattedData.value = responseData.data.map(item => {
-        return headers.value.map(header => item[header.name]);
-      });
-      console.log('Отформатированные данные:', JSON.parse(JSON.stringify(formattedData.value)));
-
-      if (tableRef.value) {
-        console.log('Обновление данных в таблице...');
-        tableRef.value.datatable.clear().rows.add(formattedData.value).draw();
-      }
-
-      dataLoaded.value = true;
-      console.log('Данные успешно загружены и обновлены.');
-    }
-  } catch (error) {
-    console.error('Ошибка при загрузке данных:', error);
-  } finally {
-    isLoading = false; // Разблокируем загрузку
-  }
-}
-
-const debouncedLoadData = _.debounce(loadData, 2000); // Увеличена задержка до 2000 мс для предотвращения частых вызовов
-
-// watch([() => props.startDate, () => props.endDate], debouncedLoadData);
+})
 
 onMounted(() => {
-  console.log('Компонент смонтирован, начинаем загрузку данных...');
-  loadData();
+  fetchData()
 })
 </script>
