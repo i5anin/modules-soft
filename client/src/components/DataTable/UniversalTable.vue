@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataTable v-if="!noData && formattedData.length" :data="formattedData" class="table table-striped display"
-               ref="tableRef" :options="dataTableOptions">
+               ref="tableRef" :options="dataTableOptions" @row-clicked="handleRowClick">
       <thead>
       <tr>
         <th v-for="(heading, i) in headers" :key="i">{{ heading.title }}</th>
@@ -55,7 +55,14 @@ const fetchData = async () => {
   if (loadRequestId === currentRequestId) processData(response.table)
 }
 
+const handleRowClick = (rowData) => {
+  console.log('Нажатая позиция:', rowData)
+}
+
 const dataTableOptions = ref({
+  pageLength: 15,
+  lengthMenu: [15, 30, 60, 100],
+  searching: true,
   processing: true,
   serverSide: true,
   ajax: async (data, callback) => {
