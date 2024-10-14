@@ -1,7 +1,13 @@
 <template>
   <div>
-    <DataTable v-if="!noData && formattedData.length" :data="formattedData" class="table table-striped display"
-               ref="tableRef" :options="dataTableOptions" @row-clicked="handleRowClick">
+    <DataTable
+        v-if="!noData && formattedData.length"
+        :data="formattedData"
+        :options="dataTableOptions"
+        @row-clicked="handleRowClick"
+        class="table table-striped display"
+        ref="tableRef"
+    >
       <thead>
       <tr>
         <th v-for="(heading, i) in headers" :key="i">{{ heading.title }}</th>
@@ -79,3 +85,8 @@ const dataTableOptions = ref({
 
 onMounted(fetchData)
 </script>
+<style>
+.table {
+  white-space: nowrap;
+}</style>
+
