@@ -1,7 +1,7 @@
 <template>
   <div>
-    <DataTable v-if="!noData && formattedData.length > 0" :data="formattedData" class="display" ref="tableRef"
-               :options="dataTableOptions">
+    <DataTable v-if="!noData && formattedData.length > 0" :data="formattedData" class="table table-striped display"
+               ref="tableRef" :options="dataTableOptions">
       <thead>
       <tr>
         <th v-for="(heading, index) in headers" :key="index">{{ heading.title }}</th>
@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import {defineProps, onMounted, ref} from 'vue'
 import DataTable from 'datatables.net-vue3'
-import DataTablesCore from 'datatables.net'
-import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
-import 'datatables.net-bs5';
+import DataTablesCore from 'datatables.net-bs5'  // Подключаем версию DataTables для Bootstrap 5
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'; // Подключаем CSS для DataTables с Bootstrap 5
+import 'bootstrap/dist/css/bootstrap.min.css';  // Подключаем основной Bootstrap 5
 
 DataTable.use(DataTablesCore)
 
