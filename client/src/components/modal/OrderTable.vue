@@ -1,7 +1,7 @@
 <template>
   <div>
     <h5 class="mt-4">{{ tableTitle || "Таблица" }}</h5> <!-- Название таблицы -->
-    <table class="table mt-3">
+    <table class="table table-sm  mt-3">
       <thead>
       <tr>
         <th v-for="(field, index) in fields" :key="index">
