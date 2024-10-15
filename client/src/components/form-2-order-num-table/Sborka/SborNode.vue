@@ -4,9 +4,9 @@
   <tr @click="toggle" :class="{ 'table-info': isExpanded }">
     <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
       <span v-if="hasChildren">
-    <font-awesome-icon :icon="isExpanded ? ['far', 'circle-minus'] : ['far', 'circle-plus']"/>
+        <font-awesome-icon :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']" class="icon-sm" />
       </span>
-      <span v-else style="padding-left: 16px;"></span>
+      <span v-else style="padding-left: 25px;"></span>
       {{ sbor.name }}
     </td>
     <td>{{ sbor.description }}</td>
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import {ref} from 'vue';
-import {FontAwesomeIcon} from '@/components/shared/fontawesome.js';
+import { ref } from 'vue';
+import { FontAwesomeIcon } from '@/components/shared/fontawesome.js';
 
 export default {
   name: 'SborNode',
@@ -55,19 +55,19 @@ export default {
         props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     );
 
-    return {isExpanded, toggle, hasChildren};
+    return { isExpanded, toggle, hasChildren };
   },
 };
 </script>
-
 
 <style scoped>
 .table-active {
   background-color: #f5f5f5;
 }
 
-.fas {
-  margin-right: 5px;
+.icon-sm {
+  font-size: 0.8em; /* Уменьшаем размер иконки */
+  margin-right: 10px; /* Добавляем отступ справа */
 }
 
 tr:hover {
