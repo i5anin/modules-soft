@@ -40,7 +40,6 @@
           </tr>
           </tbody>
         </table>
-        <Sborka ></Sborka>
       </div>
     </div>
   </div>
@@ -57,10 +56,9 @@ import 'datatables.net-bs5';
 import {useRouter} from 'vue-router';
 import _ from 'lodash';
 import {formatBoolean, formatDate, formatPrice, formatTime} from "@/components/shared/formatters.js";
-import Sborka from "@/components/form-1-orders-table/Sborka.vue";
 
 export default {
-  components: {Sborka, DateRangeFilter},
+  components: { DateRangeFilter},
   setup() {
     const ordersTable = ref(null);
     const router = useRouter();
