@@ -36,9 +36,11 @@
       </tbody>
     </table>
 
-    <div v-if="sbor.sbor_tree.length > 0" class="sbor-tree">
+    <!-- Рекурсивное отображение дочерних элементов -->
+    <div v-if="sbor.sbor_tree && sbor.sbor_tree.length > 0" class="sbor-tree">
       <h6 class="mt-3">Составные части:</h6>
       <div v-for="childSbor in sbor.sbor_tree" :key="childSbor.name" class="child-sbor">
+        <!-- Рекурсивный вызов компонента -->
         <SborComponent :sbor="childSbor" />
       </div>
     </div>
