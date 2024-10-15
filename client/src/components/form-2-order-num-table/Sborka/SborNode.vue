@@ -5,6 +5,9 @@
     <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
       <span v-if="hasChildren">
         <font-awesome-icon :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']" class="icon-sm" />
+        <!-- Иконка сборки или детали -->
+        <font-awesome-icon :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']" class="icon-sm"
+                           :style="sbor.is_sbor ? 'color: #dc6611;' : 'color: #cfa614;'" />
       </span>
       <span v-else style="padding-left: 25px;"></span>
       {{ sbor.name }}
