@@ -12,6 +12,19 @@ const handleError = (error) => {
     throw error;
 };
 
+export const fetchOrders = () => {
+    return api.get('nom_list', {
+        params: {
+            id: 1840,
+            type: 'orders',
+            module: 'tech_calc',
+        }
+    }).then(response => {
+        return response.data; // Возвращаем только данные, без изменения внешних переменных
+    }).catch(handleError);
+};
+
+
 export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) => {
     return api.get('list', {
         params: {
@@ -39,5 +52,3 @@ export const getModalOrderById = (orderId) => {
         params: {orders_nom_id: orderId},
     }).then(handleResponse).catch(handleError);
 };
-
-

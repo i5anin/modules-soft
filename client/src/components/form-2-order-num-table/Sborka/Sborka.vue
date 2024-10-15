@@ -28,7 +28,7 @@
 
 <script>
 import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { fetchOrders } from '@/api/orders.js'; // Импортируем функцию из api
 import SborNode from './SborNode.vue';
 
 export default {
@@ -37,22 +37,16 @@ export default {
   setup() {
     const ordersSbors = ref([]);
 
-    const fetchOrders = async () => {
+    const loadOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:8002/api/nom_list', {
-          params: {
-            id: 1840,
-            type: 'orders',
-            module: 'tech_calc',
-          },
-        });
-        ordersSbors.value = response.data.table.data.filter(item => item.is_sbor);
+        const data = await fetchOrders(); // Получаем данные от API
+        ordersSbors.value = data.table.data.filter(item => item.is_sbor); // Фильтруем и сохраняем в переменной
       } catch (error) {
         console.error('Ошибка при загрузке сборок:', error);
       }
     };
 
-    onMounted(fetchOrders);
+    onMounted(loadOrders);
 
     return { ordersSbors };
   },
