@@ -4,9 +4,14 @@
   <tr @click="toggle" :class="{ 'table-info': isExpanded }">
     <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
       <span v-if="hasChildren">
-        <font-awesome-icon :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']" class="icon-sm" />
+        <font-awesome-icon :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']" class="icon-sm"/>
       </span>
+      <span v-if="sbor.is_sbor">
+      </span>
+
       <span v-else style="padding-left: 25px;"></span>
+      <font-awesome-icon :icon="!sbor.is_sbor ? ['fas', 'cube'] : ['fas', 'cubes']" class="icon-sm"
+                         :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"/>
       {{ sbor.name }}
     </td>
     <td>{{ sbor.description }}</td>
@@ -24,8 +29,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { FontAwesomeIcon } from '@/components/shared/fontawesome.js';
+import {ref} from 'vue';
+import {FontAwesomeIcon} from '@/components/shared/fontawesome.js';
 
 export default {
   name: 'SborNode',
@@ -55,7 +60,7 @@ export default {
         props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     );
 
-    return { isExpanded, toggle, hasChildren };
+    return {isExpanded, toggle, hasChildren};
   },
 };
 </script>
