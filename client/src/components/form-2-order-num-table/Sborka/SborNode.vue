@@ -2,13 +2,17 @@
 <template>
   <!-- Отображение текущей сборки -->
   <tr @click="toggle" :class="{ 'table-active': isExpanded }">
-    <td :style="{ paddingLeft: depth * 20 + 'px', cursor: 'pointer' }">
-      <span v-if="hasChildren">
-        <i :class="isExpanded ? 'bi bi-dash-square' : 'bi bi-plus-square'"></i>
-      </span>
-      <span v-else style="padding-left: 16px;"></span>
-      {{ sbor.name }}
+    <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
+  <span>
+    <i class="fa-regular fa-circle-plus"></i>
+
+    <i v-if="hasChildren" :class="isExpanded ? 'fa-regular fa-circle-minus' : 'fa-regular fa-circle-plus'"></i>
+    <span v-else style="display: inline-block; width: 16px;"></span>
+    {{ sbor.name }}
+  </span>
     </td>
+
+
     <td>{{ sbor.description }}</td>
     <td>{{ sbor.kolvo }}</td>
     <td>{{ sbor.is_sbor ? 'Да' : 'Нет' }}</td>
@@ -19,12 +23,12 @@
     <SborNode v-for="child in sbor.sbor_tree"
               :key="child.name + '-' + child.description"
               :sbor="child"
-              :depth="depth + 1" />
+              :depth="depth + 1"/>
   </template>
 </template>
 
 <script>
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 export default {
   name: 'SborNode',
@@ -51,7 +55,7 @@ export default {
         props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     );
 
-    return { isExpanded, toggle, hasChildren };
+    return {isExpanded, toggle, hasChildren};
   },
 };
 </script>
