@@ -4,7 +4,7 @@
   <tr @click="toggle" :class="{ 'table-info': isExpanded }">
     <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
       <span v-if="hasChildren">
-    <font-awesome-icon :icon="isExpanded ? ['fas', 'square-minus'] : ['fas', 'square-plus']"/>
+    <font-awesome-icon :icon="isExpanded ? ['far', 'circle-minus'] : ['far', 'circle-plus']"/>
       </span>
       <span v-else style="padding-left: 16px;"></span>
       {{ sbor.name }}
