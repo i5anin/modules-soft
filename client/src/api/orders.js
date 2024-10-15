@@ -30,7 +30,7 @@ export const getOrders = (page, limit, search, sortCol, sortDir, date1, date2) =
 
 export const getOrderById = (orderId) => {
     return api.get('nom_list', {
-        params: {id: orderId, type: "orders", module: "metrolog", flat: 1},
+        params: {id: orderId, type: "orders", module: "metrolog"},
     }).then(handleResponse).catch(handleError);
 };
 
