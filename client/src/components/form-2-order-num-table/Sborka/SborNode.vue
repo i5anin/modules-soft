@@ -1,83 +1,71 @@
+<!-- SborNode.vue -->
 <template>
-  <div class="sbor-component">
-    <h5 class="sbor-title">Сборка: {{ sbor.name }} ({{ sbor.description }})</h5>
-    <table class="table table-sm">
-      <thead>
-      <tr>
-        <th>Параметр</th>
-        <th>Значение</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>Количество</td>
-        <td>{{ sbor.kolvo }}</td>
-      </tr>
-      <tr v-if="sbor.ordersnom__kolvo_add">
-        <td>С браком</td>
-        <td>{{ sbor.ordersnom__kolvo_add }}</td>
-      </tr>
-      <tr>
-        <td>Стратегия</td>
-        <td>{{ sbor.strat || 'Не указано' }}</td>
-      </tr>
-      <tr v-if="sbor.prod_price_w_sbor_det">
-        <td>Цена сборки на ед.</td>
-        <td>{{ sbor.prod_price_w_sbor_det }}</td>
-      </tr>
-      <tr v-if="sbor.p_m_t_p_out_price_det">
-        <td>Цена за 1 шт. с м/о, Т/О, аутсорс</td>
-        <td>{{ sbor.p_m_t_p_out_price_det }}</td>
-      </tr>
-      <tr>
-        <td>Итого</td>
-        <td>{{ sbor.prod_sbor_no_cal_instr }}</td>
-      </tr>
-      </tbody>
-    </table>
+  <!-- Отображение текущей сборки -->
+  <tr @click="toggle" :class="{ 'table-active': isExpanded }">
+    <td :style="{ paddingLeft: depth * 20 + 'px', cursor: 'pointer' }">
+      <span v-if="hasChildren">
+        <i :class="isExpanded ? 'bi bi-dash-square' : 'bi bi-plus-square'"></i>
+      </span>
+      <span v-else style="padding-left: 16px;"></span>
+      {{ sbor.name }}
+    </td>
+    <td>{{ sbor.description }}</td>
+    <td>{{ sbor.kolvo }}</td>
+    <td>{{ sbor.is_sbor ? 'Да' : 'Нет' }}</td>
+  </tr>
 
-    <!-- Рекурсивное отображение дочерних элементов -->
-    <div v-if="sbor.sbor_tree && sbor.sbor_tree.length > 0" class="sbor-tree">
-      <h6 class="mt-3">Составные части:</h6>
-      <div v-for="childSbor in sbor.sbor_tree" :key="childSbor.name" class="child-sbor">
-        <!-- Рекурсивный вызов компонента -->
-        <SborComponent :sbor="childSbor" />
-      </div>
-    </div>
-  </div>
+  <!-- Рекурсивное отображение дочерних сборок -->
+  <template v-if="isExpanded && hasChildren">
+    <SborNode v-for="child in sbor.sbor_tree"
+              :key="child.name + '-' + child.description"
+              :sbor="child"
+              :depth="depth + 1" />
+  </template>
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
-  name: 'SborComponent',
+  name: 'SborNode',
   props: {
     sbor: {
       type: Object,
-      required: true
-    }
-  }
+      required: true,
+    },
+    depth: {
+      type: Number,
+      default: 0,
+    },
+  },
+  setup(props) {
+    const isExpanded = ref(false);
+
+    const toggle = () => {
+      if (hasChildren.value) {
+        isExpanded.value = !isExpanded.value;
+      }
+    };
+
+    const hasChildren = ref(
+        props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
+    );
+
+    return { isExpanded, toggle, hasChildren };
+  },
 };
 </script>
 
 <style scoped>
-.sbor-component {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.table-active {
+  background-color: #f5f5f5;
 }
 
-.sbor-title {
-  font-weight: bold;
+.bi {
+  margin-right: 5px;
 }
 
-.child-sbor {
-  margin-left: 20px;
-  border-left: 2px solid #ccc;
-  padding-left: 10px;
-}
-
-.table {
-  margin-bottom: 0;
+tr:hover {
+  background-color: #f9f9f9;
 }
 </style>
