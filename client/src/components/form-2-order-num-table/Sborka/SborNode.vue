@@ -1,10 +1,10 @@
 <!-- SborNode.vue -->
 <template>
   <!-- Отображение текущей сборки -->
-  <tr @click="toggle" :class="{ 'table-active': isExpanded }">
-    <td :style="{ paddingLeft: depth * 20 + 'px', cursor: 'pointer' }">
+  <tr @click="toggle" :class="{ 'table-info': isExpanded }">
+    <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
       <span v-if="hasChildren">
-        <i :class="isExpanded ? 'bi bi-dash-square' : 'bi bi-plus-square'"></i>
+    <font-awesome-icon :icon="isExpanded ? ['fas', 'square-minus'] : ['fas', 'square-plus']"/>
       </span>
       <span v-else style="padding-left: 16px;"></span>
       {{ sbor.name }}
@@ -19,15 +19,19 @@
     <SborNode v-for="child in sbor.sbor_tree"
               :key="child.name + '-' + child.description"
               :sbor="child"
-              :depth="depth + 1" />
+              :depth="depth + 1"/>
   </template>
 </template>
 
 <script>
-import { ref } from 'vue';
+import {ref} from 'vue';
+import {FontAwesomeIcon} from '@/components/shared/fontawesome.js';
 
 export default {
   name: 'SborNode',
+  components: {
+    FontAwesomeIcon
+  },
   props: {
     sbor: {
       type: Object,
@@ -51,17 +55,18 @@ export default {
         props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     );
 
-    return { isExpanded, toggle, hasChildren };
+    return {isExpanded, toggle, hasChildren};
   },
 };
 </script>
+
 
 <style scoped>
 .table-active {
   background-color: #f5f5f5;
 }
 
-.bi {
+.fas {
   margin-right: 5px;
 }
 

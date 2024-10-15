@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Рекурсивное отображение дерева сборок -->
-        <table class="table table-bordered table-striped">
+        <table class="table table-hover">
           <thead>
           <tr>
             <th>Название</th>
