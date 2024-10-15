@@ -32,14 +32,20 @@
           </div>
         </div>
       </div>
+
+
     </div>
   </div>
+
+  <Sborka></Sborka>
 </template>
 
 <script>
 import formatters from "@/components/shared/formatters.js";
+import Sborka from "@/components/form-2-order-num-table/Sborka/Sborka.vue";
 
 export default {
+  components: {Sborka},
   props: {
     header: {
       type: Object,
