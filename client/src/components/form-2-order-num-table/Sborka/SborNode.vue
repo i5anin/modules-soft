@@ -22,6 +22,11 @@
     <td>{{ sbor.description }}</td>
     <td>{{ sbor.kolvo }}</td>
     <td>{{ sbor.is_sbor ? 'Да' : 'Нет' }}</td>
+    <td>{{ sbor.term_price_det }}</td>
+    <td>{{ sbor.prod_price_det }}</td>
+    <td>{{ sbor.metall_price_total_det }}</td>
+    <td>{{ sbor.outsource_price_det }}</td>
+    <td>{{ sbor.prod_price_w_sbor_det }}</td>
   </tr>
 
   <!-- Рекурсивное отображение дочерних сборок -->
