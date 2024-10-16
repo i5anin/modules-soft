@@ -1,40 +1,36 @@
-<!-- SborNode.vue -->
 <template>
-  <!-- Отображение текущей сборки -->
   <tr @click="toggle" :class="{ 'table-info': isExpanded }">
-    <td :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }">
-      <span v-if="hasChildren">
+    <td
+      v-for="field in fields"
+      :key="field.name"
+      :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }"
+    >
+      <!-- Динамический вывод значения поля -->
+      <span v-if="field.name === 'name' && hasChildren">
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
           class="icon-sm ms-3"
         />
       </span>
-      <span v-if="sbor.is_sbor"> </span>
-
-      <span v-else style="padding-left: 27px"></span>
-      <font-awesome-icon
-        :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
-        :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-        class="icon-sm ms-3 me-2"
-      />
-      {{ sbor.name }}
+      <span v-if="field.name === 'name' && sbor.is_sbor"></span>
+      <span v-else-if="field.name === 'name'" style="padding-left: 27px"></span>
+      <span v-if="field.name === 'name'">
+        <font-awesome-icon
+          :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
+          :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
+          class="icon-sm ms-3 me-2"
+        />
+      </span>
+      {{ sbor[field.name] }}
     </td>
-    <td>{{ sbor.description }}</td>
-    <td>{{ sbor.kolvo }}</td>
-    <td>{{ sbor.is_sbor ? 'Да' : 'Нет' }}</td>
-    <td>{{ sbor.term_price_det }}</td>
-    <td>{{ sbor.prod_price_det }}</td>
-    <td>{{ sbor.metall_price_total_det }}</td>
-    <td>{{ sbor.outsource_price_det }}</td>
-    <td>{{ sbor.prod_price_w_sbor_det }}</td>
   </tr>
 
-  <!-- Рекурсивное отображение дочерних сборок -->
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="child in sbor.sbor_tree"
       :key="child.sbor_orders__id"
       :sbor="child"
+      :fields="fields"
       :depth="depth + 1"
     />
   </template>
@@ -52,6 +48,10 @@ export default {
   props: {
     sbor: {
       type: Object,
+      required: true,
+    },
+    fields: {
+      type: Array,
       required: true,
     },
     depth: {
@@ -79,7 +79,7 @@ export default {
 
 <style scoped>
 .icon-sm {
-  font-size: 0.8em; /* Уменьшаем размер иконки */
+  font-size: 0.8em;
 }
 
 tr:hover {
