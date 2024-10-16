@@ -3,9 +3,9 @@
     <td
       v-for="field in fields"
       :key="field.name"
-      :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }"
+      :style="{ paddingLeft: depth * 25 + 'px', cursor: 'pointer' }"
     >
-      <!-- Динамический вывод значения поля в одну строку -->
+      <!-- Динамический вывод значения поля -->
       <span
         v-if="field.name === 'name'"
         style="display: inline-flex; align-items: center"
@@ -21,9 +21,11 @@
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
           class="icon-sm ms-3 me-2"
         />
-        <span>{{ sbor[field.name] }}</span>
+        <span>{{ formatValue(field.name, sbor[field.name]) }}</span>
       </span>
-      <span v-else>{{ sbor[field.name] }}</span>
+      <span v-else :title="field.title">
+        {{ formatValue(field.name, sbor[field.name]) }}
+      </span>
     </td>
   </tr>
 
@@ -41,6 +43,7 @@
 <script>
 import { ref } from 'vue'
 import { FontAwesomeIcon } from '@/components/shared/fontawesome.js'
+import formatters from '@/components/shared/formatters.js'
 
 export default {
   name: 'SborNode',
@@ -74,7 +77,20 @@ export default {
       props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
 
-    return { isExpanded, toggle, hasChildren }
+    const formatValue = (fieldName, value) => {
+      if (fieldName.toLowerCase().includes('price')) {
+        return formatters.formatPrice(value)
+      }
+      if (fieldName.toLowerCase().includes('date')) {
+        return formatters.formatDate(value)
+      }
+      if (fieldName.toLowerCase().includes('time')) {
+        return formatters.formatTime(value)
+      }
+      return value
+    }
+
+    return { isExpanded, toggle, hasChildren, formatValue }
   },
 }
 </script>

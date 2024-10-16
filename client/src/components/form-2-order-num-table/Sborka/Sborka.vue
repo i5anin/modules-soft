@@ -3,11 +3,15 @@
     <h1>Сборка</h1>
     <div class="row">
       <div class="col-12">
-        <!-- Динамическое отображение только разрешенных полей таблицы -->
-        <table class="table table-hover">
+        <table class="table display table-striped table-sm table-hover">
           <thead>
             <tr>
-              <th v-for="field in filteredFields" :key="field.name">
+              <th
+                scope="col"
+                v-for="field in filteredFields"
+                :key="field.name"
+                :style="{ width: allowedFields[field.name]?.width }"
+              >
                 {{ field.title }}
               </th>
             </tr>
@@ -39,16 +43,24 @@ export default {
     const ordersSbors = ref([])
     const tableFields = ref([])
 
-    const allowedFields = [
-      'name',
-      'description',
-      'kolvo',
-      'term_price_det',
-      'prod_price_det',
-      'metall_price_total_det',
-      'outsource_price_det',
-      'prod_price_w_sbor_det',
-    ]
+    // Определяем фиксированные ширины полей
+    const allowedFields = {
+      name: { width: '100px' },
+      description: { width: '100px' },
+
+      kolvo: { width: '100px' },
+      procent: { width: '50px' },
+      term_price_det: { width: '100px' },
+      prod_price_det: { width: '100px' },
+      metall_price_total_det: { width: '100px' },
+      outsource_price_det: { width: '100px' },
+      prod_price_w_sbor_det: { width: '100px' },
+      prod_time: { width: '100px' },
+      p_m_t_p_out_price_det: { width: '100px' },
+      p_m_t_p_out_price: { width: '100px' },
+      prod_sbor_no_cal_instr_det: { width: '100px' },
+      prod_sbor_no_cal_instr: { width: '100px' },
+    }
 
     const loadOrders = async () => {
       try {
@@ -60,16 +72,15 @@ export default {
       }
     }
 
-    // Разрешаем только указанные поля
     const filteredFields = computed(() => {
       return tableFields.value.filter((field) =>
-        allowedFields.includes(field.name)
+        Object.keys(allowedFields).includes(field.name)
       )
     })
 
     onMounted(loadOrders)
 
-    return { ordersSbors, filteredFields }
+    return { ordersSbors, filteredFields, allowedFields }
   },
 }
 </script>
