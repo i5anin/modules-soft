@@ -2,15 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/Universal',
+    path: '/universal',
     name: 'UniversalGet',
     component: () => import('./components/shared/DataTable/UniversalGet.vue'),
   },
   {
-    path: '/Sborka/:id',
+    path: '/sborka/:id',
     name: 'SborkaDetails',
     component: () => import('./components/shared/sborka/SborMain.vue'),
   },
+
   {
     path: '/',
     name: 'OrdersTable',
@@ -25,6 +26,11 @@ const routes = [
     name: 'OrderDetails',
     component: () =>
       import('./components/form-2-order-num-table/OrderNomTable.vue'),
+  },
+  {
+    path: '/:orderId/:orderId',
+    name: 'OrderDetailsDetails',
+    component: () => import('./components/form-3/OrderInfoPlus.vue'),
   },
 ]
 
