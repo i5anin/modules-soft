@@ -11,11 +11,21 @@
         style="display: inline-flex; align-items: center"
       >
         <span v-if="hasChildren">
+          <!-- Если есть дочерние элементы, выводим плюс/минус -->
           <font-awesome-icon
             :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
             class="icon-sm ms-2"
           />
         </span>
+        <span v-else>
+          <!-- Если дочерних элементов нет, выводим точку -->
+          <font-awesome-icon
+            :icon="['fas', 'circle']"
+            class="icon-sm ms-2"
+            style="opacity: 0"
+          />
+        </span>
+        <!-- Иконка куба/кубов для элементов -->
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
@@ -43,7 +53,7 @@
 <script>
 import { ref } from 'vue'
 import { FontAwesomeIcon } from '@/components/shared/fontawesome.js'
-import formatters from '@/components/shared/formatters.js'
+import formatters, { formatBoolean } from '@/components/shared/formatters.js'
 
 export default {
   name: 'SborNode',
@@ -78,6 +88,9 @@ export default {
     )
 
     const formatValue = (fieldName, value) => {
+      if (typeof value === 'boolean') {
+        return formatBoolean(value)
+      }
       if (fieldName.toLowerCase().includes('price')) {
         return formatters.formatPrice(value)
       }

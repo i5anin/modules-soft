@@ -59,6 +59,17 @@ export default {
       p_m_t_p_out_price: { width: '100px' },
       prod_sbor_no_cal_instr_det: { width: '100px' },
       prod_sbor_no_cal_instr: { width: '100px' },
+      norma: { width: '100px' },
+
+      // Новые ключи из JSON
+      ordersnom__kolvo_add: { width: '100px' },
+      mats_from: { width: '100px' },
+      imp: { width: '100px' },
+      strat: { width: '100px' },
+      prod_price: { width: '100px' },
+      tpd: { width: '100px' },
+      p_price_det: { width: '100px' },
+      prod_price_w_sbor: { width: '100px' },
     }
 
     const loadOrders = async () => {
