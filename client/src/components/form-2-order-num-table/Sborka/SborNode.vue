@@ -3,7 +3,7 @@
     <td
       v-for="field in fields"
       :key="field.name"
-      :style="{ paddingLeft: depth * 25 + 'px', cursor: 'pointer' }"
+      :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }"
     >
       <!-- Динамический вывод значения поля -->
       <span
@@ -13,13 +13,13 @@
         <span v-if="hasChildren">
           <font-awesome-icon
             :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
-            class="icon-sm ms-3"
+            class="icon-sm ms-2"
           />
         </span>
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-          class="icon-sm ms-3 me-2"
+          class="icon-sm ms-2 me-2"
         />
         <span>{{ formatValue(field.name, sbor[field.name]) }}</span>
       </span>
