@@ -35,16 +35,12 @@
       </div>
     </div>
   </div>
-
-  <Sborka></Sborka>
 </template>
 
 <script>
 import formatters from '@/components/shared/formatters.js'
-import Sborka from '@/components/shared/sborka/SborMain.vue'
 
 export default {
-  components: { Sborka },
   props: {
     header: {
       type: Object,
