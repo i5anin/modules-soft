@@ -1,5 +1,11 @@
 <template>
-  <tr @click="toggle" :class="{ 'table-info': isExpanded, bold: isExpanded }">
+  <tr
+    @click="toggle"
+    :class="{
+      'table-info': isExpanded,
+      bold: isExpanded || (sbor.is_sbor && isExpanded),
+    }"
+  >
     <td
       v-for="field in fields"
       :key="field.name"
@@ -34,9 +40,15 @@
         />
         <span>{{ formatValue(field.name, sbor[field.name]) }}</span>
       </span>
-      <span v-else :title="field.title" :style="{ fontSize: '13px' }">
+
+      <span
+        v-else
+        :title="generateTitle(field, sbor)"
+        :style="{ fontSize: '13px' }"
+      >
         {{ formatValue(field.name, sbor[field.name]) }}
       </span>
+      <!--      {{ console.log(sbor.strat) }}-->
     </td>
   </tr>
 
@@ -104,7 +116,14 @@ export default {
       return value
     }
 
-    return { isExpanded, toggle, hasChildren, formatValue }
+    const generateTitle = (field, sbor) => {
+      return (
+        `Поле: ${field.title || 'Ошибка нет поля'}\n` +
+        `Стратегия: ${sbor.strat || 'Нет'}`
+      )
+    }
+
+    return { isExpanded, toggle, hasChildren, formatValue, generateTitle }
   },
 }
 </script>
@@ -120,5 +139,9 @@ tr:hover {
 
 td {
   font-size: 13px;
+}
+
+.bold {
+  font-weight: bold;
 }
 </style>

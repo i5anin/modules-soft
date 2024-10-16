@@ -65,7 +65,7 @@ export default {
       ordersnom__kolvo_add: { width: '100px' },
       mats_from: { width: '100px' },
       imp: { width: '100px' },
-      strat: { width: '100px' },
+      // strat: { width: '100px' },
       prod_price: { width: '100px' },
       tpd: { width: '100px' },
       p_price_det: { width: '100px' },
