@@ -48,7 +48,11 @@
       >
         {{ formatValue(field.name, sbor[field.name]) }}
       </span>
-      <!--      {{ console.log(sbor.strat) }}-->
+    </td>
+
+    <!-- Новый столбец для статусов -->
+    <td>
+      <span v-html="combinedStatuses"></span>
     </td>
   </tr>
 
@@ -64,7 +68,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { FontAwesomeIcon } from '@/components/shared/fontawesome.js'
 import formatters, { formatBoolean } from '@/components/shared/formatters.js'
 
@@ -89,7 +93,7 @@ export default {
   },
   setup(props) {
     const isExpanded = ref(false)
-    const firstField = ref(props.fields[0]) // Определение первой доступной колонки
+    const firstField = ref(props.fields[0])
 
     const toggle = () => {
       if (hasChildren.value) {
@@ -124,6 +128,32 @@ export default {
       )
     }
 
+    // Статусы с соответствующими классами и метками
+    const statuses = [
+      { status: 'status_cal', badgeClass: 'bg-danger', label: 'К' },
+      { status: 'status_instr', badgeClass: 'bg-warning', label: 'И' },
+      { status: 'status_draft', badgeClass: 'bg-secondary', label: 'Ч' },
+      { status: 'status_metall', badgeClass: 'bg-dark', label: 'М' },
+      { status: 'status_kp', badgeClass: 'bg-success', label: 'КП' },
+    ]
+
+    // Комбинирование активных статусов
+    const combinedStatuses = computed(() => {
+      const activeStatuses = statuses.filter(
+        (status) =>
+          props.sbor[status.status] && props.sbor[status.status].trim()
+      )
+      if (activeStatuses.length > 0) {
+        return activeStatuses
+          .map(
+            (s) => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
+          )
+          .join('')
+      } else {
+        return ''
+      }
+    })
+
     return {
       isExpanded,
       toggle,
@@ -131,6 +161,7 @@ export default {
       formatValue,
       generateTitle,
       firstField,
+      combinedStatuses,
     }
   },
 }

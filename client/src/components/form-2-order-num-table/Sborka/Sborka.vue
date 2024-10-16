@@ -14,6 +14,8 @@
               >
                 {{ field.title }}
               </th>
+              <th scope="col" style="width: 150px">Статусы</th>
+              <!-- Новый столбец для статусов -->
             </tr>
           </thead>
           <tbody>
@@ -43,17 +45,12 @@ export default {
   setup() {
     const ordersSbors = ref([])
     const tableFields = ref([])
-    const route = useRoute() // Добавлено для получения параметра id из маршрута
+    const route = useRoute()
 
     // Определяем фиксированные ширины полей
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
-      status_cal: { width: '100px' },
-      status_instr: { width: '100px' },
-      status_draft: { width: '100px' },
-      status_metall: { width: '100px' },
-      status_kp: { width: '100px' },
       kolvo: { width: '100px' },
       procent: { width: '50px' },
       term_price_det: { width: '100px' },
@@ -78,7 +75,7 @@ export default {
 
     const loadOrders = async () => {
       try {
-        const data = await fetchOrders(route.params.id) // Получение id из маршрута
+        const data = await fetchOrders(route.params.id)
         ordersSbors.value = data.table.data.filter((item) => item.is_sbor)
         tableFields.value = data.table.fields
       } catch (error) {
