@@ -1,15 +1,15 @@
 <template>
-  <tr @click="toggle" :class="{ 'table-info': isExpanded }">
+  <tr @click="toggle" :class="{ 'table-info': isExpanded, bold: isExpanded }">
     <td
       v-for="field in fields"
       :key="field.name"
-      :style="{ cursor: 'pointer' }"
+      :style="{ cursor: 'pointer', fontSize: '12px' }"
     >
       <!-- Динамический вывод значения поля -->
       <span
         v-if="field.name === 'name'"
         style="display: inline-flex; align-items: center"
-        :style="{ paddingLeft: depth * 40 + 'px' }"
+        :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
       >
         <span v-if="hasChildren">
           <!-- Если есть дочерние элементы, выводим плюс/минус -->
@@ -34,7 +34,7 @@
         />
         <span>{{ formatValue(field.name, sbor[field.name]) }}</span>
       </span>
-      <span v-else :title="field.title">
+      <span v-else :title="field.title" :style="{ fontSize: '13px' }">
         {{ formatValue(field.name, sbor[field.name]) }}
       </span>
     </td>
@@ -116,5 +116,9 @@ export default {
 
 tr:hover {
   background-color: #f9f9f9;
+}
+
+td {
+  font-size: 13px;
 }
 </style>
