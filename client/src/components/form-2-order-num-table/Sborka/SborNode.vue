@@ -5,23 +5,25 @@
       :key="field.name"
       :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }"
     >
-      <!-- Динамический вывод значения поля -->
-      <span v-if="field.name === 'name' && hasChildren">
-        <font-awesome-icon
-          :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
-          class="icon-sm ms-3"
-        />
-      </span>
-      <span v-if="field.name === 'name' && sbor.is_sbor"></span>
-      <span v-else-if="field.name === 'name'" style="padding-left: 27px"></span>
-      <span v-if="field.name === 'name'">
+      <!-- Динамический вывод значения поля в одну строку -->
+      <span
+        v-if="field.name === 'name'"
+        style="display: inline-flex; align-items: center"
+      >
+        <span v-if="hasChildren">
+          <font-awesome-icon
+            :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
+            class="icon-sm ms-3"
+          />
+        </span>
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
           class="icon-sm ms-3 me-2"
         />
+        <span>{{ sbor[field.name] }}</span>
       </span>
-      {{ sbor[field.name] }}
+      <span v-else>{{ sbor[field.name] }}</span>
     </td>
   </tr>
 

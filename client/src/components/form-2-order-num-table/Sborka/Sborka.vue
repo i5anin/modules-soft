@@ -3,11 +3,11 @@
     <h1>Сборка</h1>
     <div class="row">
       <div class="col-12">
-        <!-- Динамическое отображение всех полей таблицы -->
+        <!-- Динамическое отображение только разрешенных полей таблицы -->
         <table class="table table-hover">
           <thead>
             <tr>
-              <th v-for="field in tableFields" :key="field.name">
+              <th v-for="field in filteredFields" :key="field.name">
                 {{ field.title }}
               </th>
             </tr>
@@ -17,7 +17,7 @@
               v-for="sbor in ordersSbors"
               :key="sbor.sbor_orders__id"
               :sbor="sbor"
-              :fields="tableFields"
+              :fields="filteredFields"
               :depth="0"
             />
           </tbody>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { fetchOrders } from '@/api/orders.js'
 import SborNode from './SborNode.vue'
 
@@ -38,6 +38,17 @@ export default {
   setup() {
     const ordersSbors = ref([])
     const tableFields = ref([])
+
+    const allowedFields = [
+      'name',
+      'description',
+      'kolvo',
+      'term_price_det',
+      'prod_price_det',
+      'metall_price_total_det',
+      'outsource_price_det',
+      'prod_price_w_sbor_det',
+    ]
 
     const loadOrders = async () => {
       try {
@@ -49,9 +60,16 @@ export default {
       }
     }
 
+    // Разрешаем только указанные поля
+    const filteredFields = computed(() => {
+      return tableFields.value.filter((field) =>
+        allowedFields.includes(field.name)
+      )
+    })
+
     onMounted(loadOrders)
 
-    return { ordersSbors, tableFields }
+    return { ordersSbors, filteredFields }
   },
 }
 </script>
