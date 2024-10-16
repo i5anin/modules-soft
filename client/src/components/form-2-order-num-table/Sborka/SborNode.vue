@@ -3,12 +3,13 @@
     <td
       v-for="field in fields"
       :key="field.name"
-      :style="{ paddingLeft: depth * 40 + 'px', cursor: 'pointer' }"
+      :style="{ cursor: 'pointer' }"
     >
       <!-- Динамический вывод значения поля -->
       <span
         v-if="field.name === 'name'"
         style="display: inline-flex; align-items: center"
+        :style="{ paddingLeft: depth * 40 + 'px' }"
       >
         <span v-if="hasChildren">
           <!-- Если есть дочерние элементы, выводим плюс/минус -->
