@@ -3,7 +3,7 @@
     <h1>Сборка</h1>
     <div class="row">
       <div class="col-12">
-        <table class="table display table-striped table-sm table-hover">
+        <table class="table table-striped table-sm table-hover">
           <thead>
             <tr>
               <th
@@ -47,7 +47,6 @@ export default {
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
-
       kolvo: { width: '100px' },
       procent: { width: '50px' },
       term_price_det: { width: '100px' },
