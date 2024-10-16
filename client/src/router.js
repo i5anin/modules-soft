@@ -7,8 +7,8 @@ const routes = [
     component: () => import('./components/DataTable/UniversalGet.vue'),
   },
   {
-    path: '/Sborka',
-    name: 'UniversalGet',
+    path: '/Sborka/:id',
+    name: 'SborkaDetails',
     component: () =>
       import('./components/form-2-order-num-table/Sborka/Sborka.vue'),
   },

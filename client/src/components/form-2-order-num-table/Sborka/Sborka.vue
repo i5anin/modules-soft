@@ -35,6 +35,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { fetchOrders } from '@/api/orders.js'
 import SborNode from './SborNode.vue'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'MainComponent',
@@ -42,18 +43,17 @@ export default {
   setup() {
     const ordersSbors = ref([])
     const tableFields = ref([])
+    const route = useRoute() // Добавлено для получения параметра id из маршрута
 
     // Определяем фиксированные ширины полей
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
-
       status_cal: { width: '100px' },
       status_instr: { width: '100px' },
       status_draft: { width: '100px' },
       status_metall: { width: '100px' },
       status_kp: { width: '100px' },
-
       kolvo: { width: '100px' },
       procent: { width: '50px' },
       term_price_det: { width: '100px' },
@@ -67,12 +67,9 @@ export default {
       prod_sbor_no_cal_instr_det: { width: '100px' },
       prod_sbor_no_cal_instr: { width: '100px' },
       norma: { width: '100px' },
-
-      // Новые ключи из JSON
       ordersnom__kolvo_add: { width: '100px' },
       mats_from: { width: '100px' },
       imp: { width: '100px' },
-      // strat: { width: '100px' },
       prod_price: { width: '100px' },
       tpd: { width: '100px' },
       p_price_det: { width: '100px' },
@@ -81,7 +78,7 @@ export default {
 
     const loadOrders = async () => {
       try {
-        const data = await fetchOrders()
+        const data = await fetchOrders(route.params.id) // Получение id из маршрута
         ordersSbors.value = data.table.data.filter((item) => item.is_sbor)
         tableFields.value = data.table.fields
       } catch (error) {
