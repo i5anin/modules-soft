@@ -1,9 +1,7 @@
 <template>
   <div>
     <div v-if="header" class="card mb-3">
-      <div class="card-header">
-        Информация о заказе
-      </div>
+      <div class="card-header">Информация о заказе</div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -21,7 +19,10 @@
         </div>
         <div v-if="hasNonEmptyComments" class="card mt-3">
           <div class="card-body">
-            <template v-for="commentField in commentFields" :key="commentField.name">
+            <template
+              v-for="commentField in commentFields"
+              :key="commentField.name"
+            >
               <p v-if="header.data[commentField.name]" class="card-text">
                 <span>
                   <strong>{{ commentField.title }}:</strong>
@@ -32,8 +33,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 
@@ -41,11 +40,11 @@
 </template>
 
 <script>
-import formatters from "@/components/shared/formatters.js";
-import Sborka from "@/components/form-2-order-num-table/Sborka/Sborka.vue";
+import formatters from '@/components/shared/formatters.js'
+import Sborka from '@/components/shared/sborka/Sborka.vue'
 
 export default {
-  components: {Sborka},
+  components: { Sborka },
   props: {
     header: {
       type: Object,
@@ -54,36 +53,49 @@ export default {
   },
   computed: {
     hasNonEmptyComments() {
-      return this.commentFields.some(field => this.header.data[field.name] && this.header.data[field.name].trim() !== '');
+      return this.commentFields.some(
+        (field) =>
+          this.header.data[field.name] &&
+          this.header.data[field.name].trim() !== ''
+      )
     },
     commentFields() {
-      return this.header.fields ? this.header.fields.filter(field => field.name.includes('comments')) : [];
+      return this.header.fields
+        ? this.header.fields.filter((field) => field.name.includes('comments'))
+        : []
     },
     nonCommentFields() {
-      return this.header.fields ? this.header.fields.filter(field => !field.name.includes('comments')) : [];
+      return this.header.fields
+        ? this.header.fields.filter((field) => !field.name.includes('comments'))
+        : []
     },
     leftFields() {
-      return this.nonCommentFields.slice(0, Math.ceil(this.nonCommentFields.length / 2));
+      return this.nonCommentFields.slice(
+        0,
+        Math.ceil(this.nonCommentFields.length / 2)
+      )
     },
     rightFields() {
-      return this.nonCommentFields.slice(Math.ceil(this.nonCommentFields.length / 2));
+      return this.nonCommentFields.slice(
+        Math.ceil(this.nonCommentFields.length / 2)
+      )
     },
   },
   methods: {
     formatValue(fieldName, value) {
       if (fieldName.toLowerCase().includes('price')) {
-        return formatters.formatPrice(value);
+        return formatters.formatPrice(value)
       }
       if (fieldName.toLowerCase().includes('date')) {
-        return formatters.formatDate(value);
+        return formatters.formatDate(value)
       }
       if (fieldName.toLowerCase().includes('time')) {
-        return formatters.formatTime(value);
+        return formatters.formatTime(value)
       }
-      return value;
+      return value
     },
   },
-};
+}
 </script>
 
 <style scoped>
