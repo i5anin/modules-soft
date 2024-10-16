@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/Sborka/:id',
     name: 'SborkaDetails',
-    component: () => import('./components/shared/sborka/Sborka.vue'),
+    component: () => import('./components/shared/sborka/SborMain.vue'),
   },
   {
     path: '/',

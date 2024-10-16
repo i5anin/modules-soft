@@ -41,7 +41,7 @@
 
 <script>
 import formatters from '@/components/shared/formatters.js'
-import Sborka from '@/components/shared/sborka/Sborka.vue'
+import Sborka from '@/components/shared/sborka/SborMain.vue'
 
 export default {
   components: { Sborka },
