@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { fetchOrders } from '@/api/orders.js'
 import SborNode from './SborNode.vue'
 
@@ -47,6 +47,13 @@ export default {
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
+
+      status_cal: { width: '100px' },
+      status_instr: { width: '100px' },
+      status_draft: { width: '100px' },
+      status_metall: { width: '100px' },
+      status_kp: { width: '100px' },
+
       kolvo: { width: '100px' },
       procent: { width: '50px' },
       term_price_det: { width: '100px' },

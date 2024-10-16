@@ -13,7 +13,7 @@
     >
       <!-- Динамический вывод значения поля -->
       <span
-        v-if="field.name === 'name'"
+        v-if="field === firstField"
         style="display: inline-flex; align-items: center"
         :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
       >
@@ -89,6 +89,7 @@ export default {
   },
   setup(props) {
     const isExpanded = ref(false)
+    const firstField = ref(props.fields[0]) // Определение первой доступной колонки
 
     const toggle = () => {
       if (hasChildren.value) {
@@ -123,7 +124,14 @@ export default {
       )
     }
 
-    return { isExpanded, toggle, hasChildren, formatValue, generateTitle }
+    return {
+      isExpanded,
+      toggle,
+      hasChildren,
+      formatValue,
+      generateTitle,
+      firstField,
+    }
   },
 }
 </script>
