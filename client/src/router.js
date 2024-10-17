@@ -12,7 +12,7 @@ const routes = [
     component: () => import('./modules/form-2/components/_OrderDetails.vue'),
   },
   {
-    path: '/:orderId/:Id',
+    path: '/:orderId/:id',
     name: 'OrderDetailsDetails',
     component: () => import('./modules/form-3/components/_NomInfo.vue'),
   },

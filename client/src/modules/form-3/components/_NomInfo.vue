@@ -1,3 +1,4 @@
+<!-- _NomInfo.vue -->
 <template>
   <div class="container">
     <router-link :to="{ name: 'OrderDetails' }" class="btn btn-secondary me-3">
@@ -6,7 +7,7 @@
 
     <h1>Информация по номенклатуре (Деталь)</h1>
 
-    <div v-if="selectedOrder && fields.length">
+    <div v-if="selectedOrder">
       <div v-if="selectedOrder.header">
         <div class="card">
           <div class="card-body">
@@ -35,49 +36,48 @@
           </div>
         </div>
       </div>
-
       <OrderTable
-        v-if="selectedOrder.table"
         :fields="uniqueTableFields"
-        :data="selectedOrder.table.data"
-        :tableTitle="selectedOrder.table.title"
+        :data="selectedOrder.table_cal.data"
+        :tableTitle="selectedOrder.table_cal.title"
+      />
+      <OrderTable
+        :fields="uniqueTableFieldsStrat"
+        :data="selectedOrder.strat.data"
+        :tableTitle="selectedOrder.strat.title"
       />
     </div>
-    <div v-else-if="!selectedOrder">
-      <p>Загрузка данных...</p>
-    </div>
     <div v-else>
-      <p>Нет доступных полей для отображения.</p>
+      <p>Загрузка данных...</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { getModalOrderById } from '../api/orders.js'
 import OrderTable from './OrderTable.vue'
 
-const props = defineProps({
-  orderId: { type: Number, required: true },
-  fields: { type: Array, required: true },
-})
-
+const route = useRoute()
+const orderId = ref(null)
+const id = ref(null) // Используем 'id' с маленькой буквы
 const selectedOrder = ref(null)
 
-watch(
-  () => props.orderId,
-  async (orderId) => {
-    if (orderId) {
-      try {
-        selectedOrder.value = await getModalOrderById(orderId)
-      } catch (error) {
-        console.error('Ошибка при загрузке деталей заказа:', error)
-        selectedOrder.value = null
-      }
+onMounted(async () => {
+  orderId.value = route.params.orderId
+  id.value = route.params.id // Доступ к 'id' из маршрута
+  if (id.value) {
+    try {
+      selectedOrder.value = await getModalOrderById(id.value)
+    } catch (error) {
+      console.error('Ошибка при загрузке деталей заказа:', error)
+      selectedOrder.value = null
     }
-  },
-  { immediate: true }
-)
+  } else {
+    console.error('Параметр id не найден в маршруте')
+  }
+})
 
 const filteredHeaderFields = computed(() => {
   return (
@@ -100,7 +100,22 @@ const rightColumnFields = computed(() => {
 })
 
 const uniqueTableFields = computed(() => {
-  const fields = selectedOrder.value?.table?.fields || []
+  const fields = selectedOrder.value?.table_cal?.fields || []
+  const uniqueFields = []
+  const seen = new Set()
+
+  fields.forEach((field) => {
+    if (!seen.has(field.name)) {
+      seen.add(field.name)
+      uniqueFields.push(field)
+    }
+  })
+
+  return uniqueFields
+})
+
+const uniqueTableFieldsStrat = computed(() => {
+  const fields = selectedOrder.value?.strat?.fields || []
   const uniqueFields = []
   const seen = new Set()
 

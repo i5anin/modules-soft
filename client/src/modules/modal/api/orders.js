@@ -65,7 +65,7 @@ export const getOrderById = (orderId) => {
 
 export const getModalOrderById = (orderId) => {
   return api
-    .get('order_nom_modal_metrolog', {
+    .get('nom_info', {
       params: { orders_nom_id: orderId },
     })
     .then(handleResponse)
