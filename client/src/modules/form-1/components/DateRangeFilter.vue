@@ -28,8 +28,8 @@
 <script>
 import Datepicker from 'vue3-datepicker'
 import { computed, ref, watch } from 'vue'
-import customRuLocale from '../../utils/localize-ru.js'
-import { FontAwesomeIcon } from '@/modules/utils/icons.js'
+import customRuLocale from '@/utils/localize-ru.js'
+import { FontAwesomeIcon } from '@/utils/icons.js'
 
 export default {
   components: {
