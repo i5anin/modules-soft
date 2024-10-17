@@ -36,12 +36,15 @@
           </div>
         </div>
       </div>
+      <!-- Добавляем проверки v-if -->
       <OrderTable
+        v-if="selectedOrder.table_cal"
         :fields="uniqueTableFields"
         :data="selectedOrder.table_cal.data"
         :tableTitle="selectedOrder.table_cal.title"
       />
       <OrderTable
+        v-if="selectedOrder.strat"
         :fields="uniqueTableFieldsStrat"
         :data="selectedOrder.strat.data"
         :tableTitle="selectedOrder.strat.title"
@@ -61,15 +64,16 @@ import OrderTable from './OrderTable.vue'
 
 const route = useRoute()
 const orderId = ref(null)
-const id = ref(null) // Используем 'id' с маленькой буквы
+const id = ref(null)
 const selectedOrder = ref(null)
 
 onMounted(async () => {
   orderId.value = route.params.orderId
-  id.value = route.params.id // Доступ к 'id' из маршрута
+  id.value = route.params.id
   if (id.value) {
     try {
       selectedOrder.value = await getModalOrderById(id.value)
+      console.log('selectedOrder:', selectedOrder.value) // Логируем объект
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
       selectedOrder.value = null
@@ -115,6 +119,7 @@ const uniqueTableFields = computed(() => {
 })
 
 const uniqueTableFieldsStrat = computed(() => {
+  console.log(uniqueTableFieldsStrat)
   const fields = selectedOrder.value?.strat?.fields || []
   const uniqueFields = []
   const seen = new Set()
