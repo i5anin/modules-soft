@@ -5,13 +5,14 @@
         Модуль «Расчет Заказа {{ roleStore.roleDisplayName }}»
       </router-link>
       <!-- Селектор роли -->
-      <div class="selector-group">
+      <div class="selector-group d-flex align-items-center">
         <label for="role-selector" class="me-4">Выбор роли:</label>
         <select
           class="form-select"
           id="role-selector"
           v-model="roleStore.selectedRole"
           @change="onRoleChange"
+          style="width: auto"
         >
           <option
             v-for="(name, key) in roleStore.roleNames"
@@ -46,18 +47,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .navbar {
   height: 70px;
   background: #eee;
 }
 
 /* Стили для группы селектора */
-.selector-group {
-  display: flex;
-  align-items: center;
-}
-
 .selector-group label {
   margin-right: 8px;
 }
@@ -65,5 +61,6 @@ export default {
 .selector-group select {
   padding: 4px 8px;
   font-size: 16px;
+  width: auto; /* Чтобы селектор не занимал всю ширину */
 }
 </style>
