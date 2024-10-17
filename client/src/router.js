@@ -22,7 +22,7 @@ const routes = [
     component: () => import('./pages/Add.vue'),
   },
   {
-    path: '/form/:orderId',
+    path: '/:orderId',
     name: 'OrderDetails',
     component: () => import('./modules/form-2/components/OrderNomTable.vue'),
   },
