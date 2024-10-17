@@ -1,7 +1,7 @@
 <template>
   <header class="navbar">
     <div class="container d-flex justify-content-between align-items-center">
-      <router-link to="/public" class="navbar-logo">
+      <router-link to="/public" class="navbar-brand">
         Модуль «Расчет Заказа {{ roleStore.roleDisplayName }}»
       </router-link>
       <!-- Селектор роли -->
@@ -50,13 +50,6 @@ export default {
 .navbar {
   height: 70px;
   background: #eee;
-  border-bottom: 3px solid #07e;
-}
-
-.navbar-logo {
-  font-size: 32px;
-  color: #07e;
-  text-decoration: none;
 }
 
 /* Стили для группы селектора */
