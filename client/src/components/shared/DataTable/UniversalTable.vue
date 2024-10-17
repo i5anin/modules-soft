@@ -1,17 +1,17 @@
 <template>
   <div>
     <DataTable
-        v-if="!noData && formattedData.length"
-        :data="formattedData"
-        :options="dataTableOptions"
-        @row-clicked="handleRowClick"
-        class="table table-striped display"
-        ref="tableRef"
+      v-if="!noData && formattedData.length"
+      :data="formattedData"
+      :options="dataTableOptions"
+      @row-clicked="handleRowClick"
+      class="table table-striped display"
+      ref="tableRef"
     >
       <thead>
-      <tr>
-        <th v-for="(heading, i) in headers" :key="i">{{ heading.title }}</th>
-      </tr>
+        <tr>
+          <th v-for="(heading, i) in headers" :key="i">{{ heading.title }}</th>
+        </tr>
       </thead>
     </DataTable>
     <div v-else class="text-center">Нет данных</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, onMounted, ref} from 'vue'
+import { defineProps, onMounted, ref } from 'vue'
 import DataTable from 'datatables.net-vue3'
 import DataTablesCore from 'datatables.net-bs5'
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
@@ -30,7 +30,7 @@ DataTable.use(DataTablesCore)
 const props = defineProps({
   startDate: String,
   endDate: String,
-  urlData: Function
+  urlData: Function,
 })
 
 const headers = ref([])
@@ -42,8 +42,13 @@ let currentController = null
 const totalCount = ref(0)
 
 const processData = (data) => {
-  headers.value = data.fields.map(f => ({name: f.name, title: f.title || f.name}))
-  formattedData.value = data.data.map(item => headers.value.map(h => item[h.name]))
+  headers.value = data.fields.map((f) => ({
+    name: f.name,
+    title: f.title || f.name,
+  }))
+  formattedData.value = data.data.map((item) =>
+    headers.value.map((h) => item[h.name])
+  )
   noData.value = !formattedData.value.length
   if (tableRef.value && formattedData.value.length) {
     tableRef.value.datatable.clear().rows.add(formattedData.value).draw()
@@ -56,7 +61,16 @@ const fetchData = async () => {
   const currentRequestId = loadRequestId
   if (currentController) currentController.abort()
   currentController = new AbortController()
-  const response = await props.urlData(1, 15, '', '', '', props.startDate, props.endDate, {signal: currentController.signal})
+  const response = await props.urlData(
+    1,
+    15,
+    '',
+    '',
+    '',
+    props.startDate,
+    props.endDate,
+    { signal: currentController.signal }
+  )
   totalCount.value = response.header.total_count
   if (loadRequestId === currentRequestId) processData(response.table)
 }
@@ -77,10 +91,10 @@ const dataTableOptions = ref({
       draw: data.draw,
       recordsTotal: totalCount.value, // правильно отображает общее количество записей
       recordsFiltered: totalCount.value, // правильно отображает количество отфильтрованных записей
-      data: formattedData.value
+      data: formattedData.value,
     })
   },
-  language: {url: 'Russian.json'},
+  language: { url: 'Russian.json' },
 })
 
 onMounted(fetchData)
@@ -88,5 +102,5 @@ onMounted(fetchData)
 <style>
 .table {
   white-space: nowrap;
-}</style>
-
+}
+</style>

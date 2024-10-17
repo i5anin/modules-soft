@@ -7,7 +7,8 @@
     "dev:client": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "dist": "http-server dist"
+    "dist": "http-server dist",
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
