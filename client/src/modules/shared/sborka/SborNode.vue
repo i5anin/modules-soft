@@ -69,7 +69,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { FontAwesomeIcon } from '@/modules/shared/fontawesome.js'
+import { FontAwesomeIcon } from '@/modules/shared/icons.js'
 import formatters, { formatBoolean } from '@/modules/shared/formatters.js'
 
 export default {

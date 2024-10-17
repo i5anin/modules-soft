@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/universal',
     name: 'UniversalGet',
-    component: () => import('./modules/shared/DataTable/UniversalGet.vue'),
+    component: () => import('./modules/shared/data-table/UniversalGet.vue'),
   },
   {
     path: '/sborka/:id',

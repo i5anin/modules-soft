@@ -45,7 +45,7 @@
 import { ref } from 'vue'
 import { getOrders } from '../../form-1/api/orders.js'
 import DateRangeFilter from '../../form-1/components/DateRangeFilter.vue'
-import UniversalTable from '@/modules/shared/DataTable/UniversalTable.vue'
+import UniversalTable from '@/modules/shared/data-table/UniversalTable.vue'
 
 const startDate = ref(null)
 const endDate = ref(null)
