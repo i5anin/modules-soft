@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import formatters from '@/modules/shared/formatters.js'
+import formatters from '@/modules/utils/formatters.js'
 
 export default {
   props: {

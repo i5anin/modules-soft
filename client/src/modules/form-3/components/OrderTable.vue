@@ -27,7 +27,7 @@ import {
   formatDate,
   formatPrice,
   formatTime,
-} from '@/modules/shared/formatters.js'
+} from '@/modules/utils/formatters.js'
 import _ from 'lodash'
 
 defineProps({
