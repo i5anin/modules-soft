@@ -8,7 +8,6 @@ export const useRoleStore = defineStore('roleStore', {
       metrolog: 'Метролог',
       omts: 'ОМТС',
       tech_calc: 'Технолог',
-      test: 'Тест',
     },
   }),
   actions: {

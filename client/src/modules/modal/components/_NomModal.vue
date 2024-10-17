@@ -11,7 +11,9 @@
       <!-- Увеличиваем размер модального окна -->
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="orderModalLabel">Детали заказа</h5>
+          <h5 class="modal-title" id="orderModalLabel">
+            Модальное окно изменение
+          </h5>
           <button
             type="button"
             class="btn-close"

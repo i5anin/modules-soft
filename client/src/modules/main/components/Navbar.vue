@@ -24,6 +24,23 @@
           </option>
         </select>
       </div>
+      <div class="d-flex align-items-center">
+        <label for="role-selector" class="me-2 mb-0">Выбор типа:</label>
+        <select
+          class="form-select form-select-sm w-auto"
+          id="role-selector"
+          v-model="roleStore.selectedRole"
+          @change="onRoleChange"
+        >
+          <option
+            v-for="(name, key) in roleStore.roleNames"
+            :key="key"
+            :value="key"
+          >
+            {{ name }}
+          </option>
+        </select>
+      </div>
     </div>
   </header>
 </template>

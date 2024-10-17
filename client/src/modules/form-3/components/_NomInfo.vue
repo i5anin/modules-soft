@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary me-3">
-      Назад к заказам
+    <router-link :to="{ name: 'OrderDetails' }" class="btn btn-secondary me-3">
+      Назад к списку деталей заказа
     </router-link>
 
-    <h1>Детали заказа</h1>
+    <h1>Информация по номенклатуре (Деталь)</h1>
 
     <div v-if="selectedOrder && fields.length">
       <div v-if="selectedOrder.header">
