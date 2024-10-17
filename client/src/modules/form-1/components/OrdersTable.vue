@@ -76,7 +76,7 @@ import {
   formatDate,
   formatPrice,
   formatTime,
-} from '@/components/shared/formatters.js'
+} from '@/modules/shared/formatters.js'
 
 export default {
   components: { DateRangeFilter },

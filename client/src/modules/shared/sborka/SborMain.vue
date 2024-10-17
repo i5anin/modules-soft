@@ -35,7 +35,7 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue'
-import { fetchOrders } from '@/api/orders.js'
+import { fetchOrders } from '@/modules/modal/api/orders.js'
 import SborNode from './SborNode.vue'
 import { useRoute } from 'vue-router'
 

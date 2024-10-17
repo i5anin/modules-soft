@@ -4,12 +4,12 @@ const routes = [
   {
     path: '/universal',
     name: 'UniversalGet',
-    component: () => import('./components/shared/DataTable/UniversalGet.vue'),
+    component: () => import('./modules/shared/DataTable/UniversalGet.vue'),
   },
   {
     path: '/sborka/:id',
     name: 'SborkaDetails',
-    component: () => import('./components/shared/sborka/SborMain.vue'),
+    component: () => import('./modules/shared/sborka/SborMain.vue'),
   },
 
   {
@@ -22,16 +22,15 @@ const routes = [
     component: () => import('./pages/Add.vue'),
   },
   {
-    path: '/:orderId',
+    path: '/form/:orderId',
     name: 'OrderDetails',
-    component: () =>
-      import('./components/form-2-order-num-table/OrderNomTable.vue'),
+    component: () => import('./modules/form-2/components/OrderNomTable.vue'),
   },
-  {
-    path: '/:orderId/:orderId',
-    name: 'OrderDetailsDetails',
-    component: () => import('./components/form-3/OrderInfoPlus.vue'),
-  },
+  // {
+  //   path: '/:orderId/:orderId',
+  //   name: 'OrderDetailsDetails',
+  //   component: () => import('./modules/form-3/components/OrderInfoPlus.vue'),
+  // },
 ]
 
 export default createRouter({

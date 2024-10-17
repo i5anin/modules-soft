@@ -83,7 +83,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { Modal } from 'bootstrap'
-import { getModalOrderById } from '@/api/orders.js'
+import { getModalOrderById } from '../api/orders.js'
 import OrderTable from './OrderTable.vue'
 
 const props = defineProps({

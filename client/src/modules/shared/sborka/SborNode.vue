@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { FontAwesomeIcon } from '@/components/shared/fontawesome.js'
-import formatters, { formatBoolean } from '@/components/shared/formatters.js'
+import { computed, ref } from 'vue'
+import { FontAwesomeIcon } from '@/modules/shared/fontawesome.js'
+import formatters, { formatBoolean } from '@/modules/shared/formatters.js'
 
 export default {
   name: 'SborNode',
