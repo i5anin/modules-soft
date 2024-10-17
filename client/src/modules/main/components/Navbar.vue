@@ -1,18 +1,19 @@
 <template>
-  <header class="navbar">
-    <div class="container d-flex justify-content-between align-items-center">
-      <router-link to="/public" class="navbar-brand">
+  <header class="navbar navbar-expand-lg navbar-light bg-light">
+    <div
+      class="container-fluid d-flex justify-content-between align-items-center"
+    >
+      <router-link to="/public" class="navbar-brand mb-0 h1">
         Модуль «Расчет Заказа {{ roleStore.roleDisplayName }}»
       </router-link>
       <!-- Селектор роли -->
-      <div class="selector-group d-flex align-items-center">
-        <label for="role-selector" class="me-4">Выбор роли:</label>
+      <div class="d-flex align-items-center">
+        <label for="role-selector" class="me-2 mb-0">Выбор роли:</label>
         <select
-          class="form-select"
+          class="form-select form-select-sm w-auto"
           id="role-selector"
           v-model="roleStore.selectedRole"
           @change="onRoleChange"
-          style="width: auto"
         >
           <option
             v-for="(name, key) in roleStore.roleNames"
@@ -46,21 +47,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.navbar {
-  height: 70px;
-  background: #eee;
-}
-
-/* Стили для группы селектора */
-.selector-group label {
-  margin-right: 8px;
-}
-
-.selector-group select {
-  padding: 4px 8px;
-  font-size: 16px;
-  width: auto; /* Чтобы селектор не занимал всю ширину */
-}
-</style>
