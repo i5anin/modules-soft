@@ -2,20 +2,24 @@
   <header class="navbar">
     <div class="container d-flex justify-content-between align-items-center">
       <router-link to="/public" class="navbar-logo">
-        Модуль «Расчет Заказа {{ roleDisplayName }}»
+        Модуль «Расчет Заказа {{ roleStore.roleDisplayName }}»
       </router-link>
-      <!-- Добавляем обычный select -->
+      <!-- Селектор роли -->
       <div class="selector-group">
         <label for="role-selector" class="me-4">Выбор роли:</label>
         <select
           class="form-select"
           id="role-selector"
-          v-model="selectedRole"
+          v-model="roleStore.selectedRole"
           @change="onRoleChange"
         >
-          <option value="metrolog">Метролог</option>
-          <option value="omts">ОМТС</option>
-          <option value="tech_calc">Технолог</option>
+          <option
+            v-for="(name, key) in roleStore.roleNames"
+            :key="key"
+            :value="key"
+          >
+            {{ name }}
+          </option>
         </select>
       </div>
     </div>
@@ -23,29 +27,21 @@
 </template>
 
 <script>
+import { useRoleStore } from '../store' // Убедитесь, что путь корректный
+
 export default {
-  data() {
-    return {
-      selectedRole: 'metrolog', // Роль по умолчанию
-      roleNames: {
-        metrolog: 'Метролог',
-        omts: 'ОМТС',
-        tech_calc: 'Технолог',
-      },
+  setup() {
+    const roleStore = useRoleStore()
+
+    const onRoleChange = () => {
+      console.log('Выбранная роль:', roleStore.selectedRole)
+      // Дополнительная логика при изменении роли (если требуется)
     }
-  },
-  computed: {
-    roleDisplayName() {
-      // Возвращаем отображаемое имя для текущей выбранной роли
-      return this.roleNames[this.selectedRole]
-    },
-  },
-  methods: {
-    onRoleChange() {
-      // Обработка изменения роли
-      console.log('Выбранная роль:', this.selectedRole)
-      // Здесь вы можете добавить логику для изменения отображения в зависимости от выбранной роли
-    },
+
+    return {
+      roleStore,
+      onRoleChange,
+    }
   },
 }
 </script>
