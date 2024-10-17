@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import DateRangeFilter from './Form1DateRangeFilter.vue'
+import DateRangeFilter from './DateRangeFilter.vue'
 import DataTable from 'datatables.net-dt'
 import $ from 'jquery'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
