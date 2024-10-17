@@ -251,7 +251,9 @@ export default {
     })
 
     onBeforeUnmount(() => {
-      ordersTable.value && ordersTable.value.destroy()
+      if (ordersTable.value) {
+        ordersTable.value.destroy()
+      }
     })
 
     // Обновляем таблицу при изменении дат
