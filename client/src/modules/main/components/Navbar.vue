@@ -2,7 +2,7 @@
   <header class="navbar">
     <div class="container d-flex justify-content-between align-items-center">
       <router-link to="/public" class="navbar-logo">
-        Модуль «Расчет Заказа Метролог»
+        Модуль «Расчет Заказа {{ roleDisplayName }}»
       </router-link>
       <!-- Добавляем обычный select -->
       <div class="selector-group">
@@ -27,7 +27,18 @@ export default {
   data() {
     return {
       selectedRole: 'metrolog', // Роль по умолчанию
+      roleNames: {
+        metrolog: 'Метролог',
+        omts: 'ОМТС',
+        tech_calc: 'Технолог',
+      },
     }
+  },
+  computed: {
+    roleDisplayName() {
+      // Возвращаем отображаемое имя для текущей выбранной роли
+      return this.roleNames[this.selectedRole]
+    },
   },
   methods: {
     onRoleChange() {
