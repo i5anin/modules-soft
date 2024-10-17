@@ -1,3 +1,4 @@
+<!-- MainOrderNomTable.vue -->
 <template>
   <div class="container">
     <div class="mt-4 d-flex align-items-center mb-2">
@@ -28,11 +29,6 @@
         </tr>
       </tbody>
     </table>
-    <OrderModal
-      :orderId="selectedOrder?.ordersnom_id"
-      :fields="tableFields"
-      @close="selectedOrder = null"
-    />
   </div>
 </template>
 
@@ -45,14 +41,12 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
 import 'datatables.net-bs5'
 import { getOrderById } from '../../form-1/api/orders.js'
 import OrderInfoCard from './HeaderInfo.vue'
-import OrderModal from '../../form-3/components/MainHeaderInfoPlus.vue'
-import _ from 'lodash' // Импортируем Lodash
+import _ from 'lodash'
 
-const router = useRouter()
+const router = useRouter() // Создаем экземпляр роутера
 const orderTable = ref(null)
 const nomtable = ref([])
 const header = ref([])
-const selectedOrder = ref(null)
 const tableFields = ref([])
 
 const fetchOrderData = _.debounce(async () => {
@@ -72,7 +66,7 @@ const fetchOrderData = _.debounce(async () => {
   } catch (error) {
     console.error('Ошибка при загрузке заказа:', error)
   }
-}, 300) // Оптимизация вызовов с помощью debounce
+}, 300)
 
 const initializeTable = _.once(() => {
   orderTable.value = new DataTable('#orderTable', {
@@ -97,10 +91,11 @@ const initializeTable = _.once(() => {
       $(row).on(
         'click.dt',
         _.throttle(() => {
-          console.log(`Нажата строка с ID: ${data.ordersnom_id}`)
-          selectedOrder.value = data
+          const orderId = router.currentRoute.value.params.orderId
+          const Id = data.ordersnom_id
+          router.push({ name: 'OrderDetailsDetails', params: { orderId, Id } }) // Переход на новую страницу
         }, 1000)
-      ) // Ограничение на клик через throttle
+      )
     },
   })
 })

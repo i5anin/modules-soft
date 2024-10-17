@@ -9,14 +9,12 @@ const routes = [
   {
     path: '/:orderId',
     name: 'OrderDetails',
-    component: () =>
-      import('./modules/form-2/components/MainOrderNomTable.vue'),
+    component: () => import('./modules/form-2/components/_OrderDetails.vue'),
   },
   {
-    path: '/m/:orderId',
+    path: '/:orderId/:Id',
     name: 'OrderDetailsDetails',
-    component: () =>
-      import('./modules/form-3/components/MainHeaderInfoPlus.vue'),
+    component: () => import('./modules/form-3/components/_NomInfo.vue'),
   },
 
   {
