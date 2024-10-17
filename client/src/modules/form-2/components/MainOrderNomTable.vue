@@ -45,7 +45,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
 import 'datatables.net-bs5'
 import { getOrderById } from '../../form-1/api/orders.js'
 import OrderInfoCard from './HeaderInfo.vue'
-import OrderModal from '../../form-3/components/HeaderInfoPlus.vue'
+import OrderModal from '../../form-3/components/MainHeaderInfoPlus.vue'
 import _ from 'lodash' // Импортируем Lodash
 
 const router = useRouter()
