@@ -3,7 +3,7 @@
     <div
       class="container h-100 d-flex justify-content-center align-items-center"
     >
-      <router-link to="/" class="navbar-logo"
+      <router-link to="/public" class="navbar-logo"
         >Модуль «Расчет Заказа Метролог»</router-link
       >
     </div>

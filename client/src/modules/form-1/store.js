@@ -1,7 +1,7 @@
 // Pinia Store Implementation
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { getOrders } from '../api/orders.js'
+import { getOrders } from './api/orders.js'
 import _ from 'lodash'
 
 export const useOrdersStore = defineStore('orders', () => {

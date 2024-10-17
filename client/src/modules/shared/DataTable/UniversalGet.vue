@@ -43,8 +43,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getOrders } from '../../../api/orders.js'
-import DateRangeFilter from '../../form-1-orders-table/DateRangeFilter.vue'
+import { getOrders } from '../../form-1/api/orders.js'
+import DateRangeFilter from '../../form-1/components/DateRangeFilter.vue'
 import UniversalTable from '@/components/shared/DataTable/UniversalTable.vue'
 
 const startDate = ref(null)
