@@ -26,6 +26,7 @@
             />
           </div>
         </div>
+
         <table id="ordersTable" class="table table-striped">
           <thead>
             <tr>
@@ -77,6 +78,7 @@ import {
   formatPrice,
   formatTime,
 } from '@/utils/formatters.js'
+import { useRoleStore } from '../../main/store/index.js' // Импортируем store
 
 export default {
   components: { DateRangeFilter },
@@ -88,9 +90,10 @@ export default {
     const noData = ref(false)
     const orders = ref([])
     const tableFields = ref([])
-    const totalCount = ref(0) // Добавляем переменную для хранения total_count
+    const totalCount = ref(0)
 
-    // Устанавливаем даты по умолчанию (3 месяца назад для "Начало" и сегодня для "Конец")
+    const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
+
     const today = new Date()
     const threeMonthsAgo = new Date()
     threeMonthsAgo.setMonth(today.getMonth() - 3)
@@ -121,12 +124,13 @@ export default {
         sortCol,
         sortDir,
         startDate.value,
-        endDate.value
+        endDate.value,
+        roleStore.selectedTypes, // Берем тип из хранилища
+        roleStore.selectedRole // Берем роль из хранилища
       )
         .then((response) => {
           noData.value = response.table.data.length === 0
           orders.value = response.table.data.map((order) => {
-            // Форматируем каждое поле перед сохранением в состояние
             const formattedOrder = {}
             tableFields.value.forEach((field) => {
               formattedOrder[field.name] = formatValue(
@@ -137,7 +141,7 @@ export default {
             return formattedOrder
           })
           tableFields.value = response.table.fields
-          totalCount.value = response.header.total_count // Обновляем total_count
+          totalCount.value = response.header.total_count
         })
         .catch((error) => {
           console.error('Ошибка при загрузке заказов:', error)
@@ -204,7 +208,6 @@ export default {
           field.name !== 'goz'
       )
       fields.splice(1, 0, { name: 'statuses', title: 'Статусы' })
-      // Переименовываем столбец status_ready в пустую строку
       fields.forEach((field) => {
         if (field.name === 'status_ready') field.title = ''
       })
@@ -230,8 +233,7 @@ export default {
 
     const formatValue = (value, fieldName) => {
       if (typeof value === 'boolean' && fieldName !== 'goz') {
-        // console.log(fieldName)
-        return formatBoolean(value) // выдает '✅' : '❌'
+        return formatBoolean(value)
       } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
         return formatDate(value)
       } else if (typeof value === 'number' && _.includes(fieldName, 'time')) {
@@ -243,9 +245,7 @@ export default {
     }
 
     onMounted(() => {
-      // Сначала загружаем данные, потом инициализируем таблицу
       fetchOrders(1, 15, '', null, null).then(() => {
-        console.log('fetchOrders completed')
         initializeTable()
       })
     })
@@ -256,12 +256,14 @@ export default {
       }
     })
 
-    // Обновляем таблицу при изменении дат
-    watch([startDate, endDate], () => {
-      if (ordersTable.value) {
-        ordersTable.value.ajax.reload(null, false)
+    watch(
+      [startDate, endDate, roleStore.selectedTypes, roleStore.selectedRole],
+      () => {
+        if (ordersTable.value) {
+          ordersTable.value.ajax.reload(null, false)
+        }
       }
-    })
+    )
 
     return {
       ordersTable,
@@ -273,14 +275,17 @@ export default {
       renderStatus,
       filteredTableFields,
       formatValue,
+      roleDisplayName: computed(() => roleStore.roleDisplayName), // Получаем имя роли
+      selectedTypesDisplayName: computed(() => roleStore.selectedTypes), // Получаем выбранный тип
     }
   },
 }
 </script>
 
 <style>
-.date-range-filters {
-  display: flex; /* Включаем flexbox разметку */
-  gap: 16px; /* Добавляем отступ между фильтрами (по желанию) */
+.date-range-filters,
+.filters {
+  display: flex;
+  gap: 16px;
 }
 </style>
