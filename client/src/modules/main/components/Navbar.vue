@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar navbar-expand-lg navbar-light bg-light">
+  <header class="navbar navbar-expand-lg navbar-light">
     <div
       class="container-fluid d-flex justify-content-between align-items-center"
     >

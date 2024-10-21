@@ -5,7 +5,7 @@
       Назад к списку деталей заказа
     </router-link>
 
-    <h1>Информация по номенклатуре (Деталь)</h1>
+    <h1 class="display-4 mb-4">Информация по номенклатуре (Деталь)</h1>
 
     <div v-if="selectedOrder">
       <div v-if="selectedOrder.header">

@@ -1,9 +1,14 @@
 <template>
-  <Navbar />
+  <div>
+    <!--    data-bs-theme="dark"-->
+    <!--    style="background-color: #aaaaaa; min-height: 100vh"-->
 
-  <div class="py-3">
-    <!-- container -->
-    <router-view />
+    <Navbar />
+
+    <div class="py-3">
+      <!-- container -->
+      <router-view />
+    </div>
   </div>
 </template>
 
