@@ -19,13 +19,15 @@ export const getOrders = (
   sortCol,
   sortDir,
   date1,
-  date2
+  date2,
+  type,
+  role
 ) => {
   return api
     .get('list', {
       params: {
-        type: 'orders',
-        module: 'metrolog',
+        type: type,
+        module: role,
         page,
         limit,
         search,

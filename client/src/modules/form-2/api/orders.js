@@ -12,10 +12,10 @@ const handleError = (error) => {
   throw error
 }
 
-export const getOrderById = (orderId) => {
+export const getOrderById = (orderId, type, role) => {
   return api
     .get('nom_list', {
-      params: { id: orderId, type: 'orders', module: 'metrolog' },
+      params: { id: orderId, type: type, module: role },
     })
     .then(handleResponse)
     .catch(handleError)
