@@ -92,8 +92,11 @@ const initializeTable = _.once(() => {
         'click.dt',
         _.throttle(() => {
           const orderId = router.currentRoute.value.params.orderId
-          const Id = data.ordersnom_id
-          router.push({ name: 'OrderDetailsDetails', params: { orderId, Id } }) // Переход на новую страницу
+          const id = data.ordersnom_id
+          router.push({
+            name: 'OrderDetailsDetails',
+            params: { orderId, id },
+          })
         }, 1000)
       )
     },
