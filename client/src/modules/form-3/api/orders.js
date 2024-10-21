@@ -63,10 +63,11 @@ export const getOrderById = (orderId) => {
     .catch(handleError)
 }
 
-export const getModalOrderById = (orderId) => {
+// api/orders.js
+export const getModalOrderById = (orderId, type, role) => {
   return api
     .get('nom_info', {
-      params: { id: orderId, type: 'orders', module: 'tech_calc' },
+      params: { id: orderId, type: type, module: role },
     })
     .then(handleResponse)
     .catch(handleError)

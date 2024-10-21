@@ -57,22 +57,26 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getModalOrderById } from '../api/orders.js'
+import { useRoleStore } from '../../main/store/index.js' // Импортируем хранилище Pinia
 import OrderTable from './OrderTable.vue'
 
+const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
 const route = useRoute()
 const orderId = ref(null)
 const id = ref(null)
 const selectedOrder = ref(null)
 
-onMounted(async () => {
-  orderId.value = route.params.orderId
-  id.value = route.params.id
+const fetchOrderData = async () => {
   if (id.value) {
     try {
-      selectedOrder.value = await getModalOrderById(id.value)
+      selectedOrder.value = await getModalOrderById(
+        id.value,
+        roleStore.selectedTypes, // Выбранный тип
+        roleStore.selectedRole // Выбранная роль
+      )
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
       selectedOrder.value = null
@@ -80,7 +84,29 @@ onMounted(async () => {
   } else {
     console.error('Параметр id не найден в маршруте')
   }
+}
+
+onMounted(async () => {
+  orderId.value = route.params.orderId
+  id.value = route.params.id
+  await fetchOrderData() // Запрашиваем данные при монтировании компонента
 })
+
+// Наблюдатель за изменениями selectedRole
+watch(
+  () => roleStore.selectedRole,
+  async () => {
+    await fetchOrderData() // Запрашиваем данные при изменении роли
+  }
+)
+
+// Наблюдатель за изменениями selectedTypes
+watch(
+  () => roleStore.selectedTypes,
+  async () => {
+    await fetchOrderData() // Запрашиваем данные при изменении типа
+  }
+)
 
 const filteredHeaderFields = computed(() => {
   return (
