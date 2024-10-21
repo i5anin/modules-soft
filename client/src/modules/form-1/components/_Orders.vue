@@ -48,8 +48,9 @@
                 <span
                   v-else-if="field.name === 'clients__name'"
                   :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }"
-                  >{{ row[field.name] }}</span
                 >
+                  {{ row[field.name] }}
+                </span>
                 <span v-else>{{
                   formatValue(row[field.name], field.name)
                 }}</span>
@@ -116,13 +117,13 @@ export default {
       { status: 'ordersnom__status_kp', badgeClass: 'bg-success', label: 'КП' },
     ]
 
-    const fetchOrders = (page, limit, searchQuery, sortCol, sortDir) => {
+    const fetchOrders = () => {
       return getOrders(
-        page,
-        limit,
-        searchQuery,
-        sortCol,
-        sortDir,
+        1, // Можно добавить параметр страницы и лимита для серверной обработки
+        15, // Количество строк на страницу
+        '', // Пустой поиск по умолчанию
+        null, // Без сортировки по умолчанию
+        null, // Без сортировки по умолчанию
         startDate.value,
         endDate.value,
         roleStore.selectedTypes, // Берем тип из хранилища
@@ -130,16 +131,7 @@ export default {
       )
         .then((response) => {
           noData.value = response.table.data.length === 0
-          orders.value = response.table.data.map((order) => {
-            const formattedOrder = {}
-            tableFields.value.forEach((field) => {
-              formattedOrder[field.name] = formatValue(
-                order[field.name],
-                field.name
-              )
-            })
-            return formattedOrder
-          })
+          orders.value = response.table.data
           tableFields.value = response.table.fields
           totalCount.value = response.header.total_count
         })
@@ -150,27 +142,18 @@ export default {
     }
 
     const initializeTable = () => {
+      if (ordersTable.value) {
+        ordersTable.value.destroy() // Уничтожаем предыдущую таблицу, если она существует
+      }
+
+      // Создаем новую таблицу
       ordersTable.value = new DataTable('#ordersTable', {
         pageLength: 15,
         lengthMenu: [15, 30, 60, 100],
         searching: true,
         processing: true,
-        serverSide: true,
-        ajax: (data, callback) => {
-          const page = Math.floor(data.start / data.length) + 1
-          const searchQuery = data.search.value
-          let sortCol = null
-          let sortDir = null
-          fetchOrders(page, data.length, searchQuery, sortCol, sortDir).then(
-            () => {
-              callback({
-                data: orders.value,
-                recordsTotal: totalCount.value,
-                recordsFiltered: totalCount.value,
-              })
-            }
-          )
-        },
+        serverSide: false, // Мы уже получили данные, поэтому отключаем серверную обработку
+        data: orders.value, // Используем полученные данные
         columns: filteredTableFields.value.map((field) => ({
           data: field.name,
           title: field.name === 'statuses' ? 'Статусы' : field.title,
@@ -193,8 +176,7 @@ export default {
           })
         },
         drawCallback: function () {
-          noData.value =
-            this.api().rows({ filter: 'applied' }).data().length === 0
+          noData.value = this.api().rows().data().length === 0
         },
       })
     }
@@ -245,23 +227,28 @@ export default {
     }
 
     onMounted(() => {
-      fetchOrders(1, 15, '', null, null).then(() => {
+      fetchOrders().then(() => {
         initializeTable()
       })
     })
 
     onBeforeUnmount(() => {
       if (ordersTable.value) {
-        ordersTable.value.destroy()
+        ordersTable.value.destroy() // Уничтожаем таблицу при размонтировании
       }
     })
 
     watch(
-      [startDate, endDate, roleStore.selectedTypes, roleStore.selectedRole],
+      [
+        startDate,
+        endDate,
+        () => roleStore.selectedTypes,
+        () => roleStore.selectedRole,
+      ],
       () => {
-        if (ordersTable.value) {
-          ordersTable.value.ajax.reload(null, false)
-        }
+        fetchOrders().then(() => {
+          initializeTable()
+        })
       }
     )
 
