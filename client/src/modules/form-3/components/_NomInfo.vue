@@ -73,7 +73,6 @@ onMounted(async () => {
   if (id.value) {
     try {
       selectedOrder.value = await getModalOrderById(id.value)
-      console.log('selectedOrder:', selectedOrder.value) // Логируем объект
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
       selectedOrder.value = null
@@ -119,7 +118,6 @@ const uniqueTableFields = computed(() => {
 })
 
 const uniqueTableFieldsStrat = computed(() => {
-  console.log(uniqueTableFieldsStrat)
   const fields = selectedOrder.value?.strat?.fields || []
   const uniqueFields = []
   const seen = new Set()

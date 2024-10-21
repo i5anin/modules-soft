@@ -5,15 +5,18 @@ export const useRoleStore = defineStore('roleStore', {
   state: () => ({
     selectedRole: 'metrolog',
     roleNames: {
+      managers: 'Менеджер',
       metrolog: 'Метролог',
       omts: 'ОМТС',
       tech_calc: 'Технолог',
+      // tech:
+      // prod:
+      // zagotovka:
     },
-    selectedTypes: 'ttt',
+    selectedTypes: 'orders',
     types: {
-      metrolog: 'ttt',
-      omts: 'rrr',
-      tech_calc: 'wew',
+      orders: 'orders',
+      specs: 'specs',
     },
   }),
   actions: {
