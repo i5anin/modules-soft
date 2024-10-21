@@ -74,6 +74,7 @@ import 'datatables.net-bs5'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import {
+  formatValue,
   formatBoolean,
   formatDate,
   formatPrice,
