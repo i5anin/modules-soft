@@ -18,7 +18,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in nomtable" :key="row.ordersnom_id">
+        <tr v-if="noData">
+          <td colspan="100%" class="text-center">Нет данных</td>
+        </tr>
+        <tr v-else v-for="row in nomtable" :key="row.ordersnom_id">
           <td v-for="field in filteredTableFields" :key="field.name">
             <span
               v-if="field.name === 'statuses'"
@@ -33,7 +36,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import DataTable from 'datatables.net-dt'
 import $ from 'jquery'
@@ -42,20 +45,29 @@ import 'datatables.net-bs5'
 import { getOrderById } from '../api/orders.js'
 import OrderInfoCard from './HeaderInfo.vue'
 import _ from 'lodash'
+import { useRoleStore } from '../../main/store/index.js' // Импортируем хранилище Pinia
 
-const router = useRouter() // Создаем экземпляр роутера
+const router = useRouter()
+const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
+
 const orderTable = ref(null)
 const nomtable = ref([])
 const header = ref([])
 const tableFields = ref([])
+const noData = ref(false)
 
-const fetchOrderData = _.debounce(async () => {
+const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId
   try {
-    const response = await getOrderById(orderId)
+    const response = await getOrderById(
+      orderId,
+      roleStore.selectedTypes,
+      roleStore.selectedRole
+    )
     nomtable.value = response.table.data
     header.value = response.header
     tableFields.value = response.table.fields
+    noData.value = nomtable.value.length === 0
     nextTick(() => {
       if (!orderTable.value) {
         initializeTable()
@@ -66,8 +78,9 @@ const fetchOrderData = _.debounce(async () => {
   } catch (error) {
     console.error('Ошибка при загрузке заказа:', error)
   }
-}, 300)
+}
 
+// Инициализация DataTable
 const initializeTable = _.once(() => {
   orderTable.value = new DataTable('#orderTable', {
     processing: true,
@@ -84,7 +97,7 @@ const initializeTable = _.once(() => {
           : null,
     })),
     language: { url: 'Russian.json' },
-    createdRow: function (row, data) {
+    createdRow: (row, data) => {
       if (data.locked) {
         $(row).find('td').css('color', '#aaaaaa')
       }
@@ -113,6 +126,7 @@ const filteredTableFields = computed(() => {
   return fields
 })
 
+// Статусы
 const statuses = [
   { status: 'cal', badgeClass: 'bg-danger', label: 'К' },
   { status: 'instr', badgeClass: 'bg-warning', label: 'И' },
@@ -136,7 +150,28 @@ const renderStatus = _.memoize((row) => {
   }
 })
 
+// Мониторинг изменений в роли и типах
+watch(
+  () => roleStore.selectedRole,
+  async () => {
+    await fetchOrderData() // Обновляем данные при изменении роли
+  }
+)
+
+watch(
+  () => roleStore.selectedTypes,
+  async () => {
+    await fetchOrderData() // Обновляем данные при изменении типа
+  }
+)
+
 onMounted(() => {
   fetchOrderData()
 })
 </script>
+
+<style scoped>
+.table {
+  width: 100%;
+}
+</style>
