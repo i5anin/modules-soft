@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     name: 'OrdersTable',
-    component: () => import('./pages/Home.vue'),
+    component: () => import('./modules/form-1/components/_Orders.vue'),
   },
   {
     path: '/:orderId',
