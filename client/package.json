@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:client": "npx prettier --write . && vite",
+    "client": "npx prettier --write . && vite",
+    "server": "cd D:\\GitHub\\omts.laravel && php artisan serve --host=0.0.0.0 --port=8002",
     "build": "vite build",
     "preview": "vite preview",
     "dist": "http-server dist",
