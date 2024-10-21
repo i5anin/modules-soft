@@ -158,13 +158,20 @@ export default {
           data: field.name,
           title: field.name === 'statuses' ? 'Статусы' : field.title,
           className: field.name === 'statuses' ? 'text-center' : '',
-          render:
-            field.name === 'statuses'
-              ? (data, type, row) => renderStatus(row)
-              : field.name === 'clients__name'
-                ? (data, type, row) =>
-                    `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
-                : null,
+          render: (data, type, row) => {
+            // Если это поле "statuses", рендерим через функцию renderStatus
+            if (field.name === 'statuses') {
+              return renderStatus(row)
+            }
+            // Условное форматирование для поля "clients__name"
+            else if (field.name === 'clients__name') {
+              return `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
+            }
+            // Применяем функцию форматирования для остальных полей
+            else {
+              return formatValue(data, field.name)
+            }
+          },
         })),
         language: { url: 'Russian.json' },
         createdRow: (row, data) => {
@@ -214,6 +221,14 @@ export default {
     })
 
     const formatValue = (value, fieldName) => {
+      // const fieldData = {
+      //   Поле: fieldName,
+      //   Значение: value,
+      //   Тип: typeof value,
+      // }
+      // console.table([fieldData])
+      // Собираем информацию о поле, значении и типе в виде таблицы
+
       if (typeof value === 'boolean' && fieldName !== 'goz') {
         return formatBoolean(value)
       } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
@@ -223,6 +238,7 @@ export default {
       } else if (typeof value === 'string' && _.includes(fieldName, 'price')) {
         return formatPrice(value)
       }
+
       return value
     }
 
