@@ -34,10 +34,16 @@
           :data="orders"
           :columns="tableColumns"
           :items-per-page-options="[15, 30, 50, 100]"
-          :initial-sort-column="'id'"
-          :initial-sort-order="'desc'"
+          :items-per-page="itemsPerPage"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :sort-column="sortColumn"
+          :sort-order="sortOrder"
           :format-value="formatValue"
           @row-click="handleRowClick"
+          @page-change="handlePageChange"
+          @sort-change="handleSortChange"
+          @page-size-change="handlePageSizeChange"
         />
       </div>
     </div>
@@ -61,12 +67,18 @@ export default {
     const router = useRouter()
     const startDate = ref(null)
     const endDate = ref(null)
-    const noData = ref(false)
     const orders = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
 
     const roleStore = useRoleStore()
+
+    // Pagination and Sorting State
+    const currentPage = ref(1)
+    const itemsPerPage = ref(15)
+    const totalPages = ref(0)
+    const sortColumn = ref('id')
+    const sortOrder = ref('desc')
 
     const today = new Date()
     const threeMonthsAgo = new Date()
@@ -76,25 +88,28 @@ export default {
 
     const fetchOrders = () => {
       return getOrders(
-        1,
-        1000,
-        '',
+        currentPage.value,
+        itemsPerPage.value,
+        '', // Assuming a search parameter if needed
         null,
         null,
         startDate.value,
         endDate.value,
         roleStore.selectedTypes,
-        roleStore.selectedRole
+        roleStore.selectedRole,
+        sortColumn.value,
+        sortOrder.value
       )
         .then((response) => {
-          noData.value = response.table.data.length === 0
           orders.value = response.table.data
           tableFields.value = response.table.fields
           totalCount.value = response.header.total_count
+          totalPages.value = Math.ceil(totalCount.value / itemsPerPage.value)
         })
         .catch((error) => {
           console.error('Ошибка при загрузке заказов:', error)
-          noData.value = true
+          orders.value = []
+          totalPages.value = 0
         })
     }
 
@@ -124,10 +139,10 @@ export default {
 
         // Custom cell component for specific fields
         if (field.name === 'statuses') {
-          column.cellComponent = 'StatusCell'
+          column.cellComponent = StatusCell
           column.sortable = false // Disable sorting on custom components if needed
         } else if (field.name === 'clients__name') {
-          column.cellComponent = 'ClientNameCell'
+          column.cellComponent = ClientNameCell
         }
         return column
       })
@@ -162,8 +177,8 @@ export default {
     const ClientNameCell = {
       props: ['row', 'column'],
       template: `<span :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
-                  {{ row[column.name] }}
-                </span>`,
+                      {{ row[column.name] }}
+                    </span>`,
     }
 
     // Handle row click from DataTable component
@@ -171,6 +186,28 @@ export default {
       router.push({ name: 'OrderDetails', params: { orderId: row.id } })
     }
 
+    // Handle page change event
+    const handlePageChange = (page) => {
+      currentPage.value = page
+      fetchOrders()
+    }
+
+    // Handle sort change event
+    const handleSortChange = ({ column, order }) => {
+      sortColumn.value = column
+      sortOrder.value = order
+      currentPage.value = 1 // Reset to first page
+      fetchOrders()
+    }
+
+    // Handle page size change event
+    const handlePageSizeChange = (size) => {
+      itemsPerPage.value = size
+      currentPage.value = 1 // Reset to first page
+      fetchOrders()
+    }
+
+    // Watch for filters change
     watch(
       [
         startDate,
@@ -179,6 +216,7 @@ export default {
         () => roleStore.selectedRole,
       ],
       () => {
+        currentPage.value = 1
         fetchOrders()
       }
     )
@@ -190,12 +228,22 @@ export default {
     return {
       startDate,
       endDate,
-      noData,
       orders,
       tableFields,
       formatValue,
       tableColumns,
       handleRowClick,
+      handlePageChange, // Added
+      handleSortChange, // Added
+      handlePageSizeChange, // Added
+      currentPage,
+      totalPages,
+      sortColumn,
+      sortOrder,
+      itemsPerPage,
+      // Include custom cell components if needed
+      StatusCell,
+      ClientNameCell,
     }
   },
 }

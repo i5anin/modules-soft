@@ -4,7 +4,11 @@
     <!-- Page Size Selection -->
     <div class="d-flex align-items-center mb-3">
       <label class="me-2">Показать на странице:</label>
-      <select v-model="localItemsPerPage" class="form-select w-auto">
+      <select
+        v-model="localItemsPerPage"
+        class="form-select w-auto"
+        @change="onPageSizeChange"
+      >
         <option v-for="size in pageSizes" :key="size" :value="size">
           {{ size }}
         </option>
@@ -18,7 +22,7 @@
           <th
             v-for="column in columns"
             :key="column.name"
-            @click="sortBy(column.name)"
+            @click="column.sortable && sortBy(column.name)"
             :class="{ sortable: column.sortable }"
           >
             {{ column.title }}
@@ -40,7 +44,7 @@
           <td colspan="100%" class="text-center">Нет данных</td>
         </tr>
         <tr
-          v-for="row in paginatedData"
+          v-for="row in data"
           :key="row.id"
           @click="handleRowClick(row)"
           :class="{ 'table-row': true, locked: row.locked }"
@@ -99,8 +103,7 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
-import _ from 'lodash'
+import { ref, computed, watch } from 'vue' // Ensure you have these imports
 
 export default {
   name: 'DataTable',
@@ -117,11 +120,19 @@ export default {
       type: Array,
       default: () => [15, 30, 50, 100],
     },
-    initialSortColumn: {
+    totalPages: {
+      type: Number,
+      required: true,
+    },
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+    sortColumn: {
       type: String,
       default: '',
     },
-    initialSortOrder: {
+    sortOrder: {
       type: String,
       default: 'asc',
     },
@@ -129,73 +140,65 @@ export default {
       type: Function,
       default: (value) => value,
     },
+    itemsPerPage: {
+      type: Number,
+      required: true,
+    },
   },
-  emits: ['row-click'],
+  emits: ['row-click', 'page-change', 'sort-change', 'page-size-change'],
   setup(props, { emit }) {
-    const localItemsPerPage = ref(props.itemsPerPageOptions[0])
-    const currentPage = ref(1)
-    const sortColumn = ref(props.initialSortColumn)
-    const sortOrder = ref(props.initialSortOrder)
+    const localItemsPerPage = ref(props.itemsPerPage)
     const pageSizes = props.itemsPerPageOptions
 
-    const sortedData = computed(() => {
-      if (!sortColumn.value) {
-        return props.data
+    // Watch for changes from parent component
+    watch(
+      () => props.itemsPerPage,
+      (newValue) => {
+        localItemsPerPage.value = newValue
       }
-      return _.orderBy(props.data, [sortColumn.value], [sortOrder.value])
-    })
-
-    const paginatedData = computed(() => {
-      const start = (currentPage.value - 1) * localItemsPerPage.value
-      const end = start + localItemsPerPage.value
-      return sortedData.value.slice(start, end)
-    })
-
-    const totalPages = computed(() => {
-      return Math.ceil(sortedData.value.length / localItemsPerPage.value)
-    })
+    )
 
     const noData = computed(() => {
-      return sortedData.value.length === 0
+      return props.data.length === 0
     })
 
     const goToPage = (page) => {
       if (page < 1) page = 1
-      if (page > totalPages.value) page = totalPages.value
-      currentPage.value = page
+      if (page > props.totalPages) page = props.totalPages
+      emit('page-change', page)
     }
 
     const sortBy = (column) => {
-      if (sortColumn.value === column) {
-        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-      } else {
-        sortColumn.value = column
-        sortOrder.value = 'asc'
+      const columnObj = props.columns.find((col) => col.name === column)
+      if (!columnObj || !columnObj.sortable) return
+      let newOrder = 'asc'
+      if (props.sortColumn === column) {
+        newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
       }
+      emit('sort-change', { column, order: newOrder })
     }
 
     const handleRowClick = (row) => {
       emit('row-click', row)
     }
 
-    // Watch for changes in items per page
-    watch(localItemsPerPage, () => {
-      currentPage.value = 1
-    })
+    const onPageSizeChange = () => {
+      emit('page-size-change', localItemsPerPage.value)
+    }
 
     return {
       localItemsPerPage,
-      currentPage,
       pageSizes,
-      paginatedData,
-      totalPages,
       noData,
       goToPage,
-      sortColumn,
-      sortOrder,
       sortBy,
-      formatValue: props.formatValue,
       handleRowClick,
+      onPageSizeChange,
+      sortColumn: computed(() => props.sortColumn),
+      sortOrder: computed(() => props.sortOrder),
+      currentPage: computed(() => props.currentPage),
+      totalPages: computed(() => props.totalPages),
+      formatValue: props.formatValue,
     }
   },
 }
