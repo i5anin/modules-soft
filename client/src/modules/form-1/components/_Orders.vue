@@ -1,9 +1,11 @@
+<!-- YourMainComponent.vue -->
 <template>
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
+        <!-- Date Range Filters -->
         <div
-          class="date-range-filters d-flex align-items-center justify-content-start"
+          class="date-range-filters d-flex align-items-center justify-content-start mb-3"
         >
           <div class="d-flex align-items-center">
             <label for="start-date" class="form-label fw-bold me-2 mb-0"
@@ -27,37 +29,16 @@
           </div>
         </div>
 
-        <table id="ordersTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th v-for="field in filteredTableFields" :key="field.name">
-                {{ field.title }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="noData">
-              <td colspan="100%" class="text-center">Нет данных</td>
-            </tr>
-            <tr v-for="row in orders" :key="row.id">
-              <td v-for="field in filteredTableFields" :key="field.name">
-                <span
-                  v-if="field.name === 'statuses'"
-                  v-html="renderStatus(row)"
-                ></span>
-                <span
-                  v-else-if="field.name === 'clients__name'"
-                  :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }"
-                >
-                  {{ row[field.name] }}
-                </span>
-                <span v-else>{{
-                  formatValue(row[field.name], field.name)
-                }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Data Table -->
+        <DataTable
+          :data="orders"
+          :columns="tableColumns"
+          :items-per-page-options="[15, 30, 50, 100]"
+          :initial-sort-column="'id'"
+          :initial-sort-order="'desc'"
+          :format-value="formatValue"
+          @row-click="handleRowClick"
+        />
       </div>
     </div>
   </div>
@@ -65,27 +46,18 @@
 
 <script>
 import DateRangeFilter from './DateRangeFilter.vue'
-import DataTable from 'datatables.net-dt'
-import $ from 'jquery'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import DataTable from './DataTable.vue' // Import the reusable DataTable component
+import { computed, onMounted, ref, watch } from 'vue'
 import { getOrders } from '../api/orders.js'
-import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css'
-import 'datatables.net-bs5'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
-import {
-  formatValue,
-  formatBoolean,
-  formatDate,
-  formatPrice,
-  formatTime,
-} from '@/utils/formatters.js'
-import { useRoleStore } from '../../main/store/index.js' // Импортируем store
+import { formatValue } from '@/utils/formatters.js'
+import { useRoleStore } from '../../main/store/index.js'
+import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
-  components: { DateRangeFilter },
+  components: { DateRangeFilter, DataTable },
   setup() {
-    const ordersTable = ref(null)
     const router = useRouter()
     const startDate = ref(null)
     const endDate = ref(null)
@@ -94,7 +66,7 @@ export default {
     const tableFields = ref([])
     const totalCount = ref(0)
 
-    const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
+    const roleStore = useRoleStore()
 
     const today = new Date()
     const threeMonthsAgo = new Date()
@@ -102,33 +74,17 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0]
     endDate.value = today.toISOString().split('T')[0]
 
-    const statuses = [
-      { status: 'ordersnom__status_cal', badgeClass: 'bg-danger', label: 'К' },
-      {
-        status: 'ordersnom__status_instr',
-        badgeClass: 'bg-warning',
-        label: 'И',
-      },
-      {
-        status: 'ordersnom__status_draft',
-        badgeClass: 'bg-secondary',
-        label: 'Ч',
-      },
-      { status: 'ordersnom__status_metall', badgeClass: 'bg-dark', label: 'М' },
-      { status: 'ordersnom__status_kp', badgeClass: 'bg-success', label: 'КП' },
-    ]
-
     const fetchOrders = () => {
       return getOrders(
-        1, // Можно добавить параметр страницы и лимита для серверной обработки
-        15, // Количество строк на страницу
-        '', // Пустой поиск по умолчанию
-        null, // Без сортировки по умолчанию
-        null, // Без сортировки по умолчанию
+        1,
+        1000,
+        '',
+        null,
+        null,
         startDate.value,
         endDate.value,
-        roleStore.selectedTypes, // Берем тип из хранилища
-        roleStore.selectedRole // Берем роль из хранилища
+        roleStore.selectedTypes,
+        roleStore.selectedRole
       )
         .then((response) => {
           noData.value = response.table.data.length === 0
@@ -140,53 +96,6 @@ export default {
           console.error('Ошибка при загрузке заказов:', error)
           noData.value = true
         })
-    }
-
-    const initializeTable = () => {
-      if (ordersTable.value) {
-        ordersTable.value.destroy() // Уничтожаем предыдущую таблицу, если она существует
-      }
-
-      // Создаем новую таблицу
-      ordersTable.value = new DataTable('#ordersTable', {
-        pageLength: 15,
-        lengthMenu: [15, 30, 60, 100],
-        searching: true,
-        processing: true,
-        serverSide: false, // Мы уже получили данные, поэтому отключаем серверную обработку
-        data: orders.value, // Используем полученные данные
-        columns: filteredTableFields.value.map((field) => ({
-          data: field.name,
-          title: field.name === 'statuses' ? 'Статусы' : field.title,
-          className: field.name === 'statuses' ? 'text-center' : '',
-          render: (data, type, row) => {
-            // Если это поле "statuses", рендерим через функцию renderStatus
-            if (field.name === 'statuses') {
-              return renderStatus(row)
-            }
-            // Условное форматирование для поля "clients__name"
-            else if (field.name === 'clients__name') {
-              return `<span style="${row.goz ? 'background-color: lightgreen;' : ''}">${data || ''}</span>`
-            }
-            // Применяем функцию форматирования для остальных полей
-            else {
-              return formatValue(data, field.name)
-            }
-          },
-        })),
-        language: { url: 'Russian.json' },
-        createdRow: (row, data) => {
-          if (data.locked) {
-            $(row).find('td').css('color', '#aaaaaa')
-          }
-          $(row).on('click.dt', () => {
-            router.push({ name: 'OrderDetails', params: { orderId: data.id } })
-          })
-        },
-        drawCallback: function () {
-          noData.value = this.api().rows().data().length === 0
-        },
-      })
     }
 
     const filteredTableFields = computed(() => {
@@ -204,56 +113,63 @@ export default {
       return fields
     })
 
-    const renderStatus = _.memoize((row) => {
-      const activeStatuses = _.filter(
-        statuses,
-        (s) => row[s.status] && row[s.status].trim() !== ''
-      )
+    // Define columns for DataTable component
+    const tableColumns = computed(() => {
+      return filteredTableFields.value.map((field) => {
+        let column = {
+          name: field.name,
+          title: field.title,
+          sortable: true,
+        }
 
-      if (activeStatuses.length > 0) {
-        return activeStatuses
-          .map(
-            (s) => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
-          )
-          .join('')
-      } else {
-        return ''
-      }
-    })
-
-    const formatValue = (value, fieldName) => {
-      // const fieldData = {
-      //   Поле: fieldName,
-      //   Значение: value,
-      //   Тип: typeof value,
-      // }
-      // console.table([fieldData])
-      // Собираем информацию о поле, значении и типе в виде таблицы
-
-      if (typeof value === 'boolean' && fieldName !== 'goz') {
-        return formatBoolean(value)
-      } else if (typeof value === 'string' && _.includes(fieldName, 'date')) {
-        return formatDate(value)
-      } else if (typeof value === 'number' && _.includes(fieldName, 'time')) {
-        return formatTime(value)
-      } else if (typeof value === 'string' && _.includes(fieldName, 'price')) {
-        return formatPrice(value)
-      }
-
-      return value
-    }
-
-    onMounted(() => {
-      fetchOrders().then(() => {
-        initializeTable()
+        // Custom cell component for specific fields
+        if (field.name === 'statuses') {
+          column.cellComponent = 'StatusCell'
+          column.sortable = false // Disable sorting on custom components if needed
+        } else if (field.name === 'clients__name') {
+          column.cellComponent = 'ClientNameCell'
+        }
+        return column
       })
     })
 
-    onBeforeUnmount(() => {
-      if (ordersTable.value) {
-        ordersTable.value.destroy() // Уничтожаем таблицу при размонтировании
-      }
-    })
+    // Components for custom cell rendering
+    const StatusCell = {
+      props: ['row'],
+      template: `<span v-html="renderStatus(row)"></span>`,
+      setup(props) {
+        const renderStatus = (row) => {
+          const activeStatuses = _.filter(
+            statuses,
+            (s) => row[s.status] && row[s.status].trim() !== ''
+          )
+
+          if (activeStatuses.length > 0) {
+            return activeStatuses
+              .map(
+                (s) =>
+                  `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
+              )
+              .join('')
+          } else {
+            return ''
+          }
+        }
+        return { renderStatus }
+      },
+    }
+
+    const ClientNameCell = {
+      props: ['row', 'column'],
+      template: `<span :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
+                  {{ row[column.name] }}
+                </span>`,
+    }
+
+    // Handle row click from DataTable component
+    const handleRowClick = (row) => {
+      router.push({ name: 'OrderDetails', params: { orderId: row.id } })
+    }
 
     watch(
       [
@@ -263,24 +179,23 @@ export default {
         () => roleStore.selectedRole,
       ],
       () => {
-        fetchOrders().then(() => {
-          initializeTable()
-        })
+        fetchOrders()
       }
     )
 
+    onMounted(() => {
+      fetchOrders()
+    })
+
     return {
-      ordersTable,
       startDate,
       endDate,
       noData,
       orders,
       tableFields,
-      renderStatus,
-      filteredTableFields,
       formatValue,
-      roleDisplayName: computed(() => roleStore.roleDisplayName), // Получаем имя роли
-      selectedTypesDisplayName: computed(() => roleStore.selectedTypes), // Получаем выбранный тип
+      tableColumns,
+      handleRowClick,
     }
   },
 }
