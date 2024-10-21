@@ -3,11 +3,17 @@ import { defineStore } from 'pinia'
 
 export const useRoleStore = defineStore('roleStore', {
   state: () => ({
-    selectedRole: 'metrolog', // Роль по умолчанию
+    selectedRole: 'metrolog',
     roleNames: {
       metrolog: 'Метролог',
       omts: 'ОМТС',
       tech_calc: 'Технолог',
+    },
+    selectedTypes: 'ttt',
+    types: {
+      metrolog: 'ttt',
+      omts: 'rrr',
+      tech_calc: 'wew',
     },
   }),
   actions: {

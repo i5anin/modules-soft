@@ -24,20 +24,22 @@
           </option>
         </select>
       </div>
+
+      <!-- Селектор типа -->
       <div class="d-flex align-items-center">
-        <label for="role-selector" class="me-2 mb-0">Выбор типа:</label>
+        <label for="type-selector" class="me-2 mb-0">Выбор типа:</label>
         <select
           class="form-select form-select-sm w-auto"
-          id="role-selector"
-          v-model="roleStore.selectedRole"
-          @change="onRoleChange"
+          id="type-selector"
+          v-model="roleStore.selectedTypes"
+          @change="onTypeChange"
         >
           <option
-            v-for="(name, key) in roleStore.roleNames"
+            v-for="(type, key) in roleStore.types"
             :key="key"
-            :value="key"
+            :value="type"
           >
-            {{ name }}
+            {{ type }}
           </option>
         </select>
       </div>
@@ -46,7 +48,7 @@
 </template>
 
 <script>
-import { useRoleStore } from '../store' // Убедитесь, что путь корректный
+import { useRoleStore } from '../store/index.js' // Убедитесь, что путь корректный
 
 export default {
   setup() {
@@ -57,9 +59,15 @@ export default {
       // Дополнительная логика при изменении роли (если требуется)
     }
 
+    const onTypeChange = () => {
+      console.log('Выбранный тип:', roleStore.selectedTypes)
+      // Дополнительная логика при изменении типа (если требуется)
+    }
+
     return {
       roleStore,
       onRoleChange,
+      onTypeChange,
     }
   },
 }
