@@ -3,7 +3,7 @@
   <div class="container">
     <div class="mt-4 d-flex align-items-center mb-2">
       <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary me-3">
-        Назад к заказам
+        <svg-icon type="mdi" :path="path" class="me-1" /> Назад к заказам
       </router-link>
     </div>
 
@@ -45,16 +45,22 @@ import 'datatables.net-bs5'
 import { getOrderById } from '../api/orders.js'
 import OrderInfoCard from './HeaderInfo.vue'
 import _ from 'lodash'
-import { useRoleStore } from '../../main/store/index.js' // Импортируем хранилище Pinia
+import { useRoleStore } from '../../main/store/index.js'
+import SvgIcon from '@jamescoyle/vue-icon' // Импортируем компонент SvgIcon
+import { mdiArrowLeft } from '@mdi/js' // Импортируем иконку
 
+// Хранилище Pinia
 const router = useRouter()
-const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
+const roleStore = useRoleStore()
 
 const orderTable = ref(null)
 const nomtable = ref([])
 const header = ref([])
 const tableFields = ref([])
 const noData = ref(false)
+
+// Путь для иконки
+const path = mdiArrowLeft
 
 const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId
