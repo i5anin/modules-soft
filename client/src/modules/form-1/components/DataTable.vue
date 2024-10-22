@@ -17,15 +17,26 @@
       </div>
 
       <!-- Search Input -->
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center position-relative">
         <label class="me-2">Поиск:</label>
-        <input
-          type="text"
-          v-model="searchQuery"
-          class="form-control w-auto me-2"
-          placeholder="Введите текст для поиска"
-          :disabled="loading"
-        />
+        <div class="position-relative">
+          <input
+            type="text"
+            v-model="searchQuery"
+            class="form-control me-2 search-input"
+            placeholder="Введите текст для поиска"
+            :disabled="loading"
+          />
+          <!-- Кнопка очистки поля, показывается только при наличии текста в поле -->
+          <button
+            v-if="searchQuery"
+            @click="clearSearch"
+            class="btn btn-link position-absolute top-50 end-0 translate-middle-y"
+            style="padding: 0; color: gray"
+          >
+            <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
         <button @click="onSearch" class="btn btn-primary" :disabled="loading">
           Поиск
         </button>
@@ -235,6 +246,11 @@ export default {
       }, 1000) // Здесь используется таймер, замените его на реальный запрос
     }
 
+    const clearSearch = () => {
+      searchQuery.value = '' // Очистка поля поиска
+      emit('search-change', '') // Обновляем таблицу после очистки
+    }
+
     // Вычисление диапазона записей
     const startRecord = computed(
       () => (props.currentPage - 1) * localItemsPerPage.value + 1
@@ -252,6 +268,7 @@ export default {
       handleRowClick,
       onPageSizeChange,
       onSearch,
+      clearSearch, // Добавляем метод очистки
       searchQuery,
       sortColumn: computed(() => props.sortColumn),
       sortOrder: computed(() => props.sortOrder),
@@ -285,6 +302,11 @@ th.sortable:hover {
 
 th .bi {
   margin-left: 5px;
+}
+
+/* Увеличиваем ширину поля поиска */
+.search-input {
+  width: 300px;
 }
 
 /* Центрируем и добавляем отступы для индикатора загрузки */
