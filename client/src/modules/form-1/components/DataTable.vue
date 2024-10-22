@@ -1,29 +1,38 @@
 <template>
   <div>
-    <!-- Page Size Selection -->
-    <div class="d-flex align-items-center mb-3">
-      <label class="me-2">Показать на странице:</label>
-      <select
-        v-model="localItemsPerPage"
-        class="form-select w-auto"
-        @change="onPageSizeChange"
-      >
-        <option v-for="size in pageSizes" :key="size" :value="size">
-          {{ size }}
-        </option>
-      </select>
-    </div>
+    <!-- Search and Page Size Selection in one line -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <!-- Page Size Selection -->
+      <div class="d-flex align-items-center me-3">
+        <label class="me-2">Показать на странице:</label>
+        <select
+          v-model="localItemsPerPage"
+          class="form-select w-auto"
+          @change="onPageSizeChange"
+        >
+          <option v-for="size in pageSizes" :key="size" :value="size">
+            {{ size }}
+          </option>
+        </select>
+      </div>
 
-    <!-- Search Input -->
-    <div class="d-flex align-items-center mb-3">
-      <label class="me-2">Поиск:</label>
-      <input
-        type="text"
-        v-model="searchQuery"
-        class="form-control w-auto me-2"
-        placeholder="Введите текст для поиска"
-      />
-      <button @click="onSearch" class="btn btn-primary">Поиск</button>
+      <!-- Search Input -->
+      <div class="d-flex align-items-center">
+        <label class="me-2">Поиск:</label>
+        <input
+          type="text"
+          v-model="searchQuery"
+          class="form-control w-auto me-2"
+          placeholder="Введите текст для поиска"
+          :disabled="loading"
+        />
+        <button @click="onSearch" class="btn btn-primary" :disabled="loading">
+          Поиск
+        </button>
+        <div v-if="loading" class="spinner-border ms-2" role="status">
+          <span class="visually-hidden">Загрузка...</span>
+        </div>
+      </div>
     </div>
 
     <!-- Data Table -->
@@ -66,7 +75,6 @@
               :row="row"
               :column="column"
             >
-              <!-- Default cell content if no component is provided -->
               {{ formatValue(row[column.name], column.name) }}
             </component>
           </td>
@@ -181,6 +189,7 @@ export default {
     const localItemsPerPage = ref(props.itemsPerPage)
     const pageSizes = props.itemsPerPageOptions
     const searchQuery = ref('')
+    const loading = ref(false) // Добавляем состояние загрузки
 
     // Watch for changes from parent component
     watch(
@@ -219,7 +228,11 @@ export default {
     }
 
     const onSearch = () => {
+      loading.value = true // Включаем загрузку
       emit('search-change', searchQuery.value)
+      setTimeout(() => {
+        loading.value = false // Выключаем загрузку после завершения поиска
+      }, 1000) // Здесь используется таймер, замените его на реальный запрос
     }
 
     // Вычисление диапазона записей
@@ -247,6 +260,7 @@ export default {
       startRecord, // Добавлено
       endRecord, // Добавлено
       totalCount: computed(() => props.totalCount), // Добавлено
+      loading, // Добавлено состояние загрузки
     }
   },
 }
@@ -271,5 +285,11 @@ th.sortable:hover {
 
 th .bi {
   margin-left: 5px;
+}
+
+/* Центрируем и добавляем отступы для индикатора загрузки */
+.spinner-border {
+  width: 20px;
+  height: 20px;
 }
 </style>

@@ -45,6 +45,7 @@
           @page-change="handlePageChange"
           @sort-change="handleSortChange"
           @page-size-change="handlePageSizeChange"
+          @search-change="handleSearchChange"
         />
       </div>
     </div>
@@ -71,7 +72,7 @@ export default {
     const orders = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
-    const searchQuery = ref('')
+    const searchQuery = ref('') // Добавляем строку поиска
 
     const roleStore = useRoleStore()
 
@@ -219,6 +220,12 @@ export default {
       fetchOrders()
     }
 
+    const handleSearchChange = (query) => {
+      searchQuery.value = query
+      currentPage.value = 1 // Обнуление страницы для нового поиска
+      fetchOrders() // Загрузка данных с новым поисковым запросом
+    }
+
     // Watch for filters change
     watch(
       [
@@ -242,20 +249,22 @@ export default {
       endDate,
       orders,
       tableFields,
+      searchQuery,
       formatValue,
       tableColumns,
       handleRowClick,
       handlePageChange,
       handleSortChange,
       handlePageSizeChange,
+      handleSearchChange,
       currentPage,
       totalPages,
       sortColumn,
       sortOrder,
       itemsPerPage,
       totalCount,
-      startRecord, // Добавлено
-      endRecord, // Добавлено
+      startRecord,
+      endRecord,
       StatusCell,
       ClientNameCell,
     }
