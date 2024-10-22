@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="mt-4 display-6 mb-4">{{ tableTitle || 'Таблица' }}</h5>
+    <h5 class="mt-4">{{ tableTitle || 'Таблица' }}</h5>
     <!-- Название таблицы -->
     <table class="table table-striped table-sm mt-3">
       <thead>

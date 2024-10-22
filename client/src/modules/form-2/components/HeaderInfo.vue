@@ -1,7 +1,15 @@
 <template>
   <div>
     <div v-if="header" class="card mb-3">
-      <div class="card-header">Информация о заказе</div>
+      <div class="card-header">
+        <!-- Иконка mdi-format-list-bulleted-type через <span> -->
+        <span class="mdi mdi-format-list-bulleted-type"></span>
+
+        <!-- Иконка через компонент SvgIcon -->
+        <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
+
+        Информация о заказе
+      </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
@@ -38,14 +46,20 @@
 </template>
 
 <script>
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiFormatListBulletedType } from '@mdi/js' // Импортируем нужную иконку
 import formatters from '@/utils/formatters.js'
 
 export default {
+  components: { SvgIcon },
   props: {
     header: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return { mdiFormatListBulletedType }
   },
   computed: {
     hasNonEmptyComments() {

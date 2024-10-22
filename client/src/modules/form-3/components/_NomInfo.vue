@@ -1,11 +1,21 @@
-<!-- _NomInfo.vue -->
 <template>
   <div class="container">
     <router-link :to="{ name: 'OrderDetails' }" class="btn btn-secondary me-3">
       Назад к списку деталей заказа
     </router-link>
 
-    <h1 class="display-4 mb-4">Информация по номенклатуре (Деталь)</h1>
+    <h3 class="mb-4">
+      <!-- Иконка через компонент SvgIcon -->
+      <svg-icon
+        type="mdi"
+        :path="mdiBolt"
+        class="me-1"
+        color="red"
+        :size="32"
+      />
+
+      Информация по номенклатуре (Деталь)
+    </h3>
 
     <div v-if="selectedOrder">
       <div v-if="selectedOrder.header">
@@ -59,8 +69,10 @@
 <script setup>
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import SvgIcon from '@jamescoyle/vue-icon' // Импорт компонента SvgIcon
+import { mdiBolt } from '@mdi/js' // Импорт иконки
 import { getModalOrderById } from '../api/orders.js'
-import { useRoleStore } from '../../main/store/index.js' // Импортируем хранилище Pinia
+import { useRoleStore } from '../../main/store/index.js' // Импорт хранилища Pinia
 import OrderTable from './OrderTable.vue'
 
 const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
