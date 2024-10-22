@@ -1,4 +1,3 @@
-<!-- DataTable.vue -->
 <template>
   <div>
     <!-- Page Size Selection -->
@@ -71,14 +70,14 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(1)"
         >
-          <a class="page-link" href="javascript:void(0)">««</a>
+          <a class="page-link" href="javascript:void(0)">«</a>
         </li>
         <li
           class="page-item"
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(currentPage - 1)"
         >
-          <a class="page-link" href="javascript:void(0)">«</a>
+          <a class="page-link" href="javascript:void(0)">‹</a>
         </li>
         <li class="page-item active">
           <span class="page-link">{{ currentPage }}</span>
@@ -88,14 +87,14 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(currentPage + 1)"
         >
-          <a class="page-link" href="javascript:void(0)">»</a>
+          <a class="page-link" href="javascript:void(0)">›</a>
         </li>
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(totalPages)"
         >
-          <a class="page-link" href="javascript:void(0)">»»</a>
+          <a class="page-link" href="javascript:void(0)">»</a>
         </li>
       </ul>
     </nav>
@@ -103,7 +102,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue' // Ensure you have these imports
+import { ref, computed, watch, resolveDynamicComponent } from 'vue'
 
 export default {
   name: 'DataTable',
@@ -143,6 +142,10 @@ export default {
     itemsPerPage: {
       type: Number,
       required: true,
+    },
+    customComponents: {
+      type: Object,
+      default: () => ({}),
     },
   },
   emits: ['row-click', 'page-change', 'sort-change', 'page-size-change'],
@@ -198,6 +201,7 @@ export default {
       sortOrder: computed(() => props.sortOrder),
       currentPage: computed(() => props.currentPage),
       totalPages: computed(() => props.totalPages),
+      customComponents: props.customComponents,
       formatValue: props.formatValue,
     }
   },

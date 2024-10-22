@@ -1,4 +1,3 @@
-<!-- YourMainComponent.vue -->
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -40,6 +39,7 @@
           :sort-column="sortColumn"
           :sort-order="sortOrder"
           :format-value="formatValue"
+          :custom-components="{ StatusCell, ClientNameCell }"
           @row-click="handleRowClick"
           @page-change="handlePageChange"
           @sort-change="handleSortChange"
@@ -51,12 +51,12 @@
 </template>
 
 <script>
-import DateRangeFilter from './DateRangeFilter.vue'
-import DataTable from './DataTable.vue' // Import the reusable DataTable component
 import { computed, onMounted, ref, watch } from 'vue'
-import { getOrders } from '../api/orders.js'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
+import DateRangeFilter from './DateRangeFilter.vue'
+import DataTable from './DataTable.vue'
+import { getOrders } from '../api/orders.js'
 import { formatValue } from '@/utils/formatters.js'
 import { useRoleStore } from '../../main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
@@ -139,10 +139,10 @@ export default {
 
         // Custom cell component for specific fields
         if (field.name === 'statuses') {
-          column.cellComponent = StatusCell
+          column.cellComponent = 'StatusCell' // Use component name as string
           column.sortable = false // Disable sorting on custom components if needed
         } else if (field.name === 'clients__name') {
-          column.cellComponent = ClientNameCell
+          column.cellComponent = 'ClientNameCell'
         }
         return column
       })
@@ -150,6 +150,7 @@ export default {
 
     // Components for custom cell rendering
     const StatusCell = {
+      name: 'StatusCell',
       props: ['row'],
       template: `<span v-html="renderStatus(row)"></span>`,
       setup(props) {
@@ -175,10 +176,11 @@ export default {
     }
 
     const ClientNameCell = {
+      name: 'ClientNameCell',
       props: ['row', 'column'],
       template: `<span :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
-                      {{ row[column.name] }}
-                    </span>`,
+                    {{ row[column.name] }}
+                  </span>`,
     }
 
     // Handle row click from DataTable component
@@ -233,15 +235,14 @@ export default {
       formatValue,
       tableColumns,
       handleRowClick,
-      handlePageChange, // Added
-      handleSortChange, // Added
-      handlePageSizeChange, // Added
+      handlePageChange,
+      handleSortChange,
+      handlePageSizeChange,
       currentPage,
       totalPages,
       sortColumn,
       sortOrder,
       itemsPerPage,
-      // Include custom cell components if needed
       StatusCell,
       ClientNameCell,
     }
