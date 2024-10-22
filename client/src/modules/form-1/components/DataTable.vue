@@ -62,47 +62,53 @@
       </tbody>
     </table>
 
-    <!-- Pagination Controls -->
-    <nav aria-label="Page navigation" class="mt-3">
-      <ul class="pagination justify-content-center">
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === 1 }"
-          @click="goToPage(1)"
-        >
-          <a class="page-link" href="javascript:void(0)">«</a>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === 1 }"
-          @click="goToPage(currentPage - 1)"
-        >
-          <a class="page-link" href="javascript:void(0)">‹</a>
-        </li>
-        <li class="page-item active">
-          <span class="page-link">{{ currentPage }}</span>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === totalPages }"
-          @click="goToPage(currentPage + 1)"
-        >
-          <a class="page-link" href="javascript:void(0)">›</a>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === totalPages }"
-          @click="goToPage(totalPages)"
-        >
-          <a class="page-link" href="javascript:void(0)">»</a>
-        </li>
-      </ul>
-    </nav>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <p class="text-muted mb-0">
+        {{ startRecord }}–{{ endRecord }} из {{ totalCount }}
+      </p>
+
+      <!-- Pagination Controls -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === 1 }"
+            @click="goToPage(1)"
+          >
+            <a class="page-link" href="javascript:void(0)">«</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === 1 }"
+            @click="goToPage(currentPage - 1)"
+          >
+            <a class="page-link" href="javascript:void(0)">‹</a>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ currentPage }}</span>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === totalPages }"
+            @click="goToPage(currentPage + 1)"
+          >
+            <a class="page-link" href="javascript:void(0)">›</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === totalPages }"
+            @click="goToPage(totalPages)"
+          >
+            <a class="page-link" href="javascript:void(0)">»</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, watch, resolveDynamicComponent } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 export default {
   name: 'DataTable',
@@ -120,6 +126,10 @@ export default {
       default: () => [15, 30, 50, 100],
     },
     totalPages: {
+      type: Number,
+      required: true,
+    },
+    totalCount: {
       type: Number,
       required: true,
     },
@@ -189,6 +199,14 @@ export default {
       emit('page-size-change', localItemsPerPage.value)
     }
 
+    // Вычисление диапазона записей
+    const startRecord = computed(
+      () => (props.currentPage - 1) * localItemsPerPage.value + 1
+    )
+    const endRecord = computed(() =>
+      Math.min(props.currentPage * localItemsPerPage.value, props.totalCount)
+    )
+
     return {
       localItemsPerPage,
       pageSizes,
@@ -201,8 +219,9 @@ export default {
       sortOrder: computed(() => props.sortOrder),
       currentPage: computed(() => props.currentPage),
       totalPages: computed(() => props.totalPages),
-      customComponents: props.customComponents,
-      formatValue: props.formatValue,
+      startRecord, // Добавлено
+      endRecord, // Добавлено
+      totalCount: computed(() => props.totalCount), // Добавлено
     }
   },
 }

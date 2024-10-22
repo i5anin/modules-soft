@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <!-- Date Range Filters -->
+        <!-- Фильтры по диапазону дат -->
         <div
           class="date-range-filters d-flex align-items-center justify-content-start mb-3"
         >
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <!-- Data Table -->
+        <!-- Таблица данных -->
         <DataTable
           :data="orders"
           :columns="tableColumns"
@@ -36,6 +36,7 @@
           :items-per-page="itemsPerPage"
           :current-page="currentPage"
           :total-pages="totalPages"
+          :total-count="totalCount"
           :sort-column="sortColumn"
           :sort-order="sortOrder"
           :format-value="formatValue"
@@ -127,6 +128,14 @@ export default {
       })
       return fields
     })
+
+    // Определение текущего диапазона записей
+    const startRecord = computed(
+      () => (currentPage.value - 1) * itemsPerPage.value + 1
+    )
+    const endRecord = computed(() =>
+      Math.min(currentPage.value * itemsPerPage.value, totalCount.value)
+    )
 
     // Define columns for DataTable component
     const tableColumns = computed(() => {
@@ -243,6 +252,9 @@ export default {
       sortColumn,
       sortOrder,
       itemsPerPage,
+      totalCount,
+      startRecord, // Добавлено
+      endRecord, // Добавлено
       StatusCell,
       ClientNameCell,
     }
