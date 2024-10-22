@@ -28,19 +28,6 @@
           </div>
         </div>
 
-        <!-- Поле ввода для поиска -->
-        <div class="search-filter mb-3">
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="form-control"
-            placeholder="Введите текст для поиска"
-          />
-          <button @click="fetchOrders" class="btn btn-primary mt-2">
-            Поиск
-          </button>
-        </div>
-
         <!-- Таблица данных -->
         <DataTable
           :data="orders"
