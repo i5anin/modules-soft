@@ -14,6 +14,18 @@
       </select>
     </div>
 
+    <!-- Search Input -->
+    <div class="d-flex align-items-center mb-3">
+      <label class="me-2">Поиск:</label>
+      <input
+        type="text"
+        v-model="searchQuery"
+        class="form-control w-auto me-2"
+        placeholder="Введите текст для поиска"
+      />
+      <button @click="onSearch" class="btn btn-primary">Поиск</button>
+    </div>
+
     <!-- Data Table -->
     <table class="table table-striped">
       <thead>
@@ -62,47 +74,53 @@
       </tbody>
     </table>
 
-    <!-- Pagination Controls -->
-    <nav aria-label="Page navigation" class="mt-3">
-      <ul class="pagination justify-content-center">
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === 1 }"
-          @click="goToPage(1)"
-        >
-          <a class="page-link" href="javascript:void(0)">«</a>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === 1 }"
-          @click="goToPage(currentPage - 1)"
-        >
-          <a class="page-link" href="javascript:void(0)">‹</a>
-        </li>
-        <li class="page-item active">
-          <span class="page-link">{{ currentPage }}</span>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === totalPages }"
-          @click="goToPage(currentPage + 1)"
-        >
-          <a class="page-link" href="javascript:void(0)">›</a>
-        </li>
-        <li
-          class="page-item"
-          :class="{ disabled: currentPage === totalPages }"
-          @click="goToPage(totalPages)"
-        >
-          <a class="page-link" href="javascript:void(0)">»</a>
-        </li>
-      </ul>
-    </nav>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <p class="text-muted mb-0">
+        {{ startRecord }}–{{ endRecord }} из {{ totalCount }}
+      </p>
+
+      <!-- Pagination Controls -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === 1 }"
+            @click="goToPage(1)"
+          >
+            <a class="page-link" href="javascript:void(0)">«</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === 1 }"
+            @click="goToPage(currentPage - 1)"
+          >
+            <a class="page-link" href="javascript:void(0)">‹</a>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ currentPage }}</span>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === totalPages }"
+            @click="goToPage(currentPage + 1)"
+          >
+            <a class="page-link" href="javascript:void(0)">›</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === totalPages }"
+            @click="goToPage(totalPages)"
+          >
+            <a class="page-link" href="javascript:void(0)">»</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, watch, resolveDynamicComponent } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 export default {
   name: 'DataTable',
@@ -120,6 +138,10 @@ export default {
       default: () => [15, 30, 50, 100],
     },
     totalPages: {
+      type: Number,
+      required: true,
+    },
+    totalCount: {
       type: Number,
       required: true,
     },
@@ -148,10 +170,17 @@ export default {
       default: () => ({}),
     },
   },
-  emits: ['row-click', 'page-change', 'sort-change', 'page-size-change'],
+  emits: [
+    'row-click',
+    'page-change',
+    'sort-change',
+    'page-size-change',
+    'search-change',
+  ],
   setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
     const pageSizes = props.itemsPerPageOptions
+    const searchQuery = ref('')
 
     // Watch for changes from parent component
     watch(
@@ -189,6 +218,18 @@ export default {
       emit('page-size-change', localItemsPerPage.value)
     }
 
+    const onSearch = () => {
+      emit('search-change', searchQuery.value)
+    }
+
+    // Вычисление диапазона записей
+    const startRecord = computed(
+      () => (props.currentPage - 1) * localItemsPerPage.value + 1
+    )
+    const endRecord = computed(() =>
+      Math.min(props.currentPage * localItemsPerPage.value, props.totalCount)
+    )
+
     return {
       localItemsPerPage,
       pageSizes,
@@ -197,12 +238,15 @@ export default {
       sortBy,
       handleRowClick,
       onPageSizeChange,
+      onSearch,
+      searchQuery,
       sortColumn: computed(() => props.sortColumn),
       sortOrder: computed(() => props.sortOrder),
       currentPage: computed(() => props.currentPage),
       totalPages: computed(() => props.totalPages),
-      customComponents: props.customComponents,
-      formatValue: props.formatValue,
+      startRecord, // Добавлено
+      endRecord, // Добавлено
+      totalCount: computed(() => props.totalCount), // Добавлено
     }
   },
 }

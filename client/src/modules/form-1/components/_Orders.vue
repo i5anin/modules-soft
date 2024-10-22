@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <!-- Date Range Filters -->
+        <!-- Фильтры по диапазону дат -->
         <div
           class="date-range-filters d-flex align-items-center justify-content-start mb-3"
         >
@@ -28,7 +28,20 @@
           </div>
         </div>
 
-        <!-- Data Table -->
+        <!-- Поле ввода для поиска -->
+        <div class="search-filter mb-3">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control"
+            placeholder="Введите текст для поиска"
+          />
+          <button @click="fetchOrders" class="btn btn-primary mt-2">
+            Поиск
+          </button>
+        </div>
+
+        <!-- Таблица данных -->
         <DataTable
           :data="orders"
           :columns="tableColumns"
@@ -36,6 +49,7 @@
           :items-per-page="itemsPerPage"
           :current-page="currentPage"
           :total-pages="totalPages"
+          :total-count="totalCount"
           :sort-column="sortColumn"
           :sort-order="sortOrder"
           :format-value="formatValue"
@@ -70,6 +84,7 @@ export default {
     const orders = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
+    const searchQuery = ref('')
 
     const roleStore = useRoleStore()
 
@@ -90,7 +105,7 @@ export default {
       return getOrders(
         currentPage.value,
         itemsPerPage.value,
-        '', // Assuming a search parameter if needed
+        searchQuery.value, // Передаем поисковый запрос
         null,
         null,
         startDate.value,
@@ -127,6 +142,14 @@ export default {
       })
       return fields
     })
+
+    // Определение текущего диапазона записей
+    const startRecord = computed(
+      () => (currentPage.value - 1) * itemsPerPage.value + 1
+    )
+    const endRecord = computed(() =>
+      Math.min(currentPage.value * itemsPerPage.value, totalCount.value)
+    )
 
     // Define columns for DataTable component
     const tableColumns = computed(() => {
@@ -243,6 +266,9 @@ export default {
       sortColumn,
       sortOrder,
       itemsPerPage,
+      totalCount,
+      startRecord, // Добавлено
+      endRecord, // Добавлено
       StatusCell,
       ClientNameCell,
     }
