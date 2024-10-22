@@ -218,10 +218,13 @@ export default {
       emit('page-size-change', localItemsPerPage.value)
     }
 
+<<<<<<< HEAD
     const onSearch = () => {
       emit('search-change', searchQuery.value)
     }
 
+=======
+>>>>>>> origin/minor-updates
     // Вычисление диапазона записей
     const startRecord = computed(
       () => (props.currentPage - 1) * localItemsPerPage.value + 1
