@@ -28,7 +28,6 @@
           </div>
         </div>
 
-<<<<<<< HEAD
         <!-- Поле ввода для поиска -->
         <div class="search-filter mb-3">
           <input
@@ -42,8 +41,6 @@
           </button>
         </div>
 
-=======
->>>>>>> origin/minor-updates
         <!-- Таблица данных -->
         <DataTable
           :data="orders"
