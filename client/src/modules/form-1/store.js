@@ -3,22 +3,12 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getOrders } from './api/orders.js'
 import _ from 'lodash'
+import { statuses } from '@/modules/shared/statuses.js'
 
 export const useOrdersStore = defineStore('orders', () => {
   const orders = ref([])
   const tableFields = ref([])
   const noData = ref(false)
-  const statuses = [
-    { status: 'ordersnom__status_cal', badgeClass: 'bg-danger', label: 'К' },
-    { status: 'ordersnom__status_instr', badgeClass: 'bg-warning', label: 'И' },
-    {
-      status: 'ordersnom__status_draft',
-      badgeClass: 'bg-secondary',
-      label: 'Ч',
-    },
-    { status: 'ordersnom__status_metall', badgeClass: 'bg-dark', label: 'М' },
-    { status: 'ordersnom__status_kp', badgeClass: 'bg-success', label: 'КП' },
-  ]
 
   const fetchOrders = async (
     page,
