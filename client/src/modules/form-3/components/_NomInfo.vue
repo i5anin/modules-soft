@@ -74,8 +74,8 @@ import SvgIcon from '@jamescoyle/vue-icon' // Импорт компонента 
 import { mdiBolt } from '@mdi/js' // Импорт иконки
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '../../main/store/index.js' // Импорт хранилища Pinia
-import OrderTable from './OrderTable.vue'
-import Strategy from './OrderTable.vue'
+import OrderTable from '../../shared/data-table/BaseTable.vue'
+import Strategy from '../../shared/data-table/BaseTable.vue'
 
 const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
 const route = useRoute()

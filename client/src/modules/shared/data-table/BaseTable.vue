@@ -22,13 +22,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import {
-  formatBoolean,
-  formatDate,
-  formatPrice,
-  formatTime,
-} from '@/utils/formatters.js'
-import _ from 'lodash'
+import { formatValue } from '@/utils/formatters.js'
 
 const props = defineProps({
   fields: { type: Array, required: true },
@@ -41,15 +35,4 @@ const props = defineProps({
 const filteredFields = computed(() => {
   return props.fields.filter((field) => !props.excluded.includes(field.name))
 })
-
-const formatValue = (value, fieldName) => {
-  if (typeof value === 'boolean') return formatBoolean(value)
-  if (typeof value === 'string' && fieldName.toLowerCase().includes('date'))
-    return formatDate(value)
-  if (typeof value === 'number' && fieldName.toLowerCase().includes('time'))
-    return formatTime(value)
-  if (fieldName.toLowerCase().includes('price') && !isNaN(parseFloat(value)))
-    return formatPrice(parseFloat(value))
-  return value
-}
 </script>
