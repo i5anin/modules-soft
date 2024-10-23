@@ -13,9 +13,12 @@
     <DetailsTable
       :fields="filteredTableFields"
       :data="nomtable"
+      :rowLink="true"
+      :linkPath="
+        (row) => ({ name: 'OrderDetails', params: { orderId: row.id } })
+      "
       tableTitle="Информация о заказе"
-      ><span v-if="field.name === 'statuses'" v-html="renderStatus(row)"></span>
-    </DetailsTable>
+    />
   </div>
 </template>
 
