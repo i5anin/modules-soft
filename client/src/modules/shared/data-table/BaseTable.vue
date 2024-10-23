@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="mt-4">{{ tableTitle || 'Таблица' }}</h5>
+    <h5 class="mt-4">{{ tableTitle }}</h5>
     <table class="table table-striped table-sm mt-3">
       <thead>
         <tr>
@@ -27,7 +27,7 @@ import { formatValue } from '@/utils/formatters.js'
 const props = defineProps({
   fields: { type: Array, required: true },
   data: { type: Array, required: true },
-  tableTitle: { type: String, required: true },
+  tableTitle: { type: String, default: 'Таблица' },
   excluded: { type: Array, default: () => [] },
 })
 
