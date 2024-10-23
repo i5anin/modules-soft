@@ -47,7 +47,7 @@
         </div>
       </div>
       <!-- Добавляем проверки v-if -->
-      <OrderTable
+      <CaliberTable
         v-if="selectedOrder.table_cal"
         :fields="uniqueTableFields"
         :data="selectedOrder.table_cal.data"
@@ -70,14 +70,14 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import SvgIcon from '@jamescoyle/vue-icon' // Импорт компонента SvgIcon
-import { mdiBolt } from '@mdi/js' // Импорт иконки
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
-import { useRoleStore } from '../../main/store/index.js' // Импорт хранилища Pinia
-import OrderTable from '../../shared/data-table/BaseTable.vue'
-import Strategy from '../../shared/data-table/BaseTable.vue'
+import { useRoleStore } from '@/modules/main/store/index.js'
+import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
+import Strategy from '@/modules/shared/data-table/BaseTable.vue'
 
-const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
+const roleStore = useRoleStore()
 const route = useRoute()
 const orderId = ref(null)
 const id = ref(null)

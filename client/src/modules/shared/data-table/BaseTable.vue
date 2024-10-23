@@ -12,7 +12,8 @@
       <tbody>
         <tr v-for="(row, rowIndex) in data" :key="rowIndex">
           <td v-for="(field, index) in filteredFields" :key="index">
-            {{ formatValue(row[field.name], field.name) }}
+            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
           </td>
         </tr>
       </tbody>
@@ -21,6 +22,7 @@
 </template>
 
 <script setup>
+import StatusDisplay from './StatusDisplay.vue'
 import { computed } from 'vue'
 import { formatValue } from '@/utils/formatters.js'
 
@@ -31,7 +33,6 @@ const props = defineProps({
   excluded: { type: Array, default: () => [] },
 })
 
-// Фильтруем поля, исключая те, которые указаны в excluded
 const filteredFields = computed(() => {
   return props.fields.filter((field) => !props.excluded.includes(field.name))
 })
