@@ -53,11 +53,12 @@
         :data="selectedOrder.table_cal.data"
         :tableTitle="selectedOrder.table_cal.title"
       />
-      <OrderTable
+      <Strategy
         v-if="selectedOrder.strat"
         :fields="uniqueTableFieldsStrat"
         :data="selectedOrder.strat.data"
         :tableTitle="selectedOrder.strat.title"
+        :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
     </div>
     <div v-else>
@@ -67,13 +68,14 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon' // Импорт компонента SvgIcon
 import { mdiBolt } from '@mdi/js' // Импорт иконки
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '../../main/store/index.js' // Импорт хранилища Pinia
 import OrderTable from './OrderTable.vue'
+import Strategy from './OrderTable.vue'
 
 const roleStore = useRoleStore() // Получаем доступ к хранилищу Pinia
 const route = useRoute()
