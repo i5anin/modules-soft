@@ -3,7 +3,7 @@
     <div
       class="container-fluid d-flex justify-content-between align-items-center"
     >
-      <router-link to="/public" class="navbar-brand mb-0 h1">
+      <router-link class="navbar-brand mb-0 h1" to="/">
         Модуль «Расчет Заказа {{ roleStore.roleDisplayName }}»
       </router-link>
       <!-- Селектор роли -->
@@ -48,21 +48,34 @@
 </template>
 
 <script>
-import { useRoleStore } from '../store/index.js' // Убедитесь, что путь корректный
+import { useRoleStore } from '../store/index.js'
 
 export default {
   setup() {
     const roleStore = useRoleStore()
 
+    const loadSelectedRoleFromStorage = () => {
+      const storedRole = localStorage.getItem('selectedRole')
+      const storedType = localStorage.getItem('selectedTypes')
+      if (storedRole) {
+        roleStore.setSelectedRole(storedRole)
+      }
+      if (storedType) {
+        roleStore.selectedTypes = storedType
+      }
+    }
+
     const onRoleChange = () => {
       console.log('Выбранная роль:', roleStore.selectedRole)
-      // Дополнительная логика при изменении роли (если требуется)
+      localStorage.setItem('selectedRole', roleStore.selectedRole)
     }
 
     const onTypeChange = () => {
       console.log('Выбранный тип:', roleStore.selectedTypes)
-      // Дополнительная логика при изменении типа (если требуется)
+      localStorage.setItem('selectedTypes', roleStore.selectedTypes)
     }
+
+    loadSelectedRoleFromStorage()
 
     return {
       roleStore,

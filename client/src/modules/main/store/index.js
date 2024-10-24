@@ -9,9 +9,6 @@ export const useRoleStore = defineStore('roleStore', {
       metrolog: 'Метролог',
       omts: 'ОМТС',
       tech_calc: 'Технолог',
-      // tech:
-      // prod:
-      // zagotovka:
     },
     selectedTypes: 'orders',
     types: {
