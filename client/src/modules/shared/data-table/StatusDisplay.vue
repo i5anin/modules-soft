@@ -1,11 +1,10 @@
-<!--StatusDisplay.vue-->
 <template>
   <div class="status-display">
     <span v-for="(statusObj, index) in formattedStatuses" :key="index">
       <span
-        v-if="row[statusObj.status] && row[statusObj.status].trim() !== ''"
+        v-if="row[statusObj.key] && row[statusObj.key].trim() !== ''"
         :class="['badge', statusObj.badgeClass]"
-        >{{ row[statusObj.status] }}
+        >{{ row[statusObj.key] }}
       </span>
     </span>
   </div>
@@ -22,13 +21,24 @@ const props = defineProps({
   },
 })
 
-// Форматирование статусов, возвращая только те, которые содержат непустые значения
+// Форматирование статусов, проверяя окончание ключей
 const formattedStatuses = computed(() => {
-  return statuses.filter((statusObj) => {
-    const statusValue = props.row[statusObj.status]
-    return statusValue && statusValue.trim() !== ''
-  })
+  return statuses
+    .map((statusObj) => {
+      const rowKey = Object.keys(props.row).find((key) =>
+        key.endsWith(statusObj.status)
+      )
+      return rowKey ? { ...statusObj, key: rowKey } : null
+    })
+    .filter(
+      (statusObj) =>
+        statusObj &&
+        props.row[statusObj.key] &&
+        props.row[statusObj.key].trim() !== ''
+    )
 })
+
+console.log('Formatted statuses for row:', props.row, formattedStatuses.value)
 </script>
 
 <style scoped>
