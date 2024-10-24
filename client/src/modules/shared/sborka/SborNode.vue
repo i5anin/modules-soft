@@ -38,7 +38,7 @@
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
           class="icon-sm ms-2 me-2"
         />
-        <span>{{ formatValue(field.name, sbor[field.name]) }}</span>
+        <span>{{ formatValue(sbor[field.name], field.name) }}</span>
       </span>
 
       <span
@@ -46,7 +46,7 @@
         :title="generateTitle(field, sbor)"
         :style="{ fontSize: '13px' }"
       >
-        {{ formatValue(field.name, sbor[field.name]) }}
+        {{ formatValue(sbor[field.name], field.name) }}
       </span>
     </td>
 
@@ -70,7 +70,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import formatters, { formatBoolean } from '@/utils/formatters.js'
+import formatters from '@/utils/formatters.js' // Импортируем форматтеры
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
@@ -106,20 +106,9 @@ export default {
       props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
 
-    const formatValue = (fieldName, value) => {
-      if (typeof value === 'boolean') {
-        return formatBoolean(value)
-      }
-      if (fieldName.toLowerCase().includes('price')) {
-        return formatters.formatPrice(value)
-      }
-      if (fieldName.toLowerCase().includes('date')) {
-        return formatters.formatDate(value)
-      }
-      if (fieldName.toLowerCase().includes('time')) {
-        return formatters.formatTime(value)
-      }
-      return value
+    // Используем импортированную функцию formatValue
+    const formatValue = (value, fieldName) => {
+      return formatters.formatValue(value, fieldName)
     }
 
     const generateTitle = (field, sbor) => {

@@ -8,24 +8,8 @@
     </div>
 
     <OrderInfoCard :header="header" />
-
-    <DetailsTable
-      v-if="
-        selectedRole !== 'tech_calc' &&
-        selectedRole !== 'managers' &&
-        nomtable.length > 0
-      "
-      :fields="filteredTableFields"
-      :data="nomtable"
-      :rowLink="true"
-      :linkPath="getOrderDetailsPath"
-      tableTitle="Информация о заказе"
-    />
     <SborMain
-      v-if="
-        (selectedRole === 'tech_calc' || selectedRole === 'managers') &&
-        nomtable.length > 0
-      "
+      v-if="nomtable.length > 0"
       :nomtable="nomtable"
       :tableFields="filteredTableFields"
     />
@@ -35,7 +19,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import DetailsTable from '@/modules/shared/data-table/BaseTable.vue'
 import { getOrderById } from '../api/orders.js'
 import OrderInfoCard from './HeaderCardInfo.vue'
 import _ from 'lodash'
