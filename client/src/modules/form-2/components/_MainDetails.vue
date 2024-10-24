@@ -7,15 +7,22 @@
       </router-link>
     </div>
 
+    <div class="mb-3"><strong>Текущая роль:</strong> {{ selectedRole }}</div>
+
     <OrderInfoCard :header="header" />
 
-    <!-- Таблица деталей -->
     <DetailsTable
+      v-if="selectedRole === 'metrolog'"
       :fields="filteredTableFields"
       :data="nomtable"
       :rowLink="true"
       :linkPath="getOrderDetailsPath"
       tableTitle="Информация о заказе"
+    />
+    <SborMain
+      v-if="selectedRole === 'tech_calc'"
+      :nomtable="nomtable"
+      :sborka="nomtable"
     />
   </div>
 </template>
@@ -23,13 +30,14 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import DetailsTable from '@/modules/shared/data-table/BaseTable.vue' // Импорт компонента
+import DetailsTable from '@/modules/shared/data-table/BaseTable.vue'
 import { getOrderById } from '../api/orders.js'
 import OrderInfoCard from './HeaderCardInfo.vue'
 import _ from 'lodash'
 import { useRoleStore } from '../../main/store/index.js'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowLeft } from '@mdi/js'
+import SborMain from '@/modules/shared/sborka/SborMain.vue'
 
 const router = useRouter()
 const roleStore = useRoleStore()
@@ -39,6 +47,7 @@ const header = ref([])
 const tableFields = ref([])
 
 const path = mdiArrowLeft
+const selectedRole = computed(() => roleStore.selectedRole)
 
 const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId
@@ -65,17 +74,13 @@ const filteredTableFields = computed(() => {
   return fields
 })
 
-// Родительский компонент (_MainOrders.vue)
-
 const getOrderDetailsPath = (row) => {
   if (row.ordersnom_id) {
-    console.log('orderId:', row.ordersnom_id)
     return {
       name: 'OrderDetailsDetails',
       params: { id: row.ordersnom_id },
     }
   } else {
-    console.warn('Строка не содержит необходимого поля ordersnom_id:', row)
     return null
   }
 }

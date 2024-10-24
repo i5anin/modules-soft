@@ -15,17 +15,16 @@
                 {{ field.title }}
               </th>
               <th scope="col" style="width: 150px">Статусы</th>
-              <!-- Новый столбец для статусов -->
             </tr>
           </thead>
           <tbody>
             <SborNode
-              v-for="sbor in ordersSbors"
+              v-for="sbor in nomtable"
               :key="sbor.sbor_orders__id"
               :sbor="sbor"
               :fields="filteredFields"
               :depth="0"
-            />
+            ></SborNode>
           </tbody>
         </table>
       </div>
@@ -34,20 +33,21 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue'
-import { fetchOrders } from '@/modules/modal/api/orders.js'
+import { computed, ref, watch } from 'vue'
 import SborNode from './SborNode.vue'
-import { useRoute } from 'vue-router'
 
 export default {
   name: 'MainComponent',
   components: { SborNode },
-  setup() {
-    const ordersSbors = ref([])
+  props: {
+    nomtable: {
+      type: Array,
+      required: true,
+    },
+  },
+  setup(props) {
     const tableFields = ref([])
-    const route = useRoute()
 
-    // Определяем фиксированные ширины полей
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
@@ -73,31 +73,23 @@ export default {
       prod_price_w_sbor: { width: '100px' },
     }
 
-    const loadOrders = async () => {
-      try {
-        const data = await fetchOrders(route.params.id)
-        ordersSbors.value = data.table.data.filter((item) => item.is_sbor)
-        tableFields.value = data.table.fields
-      } catch (error) {
-        console.error('Ошибка при загрузке сборок:', error)
-      }
-    }
-
     const filteredFields = computed(() => {
+      console.log('Filtered Fields:', tableFields.value) // Логируем поля таблицы
       return tableFields.value.filter((field) =>
         Object.keys(allowedFields).includes(field.name)
       )
     })
 
-    onMounted(loadOrders)
+    // Логируем изменения в nomtable
+    watch(
+      () => props.nomtable,
+      (newValue) => {
+        console.log('Изменение в nomtable:', newValue)
+      },
+      { immediate: true }
+    )
 
-    return { ordersSbors, filteredFields, allowedFields }
+    return { filteredFields, allowedFields }
   },
 }
 </script>
-
-<style scoped>
-.table {
-  margin-bottom: 20px;
-}
-</style>

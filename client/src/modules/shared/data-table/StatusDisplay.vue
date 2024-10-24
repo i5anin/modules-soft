@@ -37,8 +37,6 @@ const formattedStatuses = computed(() => {
         props.row[statusObj.key].trim() !== ''
     )
 })
-
-console.log('Formatted statuses for row:', props.row, formattedStatuses.value)
 </script>
 
 <style scoped>
