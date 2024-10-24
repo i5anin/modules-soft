@@ -6,33 +6,33 @@
       bold: isExpanded || (sbor.is_sbor && isExpanded),
     }"
   >
+    <!-- Новый столбец для статусов -->
+    <td>
+      <span v-html="combinedStatuses"></span>
+    </td>
     <td
       v-for="field in fields"
       :key="field.name"
       :style="{ cursor: 'pointer', fontSize: '12px' }"
     >
-      <!-- Динамический вывод значения поля -->
       <span
         v-if="field === firstField"
         style="display: inline-flex; align-items: center"
         :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
       >
         <span v-if="hasChildren">
-          <!-- Если есть дочерние элементы, выводим плюс/минус -->
           <font-awesome-icon
             :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
             class="icon-sm ms-2"
           />
         </span>
         <span v-else>
-          <!-- Если дочерних элементов нет, выводим точку -->
           <font-awesome-icon
             :icon="['fas', 'circle']"
             class="icon-sm ms-2"
             style="opacity: 0"
           />
         </span>
-        <!-- Иконка куба/кубов для элементов -->
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
@@ -48,11 +48,6 @@
       >
         {{ formatValue(sbor[field.name], field.name) }}
       </span>
-    </td>
-
-    <!-- Новый столбец для статусов -->
-    <td>
-      <span v-html="combinedStatuses"></span>
     </td>
   </tr>
 

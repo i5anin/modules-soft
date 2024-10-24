@@ -8,12 +8,13 @@
     </div>
 
     <OrderInfoCard :header="header" />
-    <SborMain
-      v-if="nomtable.length > 0"
-      :nomtable="nomtable"
-      :tableFields="filteredTableFields"
-    />
   </div>
+
+  <SborMain
+    v-if="nomtable.length > 0"
+    :nomtable="nomtable"
+    :tableFields="filteredTableFields"
+  />
 </template>
 
 <script setup>
@@ -59,7 +60,7 @@ const filteredTableFields = computed(() => {
     tableFields.value,
     (field) => !field.name.startsWith('status_')
   )
-  fields.unshift({ name: 'statuses', title: 'Статусы' })
+  // fields.unshift({ name: 'statuses', title: 'Статусы' })
   return fields
 })
 
