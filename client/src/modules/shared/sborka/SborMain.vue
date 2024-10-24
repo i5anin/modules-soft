@@ -3,7 +3,10 @@
     <h1>Сборка</h1>
     <div class="row">
       <div class="col-12">
-        <table class="table table-striped table-sm table-hover">
+        <div v-if="nomtable.length === 0" class="alert alert-warning">
+          Нет данных для отображения.
+        </div>
+        <table v-else class="table table-striped table-sm table-hover">
           <thead>
             <tr>
               <th
@@ -33,21 +36,23 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import SborNode from './SborNode.vue'
 
 export default {
-  name: 'MainComponent',
+  name: 'SborMain',
   components: { SborNode },
   props: {
     nomtable: {
       type: Array,
       required: true,
     },
+    tableFields: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props) {
-    const tableFields = ref([])
-
     const allowedFields = {
       name: { width: '100px' },
       description: { width: '100px' },
@@ -74,20 +79,10 @@ export default {
     }
 
     const filteredFields = computed(() => {
-      console.log('Filtered Fields:', tableFields.value) // Логируем поля таблицы
-      return tableFields.value.filter((field) =>
+      return props.tableFields.filter((field) =>
         Object.keys(allowedFields).includes(field.name)
       )
     })
-
-    // Логируем изменения в nomtable
-    watch(
-      () => props.nomtable,
-      (newValue) => {
-        console.log('Изменение в nomtable:', newValue)
-      },
-      { immediate: true }
-    )
 
     return { filteredFields, allowedFields }
   },

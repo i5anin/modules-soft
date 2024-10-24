@@ -7,12 +7,14 @@
       </router-link>
     </div>
 
-    <div class="mb-3"><strong>Текущая роль:</strong> {{ selectedRole }}</div>
-
     <OrderInfoCard :header="header" />
 
     <DetailsTable
-      v-if="selectedRole === 'metrolog'"
+      v-if="
+        selectedRole !== 'tech_calc' &&
+        selectedRole !== 'managers' &&
+        nomtable.length > 0
+      "
       :fields="filteredTableFields"
       :data="nomtable"
       :rowLink="true"
@@ -20,15 +22,18 @@
       tableTitle="Информация о заказе"
     />
     <SborMain
-      v-if="selectedRole === 'tech_calc'"
+      v-if="
+        (selectedRole === 'tech_calc' || selectedRole === 'managers') &&
+        nomtable.length > 0
+      "
       :nomtable="nomtable"
-      :sborka="nomtable"
+      :tableFields="filteredTableFields"
     />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import DetailsTable from '@/modules/shared/data-table/BaseTable.vue'
 import { getOrderById } from '../api/orders.js'
@@ -65,6 +70,7 @@ const fetchOrderData = async () => {
   }
 }
 
+// Фильтрация заголовков таблицы
 const filteredTableFields = computed(() => {
   const fields = _.filter(
     tableFields.value,
@@ -74,6 +80,7 @@ const filteredTableFields = computed(() => {
   return fields
 })
 
+// Получение пути для деталей заказа
 const getOrderDetailsPath = (row) => {
   if (row.ordersnom_id) {
     return {
@@ -85,7 +92,13 @@ const getOrderDetailsPath = (row) => {
   }
 }
 
+// Загрузка данных при монтировании
 onMounted(() => {
   fetchOrderData()
+})
+
+// Наблюдение за изменением selectedRole
+watch(selectedRole, (newValue) => {
+  fetchOrderData() // Запрос данных при изменении роли
 })
 </script>
