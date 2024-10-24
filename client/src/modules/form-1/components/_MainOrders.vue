@@ -29,7 +29,7 @@
         </div>
 
         <!-- Таблица данных -->
-        <DataTable
+        <ServerSideTable
           :data="orders"
           :columns="tableColumns"
           :items-per-page-options="[15, 30, 50, 100]"
@@ -57,14 +57,14 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
-import DataTable from '../../shared/data-table/ServerSideTable.vue'
+import ServerSideTable from '../../shared/data-table/ServerSideTable.vue'
 import { getOrders } from '../api/orders.js'
 import { formatValue } from '@/utils/formatters.js'
 import { useRoleStore } from '../../main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
-  components: { DateRangeFilter, DataTable },
+  components: { DateRangeFilter, ServerSideTable },
   setup() {
     const router = useRouter()
     const startDate = ref(null)

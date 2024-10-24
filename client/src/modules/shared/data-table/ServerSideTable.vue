@@ -46,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Data Table -->
     <table class="table table-striped">
       <thead>
         <tr>
@@ -80,14 +79,9 @@
           @click="handleRowClick(row)"
           :class="{ 'table-row': true, locked: row.locked }"
         >
-          <td v-for="column in columns" :key="column.name">
-            <component
-              :is="column.cellComponent || 'span'"
-              :row="row"
-              :column="column"
-            >
-              {{ formatValue(row[column.name], column.name) }}
-            </component>
+          <td v-for="(field, index) in filteredFields" :key="index">
+            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
           </td>
         </tr>
       </tbody>
@@ -140,9 +134,11 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import StatusDisplay from '@/modules/shared/data-table/StatusDisplay.vue'
 
 export default {
   name: 'DataTable',
+  components: { StatusDisplay },
   props: {
     data: {
       type: Array,
@@ -151,6 +147,10 @@ export default {
     columns: {
       type: Array,
       required: true,
+    },
+    excluded: {
+      type: Array,
+      default: () => [],
     },
     itemsPerPageOptions: {
       type: Array,
@@ -196,13 +196,19 @@ export default {
     'page-size-change',
     'search-change',
   ],
+
   setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
     const pageSizes = props.itemsPerPageOptions
     const searchQuery = ref('')
-    const loading = ref(false) // Добавляем состояние загрузки
+    const loading = ref(false)
 
-    // Watch for changes from parent component
+    const filteredFields = computed(() => {
+      return props.columns.filter(
+        (field) => !props.excluded.includes(field.name)
+      )
+    })
+
     watch(
       () => props.itemsPerPage,
       (newValue) => {
@@ -239,19 +245,18 @@ export default {
     }
 
     const onSearch = () => {
-      loading.value = true // Включаем загрузку
+      loading.value = true
       emit('search-change', searchQuery.value)
       setTimeout(() => {
-        loading.value = false // Выключаем загрузку после завершения поиска
-      }, 1000) // Здесь используется таймер, замените его на реальный запрос
+        loading.value = false
+      }, 1000)
     }
 
     const clearSearch = () => {
-      searchQuery.value = '' // Очистка поля поиска
-      emit('search-change', '') // Обновляем таблицу после очистки
+      searchQuery.value = ''
+      emit('search-change', '')
     }
 
-    // Вычисление диапазона записей
     const startRecord = computed(
       () => (props.currentPage - 1) * localItemsPerPage.value + 1
     )
@@ -268,16 +273,17 @@ export default {
       handleRowClick,
       onPageSizeChange,
       onSearch,
-      clearSearch, // Добавляем метод очистки
+      clearSearch,
       searchQuery,
       sortColumn: computed(() => props.sortColumn),
       sortOrder: computed(() => props.sortOrder),
       currentPage: computed(() => props.currentPage),
       totalPages: computed(() => props.totalPages),
-      startRecord, // Добавлено
-      endRecord, // Добавлено
-      totalCount: computed(() => props.totalCount), // Добавлено
-      loading, // Добавлено состояние загрузки
+      startRecord,
+      endRecord,
+      totalCount: computed(() => props.totalCount),
+      loading,
+      filteredFields,
     }
   },
 }
@@ -304,12 +310,10 @@ th .bi {
   margin-left: 5px;
 }
 
-/* Увеличиваем ширину поля поиска */
 .search-input {
   width: 300px;
 }
 
-/* Центрируем и добавляем отступы для индикатора загрузки */
 .spinner-border {
   width: 20px;
   height: 20px;
