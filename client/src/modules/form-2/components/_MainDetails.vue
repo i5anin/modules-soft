@@ -14,9 +14,7 @@
       :fields="filteredTableFields"
       :data="nomtable"
       :rowLink="true"
-      :linkPath="
-        (row) => ({ name: 'OrderDetails', params: { orderId: row.id } })
-      "
+      :linkPath="getOrderDetailsPath"
       tableTitle="Информация о заказе"
     />
   </div>
@@ -66,6 +64,21 @@ const filteredTableFields = computed(() => {
   fields.unshift({ name: 'statuses', title: 'Статусы' })
   return fields
 })
+
+// Родительский компонент (_MainOrders.vue)
+
+const getOrderDetailsPath = (row) => {
+  if (row.ordersnom_id) {
+    console.log('orderId:', row.ordersnom_id)
+    return {
+      name: 'OrderDetailsDetails',
+      params: { id: row.ordersnom_id },
+    }
+  } else {
+    console.warn('Строка не содержит необходимого поля ordersnom_id:', row)
+    return null
+  }
+}
 
 onMounted(() => {
   fetchOrderData()
