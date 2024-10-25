@@ -5,7 +5,6 @@
     </router-link>
 
     <h3 class="mb-4">
-      <!-- Иконка через компонент SvgIcon -->
       <svg-icon
         type="mdi"
         :path="mdiBolt"
@@ -13,50 +12,34 @@
         color="red"
         :size="32"
       />
-
-      Информация по номенклатуре (Деталь)
+      Информация по номенклатуре
     </h3>
 
     <div v-if="selectedOrder">
-      <div v-if="selectedOrder.header">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-6">
-                <div
-                  v-for="(field, index) in leftColumnFields"
-                  :key="index"
-                  class="mb-1"
-                >
-                  <strong>{{ field.title }}:</strong>
-                  {{ selectedOrder.header.data[0][field.name] }}
-                </div>
-              </div>
-              <div class="col-6">
-                <div
-                  v-for="(field, index) in rightColumnFields"
-                  :key="index"
-                  class="mb-1"
-                >
-                  <strong>{{ field.title }}:</strong>
-                  {{ selectedOrder.header.data[0][field.name] }}
-                </div>
-              </div>
-            </div>
+      <div v-if="selectedOrder.header" class="card">
+        <div class="card-body">
+          <div class="row">
+            <ColumnDisplay
+              :fields="leftColumnFields"
+              :data="selectedOrder.header.data[0]"
+            />
+            <ColumnDisplay
+              :fields="rightColumnFields"
+              :data="selectedOrder.header.data[0]"
+            />
           </div>
         </div>
       </div>
-      <!-- Добавляем проверки v-if -->
       <CaliberTable
         v-if="selectedOrder.table_cal"
         :fields="uniqueTableFields"
-        :data="selectedOrder.table_cal.data"
+        :data="formatData(selectedOrder.table_cal.data, uniqueTableFields)"
         :tableTitle="selectedOrder.table_cal.title"
       />
       <Strategy
         v-if="selectedOrder.strat"
         :fields="uniqueTableFieldsStrat"
-        :data="selectedOrder.strat.data"
+        :data="formatData(selectedOrder.strat.data, uniqueTableFieldsStrat)"
         :tableTitle="selectedOrder.strat.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
@@ -68,19 +51,21 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '@/modules/main/store/index.js'
+import { formatValue } from '@/utils/formatters.js'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import Strategy from '@/modules/shared/data-table/BaseTable.vue'
+import ColumnDisplay from './ColumnDisplay.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const orderId = ref(null)
-const id = ref(null)
+const orderId = ref(route.params.orderId)
+const id = ref(route.params.id)
 const selectedOrder = ref(null)
 
 const fetchOrderData = async () => {
@@ -88,47 +73,24 @@ const fetchOrderData = async () => {
     try {
       selectedOrder.value = await getModalOrderById(
         id.value,
-        roleStore.selectedTypes, // Выбранный тип
-        roleStore.selectedRole // Выбранная роль
+        roleStore.selectedTypes,
+        roleStore.selectedRole
       )
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
       selectedOrder.value = null
     }
-  } else {
-    console.error('Параметр id не найден в маршруте')
   }
 }
 
-onMounted(async () => {
-  orderId.value = route.params.orderId
-  id.value = route.params.id
-  await fetchOrderData() // Запрашиваем данные при монтировании компонента
-})
+onMounted(fetchOrderData)
 
-// Наблюдатель за изменениями selectedRole
-watch(
-  () => roleStore.selectedRole,
-  async () => {
-    await fetchOrderData() // Запрашиваем данные при изменении роли
-  }
-)
-
-// Наблюдатель за изменениями selectedTypes
-watch(
-  () => roleStore.selectedTypes,
-  async () => {
-    await fetchOrderData() // Запрашиваем данные при изменении типа
-  }
-)
-
-const filteredHeaderFields = computed(() => {
-  return (
+const filteredHeaderFields = computed(
+  () =>
     selectedOrder.value?.header?.fields.filter(
       (field) => field.name !== 'nom_id_nom'
     ) || []
-  )
-})
+)
 
 const leftColumnFields = computed(() => {
   const fields = filteredHeaderFields.value
@@ -142,33 +104,23 @@ const rightColumnFields = computed(() => {
   return fields.slice(half)
 })
 
-const uniqueTableFields = computed(() => {
-  const fields = selectedOrder.value?.table_cal?.fields || []
-  const uniqueFields = []
+const uniqueFields = (fields) => {
   const seen = new Set()
+  return fields.filter((field) => !seen.has(field.name) && seen.add(field.name))
+}
 
-  fields.forEach((field) => {
-    if (!seen.has(field.name)) {
-      seen.add(field.name)
-      uniqueFields.push(field)
-    }
-  })
+const uniqueTableFields = computed(() =>
+  uniqueFields(selectedOrder.value?.table_cal?.fields || [])
+)
+const uniqueTableFieldsStrat = computed(() =>
+  uniqueFields(selectedOrder.value?.strat?.fields || [])
+)
 
-  return uniqueFields
-})
-
-const uniqueTableFieldsStrat = computed(() => {
-  const fields = selectedOrder.value?.strat?.fields || []
-  const uniqueFields = []
-  const seen = new Set()
-
-  fields.forEach((field) => {
-    if (!seen.has(field.name)) {
-      seen.add(field.name)
-      uniqueFields.push(field)
-    }
-  })
-
-  return uniqueFields
-})
+const formatData = (data, fields) =>
+  data.map((row) =>
+    fields.reduce((acc, field) => {
+      acc[field.name] = formatValue(row[field.name], field.name)
+      return acc
+    }, {})
+  )
 </script>

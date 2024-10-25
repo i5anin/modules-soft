@@ -16,6 +16,8 @@ export default [
     },
     rules: {
       'vue/multi-word-component-names': 'off', // Отключаем правило multi-word-component-names
+      'complexity-analysis/max-lines': ['warn', { max: 200 }],
+      'complexity-analysis/max-complexity': ['warn', { max: 10 }],
     },
   },
 ]

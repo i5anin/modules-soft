@@ -4,21 +4,21 @@
     <table class="table table-striped table-sm mt-3">
       <thead>
         <tr>
-          <th v-for="(field, index) in filteredFields" :key="index">
+          <th v-for="field in filteredFields" :key="field.name">
             {{ field.title }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="(row, rowIndex) in data"
+          v-for="(row, rowIndex) in props.data"
           :key="rowIndex"
           @click="handleRowClick(row)"
           :style="rowLink ? 'cursor: pointer;' : ''"
         >
-          <td v-for="(field, index) in filteredFields" :key="index">
+          <td v-for="field in filteredFields" :key="field.name">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+            <span v-else>{{ row[field.name] }}</span>
           </td>
         </tr>
       </tbody>
@@ -29,7 +29,6 @@
 <script setup>
 import StatusDisplay from './StatusDisplay.vue'
 import { computed } from 'vue'
-import { formatValue } from '@/utils/formatters.js'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -37,19 +36,19 @@ const props = defineProps({
   data: { type: Array, required: true },
   tableTitle: { type: String, default: 'Таблица' },
   excluded: { type: Array, default: () => [] },
-  rowLink: { type: Boolean, default: false }, // Новый пропс для активации маршрутизации
-  linkPath: { type: Function, default: null }, // Новый пропс для определения маршрута
+  rowLink: { type: Boolean, default: false },
+  linkPath: { type: Function, default: null },
 })
 
 const router = useRouter()
 
-const filteredFields = computed(() => {
-  return props.fields.filter((field) => !props.excluded.includes(field.name))
-})
+const filteredFields = computed(() =>
+  props.fields.filter((field) => !props.excluded.includes(field.name))
+)
 
 const handleRowClick = (row) => {
   if (props.rowLink && props.linkPath) {
-    const path = props.linkPath(row) // Генерация пути из функции
+    const path = props.linkPath(row)
     if (path) {
       router.push(path)
     }
