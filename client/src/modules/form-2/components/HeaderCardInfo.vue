@@ -73,8 +73,14 @@
                       type="text"
                       v-model="fieldValues[commentField.name]"
                       :placeholder="commentField.title"
+                      style="
+                        width: 200%;
+                        max-width: 100%;
+                        height: 1rem;
+                        resize: horizontal;
+                      "
                       disabled
-                    />
+                    ></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -157,7 +163,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-/* Ваши стили */
-</style>
