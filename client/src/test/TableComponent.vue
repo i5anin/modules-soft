@@ -40,7 +40,3 @@ const onRowClick = (row) => {
   emit('row-clicked', row)
 }
 </script>
-
-<style scoped>
-/* Дополнительные стили при необходимости */
-</style>

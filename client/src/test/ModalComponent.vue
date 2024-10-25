@@ -1,10 +1,10 @@
 <template>
   <!-- Затеняющий слой -->
-  <div class="modal-backdrop fade show"></div>
+  <div class="modal-backdrop show"></div>
 
   <!-- Модальное окно -->
   <div
-    class="modal fade show"
+    class="modal show"
     tabindex="-1"
     style="display: block"
     @click.self="closeModal"
@@ -33,10 +33,6 @@
 import { defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
-  show: {
-    type: Boolean,
-    required: true,
-  },
   title: {
     type: String,
     default: 'Детали записи',
@@ -55,24 +51,3 @@ const closeModal = () => {
 
 const formattedData = computed(() => JSON.stringify(props.data, null, 2))
 </script>
-
-<style scoped>
-.modal {
-  display: block;
-  z-index: 1050; /* Модальное окно выше затеняющего слоя */
-}
-
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1040; /* Затеняющий слой ниже модального окна */
-}
-
-.modal-dialog {
-  z-index: 1050;
-}
-</style>

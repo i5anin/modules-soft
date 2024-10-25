@@ -10,7 +10,6 @@
     <!-- Модальное Окно -->
     <ModalComponent
       v-if="showModal"
-      :show="showModal"
       :title="'Детали записи'"
       :data="selectedRow"
       @close="closeModal"
@@ -54,7 +53,3 @@ const closeModal = () => {
   selectedRow.value = null
 }
 </script>
-
-<style scoped>
-/* Дополнительные стили при необходимости */
-</style>
