@@ -1,12 +1,11 @@
 <template>
   <tr
-    @click="toggle"
+    @click="handleRowClick"
     :class="{
       'table-info': isExpanded,
       bold: isExpanded || (sbor.is_sbor && isExpanded),
     }"
   >
-    <!-- Новый столбец для статусов -->
     <td>
       <span v-html="combinedStatuses"></span>
     </td>
@@ -20,7 +19,11 @@
         style="display: inline-flex; align-items: center"
         :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
       >
-        <span v-if="hasChildren">
+        <span
+          v-if="hasChildren"
+          @click.stop="toggle"
+          title="развернуть/свернуть"
+        >
           <font-awesome-icon
             :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
             class="icon-sm ms-2"
@@ -40,7 +43,6 @@
         />
         <span>{{ formatValue(sbor[field.name], field.name) }}</span>
       </span>
-
       <span
         v-else
         :title="generateTitle(field, sbor)"
@@ -58,14 +60,16 @@
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
+      @open-modal="$emit('open-modal', child)"
     />
   </template>
 </template>
 
 <script>
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import formatters from '@/utils/formatters.js' // Импортируем форматтеры
+import formatters from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
@@ -88,6 +92,7 @@ export default {
     },
   },
   setup(props) {
+    const router = useRouter()
     const isExpanded = ref(false)
     const firstField = ref(props.fields[0])
 
@@ -97,22 +102,23 @@ export default {
       }
     }
 
+    const handleRowClick = () => {
+      const id = props.sbor.ordersnom_id
+      router.push({ name: 'OrderDetailsDetails', params: { id } })
+    }
+
     const hasChildren = ref(
       props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
 
-    // Используем импортированную функцию formatValue
     const formatValue = (value, fieldName) => {
       return formatters.formatValue(value, fieldName)
     }
 
     const generateTitle = (field, sbor) => {
       return `Поле: ${field.title || 'Ошибка нет поля'}\n`
-      // +
-      // `Стратегия: ${sbor.strat || 'Нет'}`
     }
 
-    // Комбинирование активных статусов
     const combinedStatuses = computed(() => {
       const activeStatuses = statuses.filter(
         (status) =>
@@ -132,6 +138,7 @@ export default {
     return {
       isExpanded,
       toggle,
+      handleRowClick,
       hasChildren,
       formatValue,
       generateTitle,
@@ -141,21 +148,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.icon-sm {
-  font-size: 0.8em;
-}
-
-tr:hover {
-  background-color: #f9f9f9;
-}
-
-td {
-  font-size: 13px;
-}
-
-.bold {
-  font-weight: bold;
-}
-</style>
