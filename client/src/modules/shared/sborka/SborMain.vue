@@ -7,7 +7,10 @@
         <div v-if="nomtable.length === 0" class="alert alert-warning">
           Нет данных для отображения.
         </div>
-        <table v-else class="table table-striped table-sm table-hover">
+        <table
+          v-else
+          class="table table-bordered table-striped table-sm table-hover"
+        >
           <thead>
             <tr>
               <th scope="col" style="width: 40px"></th>

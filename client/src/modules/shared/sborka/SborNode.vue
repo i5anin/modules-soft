@@ -107,10 +107,9 @@ export default {
     }
 
     const generateTitle = (field, sbor) => {
-      return (
-        `Поле: ${field.title || 'Ошибка нет поля'}\n` +
-        `Стратегия: ${sbor.strat || 'Нет'}`
-      )
+      return `Поле: ${field.title || 'Ошибка нет поля'}\n`
+      // +
+      // `Стратегия: ${sbor.strat || 'Нет'}`
     }
 
     // Комбинирование активных статусов
