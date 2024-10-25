@@ -14,7 +14,6 @@
       />
       Информация по номенклатуре
     </h3>
-
     <div v-if="selectedOrder">
       <div v-if="selectedOrder.header" class="card">
         <div class="card-body">
@@ -31,13 +30,13 @@
         </div>
       </div>
       <CaliberTable
-        v-if="selectedOrder.table_cal"
+        v-if="!selectedOrder.table_cal.error"
         :fields="uniqueTableFields"
         :data="formatData(selectedOrder.table_cal.data, uniqueTableFields)"
         :tableTitle="selectedOrder.table_cal.title"
       />
       <Strategy
-        v-if="selectedOrder.strat"
+        v-if="!selectedOrder.strat.error"
         :fields="uniqueTableFieldsStrat"
         :data="formatData(selectedOrder.strat.data, uniqueTableFieldsStrat)"
         :tableTitle="selectedOrder.strat.title"
@@ -116,11 +115,13 @@ const uniqueTableFieldsStrat = computed(() =>
   uniqueFields(selectedOrder.value?.strat?.fields || [])
 )
 
-const formatData = (data, fields) =>
-  data.map((row) =>
+const formatData = (data, fields) => {
+  if (!data || !fields) return [] // проверка на наличие данных и полей
+  return data.map((row) =>
     fields.reduce((acc, field) => {
       acc[field.name] = formatValue(row[field.name], field.name)
       return acc
     }, {})
   )
+}
 </script>
