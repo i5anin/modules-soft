@@ -30,16 +30,19 @@
         </div>
       </div>
       <CaliberTable
-        v-if="!selectedOrder.table_cal.error"
+        v-if="
+          !selectedOrder.table_cal?.error &&
+          selectedOrder.table_cal?.data?.length
+        "
         :fields="uniqueTableFields"
-        :data="formatData(selectedOrder.table_cal.data, uniqueTableFields)"
-        :tableTitle="selectedOrder.table_cal.title"
+        :data="formatData(selectedOrder.table_cal?.data, uniqueTableFields)"
+        :tableTitle="selectedOrder.table_cal?.title"
       />
       <Strategy
-        v-if="!selectedOrder.strat.error"
+        v-if="!selectedOrder.strat?.error && selectedOrder.strat?.data?.length"
         :fields="uniqueTableFieldsStrat"
-        :data="formatData(selectedOrder.strat.data, uniqueTableFieldsStrat)"
-        :tableTitle="selectedOrder.strat.title"
+        :data="formatData(selectedOrder.strat?.data, uniqueTableFieldsStrat)"
+        :tableTitle="selectedOrder.strat?.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
     </div>
@@ -84,10 +87,12 @@ const fetchOrderData = async () => {
 
 onMounted(fetchOrderData)
 
+const excludedFields = ['nom_id_nom', 'ordersnom__id']
+
 const filteredHeaderFields = computed(
   () =>
     selectedOrder.value?.header?.fields.filter(
-      (field) => field.name !== 'nom_id_nom'
+      (field) => !excludedFields.includes(field.name)
     ) || []
 )
 
