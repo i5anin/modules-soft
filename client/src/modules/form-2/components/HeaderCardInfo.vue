@@ -15,13 +15,13 @@
           <div class="col-md-6">
             <p v-for="field in leftFields" :key="field.name" class="card-text">
               <strong>{{ field.title }}:</strong>
-              {{ formatValue(field.name, header.data[field.name]) }}
+              {{ formatValue(header.data[field.name], field.name) }}
             </p>
           </div>
           <div class="col-md-6">
             <p v-for="field in rightFields" :key="field.name" class="card-text">
               <strong>{{ field.title }}:</strong>
-              {{ formatValue(field.name, header.data[field.name]) }}
+              {{ formatValue(header.data[field.name], field.name) }}
             </p>
           </div>
         </div>
@@ -46,11 +46,12 @@
 </template>
 
 <script>
+import { computed, defineComponent, ref } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiFormatListBulletedType } from '@mdi/js' // Импортируем нужную иконку
-import formatters from '@/utils/formatters.js'
+import { mdiFormatListBulletedType } from '@mdi/js'
+import { formatValue as formatterFormatValue } from '@/utils/formatters.js'
 
-export default {
+export default defineComponent({
   components: { SvgIcon },
   props: {
     header: {
@@ -58,56 +59,56 @@ export default {
       required: true,
     },
   },
-  data() {
-    return { mdiFormatListBulletedType }
-  },
-  computed: {
-    hasNonEmptyComments() {
-      return this.commentFields.some(
-        (field) =>
-          this.header.data[field.name] &&
-          this.header.data[field.name].trim() !== ''
-      )
-    },
-    commentFields() {
-      return this.header.fields
-        ? this.header.fields.filter((field) => field.name.includes('comments'))
-        : []
-    },
-    nonCommentFields() {
-      return this.header.fields
-        ? this.header.fields.filter((field) => !field.name.includes('comments'))
-        : []
-    },
-    leftFields() {
-      return this.nonCommentFields.slice(
-        0,
-        Math.ceil(this.nonCommentFields.length / 2)
-      )
-    },
-    rightFields() {
-      return this.nonCommentFields.slice(
-        Math.ceil(this.nonCommentFields.length / 2)
-      )
-    },
-  },
-  methods: {
-    formatValue(fieldName, value) {
-      if (fieldName.toLowerCase().includes('price')) {
-        return formatters.formatPrice(value)
-      }
-      if (fieldName.toLowerCase().includes('date')) {
-        return formatters.formatDate(value)
-      }
-      if (fieldName.toLowerCase().includes('time')) {
-        return formatters.formatTime(value)
-      }
-      return value
-    },
-  },
-}
-</script>
+  setup(props) {
+    const mdiFormatListBulletedTypeRef = ref(mdiFormatListBulletedType)
 
-<style scoped>
-/* Ваши стили */
-</style>
+    const hasNonEmptyComments = computed(() =>
+      commentFields.value.some(
+        (field) =>
+          props.header.data[field.name] &&
+          props.header.data[field.name].trim() !== ''
+      )
+    )
+
+    const commentFields = computed(() =>
+      props.header.fields
+        ? props.header.fields.filter((field) => field.name.includes('comments'))
+        : []
+    )
+
+    const nonCommentFields = computed(() =>
+      props.header.fields
+        ? props.header.fields.filter(
+            (field) => !field.name.includes('comments')
+          )
+        : []
+    )
+
+    const leftFields = computed(() =>
+      nonCommentFields.value.slice(
+        0,
+        Math.ceil(nonCommentFields.value.length / 2)
+      )
+    )
+
+    const rightFields = computed(() =>
+      nonCommentFields.value.slice(Math.ceil(nonCommentFields.value.length / 2))
+    )
+
+    // Определение функции formatValue в setup
+    const formatValue = (value, fieldName) => {
+      return formatterFormatValue(value, fieldName)
+    }
+
+    return {
+      mdiFormatListBulletedType: mdiFormatListBulletedTypeRef,
+      hasNonEmptyComments,
+      commentFields,
+      nonCommentFields,
+      leftFields,
+      rightFields,
+      formatValue,
+    }
+  },
+})
+</script>
