@@ -21,6 +21,12 @@ const routes = [
     name: 'SborkaDetails',
     component: () => import('./modules/shared/sborka/SborMain.vue'),
   },
+
+  {
+    path: '/test',
+    name: 'ParentComponent',
+    component: () => import('./test/_ParentComponent.vue'),
+  },
 ]
 
 export default createRouter({
