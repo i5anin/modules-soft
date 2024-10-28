@@ -1,6 +1,6 @@
 <template>
   <tr
-    @click="handleRowClick"
+    @click.stop="toggle"
     :class="{
       'table-info': isExpanded,
       bold: isExpanded || (sbor.is_sbor && isExpanded),
@@ -19,11 +19,7 @@
         style="display: inline-flex; align-items: center"
         :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
       >
-        <span
-          v-if="hasChildren"
-          @click.stop="toggle"
-          title="развернуть/свернуть"
-        >
+        <span v-if="hasChildren" title="развернуть/свернуть">
           <font-awesome-icon
             :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
             class="icon-sm ms-2"
@@ -42,7 +38,14 @@
           class="icon-sm ms-2 me-2"
         />
         <span>{{ formatValue(sbor[field.name], field.name) }}</span>
+        <font-awesome-icon
+          :icon="['fas', 'circle-info']"
+          :style="{ color: 'green' }"
+          class="icon-sm ms-2 me-2"
+          @click="handleRowClick"
+        />
       </span>
+
       <span
         v-else
         :title="generateTitle(field, sbor)"
@@ -60,7 +63,6 @@
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
-      @open-modal="$emit('open-modal', child)"
     />
   </template>
 </template>

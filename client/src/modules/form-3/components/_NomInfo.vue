@@ -15,20 +15,57 @@
       Информация по номенклатуре
     </h3>
     <div v-if="selectedOrder">
-      <div v-if="selectedOrder.header" class="card">
-        <div class="card-body">
+      <div v-if="selectedOrder.header" class="card mb-2">
+        <div class="card-body p-2">
           <div class="row">
-            <ColumnDisplay
-              :fields="leftColumnFields"
-              :data="selectedOrder.header.data[0]"
-            />
-            <ColumnDisplay
-              :fields="rightColumnFields"
-              :data="selectedOrder.header.data[0]"
-            />
+            <!-- Левая колонка -->
+            <div class="col-md-6">
+              <table class="table table-sm">
+                <tbody>
+                  <tr v-for="field in leftColumnFields" :key="field.name">
+                    <td class="p-1">
+                      <strong>{{ field.title }}</strong>
+                    </td>
+                    <td class="p-1">
+                      <input
+                        type="text"
+                        v-model="fieldValues[field.name]"
+                        :placeholder="field.title"
+                        class="form-control form-control-sm"
+                        disabled
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Правая колонка -->
+            <div class="col-md-6">
+              <table class="table table-sm">
+                <tbody>
+                  <tr v-for="field in rightColumnFields" :key="field.name">
+                    <td class="p-1">
+                      <strong>{{ field.title }}</strong>
+                    </td>
+                    <td class="p-1">
+                      <input
+                        type="text"
+                        v-model="fieldValues[field.name]"
+                        :placeholder="field.title"
+                        class="form-control form-control-sm"
+                        disabled
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Таблица данных по калибровке -->
       <CaliberTable
         v-if="
           !selectedOrder.table_cal?.error &&
@@ -38,6 +75,8 @@
         :data="formatData(selectedOrder.table_cal?.data, uniqueTableFields)"
         :tableTitle="selectedOrder.table_cal?.title"
       />
+
+      <!-- Таблица данных по стратегии -->
       <Strategy
         v-if="!selectedOrder.strat?.error && selectedOrder.strat?.data?.length"
         :fields="uniqueTableFieldsStrat"
@@ -62,11 +101,9 @@ import { useRoleStore } from '@/modules/main/store/index.js'
 import { formatValue } from '@/utils/formatters.js'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import Strategy from '@/modules/shared/data-table/BaseTable.vue'
-import ColumnDisplay from './ColumnDisplay.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const orderId = ref(route.params.orderId)
 const id = ref(route.params.id)
 const selectedOrder = ref(null)
 
@@ -87,8 +124,19 @@ const fetchOrderData = async () => {
 
 onMounted(fetchOrderData)
 
-const excludedFields = ['nom_id_nom', 'ordersnom__id']
+// Поля, которые нужно исключить из отображения
+const excludedFields = [
+  'zag_tech_material_id',
+  'ordersnom__id',
+  'zag_buy_p1',
+  'zag_buy_p2',
+  'zag_buy_p3',
+  'zag_buy_p4',
+  'zag_buy_weight',
+  'nom_id_nom',
+]
 
+// Фильтрованные поля заголовка
 const filteredHeaderFields = computed(
   () =>
     selectedOrder.value?.header?.fields.filter(
@@ -96,6 +144,7 @@ const filteredHeaderFields = computed(
     ) || []
 )
 
+// Разделение полей на левую и правую колонку
 const leftColumnFields = computed(() => {
   const fields = filteredHeaderFields.value
   const half = Math.ceil(fields.length / 2)
@@ -108,6 +157,17 @@ const rightColumnFields = computed(() => {
   return fields.slice(half)
 })
 
+// Реактивное поле для значений
+const fieldValues = computed(() =>
+  Object.fromEntries(
+    filteredHeaderFields.value.map((field) => [
+      field.name,
+      formatValue(selectedOrder.value?.header?.data[0][field.name], field.name),
+    ])
+  )
+)
+
+// Уникальные поля для таблиц данных
 const uniqueFields = (fields) => {
   const seen = new Set()
   return fields.filter((field) => !seen.has(field.name) && seen.add(field.name))
@@ -120,8 +180,8 @@ const uniqueTableFieldsStrat = computed(() =>
   uniqueFields(selectedOrder.value?.strat?.fields || [])
 )
 
+// Форматирование данных для отображения в таблицах
 const formatData = (data, fields) => {
-  if (!data || !fields) return [] // проверка на наличие данных и полей
   return data.map((row) =>
     fields.reduce((acc, field) => {
       acc[field.name] = formatValue(row[field.name], field.name)

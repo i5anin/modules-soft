@@ -9,6 +9,7 @@ import {
   faCubes,
   faCube,
   faCircle,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons' // Добавляем нужные иконки
 import { faCalendar } from '@fortawesome/free-regular-svg-icons'
 
@@ -21,7 +22,8 @@ library.add(
   faCubes,
   faCube,
   faCalendar,
-  faCircle
+  faCircle,
+  faInfoCircle
 )
 
 export { FontAwesomeIcon }
