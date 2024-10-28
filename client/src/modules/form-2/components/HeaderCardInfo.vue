@@ -57,7 +57,7 @@
         <!-- Компонент для отображения комментариев -->
         <CommentSection
           :commentFields="commentFields"
-          :fieldValues="fieldValues"
+          :fieldValues="fieldValuesComputed"
         />
       </div>
     </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref, reactive } from 'vue'
+import { computed, defineComponent, ref, reactive, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue as formatterFormatValue } from '@/utils/formatters.js'
@@ -107,14 +107,32 @@ export default defineComponent({
       nonCommentFields.value.slice(Math.ceil(nonCommentFields.value.length / 2))
     )
 
-    const fieldValues = reactive(
-      Object.fromEntries(
-        [...nonCommentFields.value, ...commentFields.value].map((field) => [
-          field.name,
-          formatterFormatValue(props.header.data[field.name], field.name),
-        ])
+    // Инициализация fieldValues как пустой объект, чтобы его можно было обновлять
+    const fieldValues = reactive({})
+
+    // Функция для обновления fieldValues
+    const updateFieldValues = () => {
+      Object.assign(
+        fieldValues,
+        Object.fromEntries(
+          [...nonCommentFields.value, ...commentFields.value].map((field) => [
+            field.name,
+            formatterFormatValue(props.header.data[field.name], field.name),
+          ])
+        )
       )
+    }
+
+    // Вызываем updateFieldValues при изменении header
+    watch(
+      () => props.header,
+      () => {
+        updateFieldValues()
+      },
+      { immediate: true } // Запуск при первой загрузке
     )
+
+    const fieldValuesComputed = computed(() => fieldValues)
 
     return {
       mdiFormatListBulletedType: mdiFormatListBulletedTypeRef,
@@ -122,6 +140,7 @@ export default defineComponent({
       rightFields,
       commentFields,
       fieldValues,
+      fieldValuesComputed,
     }
   },
 })
