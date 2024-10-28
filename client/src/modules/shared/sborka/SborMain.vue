@@ -12,7 +12,7 @@
           class="table table-bordered table-striped table-sm table-hover"
         >
           <thead>
-            <tr>
+            <tr :style="{ fontSize: '12px' }">
               <th scope="col" style="width: 40px"></th>
               <!-- Статусы на первом месте -->
               <th
