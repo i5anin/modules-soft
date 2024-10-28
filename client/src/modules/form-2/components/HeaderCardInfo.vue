@@ -54,39 +54,11 @@
           </div>
         </div>
 
-        <!-- Комментарии, если они есть -->
-        <div v-if="hasNonEmptyComments" class="card mt-2">
-          <div class="card-body p-2">
-            <table class="table table-sm">
-              <tbody>
-                <tr
-                  v-for="commentField in commentFields"
-                  :key="commentField.name"
-                >
-                  <td>
-                    <strong>{{ commentField.title }}</strong>
-                  </td>
-                  <td>
-                    <textarea
-                      class="form-control"
-                      aria-label="textarea"
-                      type="text"
-                      v-model="fieldValues[commentField.name]"
-                      :placeholder="commentField.title"
-                      style="
-                        width: 200%;
-                        max-width: 100%;
-                        height: 1rem;
-                        resize: horizontal;
-                      "
-                      disabled
-                    ></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <!-- Компонент для отображения комментариев -->
+        <CommentSection
+          :commentFields="commentFields"
+          :fieldValues="fieldValues"
+        />
       </div>
     </div>
   </div>
@@ -97,9 +69,10 @@ import { computed, defineComponent, ref, reactive } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue as formatterFormatValue } from '@/utils/formatters.js'
+import CommentSection from './CommentSection.vue'
 
 export default defineComponent({
-  components: { SvgIcon },
+  components: { SvgIcon, CommentSection },
   props: {
     header: {
       type: Object,
@@ -134,15 +107,6 @@ export default defineComponent({
       nonCommentFields.value.slice(Math.ceil(nonCommentFields.value.length / 2))
     )
 
-    const hasNonEmptyComments = computed(() =>
-      commentFields.value.some(
-        (field) =>
-          props.header.data[field.name] &&
-          props.header.data[field.name].trim() !== ''
-      )
-    )
-
-    // Состояние для значений полей
     const fieldValues = reactive(
       Object.fromEntries(
         [...nonCommentFields.value, ...commentFields.value].map((field) => [
@@ -156,7 +120,6 @@ export default defineComponent({
       mdiFormatListBulletedType: mdiFormatListBulletedTypeRef,
       leftFields,
       rightFields,
-      hasNonEmptyComments,
       commentFields,
       fieldValues,
     }
