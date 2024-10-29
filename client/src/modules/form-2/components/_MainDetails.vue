@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid-container" :style="gridStyle">
+    <div class="grid-container">
       <div class="order-info-card p-2" :class="{ collapsed: isCollapsed }">
         <router-link
           :to="{ name: 'OrdersTable' }"
@@ -22,7 +22,7 @@
         </button>
       </div>
 
-      <!-- Компонент SborMain занимает 10 колонок -->
+      <!-- Компонент SborMain занимает оставшееся пространство -->
       <div class="sbor-main">
         <SborMain
           v-if="nomtable.length > 0"
@@ -80,11 +80,6 @@ const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }
 
-// Динамический стиль для изменения ширины колонок
-const gridStyle = computed(() => ({
-  gridTemplateColumns: isCollapsed.value ? '4fr 9fr' : '3fr 9fr',
-}))
-
 onMounted(() => {
   fetchOrderData()
 })
@@ -97,13 +92,19 @@ watch(selectedRole, () => {
 <style scoped>
 .grid-container {
   display: grid;
+  grid-template-columns: 300px 1fr; /* Фиксированная ширина слева и адаптивная справа */
   gap: 16px;
 }
 
 .order-info-card {
+  width: 100%; /* Занимает всю фиксированную ширину сетки */
   background-color: #f8f9fa;
   border-radius: 8px;
   position: relative;
+}
+
+.sbor-main {
+  width: 100%; /* Занимает оставшееся пространство справа */
 }
 
 .toggle-btn {

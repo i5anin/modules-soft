@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid">
-    <!--    <h1>Сборка</h1>-->
-    <h5 class="mt-4">Номенкалотуры</h5>
+    <h5 class="mt-4">Номенклатуры</h5>
     <div class="row">
       <div class="col-12">
         <div v-if="nomtable.length === 0" class="alert alert-warning">
@@ -12,10 +11,9 @@
           class="table table-bordered table-striped table-sm table-hover"
         >
           <thead>
-            <tr :style="{ fontSize: '12px' }">
+            <tr style="font-size: 12px">
               <th scope="col" style="width: 40px" title="развернут статус"></th>
               <th scope="col" style="width: 40px" title="статусы"></th>
-              <!-- Статусы на первом месте -->
               <th
                 scope="col"
                 v-for="field in filteredFields"

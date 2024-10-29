@@ -1,10 +1,12 @@
+<!-- Компонент SborNode с фиксированной шириной и высотой для ячеек -->
 <template>
   <tr
     @click.stop="toggle"
     :class="{
       'table-info': isExpanded,
-      'fw-bold ': isExpanded || (sbor.is_sbor && isExpanded),
+      'fw-bold': isExpanded,
     }"
+    style="table-layout: fixed"
   >
     <td :style="{ width: '40px', textAlign: 'center' }">
       <span v-if="hasChildren" title="развернуть/свернуть">
@@ -20,12 +22,12 @@
     <td
       v-for="field in fields"
       :key="field.name"
-      :style="{ cursor: 'pointer', fontSize: '12px' }"
+      style="cursor: pointer; font-size: 12px"
     >
       <span
         v-if="field === firstField"
-        style="display: inline-flex; align-items: center"
-        :style="{ paddingLeft: depth * 35 + 'px', fontSize: '15px' }"
+        style="display: inline-flex; align-items: center; min-width: 100%"
+        :style="{ paddingLeft: `${depth * 35}px` }"
       >
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
@@ -41,11 +43,7 @@
         />
       </span>
 
-      <span
-        v-else
-        :title="generateTitle(field, sbor)"
-        :style="{ fontSize: '13px' }"
-      >
+      <span v-else :title="generateTitle(field, sbor)" style="font-size: 13px">
         {{ formatValue(sbor[field.name], field.name) }}
       </span>
     </td>
