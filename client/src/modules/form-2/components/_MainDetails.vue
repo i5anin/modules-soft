@@ -1,20 +1,37 @@
 <template>
-  <div class="container">
-    <div class="mt-4 d-flex align-items-center mb-2">
-      <router-link :to="{ name: 'OrdersTable' }" class="btn btn-secondary me-3">
-        <svg-icon type="mdi" :path="path" class="me-1" />
-        Назад к заказам
-      </router-link>
+  <div>
+    <div class="grid-container" :style="gridStyle">
+      <div class="order-info-card p-2" :class="{ collapsed: isCollapsed }">
+        <router-link
+          :to="{ name: 'OrdersTable' }"
+          tag="button"
+          class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light"
+        >
+          <svg-icon type="mdi" :path="path" class="me-1" />
+          Назад к заказам
+        </router-link>
+
+        <!-- Содержимое, которое можно свернуть -->
+        <div v-if="!isCollapsed">
+          <OrderInfoCard :header="header" />
+        </div>
+
+        <!-- Кнопка для сворачивания -->
+        <button class="btn btn-link toggle-btn" @click="toggleCollapse">
+          {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </div>
+
+      <!-- Компонент SborMain занимает 10 колонок -->
+      <div class="sbor-main">
+        <SborMain
+          v-if="nomtable.length > 0"
+          :nomtable="nomtable"
+          :tableFields="filteredTableFields"
+        />
+      </div>
     </div>
-
-    <OrderInfoCard :header="header" />
   </div>
-
-  <SborMain
-    v-if="nomtable.length > 0"
-    :nomtable="nomtable"
-    :tableFields="filteredTableFields"
-  />
 </template>
 
 <script setup>
@@ -32,8 +49,9 @@ const router = useRouter()
 const roleStore = useRoleStore()
 
 const nomtable = ref([])
-const header = ref([])
+const header = ref({})
 const tableFields = ref([])
+const isCollapsed = ref(false)
 
 const path = mdiArrowLeft
 const selectedRole = computed(() => roleStore.selectedRole)
@@ -54,35 +72,43 @@ const fetchOrderData = async () => {
   }
 }
 
-// Фильтрация заголовков таблицы
-const filteredTableFields = computed(() => {
-  const fields = _.filter(
-    tableFields.value,
-    (field) => !field.name.startsWith('status_')
-  )
-  // fields.unshift({ name: 'statuses', title: 'Статусы' })
-  return fields
-})
+const filteredTableFields = computed(() =>
+  _.filter(tableFields.value, (field) => !field.name.startsWith('status_'))
+)
 
-// Получение пути для деталей заказа
-const getOrderDetailsPath = (row) => {
-  if (row.ordersnom_id) {
-    return {
-      name: 'OrderDetailsDetails',
-      params: { id: row.ordersnom_id },
-    }
-  } else {
-    return null
-  }
+const toggleCollapse = () => {
+  isCollapsed.value = !isCollapsed.value
 }
 
-// Загрузка данных при монтировании
+// Динамический стиль для изменения ширины колонок
+const gridStyle = computed(() => ({
+  gridTemplateColumns: isCollapsed.value ? '4fr 9fr' : '3fr 9fr',
+}))
+
 onMounted(() => {
   fetchOrderData()
 })
 
-// Наблюдение за изменением selectedRole
-watch(selectedRole, (newValue) => {
-  fetchOrderData() // Запрос данных при изменении роли
+watch(selectedRole, () => {
+  fetchOrderData()
 })
 </script>
+
+<style scoped>
+.grid-container {
+  display: grid;
+  gap: 16px;
+}
+
+.order-info-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+</style>
