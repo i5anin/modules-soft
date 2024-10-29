@@ -1,32 +1,27 @@
 <template>
   <div class="card mt-2">
-    <!--    <div v-if="hasNonEmptyComments" class="card mt-2">-->
     <div class="card-body p-2">
-      <table class="table table-sm">
-        <tbody>
-          <tr v-for="commentField in commentFields" :key="commentField.name">
-            <td>
-              <strong>{{ commentField.title }}</strong>
-            </td>
-            <td>
-              <textarea
-                class="form-control"
-                aria-label="textarea"
-                type="text"
-                v-model="fieldValues[commentField.name]"
-                :placeholder="commentField.title"
-                style="
-                  width: 200%;
-                  max-width: 100%;
-                  height: 1rem;
-                  resize: horizontal;
-                "
-                disabled
-              ></textarea>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div
+        v-for="commentField in commentFields"
+        :key="commentField.name"
+        class="mb-3"
+      >
+        <label class="form-label small">
+          <strong>{{ commentField.title }}</strong>
+        </label>
+        <textarea
+          class="form-control form-control-sm"
+          aria-label="textarea"
+          :value="fieldValues[commentField.name] || 'Нет данных'"
+          :placeholder="commentField.title"
+          :style="{
+            height: '2rem',
+            resize: 'vertical',
+            color: fieldValues[commentField.name] ? '' : '#d8d8d8',
+          }"
+          disabled
+        ></textarea>
+      </div>
     </div>
   </div>
 </template>

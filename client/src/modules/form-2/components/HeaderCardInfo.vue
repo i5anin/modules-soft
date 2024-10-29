@@ -7,24 +7,19 @@
         Информация о заказе
       </div>
       <div class="card-body p-2">
-        <table class="table table-sm">
-          <tbody>
-            <tr v-for="field in allFields" :key="field.name">
-              <td class="p-1">
-                <strong>{{ field.title }}</strong>
-              </td>
-              <td class="p-1" :title="fieldValues[field.name]">
-                <input
-                  type="text"
-                  v-model="fieldValues[field.name]"
-                  :placeholder="field.title"
-                  class="form-control form-control-sm"
-                  disabled
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="row g-3">
+          <div v-for="field in allFields" :key="field.name" class="col-md-6">
+            <div class="field-label">{{ field.title }}</div>
+            <div
+              class="field-value"
+              :style="{
+                color: fieldValues[field.name] ? '' : '#d8d8d8',
+              }"
+            >
+              {{ fieldValues[field.name] || 'Нет данных' }}
+            </div>
+          </div>
+        </div>
 
         <!-- Компонент для отображения комментариев -->
         <CommentSection
@@ -68,10 +63,8 @@ export default defineComponent({
         : []
     )
 
-    // Инициализация fieldValues как пустой объект, чтобы его можно было обновлять
     const fieldValues = reactive({})
 
-    // Функция для обновления fieldValues
     const updateFieldValues = () => {
       Object.assign(
         fieldValues,
@@ -84,13 +77,12 @@ export default defineComponent({
       )
     }
 
-    // Вызываем updateFieldValues при изменении header
     watch(
       () => props.header,
       () => {
         updateFieldValues()
       },
-      { immediate: true } // Запуск при первой загрузке
+      { immediate: true }
     )
 
     const fieldValuesComputed = computed(() => fieldValues)
@@ -105,3 +97,16 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.field-label {
+  font-size: 0.8rem;
+  color: #212529;
+  font-weight: 500;
+}
+
+.field-value {
+  font-size: 1rem;
+  color: #495057;
+}
+</style>

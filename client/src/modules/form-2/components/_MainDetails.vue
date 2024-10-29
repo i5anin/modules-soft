@@ -92,7 +92,7 @@ watch(selectedRole, () => {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 300px 1fr; /* Фиксированная ширина слева и адаптивная справа */
+  grid-template-columns: 500px 1fr; /* Фиксированная ширина слева и адаптивная справа */
   gap: 16px;
 }
 
