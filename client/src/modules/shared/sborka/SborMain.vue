@@ -13,7 +13,8 @@
         >
           <thead>
             <tr :style="{ fontSize: '12px' }">
-              <th scope="col" style="width: 40px"></th>
+              <th scope="col" style="width: 40px" title="развернут статус"></th>
+              <th scope="col" style="width: 40px" title="статусы"></th>
               <!-- Статусы на первом месте -->
               <th
                 scope="col"
