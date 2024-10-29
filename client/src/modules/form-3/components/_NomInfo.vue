@@ -190,3 +190,9 @@ const formatData = (data, fields) => {
   )
 }
 </script>
+
+<style scoped>
+input::placeholder {
+  color: #d8d8d8; /* Серый цвет для placeholder */
+}
+</style>
