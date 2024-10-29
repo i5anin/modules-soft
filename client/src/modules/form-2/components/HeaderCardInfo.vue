@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="header" class="card border-light mb-2">
-      <div class="card-header border-light p-2">
+      <div class="card-header bg-transparent border-success border-light p-2">
         <span class="mdi mdi-format-list-bulleted-type"></span>
         <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
         Информация о заказе {{ fieldValues['orders__id'] || '' }}
@@ -23,7 +23,7 @@
       </div>
       <!-- Компонент для отображения комментариев -->
       <CommentSection
-        class="card-footer"
+        class="card-footer bg-transparent border-success"
         :commentFields="commentFields"
         :fieldValues="fieldValuesComputed"
       />

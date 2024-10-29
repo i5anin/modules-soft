@@ -20,7 +20,7 @@
           <div class="row">
             <!-- Левая колонка -->
             <div class="col-md-6">
-              <table class="table table-sm">
+              <table class="table table-sm border-light">
                 <tbody>
                   <tr v-for="field in leftColumnFields" :key="field.name">
                     <td class="p-1">
@@ -42,7 +42,7 @@
 
             <!-- Правая колонка -->
             <div class="col-md-6">
-              <table class="table table-sm">
+              <table class="table table-sm border-light">
                 <tbody>
                   <tr v-for="field in rightColumnFields" :key="field.name">
                     <td class="p-1">

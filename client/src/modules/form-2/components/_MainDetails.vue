@@ -16,10 +16,10 @@
           <OrderInfoCard :header="header" />
         </div>
 
-        <!-- Кнопка для сворачивания -->
-        <button class="btn btn-link toggle-btn" @click="toggleCollapse">
-          {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}
-        </button>
+        <!--        &lt;!&ndash; Кнопка для сворачивания &ndash;&gt;-->
+        <!--        <button class="btn btn-link toggle-btn" @click="toggleCollapse">-->
+        <!--          {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}-->
+        <!--        </button>-->
       </div>
 
       <!-- Компонент SborMain занимает оставшееся пространство -->
