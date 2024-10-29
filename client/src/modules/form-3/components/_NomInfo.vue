@@ -1,21 +1,27 @@
 <template>
   <div class="container">
-    <router-link :to="{ name: 'OrderDetails' }" class="btn btn-secondary me-3">
-      Назад к списку деталей заказа
-    </router-link>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <router-link
+        :to="{ name: 'OrderDetails' }"
+        class="btn btn-secondary me-3"
+      >
+        Назад к списку деталей заказа
+      </router-link>
 
-    <h3 class="mb-4">
-      <svg-icon
-        type="mdi"
-        :path="mdiBolt"
-        class="me-1"
-        color="red"
-        :size="32"
-      />
-      Информация по номенклатуре
-    </h3>
+      <div class="d-flex align-items-center mb-4">
+        <svg-icon
+          type="mdi"
+          :path="mdiBolt"
+          class="me-1"
+          color="red"
+          :size="32"
+        />
+        <h4 class="m-0">Информация по номенклатуре</h4>
+      </div>
+    </div>
+
     <div v-if="selectedOrder">
-      <div v-if="selectedOrder.header" class="card mb-2">
+      <div v-if="selectedOrder.header" class="card mb-2 b">
         <div class="card-body p-2">
           <div class="row">
             <!-- Левая колонка -->
@@ -24,10 +30,18 @@
                 <tbody>
                   <tr v-for="field in leftColumnFields" :key="field.name">
                     <td class="p-1">
-                      <strong>{{ field.title }}</strong>
+                      {{ field.title }}
                     </td>
-                    <td class="p-1">
+                    <td class="p-1" width="40%">
+                      <textarea
+                        v-if="String(fieldValues[field.name]).length >= 25"
+                        v-model="fieldValues[field.name]"
+                        :placeholder="field.title"
+                        class="form-control form-control-sm"
+                        disabled
+                      />
                       <input
+                        v-else
                         type="text"
                         v-model="fieldValues[field.name]"
                         :placeholder="field.title"
@@ -45,11 +59,19 @@
               <table class="table table-sm border-light">
                 <tbody>
                   <tr v-for="field in rightColumnFields" :key="field.name">
-                    <td class="p-1">
-                      <strong>{{ field.title }}</strong>
+                    <td class="p-1" width="50%">
+                      {{ field.title }}
                     </td>
                     <td class="p-1">
+                      <textarea
+                        v-if="String(fieldValues[field.name]).length >= 25"
+                        v-model="fieldValues[field.name]"
+                        :placeholder="field.title"
+                        class="form-control form-control-sm"
+                        disabled
+                      />
                       <input
+                        v-else
                         type="text"
                         v-model="fieldValues[field.name]"
                         :placeholder="field.title"
