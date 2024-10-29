@@ -3,9 +3,17 @@
     @click.stop="toggle"
     :class="{
       'table-info': isExpanded,
-      bold: isExpanded || (sbor.is_sbor && isExpanded),
+      'fw-bold ': isExpanded || (sbor.is_sbor && isExpanded),
     }"
   >
+    <td :style="{ width: '40px', textAlign: 'center' }">
+      <span v-if="hasChildren" title="развернуть/свернуть">
+        <font-awesome-icon
+          :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
+          class="icon-sm"
+        />
+      </span>
+    </td>
     <td>
       <span v-html="combinedStatuses"></span>
     </td>
@@ -17,21 +25,8 @@
       <span
         v-if="field === firstField"
         style="display: inline-flex; align-items: center"
-        :style="{ paddingLeft: depth * 40 + 'px', fontSize: '15px' }"
+        :style="{ paddingLeft: depth * 35 + 'px', fontSize: '15px' }"
       >
-        <span v-if="hasChildren" title="развернуть/свернуть">
-          <font-awesome-icon
-            :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
-            class="icon-sm ms-2"
-          />
-        </span>
-        <span v-else>
-          <font-awesome-icon
-            :icon="['fas', 'circle']"
-            class="icon-sm ms-2"
-            style="opacity: 0"
-          />
-        </span>
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
