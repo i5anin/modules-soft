@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="grid-container">
-      <div class="order-info-card p-2" :class="{ collapsed: isCollapsed }">
+      <div class="p-2" :class="{ collapsed: isCollapsed }">
         <router-link
           :to="{ name: 'OrdersTable' }"
           tag="button"
@@ -92,8 +92,7 @@ watch(selectedRole, () => {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 500px 1fr; /* Фиксированная ширина слева и адаптивная справа */
-  gap: 16px;
+  grid-template-columns: 400px 1fr; /* Фиксированная ширина слева и адаптивная справа */
 }
 
 .order-info-card {

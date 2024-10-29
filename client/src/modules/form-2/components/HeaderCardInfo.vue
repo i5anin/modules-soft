@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="header" class="card mb-2">
-      <div class="card-header p-2">
+    <div v-if="header" class="card border-light mb-2">
+      <div class="card-header border-light p-2">
         <span class="mdi mdi-format-list-bulleted-type"></span>
         <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
-        Информация о заказе
+        Информация о заказе {{ fieldValues['orders__id'] || '' }}
       </div>
       <div class="card-body p-2">
         <div class="row g-3">
@@ -20,13 +20,13 @@
             </div>
           </div>
         </div>
-
-        <!-- Компонент для отображения комментариев -->
-        <CommentSection
-          :commentFields="commentFields"
-          :fieldValues="fieldValuesComputed"
-        />
       </div>
+      <!-- Компонент для отображения комментариев -->
+      <CommentSection
+        class="card-footer"
+        :commentFields="commentFields"
+        :fieldValues="fieldValuesComputed"
+      />
     </div>
   </div>
 </template>

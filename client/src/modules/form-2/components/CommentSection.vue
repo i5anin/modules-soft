@@ -1,6 +1,6 @@
 <template>
-  <div class="card mt-2">
-    <div class="card-body p-2">
+  <div class="border-light mt-2">
+    <div class="card-text p-2">
       <div
         v-for="commentField in commentFields"
         :key="commentField.name"
