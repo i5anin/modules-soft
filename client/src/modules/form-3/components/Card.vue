@@ -13,6 +13,9 @@
                     v-model="fieldValues[field.name]"
                     :placeholder="field.title"
                     class="form-control form-control-sm"
+                    :style="{
+                      height: calculateHeight(fieldValues[field.name]) + 'px',
+                    }"
                     disabled
                   />
                   <input
@@ -40,6 +43,9 @@
                     v-model="fieldValues[field.name]"
                     :placeholder="field.title"
                     class="form-control form-control-sm"
+                    :style="{
+                      height: calculateHeight(fieldValues[field.name]) + 'px',
+                    }"
                     disabled
                   />
                   <input
@@ -68,4 +74,11 @@ const props = defineProps({
   rightColumnFields: Array,
   fieldValues: Object,
 })
+
+function calculateHeight(text) {
+  const lineHeight = 21 // высота строки
+  const padding = 10 // дополнительное пространство для более точного отображения
+  const lineCount = Math.ceil(text.length / 25) // примерное число строк на основе длины текста
+  return lineCount * lineHeight + padding
+}
 </script>
