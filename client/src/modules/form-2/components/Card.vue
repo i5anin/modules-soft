@@ -79,9 +79,7 @@ export default defineComponent({
 
     watch(
       () => props.header,
-      () => {
-        updateFieldValues()
-      },
+      () => updateFieldValues(),
       { immediate: true }
     )
 

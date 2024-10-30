@@ -61,7 +61,7 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '@/modules/main/store/index.js'
-import { formatValue } from '@/utils/formatters.js'
+import { formatValueCard } from '@/utils/formatters.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import Strategy from '@/modules/shared/data-table/BaseTable.vue'
@@ -107,22 +107,27 @@ const filteredHeaderFields = computed(
 )
 
 const leftColumnFields = computed(() => {
-  const fields = filteredHeaderFields.value
-  const half = Math.ceil(fields.length / 2)
-  return fields.slice(0, half)
+  const fields = filteredHeaderFields.value.filter(
+    (field) => field.edit === true
+  )
+  return fields
 })
 
 const rightColumnFields = computed(() => {
-  const fields = filteredHeaderFields.value
-  const half = Math.ceil(fields.length / 2)
-  return fields.slice(half)
+  const fields = filteredHeaderFields.value.filter(
+    (field) => field.edit !== true
+  )
+  return fields
 })
 
 const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      formatValue(selectedOrder.value?.header?.data[0][field.name], field.name),
+      formatValueCard(
+        selectedOrder.value?.header?.data[0][field.name],
+        field.name
+      ),
     ])
   )
 )
@@ -142,7 +147,7 @@ const uniqueTableFieldsStrat = computed(() =>
 const formatData = (data, fields) => {
   return data.map((row) =>
     fields.reduce((acc, field) => {
-      acc[field.name] = formatValue(row[field.name], field.name)
+      acc[field.name] = formatValueCard(row[field.name], field.name)
       return acc
     }, {})
   )

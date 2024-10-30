@@ -3,6 +3,19 @@ import 'moment/locale/ru'
 
 moment.locale('ru')
 
+export function formatValueCard(value, fieldName) {
+  if (fieldName.toLowerCase().includes('price')) {
+    return formatPrice(value)
+  }
+  if (fieldName.toLowerCase().includes('date')) {
+    return formatDate(value)
+  }
+  if (fieldName.toLowerCase().includes('time')) {
+    return formatTime(value)
+  }
+  return value
+}
+
 export function formatValue(value, fieldName) {
   if (typeof value === 'boolean' && fieldName !== 'goz') {
     return formatBoolean(value)
@@ -40,7 +53,7 @@ export function formatPrice(price) {
 
 export function formatBoolean(value) {
   if (typeof value === 'boolean') {
-    return value ? '✅' : ' '
+    return value ? '✅' : ''
   }
   return value
 }

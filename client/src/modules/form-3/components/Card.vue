@@ -16,15 +16,31 @@
                     :style="{
                       height: calculateHeight(fieldValues[field.name]) + 'px',
                     }"
-                    disabled
+                    :disabled="!field.edit"
                   />
+                  <div
+                    v-else-if="typeof fieldValues[field.name] === 'boolean'"
+                    class="form-check form-switch"
+                  >
+                    <input
+                      type="checkbox"
+                      v-model="fieldValues[field.name]"
+                      class="form-check-input"
+                      :id="`switch-${field.name}`"
+                      :disabled="!field.edit"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="`switch-${field.name}`"
+                    />
+                  </div>
                   <input
                     v-else
                     type="text"
                     v-model="fieldValues[field.name]"
                     :placeholder="field.title"
                     class="form-control form-control-sm"
-                    disabled
+                    :disabled="!field.edit"
                   />
                 </td>
               </tr>
@@ -33,33 +49,43 @@
         </div>
 
         <div class="col-md-6">
-          <table class="table table-sm border-light">
-            <tbody>
-              <tr v-for="field in rightColumnFields" :key="field.name">
-                <td class="p-1" width="50%">{{ field.title }}</td>
-                <td class="p-1">
-                  <textarea
-                    v-if="String(fieldValues[field.name]).length >= 25"
-                    v-model="fieldValues[field.name]"
-                    :placeholder="field.title"
-                    class="form-control form-control-sm"
-                    :style="{
-                      height: calculateHeight(fieldValues[field.name]) + 'px',
-                    }"
-                    disabled
-                  />
-                  <input
-                    v-else
-                    type="text"
-                    v-model="fieldValues[field.name]"
-                    :placeholder="field.title"
-                    class="form-control form-control-sm"
-                    disabled
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="card-body p-2">
+            <div class="row g-3">
+              <div
+                v-for="field in rightColumnFields"
+                :key="field.name"
+                class="col-md-6"
+              >
+                <div class="field-label">{{ field.title }}</div>
+                <div
+                  class="field-value"
+                  :style="{
+                    color: fieldValues[field.name] ? '' : '#d8d8d8',
+                  }"
+                >
+                  <span v-if="typeof fieldValues[field.name] !== 'boolean'">{{
+                    fieldValues[field.name] || 'Нет данных'
+                  }}</span>
+                  <div
+                    v-else-if="typeof fieldValues[field.name] === 'boolean'"
+                    class="form-check form-switch"
+                  >
+                    <input
+                      type="checkbox"
+                      v-model="fieldValues[field.name]"
+                      class="form-check-input"
+                      :id="`switch-${field.name}`"
+                      :disabled="!field.edit"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="`switch-${field.name}`"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -67,7 +93,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed, ref } from 'vue' // добавлен computed
 
 const props = defineProps({
   leftColumnFields: Array,
