@@ -108,3 +108,16 @@ function calculateHeight(text) {
   return lineCount * lineHeight + padding
 }
 </script>
+
+<style scoped>
+.field-label {
+  font-size: 0.8rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.field-value {
+  font-size: 1rem;
+  color: #495057;
+}
+</style>

@@ -100,7 +100,7 @@ export default defineComponent({
 .field-label {
   font-size: 0.8rem;
   color: #212529;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .field-value {
