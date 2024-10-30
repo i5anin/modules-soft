@@ -2,7 +2,8 @@
   <div class="card mb-2">
     <div class="card-body p-2">
       <div class="row">
-        <div class="col-md-6">
+        <!-- Левый столбик: Карточка с полями leftColumnFields -->
+        <div class="col-12">
           <table class="table table-sm border-light">
             <tbody>
               <tr v-for="field in leftColumnFields" :key="field.name">
@@ -48,7 +49,8 @@
           </table>
         </div>
 
-        <div class="col-md-6">
+        <!-- Правый столбик: теперь снизу, отображает поля rightColumnFields -->
+        <div class="col-12 mt-3">
           <div class="card-body p-2">
             <div class="row g-3">
               <div
@@ -93,7 +95,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue' // добавлен computed
+import { defineProps, computed, ref } from 'vue'
 
 const props = defineProps({
   leftColumnFields: Array,

@@ -1,9 +1,10 @@
 <template>
-  <div class="container">
-    <div style="display: flex; align-items: center; gap: 10px">
+  <div class="grid-container">
+    <!-- Левая колонка: Карточка с информацией -->
+    <div class="p-2">
       <router-link
         :to="{ name: 'OrderDetails' }"
-        class="btn btn-secondary me-3"
+        class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light"
       >
         Назад к списку деталей заказа
       </router-link>
@@ -18,19 +19,21 @@
         />
         <h4 class="m-0">Информация по номенклатуре</h4>
       </div>
-    </div>
 
-    <div v-if="selectedOrder">
       <Card
-        v-if="selectedOrder.header"
+        v-if="selectedOrder && selectedOrder.header"
         :leftColumnFields="leftColumnFields"
         :rightColumnFields="rightColumnFields"
         :fieldValues="fieldValues"
       />
+    </div>
 
+    <!-- Правая колонка: Таблицы -->
+    <div class="table-section">
       <!-- Таблица данных по калибрам -->
       <CaliberTable
         v-if="
+          selectedOrder &&
           !selectedOrder.table_cal?.error &&
           selectedOrder.table_cal?.data?.length
         "
@@ -41,15 +44,16 @@
 
       <!-- Таблица данных по стратегии -->
       <StrategyTable
-        v-if="!selectedOrder.strat?.error && selectedOrder.strat?.data?.length"
+        v-if="
+          selectedOrder &&
+          !selectedOrder.strat?.error &&
+          selectedOrder.strat?.data?.length
+        "
         :fields="uniqueTableFieldsStrat"
         :data="formatData(selectedOrder.strat?.data, uniqueTableFieldsStrat)"
         :tableTitle="selectedOrder.strat?.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
-    </div>
-    <div v-else>
-      <p>Загрузка данных...</p>
     </div>
   </div>
 </template>
@@ -107,17 +111,11 @@ const filteredHeaderFields = computed(
 )
 
 const leftColumnFields = computed(() => {
-  const fields = filteredHeaderFields.value.filter(
-    (field) => field.edit === true
-  )
-  return fields
+  return filteredHeaderFields.value.filter((field) => field.edit === true)
 })
 
 const rightColumnFields = computed(() => {
-  const fields = filteredHeaderFields.value.filter(
-    (field) => field.edit !== true
-  )
-  return fields
+  return filteredHeaderFields.value.filter((field) => field.edit !== true)
 })
 
 const fieldValues = computed(() =>
@@ -153,3 +151,21 @@ const formatData = (data, fields) => {
   )
 }
 </script>
+
+<style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: 400px 1fr; /* Фиксированная ширина слева и адаптивная справа */
+  gap: 16px;
+}
+
+.table-section {
+  width: 100%; /* Занимает оставшееся пространство справа */
+}
+
+.card-body {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+}
+</style>
