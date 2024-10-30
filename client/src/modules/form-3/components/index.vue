@@ -40,7 +40,7 @@
       />
 
       <!-- Таблица данных по стратегии -->
-      <Strategy
+      <StrategyTable
         v-if="!selectedOrder.strat?.error && selectedOrder.strat?.data?.length"
         :fields="uniqueTableFieldsStrat"
         :data="formatData(selectedOrder.strat?.data, uniqueTableFieldsStrat)"
@@ -61,10 +61,10 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '@/modules/main/store/index.js'
-import { formatValueCard } from '@/utils/formatters.js'
+import { formatValue, formatValueCard } from '@/utils/formatters.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
-import Strategy from '@/modules/shared/data-table/BaseTable.vue'
+import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
@@ -147,7 +147,7 @@ const uniqueTableFieldsStrat = computed(() =>
 const formatData = (data, fields) => {
   return data.map((row) =>
     fields.reduce((acc, field) => {
-      acc[field.name] = formatValueCard(row[field.name], field.name)
+      acc[field.name] = formatValue(row[field.name], field.name)
       return acc
     }, {})
   )
