@@ -11,15 +11,8 @@
           Назад к заказам
         </router-link>
 
-        <!-- Содержимое, которое можно свернуть -->
-        <div v-if="!isCollapsed">
-          <OrderInfoCard :header="header" />
-        </div>
-
-        <!--        &lt;!&ndash; Кнопка для сворачивания &ndash;&gt;-->
-        <!--        <button class="btn btn-link toggle-btn" @click="toggleCollapse">-->
-        <!--          {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}-->
-        <!--        </button>-->
+        <!-- Содержимое карточки -->
+        <OrderInfoCard :header="header" />
       </div>
 
       <!-- Компонент SborMain занимает оставшееся пространство -->
@@ -38,7 +31,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getOrderById } from '../api/orders.js'
-import OrderInfoCard from './HeaderCardInfo.vue'
+import OrderInfoCard from './Card.vue'
 import _ from 'lodash'
 import { useRoleStore } from '../../main/store/index.js'
 import SvgIcon from '@jamescoyle/vue-icon'

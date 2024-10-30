@@ -4,17 +4,17 @@ const routes = [
   {
     path: '/',
     name: 'OrdersTable',
-    component: () => import('./modules/form-1/components/_MainOrders.vue'),
+    component: () => import('./modules/form-1/components/Index.vue'),
   },
   {
     path: '/:orderId',
     name: 'OrderDetails',
-    component: () => import('./modules/form-2/components/_MainDetails.vue'),
+    component: () => import('./modules/form-2/components/Index.vue'),
   },
   {
     path: '/:orderId/:id',
     name: 'OrderDetailsDetails',
-    component: () => import('./modules/form-3/components/_NomInfo.vue'),
+    component: () => import('./modules/form-3/components/index.vue'),
   },
   {
     path: '/sborka/:id',

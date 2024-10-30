@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import Table from '@/modules/form-1/components/_MainOrders.vue'
+import Table from '@/modules/form-1/components/Index.vue'
 
 // import useHome from '../store/home.module.js'
 // const _home = useHome()

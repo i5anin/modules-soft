@@ -36,7 +36,7 @@ import { computed, defineComponent, ref, reactive, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue as formatterFormatValue } from '@/utils/formatters.js'
-import CommentSection from './CommentSection.vue'
+import CommentSection from './CardComment.vue'
 
 export default defineComponent({
   components: { SvgIcon, CommentSection },

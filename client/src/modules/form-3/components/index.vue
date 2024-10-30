@@ -21,73 +21,14 @@
     </div>
 
     <div v-if="selectedOrder">
-      <div v-if="selectedOrder.header" class="card mb-2 b">
-        <div class="card-body p-2">
-          <div class="row">
-            <!-- Левая колонка -->
-            <div class="col-md-6">
-              <table class="table table-sm border-light">
-                <tbody>
-                  <tr v-for="field in leftColumnFields" :key="field.name">
-                    <td class="p-1">
-                      {{ field.title }}
-                    </td>
-                    <td class="p-1" width="40%">
-                      <textarea
-                        v-if="String(fieldValues[field.name]).length >= 25"
-                        v-model="fieldValues[field.name]"
-                        :placeholder="field.title"
-                        class="form-control form-control-sm"
-                        disabled
-                      />
-                      <input
-                        v-else
-                        type="text"
-                        v-model="fieldValues[field.name]"
-                        :placeholder="field.title"
-                        class="form-control form-control-sm"
-                        disabled
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      <Card
+        v-if="selectedOrder.header"
+        :leftColumnFields="leftColumnFields"
+        :rightColumnFields="rightColumnFields"
+        :fieldValues="fieldValues"
+      />
 
-            <!-- Правая колонка -->
-            <div class="col-md-6">
-              <table class="table table-sm border-light">
-                <tbody>
-                  <tr v-for="field in rightColumnFields" :key="field.name">
-                    <td class="p-1" width="50%">
-                      {{ field.title }}
-                    </td>
-                    <td class="p-1">
-                      <textarea
-                        v-if="String(fieldValues[field.name]).length >= 25"
-                        v-model="fieldValues[field.name]"
-                        :placeholder="field.title"
-                        class="form-control form-control-sm"
-                        disabled
-                      />
-                      <input
-                        v-else
-                        type="text"
-                        v-model="fieldValues[field.name]"
-                        :placeholder="field.title"
-                        class="form-control form-control-sm"
-                        disabled
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Таблица данных по калибровке -->
+      <!-- Таблица данных по калибрам -->
       <CaliberTable
         v-if="
           !selectedOrder.table_cal?.error &&
@@ -121,6 +62,7 @@ import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '@/modules/main/store/index.js'
 import { formatValue } from '@/utils/formatters.js'
+import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import Strategy from '@/modules/shared/data-table/BaseTable.vue'
 
@@ -146,7 +88,6 @@ const fetchOrderData = async () => {
 
 onMounted(fetchOrderData)
 
-// Поля, которые нужно исключить из отображения
 const excludedFields = [
   'zag_tech_material_id',
   'ordersnom__id',
@@ -158,7 +99,6 @@ const excludedFields = [
   'nom_id_nom',
 ]
 
-// Фильтрованные поля заголовка
 const filteredHeaderFields = computed(
   () =>
     selectedOrder.value?.header?.fields.filter(
@@ -166,7 +106,6 @@ const filteredHeaderFields = computed(
     ) || []
 )
 
-// Разделение полей на левую и правую колонку
 const leftColumnFields = computed(() => {
   const fields = filteredHeaderFields.value
   const half = Math.ceil(fields.length / 2)
@@ -179,7 +118,6 @@ const rightColumnFields = computed(() => {
   return fields.slice(half)
 })
 
-// Реактивное поле для значений
 const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
@@ -189,7 +127,6 @@ const fieldValues = computed(() =>
   )
 )
 
-// Уникальные поля для таблиц данных
 const uniqueFields = (fields) => {
   const seen = new Set()
   return fields.filter((field) => !seen.has(field.name) && seen.add(field.name))
@@ -202,7 +139,6 @@ const uniqueTableFieldsStrat = computed(() =>
   uniqueFields(selectedOrder.value?.strat?.fields || [])
 )
 
-// Форматирование данных для отображения в таблицах
 const formatData = (data, fields) => {
   return data.map((row) =>
     fields.reduce((acc, field) => {
@@ -212,9 +148,3 @@ const formatData = (data, fields) => {
   )
 }
 </script>
-
-<style scoped>
-input::placeholder {
-  color: #d8d8d8; /* Серый цвет для placeholder */
-}
-</style>
