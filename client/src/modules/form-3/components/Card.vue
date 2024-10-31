@@ -6,7 +6,7 @@
         <div class="col-12">
           <div v-for="field in leftColumnFields" :key="field.name" class="mb-3">
             <div
-              v-if="String(fieldValues[field.name]).length >= 25"
+              v-if="String(fieldValues[field.name]).length >= 40"
               class="form-floating"
             >
               <textarea
