@@ -1,33 +1,34 @@
-.form-floating > .form-control,
-.form-floating > .form-select {
-    padding: 0.8rem 0.75rem;
-}
+
 
 .form-floating > label {
-    height: 80%;
-    padding: 0 0.75rem;
-    pointer-events: none;
-    transform-origin: left center;
-    transition: all 0.1s ease-in-out;
+    left: 10px;
+    padding: 0 5px; /* Устанавливает отступы метки слева и справа для позиционирования над полем. */
+    pointer-events: none; /* Отключает события наведения и кликов на метке, чтобы они не блокировали доступ к полю. */
+    transform-origin: left center; /* Устанавливает точку трансформации в левый центр, чтобы метка перемещалась относительно этого положения. */
+    transition: all 0.1s ease-in-out; /* Добавляет анимацию для плавного перемещения метки при вводе текста. */
+    height: auto;
+    line-height: 17px;
+    top: 3px;
 }
 
 .form-floating > .form-control::placeholder {
-    color: transparent;
+    color: transparent; /* Делает текст плейсхолдера прозрачным, чтобы он не перекрывал метку при поднятии. */
 }
 
 .form-floating > .form-control:not(:placeholder-shown) ~ label,
 .form-floating > .form-control:focus ~ label {
-    background-color: transparent;
-    font-size: 0.85rem;
-    transform: translateY(-0.8rem) scale(0.85);
+    background-color: white; /* Устанавливает прозрачный фон для метки, когда поле заполнено или в фокусе. */
+    font-size: 0.85rem; /* Уменьшает размер шрифта метки при её перемещении вверх. */
+    transform: translateY(-0.8rem) scale(0.85); /* Поднимает и уменьшает метку над полем, если оно в фокусе или заполнено. */
 }
 
+
 .form-floating > .form-control:not(:placeholder-shown) ~ label:after {
-    border-radius: 0 !important;
+    border-radius: 0 !important; /* Обнуляет скругление границ для дополнительных стилей, если они есть. */
 }
 
 .form-floating > .form-control {
-    height: 10px;
-    min-height: 10px;
-    line-height: 10px;
+    height: 10px; /* Устанавливает минимальную высоту поля в 10 пикселей, чтобы обеспечить видимость. */
+    min-height: 10px; /* Устанавливает минимальную высоту для поддержания высоты 10 пикселей. */
+    line-height: 10px; /* Устанавливает межстрочный интервал в 10 пикселей, что помогает уменьшить высоту поля. */
 }
