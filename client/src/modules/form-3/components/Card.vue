@@ -100,6 +100,7 @@
 
 <script setup>
 import { defineProps, ref } from 'vue'
+import './FormFloatingField.css'
 
 const props = defineProps({
   leftColumnFields: Array,
