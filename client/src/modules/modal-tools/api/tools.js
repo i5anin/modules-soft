@@ -15,8 +15,8 @@ const handleError = (error) => {
 export const fetchInstrumentData = (no, nomId) => {
   return api
     .get('instr_op_info', {
-      params: { no: no, nom_id: nomId },
+      params: { no, nom_id: nomId },
     })
-    .then(handleResponse)
+    .then((response) => response.data)
     .catch(handleError)
 }

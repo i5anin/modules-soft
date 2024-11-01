@@ -17,9 +17,15 @@ const routes = [
     component: () => import('./modules/form-3/components/index.vue'),
   },
   {
-    path: '/sborka/:id',
+    path: '/sborka-test/:id',
     name: 'SborkaDetails',
     component: () => import('./modules/shared/sborka/SborMain.vue'),
+  },
+
+  {
+    path: '/modal-tools-test/:no/:nomId',
+    name: 'modal-tools',
+    component: () => import('./modules/modal-tools/components/index.vue'),
   },
 
   {

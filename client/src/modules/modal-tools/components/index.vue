@@ -11,7 +11,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="orderModalLabel">
-            Модальное окно инструмента
+            Модальное окно инструмента {{ no }} {{ nomId }}
           </h5>
           <button
             type="button"
@@ -23,34 +23,54 @@
         </div>
         <div class="modal-body">
           <div v-if="instrumentData">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div
-                    class="col-6"
-                    v-for="(item, index) in instrumentData.data"
-                    :key="index"
-                    class="mb-1"
-                  >
-                    <strong>Группа инструмента:</strong> {{ item.tool_group_id
-                    }}<br />
-                    <strong>Тип операции:</strong> {{ item.t_op }}<br />
-                    <strong>Комментарии:</strong> {{ item.comments_operators
-                    }}<br />
-                    <strong>Путь:</strong> {{ item.path }}<br />
-                    <strong>Описание свойства:</strong>
-                    <ul>
+            <table class="table table-sm table-bordered table-hover">
+              <thead>
+                <tr class="text-center">
+                  <!-- Центрируем заголовки -->
+                  <th style="width: 1%">#</th>
+                  <th style="width: 10%">Т шт. операции</th>
+                  <th style="width: 15%">Комментарии оператора</th>
+                  <th style="width: 20%">Расположение в дереве инсрумента</th>
+                  <th style="width: 25%">Характеристики</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item, index) in instrumentData.data.slice(0, 5)"
+                  :key="index"
+                >
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ item.t_op }}</td>
+                  <td>{{ item.comments_operators }}</td>
+                  <td>
+                    <ul class="list-group list-group-flush">
                       <li
+                        class="list-group-item"
+                        v-for="(segment, segmentIndex) in item.path.split(
+                          ' > '
+                        )"
+                        :key="segmentIndex"
+                      >
+                        {{ segment }}
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul
+                      class="list-group list-group-flush list-group-item-warning"
+                    >
+                      <li
+                        class="list-group-item"
                         v-for="(value, key) in item.property_description"
                         :key="key"
                       >
-                        {{ key }}: {{ value }}
+                        {{ key }}: <b>{{ value }}</b>
                       </li>
                     </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div v-else>
             <p>Загрузка данных...</p>
@@ -72,14 +92,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Modal } from 'bootstrap'
 import { fetchInstrumentData } from '../api/tools.js'
+import { useRoute } from 'vue-router'
 
-const props = defineProps({
-  no: { type: String, required: true },
-  nomId: { type: Number, required: true },
-})
+const route = useRoute()
+
+const no = ref(route.params.no)
+const nomId = ref(route.params.nomId)
 
 const emit = defineEmits(['close'])
 
@@ -89,26 +110,34 @@ const instrumentData = ref(null)
 
 onMounted(() => {
   modalInstance = new Modal(modalContainer.value)
+  fetchData()
 })
 
-watch(
-  () => [props.no, props.nomId],
-  async ([no, nomId]) => {
-    if (no && nomId) {
-      try {
-        instrumentData.value = await fetchInstrumentData('005', 39087) //no=005&nom_id=39087 fetchInstrumentData(no, nomId)
-        modalInstance.show()
-      } catch (error) {
-        console.error('Ошибка при загрузке данных инструмента:', error)
-        instrumentData.value = null
-      }
+const fetchData = async () => {
+  if (no.value && nomId.value) {
+    try {
+      instrumentData.value = await fetchInstrumentData(no.value, nomId.value)
+      modalInstance.show()
+    } catch (error) {
+      console.error('Ошибка при загрузке данных инструмента:', error)
+      instrumentData.value = null
     }
-  },
-  { immediate: true }
-)
+  }
+}
 
 const closeModal = () => {
   modalInstance.hide()
   emit('close')
 }
 </script>
+
+<style scoped>
+.table {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.table th {
+  text-align: center; /* Центрируем текст в заголовках таблицы */
+}
+</style>
