@@ -22,20 +22,19 @@
               <label :for="'floatingTextarea'">{{ field.title }}</label>
             </div>
 
-            <div
-              v-else-if="typeof fieldValues[field.name] === 'boolean'"
-              class="form-check form-switch"
-            >
-              <input
-                type="checkbox"
-                v-model="fieldValues[field.name]"
-                class="form-check-input"
-                :id="`switch-${field.name}`"
-                :disabled="!field.edit"
-              />
-              <label class="form-check-label" :for="`switch-${field.name}`">{{
-                field.title
-              }}</label>
+            <div v-else-if="typeof fieldValues[field.name] === 'boolean'">
+              <div class="form-check form-switch d-inline-block me-3">
+                <input
+                  type="checkbox"
+                  v-model="fieldValues[field.name]"
+                  class="form-check-input"
+                  :id="`switch-${field.name}`"
+                  :disabled="!field.edit"
+                />
+                <label class="form-check-label" :for="`switch-${field.name}`">
+                  {{ field.title }}
+                </label>
+              </div>
             </div>
 
             <div v-else class="form-floating">
@@ -47,21 +46,21 @@
                 :disabled="!field.edit"
                 :id="`floatingInput-${field.name}`"
               />
-              <label :for="`floatingInput-${field.name}`">{{
-                field.title
-              }}</label>
+              <label :for="`floatingInput-${field.name}`">
+                {{ field.title }}
+              </label>
             </div>
           </div>
         </div>
 
-        <!-- Правый столбик: теперь снизу, отображает поля rightColumnFields -->
+        <!-- Правый столбик: отображает поля rightColumnFields в 2 ряда -->
         <div class="col-12 mt-3">
           <div class="card-body p-2">
             <div class="row g-3">
               <div
+                class="col-md-6"
                 v-for="field in rightColumnFields"
                 :key="field.name"
-                class="col-md-6"
               >
                 <div class="field-label">{{ field.title }}</div>
                 <div
@@ -72,8 +71,8 @@
                     {{ fieldValues[field.name] || 'Нет данных' }}
                   </span>
                   <div
-                    v-else-if="typeof fieldValues[field.name] === 'boolean'"
-                    class="form-check form-switch"
+                    v-else
+                    class="form-check form-switch d-inline-block me-3"
                   >
                     <input
                       type="checkbox"
@@ -99,8 +98,8 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
-import './FormFloatingField.css'
+import { defineProps } from 'vue'
+import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
   leftColumnFields: Array,
