@@ -22,8 +22,8 @@
 
       <Card
         v-if="selectedOrder && selectedOrder.header"
-        :leftColumnFields="leftColumnFields"
-        :rightColumnFields="rightColumnFields"
+        :editableFormFields="editableFormFields"
+        :readonlyFormFields="readonlyFormFields"
         :fieldValues="fieldValues"
       />
     </div>
@@ -110,11 +110,11 @@ const filteredHeaderFields = computed(
     ) || []
 )
 
-const leftColumnFields = computed(() => {
+const editableFormFields = computed(() => {
   return filteredHeaderFields.value.filter((field) => field.edit === true)
 })
 
-const rightColumnFields = computed(() => {
+const readonlyFormFields = computed(() => {
   return filteredHeaderFields.value.filter((field) => field.edit !== true)
 })
 

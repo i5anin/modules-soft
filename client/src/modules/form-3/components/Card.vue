@@ -2,9 +2,13 @@
   <div class="card mb-2">
     <div class="card-body p-2">
       <div class="row">
-        <!-- Левый столбик: Карточка с полями leftColumnFields -->
+        <!-- Левый столбик: Карточка с полями editableFormFields -->
         <div class="col-12">
-          <div v-for="field in leftColumnFields" :key="field.name" class="mb-3">
+          <div
+            v-for="field in editableFormFields"
+            :key="field.name"
+            class="mb-3"
+          >
             <div
               v-if="String(fieldValues[field.name]).length >= 40"
               class="form-floating"
@@ -53,13 +57,13 @@
           </div>
         </div>
 
-        <!-- Правый столбик: отображает поля rightColumnFields в 2 ряда -->
+        <!-- Правый столбик: отображает поля readonlyFormFields в 2 ряда -->
         <div class="col-12 mt-3">
           <div class="card-body p-2">
             <div class="row g-3">
               <div
                 class="col-md-6"
-                v-for="field in rightColumnFields"
+                v-for="field in readonlyFormFields"
                 :key="field.name"
               >
                 <div class="field-label">{{ field.title }}</div>
@@ -102,8 +106,8 @@ import { defineProps } from 'vue'
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
-  leftColumnFields: Array,
-  rightColumnFields: Array,
+  editableFormFields: Array,
+  readonlyFormFields: Array,
   fieldValues: Object,
 })
 
