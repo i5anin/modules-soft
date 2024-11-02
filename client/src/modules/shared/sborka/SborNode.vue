@@ -17,8 +17,9 @@
       </span>
     </td>
     <td>
-      <span v-html="combinedStatuses"></span>
+      <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
+
     <td
       v-for="field in fields"
       :key="field.name"

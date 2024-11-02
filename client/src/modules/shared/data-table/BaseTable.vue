@@ -18,10 +18,7 @@
         >
           <td v-for="field in filteredFields" :key="field.name">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else
-              >{{ row[field.name] }}
-              <button v-if="field.edit">edit</button></span
-            >
+            <span v-else>{{ row[field.name] }}</span>
           </td>
         </tr>
       </tbody>
