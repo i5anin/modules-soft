@@ -4,7 +4,6 @@
     <table class="table table-sm table-bordered table-hover table-striped">
       <thead>
         <tr class="text-center">
-          <th>#</th>
           <th>Т шт.</th>
           <th>Комментарии оператора</th>
           <th>Расположение в дереве инструмента</th>
@@ -14,46 +13,36 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in instruments" :key="generateUniqueId(item)">
-          <td class="text-center align-middle">{{ index + 1 }}</td>
           <td class="text-center align-middle">{{ item.t_op }}</td>
           <td>
             <ul class="list-group list-group-flush">
               <li
-                class="list-group-item"
-                v-for="(comment, idx) in item.comments_operators.slice(0, 3)"
+                class="list-group-item small p-1"
+                v-for="(comment, idx) in initialComments(item)"
                 :key="idx"
-                style="font-size: 12px; padding: 2px"
+              >
+                {{ comment }}
+              </li>
+              <li
+                v-if="isExpanded(item)"
+                class="list-group-item small p-1"
+                v-for="(comment, idx) in additionalComments(item)"
+                :key="idx"
               >
                 {{ comment }}
               </li>
             </ul>
             <div
-              v-if="item.comments_operators.length > 3"
-              class="text-center mt-2"
+              v-if="item.comments_operators.length > 10"
+              class="mt-2 text-center"
             >
               <button
                 class="btn btn-sm btn-outline-secondary"
                 type="button"
                 @click="toggleCollapse(item)"
               >
-                {{
-                  collapseStates[generateUniqueId(item)]
-                    ? 'Скрыть'
-                    : 'Показать остальные'
-                }}
+                {{ isExpanded(item) ? 'Скрыть' : 'Показать остальные' }}
               </button>
-              <div v-if="collapseStates[generateUniqueId(item)]" class="mt-2">
-                <ul class="list-group list-group-flush">
-                  <li
-                    class="list-group-item"
-                    v-for="(comment, idx) in item.comments_operators.slice(3)"
-                    :key="idx"
-                    style="font-size: 13px"
-                  >
-                    {{ comment }}
-                  </li>
-                </ul>
-              </div>
             </div>
           </td>
           <td>
@@ -116,14 +105,43 @@ const toggleCollapse = (item) => {
   const id = generateUniqueId(item)
   props.collapseStates[id] = !props.collapseStates[id]
 }
+
+const isExpanded = (item) => {
+  const id = generateUniqueId(item)
+  return props.collapseStates[id]
+}
+
+const initialComments = (item) => {
+  return item.comments_operators.slice(0, 10)
+}
+
+const additionalComments = (item) => {
+  return item.comments_operators.slice(10)
+}
 </script>
 
 <style scoped>
 .table th {
   text-align: center;
 }
+
 .btn-circle {
   background-color: transparent;
   border: none;
+}
+
+.small {
+  font-size: 0.875rem; /* Соответствует Bootstrap классу .small */
+}
+
+.p-1 {
+  padding: 0.25rem; /* Соответствует Bootstrap классу .p-1 */
+}
+
+@media (max-width: 767px) {
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }
 </style>

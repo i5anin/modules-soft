@@ -5,7 +5,6 @@
       <table class="table table-sm table-bordered table-hover table-striped">
         <thead>
           <tr class="text-center">
-            <th>#</th>
             <th>Т шт.</th>
             <th>Расположение в дереве инструмента</th>
             <th>Характеристики</th>
@@ -17,7 +16,6 @@
             v-for="(item, index) in instruments"
             :key="generateUniqueId(item)"
           >
-            <td class="text-center align-middle">{{ index + 1 }}</td>
             <td class="text-center align-middle">{{ item.t_op }}</td>
             <td>
               <ul class="list-group list-group-flush">
