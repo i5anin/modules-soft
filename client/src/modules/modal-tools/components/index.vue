@@ -27,8 +27,10 @@
             <div class="row">
               <AddedInstrumentsTable
                 :instruments="addedInstruments"
+                :collapse-states="collapseStates"
                 @remove-instrument="removeInstrument"
               />
+
               <ProposedInstrumentsTable
                 :instruments="filteredInstruments"
                 :collapse-states="collapseStates"

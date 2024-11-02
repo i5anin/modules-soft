@@ -40,6 +40,7 @@
         :fields="uniqueTableFields"
         :data="formatData(selectedOrder.table_cal?.data, uniqueTableFields)"
         :tableTitle="selectedOrder.table_cal?.title"
+        :excluded="['id']"
       />
 
       <!-- Таблица данных по стратегии -->

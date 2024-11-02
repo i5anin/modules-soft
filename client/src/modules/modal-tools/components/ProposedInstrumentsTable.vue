@@ -4,11 +4,11 @@
     <table class="table table-sm table-bordered table-hover table-striped">
       <thead>
         <tr class="text-center">
-          <th>Т шт.</th>
-          <th>Комментарии оператора</th>
-          <th>Расположение в дереве инструмента</th>
-          <th>Характеристики</th>
-          <th>Добавить</th>
+          <th style="width: 2%">Т шт.</th>
+          <th style="width: 36%">Комментарии оператора</th>
+          <th style="width: 20%">Расположение в дереве инструмента</th>
+          <th style="width: 20%">Характеристики</th>
+          <th style="width: 2%">Добавить</th>
         </tr>
       </thead>
       <tbody>
@@ -112,11 +112,11 @@ const isExpanded = (item) => {
 }
 
 const initialComments = (item) => {
-  return item.comments_operators.slice(0, 10)
+  return item.comments_operators.slice(0, 5)
 }
 
 const additionalComments = (item) => {
-  return item.comments_operators.slice(10)
+  return item.comments_operators.slice(5)
 }
 </script>
 
