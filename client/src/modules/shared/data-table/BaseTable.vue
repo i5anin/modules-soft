@@ -18,13 +18,12 @@
         >
           <td v-for="field in filteredFields" :key="field.name">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else>{{ row[field.name] }}</span>
+            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Модальное окно -->
     <EditableModal
       v-if="selectedRow"
       :rowData="selectedRow"
@@ -39,6 +38,7 @@ import StatusDisplay from './StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { formatValue } from '@/utils/formatters.js' // Импортируйте вашу функцию форматирования
 
 const props = defineProps({
   fields: { type: Array, required: true },

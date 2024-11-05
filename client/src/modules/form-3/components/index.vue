@@ -38,7 +38,7 @@
           selectedOrder.table_cal?.data?.length
         "
         :fields="uniqueTableFields"
-        :data="formatData(selectedOrder.table_cal?.data, uniqueTableFields)"
+        :data="selectedOrder.table_cal?.data"
         :tableTitle="selectedOrder.table_cal?.title"
         :excluded="['id']"
       />
@@ -51,7 +51,7 @@
           selectedOrder.strat?.data?.length
         "
         :fields="uniqueTableFieldsStrat"
-        :data="formatData(selectedOrder.strat?.data, uniqueTableFieldsStrat)"
+        :data="selectedOrder.strat?.data"
         :tableTitle="selectedOrder.strat?.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
@@ -66,7 +66,6 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/orders.js'
 import { useRoleStore } from '@/modules/main/store/index.js'
-import { formatValue, formatValueCard } from '@/utils/formatters.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
@@ -123,10 +122,7 @@ const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      formatValueCard(
-        selectedOrder.value?.header?.data[0][field.name],
-        field.name
-      ),
+      selectedOrder.value?.header?.data[0][field.name], // Убрано форматирование
     ])
   )
 )
@@ -142,15 +138,6 @@ const uniqueTableFields = computed(() =>
 const uniqueTableFieldsStrat = computed(() =>
   uniqueFields(selectedOrder.value?.strat?.fields || [])
 )
-
-const formatData = (data, fields) => {
-  return data.map((row) =>
-    fields.reduce((acc, field) => {
-      acc[field.name] = formatValue(row[field.name], field.name)
-      return acc
-    }, {})
-  )
-}
 </script>
 
 <style scoped>

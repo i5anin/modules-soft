@@ -18,22 +18,25 @@
         </div>
         <div class="modal-body">
           <form @submit.prevent="saveChanges">
-            <div v-for="field in fields" :key="field.name" class="mb-3">
+            <div v-for="field in editableFields" :key="field.name" class="mb-3">
               <label :for="field.name" class="field-label">
                 {{ field.title }}
               </label>
               <input
-                v-if="field.edit"
                 type="text"
                 class="form-control"
                 v-model="editableData[field.name]"
                 :id="field.name"
               />
+            </div>
+            <div v-for="field in readonlyFields" :key="field.name" class="mb-3">
+              <label :for="field.name" class="field-label">
+                {{ field.title }}
+              </label>
               <input
-                v-else
                 type="text"
                 class="form-control"
-                :value="editableData[field.name]"
+                :value="formatValueCard(editableData[field.name], field.name)"
                 :id="field.name"
                 disabled
               />
@@ -58,7 +61,8 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
+import { formatValueCard } from '@/utils/formatters.js'
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
@@ -69,6 +73,14 @@ const emit = defineEmits(['close'])
 
 const editableData = reactive({ ...props.rowData })
 
+const editableFields = computed(() => {
+  return props.fields.filter((field) => field.edit)
+})
+
+const readonlyFields = computed(() => {
+  return props.fields.filter((field) => !field.edit)
+})
+
 const saveChanges = () => {
   console.log('Сохраненные данные:', editableData)
   emit('close')
@@ -77,11 +89,13 @@ const saveChanges = () => {
 
 <style scoped>
 .modal {
-  display: block; /* Позволяет отображать модалку */
+  display: block;
 }
+
 .modal-dialog {
   max-width: 500px;
 }
+
 .modal-content {
   position: relative;
 }

@@ -21,9 +21,11 @@
                   height: calculateHeight(localFieldValues[field.name]) + 'px',
                 }"
                 :disabled="!field.edit"
-                id="floatingTextarea"
+                :id="`floatingTextarea-${field.name}`"
               ></textarea>
-              <label :for="'floatingTextarea'">{{ field.title }}</label>
+              <label :for="`floatingTextarea-${field.name}`">{{
+                field.title
+              }}</label>
             </div>
 
             <div v-else-if="typeof localFieldValues[field.name] === 'boolean'">
@@ -92,8 +94,9 @@
                     <label
                       class="form-check-label"
                       :for="`switch-${field.name}`"
-                      >{{ field.title }}</label
                     >
+                      {{ field.title }}
+                    </label>
                   </div>
                 </div>
               </div>
@@ -106,7 +109,8 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, computed } from 'vue'
+import { formatValueCard } from '@/utils/formatters.js' // Импортируйте вашу функцию форматирования
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
@@ -115,8 +119,17 @@ const props = defineProps({
   fieldValues: Object,
 })
 
-// Создаем локальную реактивную копию fieldValues
-const localFieldValues = ref({ ...props.fieldValues })
+// Создаем локальную реактивную копию fieldValues с форматированием
+const localFieldValues = ref(computeFormattedValues(props.fieldValues))
+
+function computeFormattedValues(values) {
+  return Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [
+      key,
+      formatValueCard(value, key), // Применяем форматирование к каждому значению
+    ])
+  )
+}
 
 function calculateHeight(text) {
   const lineHeight = 21
