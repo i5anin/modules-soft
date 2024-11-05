@@ -19,20 +19,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
-
-const props = defineProps({
-  fields: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-  data: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-})
+import { defineEmits } from 'vue'
 
 const emit = defineEmits(['row-clicked'])
 

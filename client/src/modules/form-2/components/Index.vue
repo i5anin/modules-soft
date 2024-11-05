@@ -2,13 +2,11 @@
   <div>
     <div class="grid-container">
       <div class="p-2" :class="{ collapsed: isCollapsed }">
-        <router-link
-          :to="{ name: 'OrdersTable' }"
-          tag="button"
-          class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light"
-        >
-          <svg-icon type="mdi" :path="path" class="me-1" />
-          Назад к заказам
+        <router-link :to="{ name: 'OrdersTable' }" custom>
+          <button class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light">
+            <svg-icon type="mdi" :path="path" class="me-1" />
+            Назад к заказам
+          </button>
         </router-link>
 
         <!-- Содержимое карточки -->
@@ -68,10 +66,6 @@ const fetchOrderData = async () => {
 const filteredTableFields = computed(() =>
   _.filter(tableFields.value, (field) => !field.name.startsWith('status_'))
 )
-
-const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value
-}
 
 onMounted(() => {
   fetchOrderData()

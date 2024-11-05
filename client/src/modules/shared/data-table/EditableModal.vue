@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 
 const props = defineProps({
   rowData: { type: Object, required: true },

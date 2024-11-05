@@ -111,7 +111,7 @@ export default {
       return formatters.formatValue(value, fieldName)
     }
 
-    const generateTitle = (field, sbor) => {
+    const generateTitle = (field) => {
       return `Поле: ${field.title || 'Ошибка нет поля'}\n`
     }
 

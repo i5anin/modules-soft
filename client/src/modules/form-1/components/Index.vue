@@ -72,7 +72,7 @@ export default {
     const orders = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
-    const searchQuery = ref('') // Добавляем строку поиска
+    const searchQuery = ref('')
 
     const roleStore = useRoleStore()
 
@@ -93,7 +93,7 @@ export default {
       return getOrders(
         currentPage.value,
         itemsPerPage.value,
-        searchQuery.value, // Передаем поисковый запрос
+        searchQuery.value,
         null,
         null,
         startDate.value,
@@ -164,7 +164,7 @@ export default {
       name: 'StatusCell',
       props: ['row'],
       template: `<span v-html="renderStatus(row)"></span>`,
-      setup(props) {
+      setup() {
         const renderStatus = (row) => {
           const activeStatuses = _.filter(
             statuses,

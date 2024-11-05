@@ -89,40 +89,39 @@
 
     <div class="d-flex justify-content-between align-items-center mt-3">
       <p class="text-muted mb-0">
-        {{ startRecord }}–{{ endRecord }} из {{ totalCount }}
+        {{ startRecord }}–{{ endRecord }} из {{ totalCnt }}
       </p>
 
-      <!-- Pagination Controls -->
       <nav aria-label="Page navigation">
         <ul class="pagination mb-0">
           <li
             class="page-item"
-            :class="{ disabled: currentPage === 1 }"
+            :class="{ disabled: currentPg === 1 }"
             @click="goToPage(1)"
           >
             <a class="page-link" href="javascript:void(0)">«</a>
           </li>
           <li
             class="page-item"
-            :class="{ disabled: currentPage === 1 }"
-            @click="goToPage(currentPage - 1)"
+            :class="{ disabled: currentPg === 1 }"
+            @click="goToPage(currentPg - 1)"
           >
             <a class="page-link" href="javascript:void(0)">‹</a>
           </li>
           <li class="page-item active">
-            <span class="page-link">{{ currentPage }}</span>
+            <span class="page-link">{{ currentPg }}</span>
           </li>
           <li
             class="page-item"
-            :class="{ disabled: currentPage === totalPages }"
-            @click="goToPage(currentPage + 1)"
+            :class="{ disabled: currentPg === totalPg }"
+            @click="goToPage(currentPg + 1)"
           >
             <a class="page-link" href="javascript:void(0)">›</a>
           </li>
           <li
             class="page-item"
-            :class="{ disabled: currentPage === totalPages }"
-            @click="goToPage(totalPages)"
+            :class="{ disabled: currentPg === totalPg }"
+            @click="goToPage(totalPg)"
           >
             <a class="page-link" href="javascript:void(0)">»</a>
           </li>
@@ -275,13 +274,11 @@ export default {
       onSearch,
       clearSearch,
       searchQuery,
-      sortColumn: computed(() => props.sortColumn),
-      sortOrder: computed(() => props.sortOrder),
-      currentPage: computed(() => props.currentPage),
-      totalPages: computed(() => props.totalPages),
+      currentPg: computed(() => props.currentPage), // Переименовать
+      totalPg: computed(() => props.totalPages), // Переименовать
+      totalCnt: computed(() => props.totalCount), // Переименовать
       startRecord,
       endRecord,
-      totalCount: computed(() => props.totalCount),
       loading,
       filteredFields,
     }

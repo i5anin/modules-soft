@@ -4,10 +4,6 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
 })
 
-const handleResponse = (response) => {
-  return response.data
-}
-
 const handleError = (error) => {
   throw error
 }

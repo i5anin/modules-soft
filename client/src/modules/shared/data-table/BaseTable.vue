@@ -38,7 +38,7 @@
 import StatusDisplay from './StatusDisplay.vue'
 import EditableModal from './EditableModal.vue'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router' // Импортируем useRouter
 
 const props = defineProps({
   fields: { type: Array, required: true },
@@ -49,7 +49,7 @@ const props = defineProps({
   linkPath: { type: Function, default: null },
 })
 
-const router = useRouter()
+const router = useRouter() // Используем router
 const selectedRow = ref(null)
 
 const filteredFields = computed(() =>
@@ -58,14 +58,8 @@ const filteredFields = computed(() =>
 
 const openModal = (row) => {
   selectedRow.value = row
-}
-
-const handleRowClick = (row) => {
   if (props.rowLink && props.linkPath) {
-    const path = props.linkPath(row)
-    if (path) {
-      router.push(path)
-    }
+    router.push(props.linkPath(row)) // Навигация по пути
   }
 }
 </script>

@@ -12,25 +12,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in instruments" :key="generateUniqueId(item)">
+        <tr v-for="item in instruments" :key="generateUniqueId(item)">
           <td class="text-center align-middle">{{ item.t_op }}</td>
           <td>
             <ul class="list-group list-group-flush">
               <li
-                class="list-group-item small p-1"
                 v-for="(comment, idx) in initialComments(item)"
-                :key="idx"
-              >
-                {{ comment }}
-              </li>
-              <li
-                v-if="isExpanded(item)"
+                :key="`initial-${idx}`"
                 class="list-group-item small p-1"
-                v-for="(comment, idx) in additionalComments(item)"
-                :key="idx"
               >
                 {{ comment }}
               </li>
+              <template v-if="isExpanded(item)">
+                <li
+                  v-for="(comment, idx) in additionalComments(item)"
+                  :key="`additional-${idx}`"
+                  class="list-group-item small p-1"
+                >
+                  {{ comment }}
+                </li>
+              </template>
             </ul>
             <div
               v-if="item.comments_operators.length > 10"
@@ -48,9 +49,9 @@
           <td>
             <ul class="list-group list-group-flush">
               <li
-                class="list-group-item"
                 v-for="(segment, idx) in item.path.split(' > ')"
                 :key="idx"
+                class="list-group-item"
               >
                 {{ segment }}
               </li>
@@ -59,9 +60,9 @@
           <td>
             <ul class="list-group list-group-flush list-group-item-warning">
               <li
-                class="list-group-item"
                 v-for="(value, key) in item.property_description"
                 :key="key"
+                class="list-group-item"
               >
                 {{ key }}: <b>{{ value }}</b>
               </li>
@@ -85,6 +86,7 @@
 <script setup>
 import { mdiPlusCircle } from '@mdi/js'
 import SvgIcon from '@jamescoyle/vue-icon'
+import { reactive } from 'vue'
 
 const props = defineProps({
   instruments: {
@@ -97,18 +99,21 @@ const props = defineProps({
   },
 })
 
+// Локальное состояние для управления раскрытием комментариев
+const localCollapseStates = reactive({ ...props.collapseStates })
+
 const generateUniqueId = (item) => {
   return `${item.tool_group_id}-${JSON.stringify(item.property_description)}`
 }
 
 const toggleCollapse = (item) => {
   const id = generateUniqueId(item)
-  props.collapseStates[id] = !props.collapseStates[id]
+  localCollapseStates[id] = !localCollapseStates[id]
 }
 
 const isExpanded = (item) => {
   const id = generateUniqueId(item)
-  return props.collapseStates[id]
+  return localCollapseStates[id]
 }
 
 const initialComments = (item) => {
@@ -131,11 +136,11 @@ const additionalComments = (item) => {
 }
 
 .small {
-  font-size: 0.875rem; /* Соответствует Bootstrap классу .small */
+  font-size: 0.875rem;
 }
 
 .p-1 {
-  padding: 0.25rem; /* Соответствует Bootstrap классу .p-1 */
+  padding: 0.25rem;
 }
 
 @media (max-width: 767px) {
