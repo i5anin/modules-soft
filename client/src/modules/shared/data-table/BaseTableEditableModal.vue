@@ -18,28 +18,49 @@
         </div>
         <div class="modal-body">
           <form @submit.prevent="saveChanges">
-            <div v-for="field in editableFields" :key="field.name" class="mb-3">
+            <div
+              v-for="field in [...editableFields, ...readonlyFields]"
+              :key="field.name"
+              class="mb-3"
+            >
               <label :for="field.name" class="field-label">
                 {{ field.title }}
               </label>
-              <input
-                type="text"
-                class="form-control"
-                v-model="editableData[field.name]"
-                :id="field.name"
-              />
-            </div>
-            <div v-for="field in readonlyFields" :key="field.name" class="mb-3">
-              <label :for="field.name" class="field-label">
-                {{ field.title }}
-              </label>
-              <input
-                type="text"
-                class="form-control"
-                :value="formatValueCard(editableData[field.name], field.name)"
-                :id="field.name"
-                disabled
-              />
+              <template v-if="field.edit">
+                <div v-if="typeof editableData[field.name] === 'boolean'">
+                  <div class="form-check form-switch">
+                    <input
+                      type="checkbox"
+                      v-model="editableData[field.name]"
+                      class="form-check-input"
+                      :id="`switch-${field.name}`"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="`switch-${field.name}`"
+                    >
+                      {{ field.title }}
+                    </label>
+                  </div>
+                </div>
+                <div v-else>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="editableData[field.name]"
+                    :id="field.name"
+                  />
+                </div>
+              </template>
+              <template v-else>
+                <input
+                  type="text"
+                  class="form-control"
+                  :value="formatValueCard(editableData[field.name], field.name)"
+                  :id="field.name"
+                  disabled
+                />
+              </template>
             </div>
           </form>
         </div>
@@ -73,13 +94,12 @@ const emit = defineEmits(['close'])
 
 const editableData = reactive({ ...props.rowData })
 
-const editableFields = computed(() => {
-  return props.fields.filter((field) => field.edit)
-})
-
-const readonlyFields = computed(() => {
-  return props.fields.filter((field) => !field.edit)
-})
+const editableFields = computed(() =>
+  props.fields.filter((field) => field.edit)
+)
+const readonlyFields = computed(() =>
+  props.fields.filter((field) => !field.edit)
+)
 
 const saveChanges = () => {
   console.log('Сохраненные данные:', editableData)
