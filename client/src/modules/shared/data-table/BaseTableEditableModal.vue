@@ -3,7 +3,7 @@
     class="modal"
     tabindex="-1"
     role="dialog"
-    style="display: block; background: rgba(0, 0, 0, 0.5)"
+    style="display: block; background: rgba(0, 0, 0, 0.6)"
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -19,9 +19,9 @@
         <div class="modal-body">
           <form @submit.prevent="saveChanges">
             <div v-for="field in fields" :key="field.name" class="mb-3">
-              <label :for="field.name" class="form-label">{{
-                field.title
-              }}</label>
+              <label :for="field.name" class="field-label">
+                {{ field.title }}
+              </label>
               <input
                 v-if="field.edit"
                 type="text"
@@ -59,6 +59,7 @@
 
 <script setup>
 import { reactive } from 'vue'
+import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
   rowData: { type: Object, required: true },
@@ -69,7 +70,6 @@ const emit = defineEmits(['close'])
 const editableData = reactive({ ...props.rowData })
 
 const saveChanges = () => {
-  // Здесь можно добавить логику для сохранения данных или отправки на сервер
   console.log('Сохраненные данные:', editableData)
   emit('close')
 }

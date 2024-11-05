@@ -2,8 +2,22 @@
   <div>
     <div class="grid-container">
       <div class="p-2" :class="{ collapsed: isCollapsed }">
-        <router-link :to="{ name: 'OrdersTable' }" custom>
-          <button class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light">
+        <router-link
+          :to="{ name: 'OrdersTable' }"
+          v-slot="{ href, isActive, isExactActive }"
+        >
+          <button
+            :class="[
+              'btn',
+              'btn-secondary',
+              'me-3',
+              'mb-2',
+              'btn-sm',
+              'btn-outline-light',
+              { active: isActive },
+            ]"
+            :href="href"
+          >
             <svg-icon type="mdi" :path="path" class="me-1" />
             Назад к заказам
           </button>

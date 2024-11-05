@@ -27,12 +27,6 @@ const routes = [
     name: 'modal-tools',
     component: () => import('./modules/modal-tools/components/index.vue'),
   },
-
-  {
-    path: '/test',
-    name: 'ParentComponent',
-    component: () => import('./test/_ParentComponent.vue'),
-  },
 ]
 
 export default createRouter({

@@ -36,9 +36,9 @@
 
 <script setup>
 import StatusDisplay from './StatusDisplay.vue'
-import EditableModal from './EditableModal.vue'
+import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router' // Импортируем useRouter
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   fields: { type: Array, required: true },
@@ -49,7 +49,7 @@ const props = defineProps({
   linkPath: { type: Function, default: null },
 })
 
-const router = useRouter() // Используем router
+const router = useRouter()
 const selectedRow = ref(null)
 
 const filteredFields = computed(() =>
@@ -57,9 +57,9 @@ const filteredFields = computed(() =>
 )
 
 const openModal = (row) => {
-  selectedRow.value = row
+  selectedRow.value = row // Сохраняем выбранную строку
   if (props.rowLink && props.linkPath) {
-    router.push(props.linkPath(row)) // Навигация по пути
+    router.push(props.linkPath(row)) // Навигация по пути, если нужно
   }
 }
 </script>
