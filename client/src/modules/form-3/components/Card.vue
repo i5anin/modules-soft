@@ -23,9 +23,9 @@
                 :disabled="!field.edit"
                 :id="`floatingTextarea-${field.name}`"
               ></textarea>
-              <label :for="`floatingTextarea-${field.name}`">{{
-                field.title
-              }}</label>
+              <label :for="`floatingTextarea-${field.name}`">
+                {{ field.title }}
+              </label>
             </div>
 
             <div v-else-if="typeof localFieldValues[field.name] === 'boolean'">
