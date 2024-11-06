@@ -58,7 +58,7 @@ import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
 import ServerSideTable from '../../shared/data-table/ServerSideTable.vue'
-import { getOrders } from '../api/orders.js'
+import { getOrders } from '../api/orders.ts'
 import { formatValue } from '@/utils/formatters.ts'
 import { useRoleStore } from '../../main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
@@ -90,19 +90,17 @@ export default {
     endDate.value = today.toISOString().split('T')[0]
 
     const fetchOrders = () => {
-      return getOrders(
-        currentPage.value,
-        itemsPerPage.value,
-        searchQuery.value,
-        null,
-        null,
-        startDate.value,
-        endDate.value,
-        roleStore.selectedTypes,
-        roleStore.selectedRole,
-        sortColumn.value,
-        sortOrder.value
-      )
+      return getOrders({
+        page: currentPage.value,
+        limit: itemsPerPage.value,
+        search: searchQuery.value,
+        sortCol: sortColumn.value,
+        sortDir: sortOrder.value,
+        date1: startDate.value,
+        date2: endDate.value,
+        type: roleStore.selectedTypes,
+        role: roleStore.selectedRole,
+      })
         .then((response) => {
           orders.value = response.table.data
 

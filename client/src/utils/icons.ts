@@ -1,5 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 import {
   faCalendarDays,
@@ -10,11 +11,11 @@ import {
   faCube,
   faCircle,
   faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons' // Добавляем нужные иконки
+} from '@fortawesome/free-solid-svg-icons'
 import { faCalendar } from '@fortawesome/free-regular-svg-icons'
 
 // Добавляем необходимые иконки в библиотеку
-library.add(
+const icons: IconDefinition[] = [
   faXmark,
   faCalendarDays,
   faPlus,
@@ -23,7 +24,9 @@ library.add(
   faCube,
   faCalendar,
   faCircle,
-  faInfoCircle
-)
+  faInfoCircle,
+]
+
+library.add(...icons)
 
 export { FontAwesomeIcon }

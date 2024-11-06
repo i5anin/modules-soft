@@ -61,7 +61,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { Field, Sbor } from './SborNode.types'
 import { useRouter } from 'vue-router'
-import { FontAwesomeIcon } from '@/utils/icons.js'
+import { FontAwesomeIcon } from '@/utils/icons.ts'
 import formatters from '@/utils/formatters.ts'
 import { statuses } from '@/modules/shared/statuses.js'
 

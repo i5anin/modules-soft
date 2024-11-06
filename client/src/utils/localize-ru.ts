@@ -1,11 +1,10 @@
-// custom-ru.js
-import { ru } from 'date-fns/locale'
+import { Locale, ru } from 'date-fns/locale'
 
-const customRuLocale = {
+const customRuLocale: Locale = {
   ...ru,
   localize: {
     ...ru.localize,
-    day: (day) => {
+    day: (day: number): string => {
       const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ']
       return days[day]
     },
