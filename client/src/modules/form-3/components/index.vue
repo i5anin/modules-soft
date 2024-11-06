@@ -92,6 +92,7 @@ const fetchOrderData = async () => {
 
 onMounted(fetchOrderData)
 
+// Исключенные поля для отображения
 const excludedFields = [
   'zag_tech_material_id',
   'ordersnom__id',
@@ -103,40 +104,48 @@ const excludedFields = [
   'nom_id_nom',
 ]
 
-const filteredHeaderFields = computed(
-  () =>
-    selectedOrder.value?.header?.fields.filter(
-      (field) => !excludedFields.includes(field.name)
-    ) || []
+// Фильтрация полей заголовка с учетом новой структуры данных
+const filteredHeaderFields = computed(() =>
+  Object.entries(selectedOrder.value?.header?.fields || {})
+    .filter(([fieldName]) => !excludedFields.includes(fieldName))
+    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
 )
 
-const editableFormFields = computed(() => {
-  return filteredHeaderFields.value.filter((field) => field.edit === true)
-})
+const editableFormFields = computed(() =>
+  filteredHeaderFields.value.filter((field) => field.edit === true)
+)
 
-const readonlyFormFields = computed(() => {
-  return filteredHeaderFields.value.filter((field) => field.edit !== true)
-})
+const readonlyFormFields = computed(() =>
+  filteredHeaderFields.value.filter((field) => field.edit !== true)
+)
 
+// Преобразование значений полей в объект
 const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      selectedOrder.value?.header?.data[0][field.name], // Убрано форматирование
+      selectedOrder.value?.header?.data[0][field.name],
     ])
   )
 )
 
+// Уникальные поля для каждой таблицы (без дублирования)
 const uniqueFields = (fields) => {
   const seen = new Set()
-  return fields.filter((field) => !seen.has(field.name) && seen.add(field.name))
+  return Object.entries(fields || {})
+    .filter(([fieldName]) => {
+      if (seen.has(fieldName)) return false
+      seen.add(fieldName)
+      return true
+    })
+    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
 }
 
 const uniqueTableFields = computed(() =>
-  uniqueFields(selectedOrder.value?.table_cal?.fields || [])
+  uniqueFields(selectedOrder.value?.table_cal?.fields)
 )
 const uniqueTableFieldsStrat = computed(() =>
-  uniqueFields(selectedOrder.value?.strat?.fields || [])
+  uniqueFields(selectedOrder.value?.strat?.fields)
 )
 </script>
 

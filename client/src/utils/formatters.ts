@@ -8,9 +8,7 @@ export function formatValueCard(
   fieldName: string
 ): string | number {
   const field = fieldName.toLowerCase()
-
-  if (field.includes('price') && typeof value === 'number')
-    return formatPrice(value)
+  if (field.includes('price')) return formatPrice(value)
   if (field.includes('date') && typeof value === 'string')
     return formatDate(value)
   if (field.includes('time')) return formatTime(value)
@@ -43,14 +41,15 @@ export function formatTime(dateString: string | number): string {
   return days === 0 ? '' : `${days} дней`
 }
 
-export function formatPrice(price: number): string {
+export function formatPrice(price: number | string): string {
+  const numericPrice = typeof price === 'string' ? parseFloat(price) : price
   const formatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
-  return formatter.format(price)
+  return formatter.format(numericPrice)
 }
 
 export function formatBoolean(value: boolean): string {
