@@ -76,11 +76,11 @@ export default defineComponent({
   },
   props: {
     sbor: {
-      type: Object as () => Sbor,
+      type: Object,
       required: true,
     },
     fields: {
-      type: [Object, Array] as unknown as () => Record<string, Field> | Field[],
+      type: Object,
       required: true,
     },
     depth: {
