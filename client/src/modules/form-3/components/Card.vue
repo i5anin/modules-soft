@@ -72,13 +72,13 @@
                 <div
                   class="field-value"
                   :style="{
-                    color: localFieldValues[field.name] ? '' : '#d8d8d8',
+                    color: formattedFieldValues[field.name] ? '' : '#d8d8d8',
                   }"
                 >
                   <span
-                    v-if="typeof localFieldValues[field.name] !== 'boolean'"
+                    v-if="typeof formattedFieldValues[field.name] !== 'boolean'"
                   >
-                    {{ localFieldValues[field.name] || 'Нет данных' }}
+                    {{ formattedFieldValues[field.name] || 'Нет данных' }}
                   </span>
                   <div
                     v-else
@@ -86,10 +86,10 @@
                   >
                     <input
                       type="checkbox"
-                      v-model="localFieldValues[field.name]"
+                      v-model="formattedFieldValues[field.name]"
                       class="form-check-input"
                       :id="`switch-${field.name}`"
-                      :disabled="!field.edit"
+                      disabled
                     />
                     <label
                       class="form-check-label"
@@ -109,8 +109,8 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
-import { formatValueCard } from '@/utils/formatters.ts' // Импортируйте вашу функцию форматирования
+import { defineProps, ref, computed } from 'vue'
+import { formatValueCard } from '@/utils/formatters.ts'
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
@@ -119,18 +119,20 @@ const props = defineProps({
   fieldValues: Object,
 })
 
-// Создаем локальную реактивную копию fieldValues с форматированием
-const localFieldValues = ref(computeFormattedValues(props.fieldValues))
+// Создаем локальную реактивную копию для редактируемых полей, без форматирования
+const localFieldValues = ref({ ...props.fieldValues })
 
-function computeFormattedValues(values) {
-  return Object.fromEntries(
-    Object.entries(values).map(([key, value]) => [
+// Форматированные значения для отображения только в readonly полях
+const formattedFieldValues = computed(() =>
+  Object.fromEntries(
+    Object.entries(props.fieldValues).map(([key, value]) => [
       key,
-      formatValueCard(value, key), // Применяем форматирование к каждому значению
+      formatValueCard(value, key), // Применяем форматирование только для readonly
     ])
   )
-}
+)
 
+// Функция для вычисления высоты textarea на основе длины текста
 function calculateHeight(text) {
   const lineHeight = 21
   const padding = 10
