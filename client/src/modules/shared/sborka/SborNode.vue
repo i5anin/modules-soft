@@ -61,25 +61,26 @@
   </template>
 </template>
 
-<script>
-import { computed, ref } from 'vue'
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import formatters from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/statuses.js'
+import { Field, Sbor } from './SborNode.types' // Импортируем типы из отдельного файла
 
-export default {
+export default defineComponent({
   name: 'SborNode',
   components: {
     FontAwesomeIcon,
   },
   props: {
     sbor: {
-      type: Object,
+      type: Object as () => Sbor,
       required: true,
     },
     fields: {
-      type: [Object, Array], // Поддержка форматов объект и массив
+      type: [Object, Array] as unknown as () => Record<string, Field> | Field[],
       required: true,
     },
     depth: {
@@ -91,8 +92,7 @@ export default {
     const router = useRouter()
     const isExpanded = ref(false)
 
-    // Преобразуем `fields` в массив, если он приходит как объект
-    const fieldsArray = computed(() => {
+    const fieldsArray = computed<Field[]>(() => {
       return Array.isArray(props.fields)
         ? props.fields
         : Object.keys(props.fields).map((key) => ({
@@ -118,15 +118,15 @@ export default {
       return props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     })
 
-    const formatValue = (value, fieldName) => {
+    const formatValue = (value: any, fieldName: string): string => {
       return formatters.formatValue(value, fieldName)
     }
 
-    const generateTitle = (field) => {
+    const generateTitle = (field: Field): string => {
       return `Поле: ${field.title || 'Нет данных'}`
     }
 
-    const combinedStatuses = computed(() => {
+    const combinedStatuses = computed((): string => {
       const activeStatuses = statuses.filter(
         (status) =>
           props.sbor[status.status] && props.sbor[status.status].trim()
@@ -151,8 +151,8 @@ export default {
       generateTitle,
       firstField,
       combinedStatuses,
-      fieldsArray, // Преобразованный массив полей для `v-for`
+      fieldsArray,
     }
   },
-}
+})
 </script>
