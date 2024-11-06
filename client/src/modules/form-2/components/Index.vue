@@ -2,10 +2,7 @@
   <div>
     <div class="grid-container">
       <div class="p-2" :class="{ collapsed: isCollapsed }">
-        <router-link
-          :to="{ name: 'OrdersTable' }"
-          v-slot="{ href, isActive, isExactActive }"
-        >
+        <router-link :to="{ name: 'OrdersTable' }" v-slot="{ href, isActive }">
           <button
             :class="[
               'btn',
@@ -22,16 +19,15 @@
             Назад к заказам
           </button>
         </router-link>
-
         <!-- Содержимое карточки -->
-        <OrderInfoCard :header="header" />
+        <OrderInfoCard :header="headerData" />
       </div>
 
       <!-- Компонент SborMain занимает оставшееся пространство -->
       <div class="sbor-main">
         <SborMain
-          v-if="nomtable.length > 0"
-          :nomtable="nomtable"
+          v-if="nomTableData.length > 0"
+          :nomtable="nomTableData"
           :tableFields="filteredTableFields"
         />
       </div>
@@ -53,14 +49,16 @@ import SborMain from '@/modules/shared/sborka/SborMain.vue'
 const router = useRouter()
 const roleStore = useRoleStore()
 
-const nomtable = ref([])
-const header = ref({})
-const tableFields = ref([])
+// Данные для заголовка и таблицы
+const nomTableData = ref([])
+const headerData = ref({})
+const tableFields = ref({})
 const isCollapsed = ref(false)
 
 const path = mdiArrowLeft
 const selectedRole = computed(() => roleStore.selectedRole)
 
+// Получение данных заказа
 const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId
   try {
@@ -69,22 +67,31 @@ const fetchOrderData = async () => {
       roleStore.selectedTypes,
       roleStore.selectedRole
     )
-    nomtable.value = response.table.data
-    header.value = response.header
+
+    // Присваиваем данные из API
+    headerData.value = response.header
     tableFields.value = response.table.fields
+    nomTableData.value = response.table.data
   } catch (error) {
     console.error('Ошибка при загрузке заказа:', error)
   }
 }
 
-const filteredTableFields = computed(() =>
-  _.filter(tableFields.value, (field) => !field.name.startsWith('status_'))
-)
+// Преобразование tableFields из объекта в массив для удобства отображения
+const filteredTableFields = computed(() => {
+  return Object.entries(tableFields.value)
+    .filter(([key]) => !key.startsWith('status_'))
+    .map(([key, field]) => ({
+      name: key,
+      ...field,
+    }))
+})
 
 onMounted(() => {
   fetchOrderData()
 })
 
+// Обновление данных при изменении роли пользователя
 watch(selectedRole, () => {
   fetchOrderData()
 })

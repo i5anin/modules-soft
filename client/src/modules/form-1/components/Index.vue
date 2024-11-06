@@ -76,7 +76,7 @@ export default {
 
     const roleStore = useRoleStore()
 
-    // Pagination and Sorting State
+    // Состояние пагинации и сортировки
     const currentPage = ref(1)
     const itemsPerPage = ref(15)
     const totalPages = ref(0)
@@ -105,7 +105,17 @@ export default {
       )
         .then((response) => {
           orders.value = response.table.data
-          tableFields.value = response.table.fields
+
+          // Преобразование `fields` из объекта в массив
+          tableFields.value = Object.entries(response.table.fields).map(
+            ([key, field]) => ({
+              name: key,
+              title: field.title,
+              width: field.width,
+              edit: field.edit || false,
+            })
+          )
+
           totalCount.value = response.header.total_count
           totalPages.value = Math.ceil(totalCount.value / itemsPerPage.value)
         })
@@ -131,7 +141,6 @@ export default {
       return fields
     })
 
-    // Определение текущего диапазона записей
     const startRecord = computed(
       () => (currentPage.value - 1) * itemsPerPage.value + 1
     )
@@ -139,7 +148,6 @@ export default {
       Math.min(currentPage.value * itemsPerPage.value, totalCount.value)
     )
 
-    // Define columns for DataTable component
     const tableColumns = computed(() => {
       return filteredTableFields.value.map((field) => {
         let column = {
@@ -148,10 +156,9 @@ export default {
           sortable: true,
         }
 
-        // Custom cell component for specific fields
         if (field.name === 'statuses') {
-          column.cellComponent = 'StatusCell' // Use component name as string
-          column.sortable = false // Disable sorting on custom components if needed
+          column.cellComponent = 'StatusCell'
+          column.sortable = false
         } else if (field.name === 'clients__name') {
           column.cellComponent = 'ClientNameCell'
         }
@@ -159,7 +166,6 @@ export default {
       })
     })
 
-    // Components for custom cell rendering
     const StatusCell = {
       name: 'StatusCell',
       props: ['row'],
@@ -194,39 +200,34 @@ export default {
                   </span>`,
     }
 
-    // Handle row click from DataTable component
     const handleRowClick = (row) => {
       router.push({ name: 'OrderDetails', params: { orderId: row.id } })
     }
 
-    // Handle page change event
     const handlePageChange = (page) => {
       currentPage.value = page
       fetchOrders()
     }
 
-    // Handle sort change event
     const handleSortChange = ({ column, order }) => {
       sortColumn.value = column
       sortOrder.value = order
-      currentPage.value = 1 // Reset to first page
+      currentPage.value = 1
       fetchOrders()
     }
 
-    // Handle page size change event
     const handlePageSizeChange = (size) => {
       itemsPerPage.value = size
-      currentPage.value = 1 // Reset to first page
+      currentPage.value = 1
       fetchOrders()
     }
 
     const handleSearchChange = (query) => {
       searchQuery.value = query
-      currentPage.value = 1 // Обнуление страницы для нового поиска
-      fetchOrders() // Загрузка данных с новым поисковым запросом
+      currentPage.value = 1
+      fetchOrders()
     }
 
-    // Watch for filters change
     watch(
       [
         startDate,

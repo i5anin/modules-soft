@@ -1,4 +1,3 @@
-<!-- Компонент SborNode с фиксированной шириной и высотой для ячеек -->
 <template>
   <tr
     @click.stop="toggle"
@@ -20,8 +19,9 @@
       <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
 
+    <!-- Теперь `fieldsArray` содержит массив объектов полей -->
     <td
-      v-for="field in fields"
+      v-for="field in fieldsArray"
       :key="field.name"
       style="cursor: pointer; font-size: 12px"
     >
@@ -79,7 +79,7 @@ export default {
       required: true,
     },
     fields: {
-      type: Array,
+      type: [Object, Array], // Поддержка форматов объект и массив
       required: true,
     },
     depth: {
@@ -90,7 +90,18 @@ export default {
   setup(props) {
     const router = useRouter()
     const isExpanded = ref(false)
-    const firstField = ref(props.fields[0])
+
+    // Преобразуем `fields` в массив, если он приходит как объект
+    const fieldsArray = computed(() => {
+      return Array.isArray(props.fields)
+        ? props.fields
+        : Object.keys(props.fields).map((key) => ({
+            name: key,
+            ...props.fields[key],
+          }))
+    })
+
+    const firstField = computed(() => fieldsArray.value[0])
 
     const toggle = () => {
       if (hasChildren.value) {
@@ -103,16 +114,16 @@ export default {
       router.push({ name: 'OrderDetailsDetails', params: { id } })
     }
 
-    const hasChildren = ref(
-      props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
-    )
+    const hasChildren = computed(() => {
+      return props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
+    })
 
     const formatValue = (value, fieldName) => {
       return formatters.formatValue(value, fieldName)
     }
 
     const generateTitle = (field) => {
-      return `Поле: ${field.title || 'Ошибка нет поля'}\n`
+      return `Поле: ${field.title || 'Нет данных'}`
     }
 
     const combinedStatuses = computed(() => {
@@ -140,6 +151,7 @@ export default {
       generateTitle,
       firstField,
       combinedStatuses,
+      fieldsArray, // Преобразованный массив полей для `v-for`
     }
   },
 }

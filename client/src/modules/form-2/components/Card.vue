@@ -8,15 +8,15 @@
       </div>
       <div class="card-body p-2">
         <div class="row g-3">
-          <div v-for="field in allFields" :key="field.name" class="col-md-6">
+          <div v-for="(field, name) in allFields" :key="name" class="col-md-6">
             <div class="field-label">{{ field.title }}</div>
             <div
               class="field-value"
               :style="{
-                color: fieldValues[field.name] ? '' : '#d8d8d8',
+                color: fieldValues[name] ? '' : '#d8d8d8',
               }"
             >
-              {{ fieldValues[field.name] || 'Нет данных' }}
+              {{ fieldValues[name] || 'Нет данных' }}
             </div>
           </div>
         </div>
@@ -49,40 +49,46 @@ export default defineComponent({
   setup(props) {
     const mdiFormatListBulletedTypeRef = ref(mdiFormatListBulletedType)
 
-    const commentFields = computed(() =>
-      props.header.fields
-        ? props.header.fields.filter((field) => field.name.includes('comments'))
-        : []
-    )
+    // Подразделяем поля на основные и комментарии
+    const commentFields = computed(() => {
+      return Object.entries(props.header.fields || {})
+        .filter(([name]) => name.includes('comments'))
+        .map(([name, field]) => ({ name, ...field }))
+    })
 
-    const allFields = computed(() =>
-      props.header.fields
-        ? props.header.fields.filter(
-            (field) => !field.name.includes('comments')
-          )
-        : []
-    )
+    const allFields = computed(() => {
+      return Object.entries(props.header.fields || {})
+        .filter(([name]) => !name.includes('comments'))
+        .reduce((acc, [name, field]) => {
+          acc[name] = field
+          return acc
+        }, {})
+    })
 
+    // Реактивный объект для хранения значений полей
     const fieldValues = reactive({})
 
+    // Обновление fieldValues на основе props.header.data
     const updateFieldValues = () => {
       Object.assign(
         fieldValues,
         Object.fromEntries(
-          [...allFields.value, ...commentFields.value].map((field) => [
-            field.name,
-            formatterFormatValue(props.header.data[field.name], field.name),
+          Object.keys(props.header.fields || {}).map((name) => [
+            name,
+            formatterFormatValue(props.header.data?.[name] ?? null, name),
           ])
         )
       )
     }
 
+    // Наблюдаем за изменениями в props.header и обновляем fieldValues
     watch(
       () => props.header,
       () => updateFieldValues(),
       { immediate: true }
     )
 
+    // Комментарии обрабатываются отдельно
     const fieldValuesComputed = computed(() => fieldValues)
 
     return {
