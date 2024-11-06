@@ -1,10 +1,7 @@
 <template>
   <tr
     @click.stop="toggle"
-    :class="{
-      'table-info': isExpanded,
-      'fw-bold': isExpanded,
-    }"
+    :class="{ 'table-info': isExpanded, 'fw-bold': isExpanded }"
     style="table-layout: fixed"
   >
     <td :style="{ width: '40px', textAlign: 'center' }">
@@ -19,7 +16,6 @@
       <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
 
-    <!-- Теперь `fieldsArray` содержит массив объектов полей -->
     <td
       v-for="field in fieldsArray"
       :key="field.name"
@@ -67,32 +63,20 @@ import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import formatters from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/statuses.js'
-import { Field, Sbor } from './SborNode.types' // Импортируем типы из отдельного файла
 
 export default defineComponent({
   name: 'SborNode',
-  components: {
-    FontAwesomeIcon,
-  },
+  components: { FontAwesomeIcon },
   props: {
-    sbor: {
-      type: Object,
-      required: true,
-    },
-    fields: {
-      type: Object,
-      required: true,
-    },
-    depth: {
-      type: Number,
-      default: 0,
-    },
+    sbor: { type: Object, required: true },
+    fields: { type: [Object, Array], required: true },
+    depth: { type: Number, default: 0 },
   },
   setup(props) {
     const router = useRouter()
     const isExpanded = ref(false)
 
-    const fieldsArray = computed<Field[]>(() => {
+    const fieldsArray = computed(() => {
       return Array.isArray(props.fields)
         ? props.fields
         : Object.keys(props.fields).map((key) => ({
@@ -104,42 +88,39 @@ export default defineComponent({
     const firstField = computed(() => fieldsArray.value[0])
 
     const toggle = () => {
-      if (hasChildren.value) {
-        isExpanded.value = !isExpanded.value
-      }
+      if (hasChildren.value) isExpanded.value = !isExpanded.value
     }
 
     const handleRowClick = () => {
-      const id = props.sbor.ordersnom_id
-      router.push({ name: 'OrderDetailsDetails', params: { id } })
+      router.push({
+        name: 'OrderDetailsDetails',
+        params: { id: props.sbor.ordersnom_id },
+      })
     }
 
-    const hasChildren = computed(() => {
-      return props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
-    })
+    const hasChildren = computed(
+      () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
+    )
 
-    const formatValue = (value: any, fieldName: string): string => {
-      return formatters.formatValue(value, fieldName)
-    }
+    const formatValue = (value: any, fieldName: string) =>
+      formatters.formatValue(value, fieldName)
 
-    const generateTitle = (field: Field): string => {
-      return `Поле: ${field.title || 'Нет данных'}`
-    }
+    const generateTitle = (field: any, sbor: any) =>
+      `Поле: ${field.title || 'Нет данных'}`
 
-    const combinedStatuses = computed((): string => {
+    const combinedStatuses = computed(() => {
       const activeStatuses = statuses.filter(
         (status) =>
           props.sbor[status.status] && props.sbor[status.status].trim()
       )
-      if (activeStatuses.length > 0) {
-        return activeStatuses
-          .map(
-            (s) => `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
-          )
-          .join('')
-      } else {
-        return ''
-      }
+      return activeStatuses.length > 0
+        ? activeStatuses
+            .map(
+              (s) =>
+                `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
+            )
+            .join('')
+        : ''
     })
 
     return {

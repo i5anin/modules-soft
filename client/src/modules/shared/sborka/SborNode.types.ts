@@ -1,14 +1,12 @@
-// SborNode.types.ts
+// В файле SborNode.types.ts
 
-// Интерфейс для данных Sbor
 export interface Sbor {
   is_sbor: boolean
   ordersnom_id: number
-  sbor_tree?: Sbor[]
-  [key: string]: any // Динамическое свойство для других полей
+  sbor_tree?: Sbor[] // Рекурсивное определение, чтобы поддерживать вложенные элементы
+  [key: string]: any // Разрешаем дополнительные свойства
 }
 
-// Интерфейс для полей (fields)
 export interface Field {
   name: string
   title: string
