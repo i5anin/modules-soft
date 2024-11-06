@@ -1,5 +1,5 @@
-<!-- Компонент SborNode с фиксированной шириной и высотой для ячеек -->
 <template>
+  <!-- Строка для текущего элемента `sbor` -->
   <tr
     @click.stop="toggle"
     :class="{
@@ -8,6 +8,7 @@
     }"
     style="table-layout: fixed"
   >
+    <!-- Колонка для иконки раскрытия дерева -->
     <td :style="{ width: '40px', textAlign: 'center' }">
       <span v-if="hasChildren" title="развернуть/свернуть">
         <font-awesome-icon
@@ -16,40 +17,45 @@
         />
       </span>
     </td>
+    <!-- Колонка для статусов -->
     <td>
       <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
 
+    <!-- Поля, отображаемые для текущего `sbor`, с учетом структуры `fields` -->
     <td
-      v-for="field in fields"
-      :key="field.name"
+      v-for="[fieldName, field] in Object.entries(fields)"
+      :key="fieldName"
       style="cursor: pointer; font-size: 12px"
     >
       <span
-        v-if="field === firstField"
+        v-if="fieldName === firstFieldName"
         style="display: inline-flex; align-items: center; min-width: 100%"
         :style="{ paddingLeft: `${depth * 35}px` }"
       >
+        <!-- Иконка для обозначения типа элемента -->
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
           class="icon-sm ms-2 me-2"
         />
-        <span>{{ formatValue(sbor[field.name], field.name) }}</span>
+        <span>{{ formatValue(sbor[fieldName], fieldName) }}</span>
         <font-awesome-icon
           :icon="['fas', 'circle-info']"
           :style="{ color: 'green' }"
           class="icon-sm ms-2 me-2"
-          @click="handleRowClick"
+          @click.stop="handleRowClick"
         />
       </span>
+      <!-- Остальные поля -->
 
-      <span v-else :title="generateTitle(field, sbor)" style="font-size: 13px">
-        {{ formatValue(sbor[field.name], field.name) }}
+      <span v-else :title="generateTitle(field)" style="font-size: 13px">
+        {{ formatValue(sbor[fieldName], fieldName) }}
       </span>
     </td>
   </tr>
 
+  <!-- Рекурсивное отображение для каждого элемента в `sbor_tree` -->
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="child in sbor.sbor_tree"
@@ -79,7 +85,7 @@ export default {
       required: true,
     },
     fields: {
-      type: Array,
+      type: Object, // Теперь fields — объект, а не массив
       required: true,
     },
     depth: {
@@ -90,7 +96,7 @@ export default {
   setup(props) {
     const router = useRouter()
     const isExpanded = ref(false)
-    const firstField = ref(props.fields[0])
+    const firstFieldName = Object.keys(props.fields)[0] // Имя первого поля
 
     const toggle = () => {
       if (hasChildren.value) {
@@ -103,16 +109,16 @@ export default {
       router.push({ name: 'OrderDetailsDetails', params: { id } })
     }
 
-    const hasChildren = ref(
-      props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
-    )
+    const hasChildren = computed(() => {
+      return props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
+    })
 
     const formatValue = (value, fieldName) => {
       return formatters.formatValue(value, fieldName)
     }
 
     const generateTitle = (field) => {
-      return `Поле: ${field.title || 'Ошибка нет поля'}\n`
+      return `Поле: ${field.title || 'Нет данных'}`
     }
 
     const combinedStatuses = computed(() => {
@@ -138,7 +144,7 @@ export default {
       hasChildren,
       formatValue,
       generateTitle,
-      firstField,
+      firstFieldName,
       combinedStatuses,
     }
   },
