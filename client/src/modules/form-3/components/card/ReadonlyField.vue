@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import { defineProps, computed } from 'vue'
-import type { Field } from '../types'
+import type { Field } from '../../types'
 
 const props = defineProps<{
   field: Field

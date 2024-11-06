@@ -44,8 +44,8 @@
 
 <script lang="ts" setup>
 import { computed, defineProps } from 'vue'
-import { calculateHeight } from '../utils/calculateHeight'
-import type { Field } from '../types'
+import { calculateHeight } from '../../utils/calculateHeight'
+import type { Field } from '../../types'
 
 const props = defineProps<{
   field: Field
