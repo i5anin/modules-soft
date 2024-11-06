@@ -40,7 +40,7 @@
         />
       </span>
 
-      <span v-else :title="generateTitle(field, sbor)" style="font-size: 13px">
+      <span v-else :title="generateTitle(field)" style="font-size: 13px">
         {{ formatValue(sbor[field.name], field.name) }}
       </span>
     </td>
@@ -49,7 +49,7 @@
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="child in sbor.sbor_tree"
-      :key="child.sbor_orders__id"
+      :key="child.ordersnom_id"
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
@@ -59,17 +59,21 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
+import { Field, Sbor } from './SborNode.types'
 import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import formatters from '@/utils/formatters.js'
+import formatters from '@/utils/formatters.ts'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default defineComponent({
   name: 'SborNode',
   components: { FontAwesomeIcon },
   props: {
-    sbor: { type: Object, required: true },
-    fields: { type: [Object, Array], required: true },
+    sbor: { type: Object as () => Sbor, required: true },
+    fields: {
+      type: [Object, Array] as () => Record<string, Field> | Field[],
+      required: true,
+    },
     depth: { type: Number, default: 0 },
   },
   setup(props) {
@@ -101,11 +105,12 @@ export default defineComponent({
     const hasChildren = computed(
       () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
+    const formatValue = (
+      value: string | number | boolean | null,
+      fieldName: string
+    ) => formatters.formatValue(value, fieldName)
 
-    const formatValue = (value: any, fieldName: string) =>
-      formatters.formatValue(value, fieldName)
-
-    const generateTitle = (field: any, sbor: any) =>
+    const generateTitle = (field: Field) =>
       `Поле: ${field.title || 'Нет данных'}`
 
     const combinedStatuses = computed(() => {

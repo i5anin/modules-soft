@@ -83,7 +83,7 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
-import { formatValueCard } from '@/utils/formatters.js'
+import { formatValueCard } from '@/utils/formatters.ts'
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({

@@ -109,8 +109,8 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue'
-import { formatValueCard } from '@/utils/formatters.js' // Импортируйте вашу функцию форматирования
+import { defineProps, ref } from 'vue'
+import { formatValueCard } from '@/utils/formatters.ts' // Импортируйте вашу функцию форматирования
 import '@/assets/FormFloatingField.css'
 
 const props = defineProps({

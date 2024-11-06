@@ -38,7 +38,7 @@ import StatusDisplay from './StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { formatValue } from '@/utils/formatters.js' // Импортируйте вашу функцию форматирования
+import { formatValue } from '@/utils/formatters.ts' // Импортируйте вашу функцию форматирования
 
 const props = defineProps({
   fields: { type: Array, required: true },
