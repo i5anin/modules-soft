@@ -4,8 +4,7 @@
     <table class="table table-striped table-sm mt-3 table-bordered table-hover">
       <thead>
         <tr>
-          <!-- Теперь ключи фильтруются из объекта, а не массива -->
-          <th v-for="(field, fieldName) in filteredFields" :key="fieldName">
+          <th v-for="field in filteredFields" :key="field.name">
             {{ field.title }}
           </th>
         </tr>
@@ -17,10 +16,9 @@
           @click="openModal(row)"
           :style="rowLink ? 'cursor: pointer;' : ''"
         >
-          <!-- Используем fieldName для доступа к данным строки -->
-          <td v-for="(field, fieldName) in filteredFields" :key="fieldName">
-            <StatusDisplay v-if="fieldName === 'statuses'" :row="row" />
-            <span v-else>{{ formatValue(row[fieldName], fieldName) }}</span>
+          <td v-for="field in filteredFields" :key="field.name">
+            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
           </td>
         </tr>
       </tbody>
@@ -40,10 +38,10 @@ import StatusDisplay from './StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { formatValue } from '@/utils/formatters.ts'
+import { formatValue } from '@/utils/formatters.ts' // Импортируйте вашу функцию форматирования
 
 const props = defineProps({
-  fields: { type: Object, required: true }, // Изменяем на Object для нового формата
+  fields: { type: Array, required: true },
   data: { type: Array, required: true },
   tableTitle: { type: String, default: 'Таблица' },
   excluded: { type: Array, default: () => [] },
@@ -54,20 +52,14 @@ const props = defineProps({
 const router = useRouter()
 const selectedRow = ref(null)
 
-// Фильтрация полей с учетом новой структуры
-const filteredFields = computed(() => {
-  const fields = props.fields
-  return Object.fromEntries(
-    Object.entries(fields).filter(
-      ([fieldName]) => !props.excluded.includes(fieldName)
-    )
-  )
-})
+const filteredFields = computed(() =>
+  props.fields.filter((field) => !props.excluded.includes(field.name))
+)
 
 const openModal = (row) => {
-  selectedRow.value = row
+  selectedRow.value = row // Сохраняем выбранную строку
   if (props.rowLink && props.linkPath) {
-    router.push(props.linkPath(row))
+    router.push(props.linkPath(row)) // Навигация по пути, если нужно
   }
 }
 </script>
