@@ -8,7 +8,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Детали строки</h5>
+          <h5 class="modal-title">Редактирование поля "{{ field.title }}"</h5>
           <button
             type="button"
             class="btn-close"
@@ -18,47 +18,30 @@
         </div>
         <div class="modal-body">
           <form @submit.prevent="saveChanges">
-            <div
-              v-for="field in [...editableFields, ...readonlyFields]"
-              :key="field.name"
-              class="mb-3"
-            >
+            <div class="mb-3">
               <label :for="field.name" class="field-label">
                 {{ field.title }}
               </label>
-              <template v-if="field.edit">
-                <div v-if="typeof editableData[field.name] === 'boolean'">
-                  <div class="form-check form-switch">
-                    <input
-                      type="checkbox"
-                      v-model="editableData[field.name]"
-                      class="form-check-input"
-                      :id="`switch-${field.name}`"
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="`switch-${field.name}`"
-                    >
-                      {{ field.title }}
-                    </label>
-                  </div>
-                </div>
-                <div v-else>
+              <!-- Проверяем, является ли поле булевым -->
+              <template v-if="isBooleanField">
+                <div class="form-check">
                   <input
-                    type="text"
-                    class="form-control"
+                    type="checkbox"
+                    class="form-check-input"
                     v-model="editableData[field.name]"
                     :id="field.name"
                   />
+                  <label class="form-check-label" :for="field.name">
+                    {{ field.title }}
+                  </label>
                 </div>
               </template>
               <template v-else>
                 <input
                   type="text"
                   class="form-control"
-                  :value="formatValueCard(editableData[field.name], field.name)"
+                  v-model="editableData[field.name]"
                   :id="field.name"
-                  disabled
                 />
               </template>
             </div>
@@ -83,25 +66,21 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
-import { formatValueCard } from '@/utils/formatters.ts'
-import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
   rowData: { type: Object, required: true },
-  fields: { type: Array, required: true },
+  field: { type: Object, required: true },
 })
 const emit = defineEmits(['close'])
 
 const editableData = reactive({ ...props.rowData })
 
-const editableFields = computed(() =>
-  props.fields.filter((field) => field.edit)
-)
-const readonlyFields = computed(() =>
-  props.fields.filter((field) => !field.edit)
-)
+const isBooleanField = computed(() => {
+  return typeof editableData[props.field.name] === 'boolean'
+})
 
 const saveChanges = () => {
+  // Логика сохранения изменений
   console.log('Сохраненные данные:', editableData)
   emit('close')
 }
