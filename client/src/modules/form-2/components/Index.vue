@@ -38,7 +38,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrderById } from '../api/orders.js'
+import { getOrderById } from '../api/nom_list.ts'
 import OrderInfoCard from './Card.vue'
 import { useRoleStore } from '../../main/store/index.js'
 import SvgIcon from '@jamescoyle/vue-icon'
@@ -60,14 +60,10 @@ const selectedRole = computed(() => roleStore.selectedRole)
 // Получение данных заказа
 const fetchOrderData = async () => {
   const orderId = router.currentRoute.value.params.orderId
+  const type = roleStore.selectedTypes
+  const role = roleStore.selectedRole
   try {
-    const response = await getOrderById(
-      orderId,
-      roleStore.selectedTypes,
-      roleStore.selectedRole
-    )
-
-    // Присваиваем данные из API
+    const response = await getOrderById({ orderId, type, role })
     headerData.value = response.header
     tableFields.value = response.table.fields
     nomTableData.value = response.table.data
