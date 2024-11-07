@@ -55,25 +55,39 @@
         :tableTitle="selectedOrder.strat?.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
+
+      <!-- Таблица данных по TPD -->
+      <TpdTable
+        v-if="
+          selectedOrder &&
+          !selectedOrder.tpd?.error &&
+          selectedOrder.tpd?.data?.length
+        "
+        :fields="uniqueTableFieldsTpd"
+        :data="selectedOrder.tpd?.data"
+        :tableTitle="selectedOrder.tpd?.title"
+      />
     </div>
   </div>
 </template>
 
-<script setup>
-import { computed, onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
-import { getModalOrderById } from '../api/orders.js'
+import { getModalOrderById } from '../api/nom_info.ts'
 import { useRoleStore } from '@/modules/main/store/index.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
+import TpdTable from '@/modules/shared/data-table/BaseTable.vue'
+import type { ModalOrder } from '../types' // Подключите тип ModalOrder
 
 const roleStore = useRoleStore()
 const route = useRoute()
 const id = ref(route.params.id)
-const selectedOrder = ref(null)
+const selectedOrder = ref<ModalOrder | null>(null)
 
 const fetchOrderData = async () => {
   if (id.value) {
@@ -130,7 +144,7 @@ const fieldValues = computed(() =>
 )
 
 // Уникальные поля для каждой таблицы (без дублирования)
-const uniqueFields = (fields) => {
+const uniqueFields = (fields: Record<string, any>) => {
   const seen = new Set()
   return Object.entries(fields || {})
     .filter(([fieldName]) => {
@@ -146,6 +160,9 @@ const uniqueTableFields = computed(() =>
 )
 const uniqueTableFieldsStrat = computed(() =>
   uniqueFields(selectedOrder.value?.strat?.fields)
+)
+const uniqueTableFieldsTpd = computed(() =>
+  uniqueFields(selectedOrder.value?.tpd?.fields)
 )
 </script>
 

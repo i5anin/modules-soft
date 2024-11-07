@@ -19,7 +19,6 @@ export interface Order {
     createdAt: string
     updatedAt: string
     type: string
-    // другие поля для заголовка, если присутствуют
   }
   table: {
     fields: Record<string, { label: string; type: string; [key: string]: any }>

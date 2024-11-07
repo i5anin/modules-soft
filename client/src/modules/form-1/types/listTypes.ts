@@ -21,5 +21,4 @@ export interface Order {
   createdAt: string
   updatedAt: string
   type: string
-  // добавьте другие поля, если они присутствуют в ответе API
 }
