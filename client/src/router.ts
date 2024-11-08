@@ -5,18 +5,18 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'OrdersTable',
-    component: () => import('@/modules/orders/form-1/components'),
+    component: () => import('@/modules/orders/form-1/components/index.vue'),
   },
   {
     path: '/:orderId',
     name: 'OrderDetails',
-    component: () => import('@/modules/orders/form-2/components'),
+    component: () => import('@/modules/orders/form-2/components/index.vue'),
     props: true, // позволяет передавать orderId как параметр
   },
   {
     path: '/:orderId/:id',
     name: 'OrderDetailsDetails',
-    component: () => import('@/modules/orders/form-3/components'),
+    component: () => import('@/modules/orders/form-3/components/index.vue'),
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
@@ -28,7 +28,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/modal-tools-test/:no/:nomId',
     name: 'modal-tools',
-    component: () => import('@/modules/orders/modal-tools/components'),
+    component: () =>
+      import('@/modules/orders/modal-tools/components/index.vue'),
     props: true, // передача no и nomId как параметров
   },
 ]
