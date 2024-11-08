@@ -28,8 +28,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/modal-tools-test/:no/:nomId',
     name: 'modal-tools',
-    component: () =>
-      import('@/modules/orders/modal-tools/components/index.vue'),
+    component: () => import('@/modules/orders/modal-tools/components'),
     props: true, // передача no и nomId как параметров
   },
 ]
