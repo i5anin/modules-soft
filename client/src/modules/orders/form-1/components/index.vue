@@ -57,10 +57,10 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
-import ServerSideTable from '../../shared/data-table/ServerSideTable.vue'
 import { getOrders } from '../api/list.ts'
 import { formatValue } from '@/utils/formatters.ts'
-import { useRoleStore } from '../../main/store/index.js'
+import ServerSideTable from '@/modules/shared/data-table/ServerSideTable.vue'
+import { useRoleStore } from '@/modules/_main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
