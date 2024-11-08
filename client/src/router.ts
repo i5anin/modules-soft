@@ -20,6 +20,13 @@ const routes: Array<RouteRecordRaw> = [
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
+    path: '/nomenclature',
+    name: 'Nomenclature',
+    component: () =>
+      import('@/modules/nomenclature/form-1/components/index.vue'),
+    props: true,
+  },
+  {
     path: '/sborka-test/:id',
     name: 'SborkaDetails',
     component: () => import('@/modules/shared/sborka/SborMain.vue'),

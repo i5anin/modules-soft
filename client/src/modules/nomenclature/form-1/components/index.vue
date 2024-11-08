@@ -40,7 +40,7 @@
           :sort-column="sortColumn"
           :sort-order="sortOrder"
           :format-value="formatValue"
-          :custom-components="{ StatusCell, ClientNameCell }"
+          :custom-components="{ ClientNameCell }"
           @row-click="handleRowClick"
           @page-change="handlePageChange"
           @sort-change="handleSortChange"
@@ -58,10 +58,9 @@ import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
 import ServerSideTable from '@/modules/shared/data-table/ServerSideTable.vue'
-import { getOrders } from '../api/list.ts'
+import { getOrders } from '../api/nom_dir.ts'
 import { formatValue } from '@/utils/formatters.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
   components: { DateRangeFilter, ServerSideTable },
@@ -76,9 +75,8 @@ export default {
 
     const roleStore = useRoleStore()
 
-    // Состояние пагинации и сортировки
     const currentPage = ref(1)
-    const itemsPerPage = ref(15)
+    const itemsPerPage = ref(1) //15
     const totalPages = ref(0)
     const sortColumn = ref('id')
     const sortOrder = ref('desc')
@@ -89,106 +87,67 @@ export default {
     startDate.value = threeMonthsAgo.toISOString().split('T')[0]
     endDate.value = today.toISOString().split('T')[0]
 
-    const fetchOrders = () => {
-      return getOrders({
-        page: currentPage.value,
-        limit: itemsPerPage.value,
-        search: searchQuery.value,
-        sortCol: sortColumn.value,
-        sortDir: sortOrder.value,
-        date1: startDate.value,
-        date2: endDate.value,
-        type: roleStore.selectedTypes,
-        role: roleStore.selectedRole,
-      })
-        .then((response) => {
-          orders.value = response.table.data
+    const fetchOrders = async () => {
+      try {
+        const response = await getOrders({
+          page: currentPage.value,
+          limit: itemsPerPage.value,
+          search: searchQuery.value,
+          sortCol: sortColumn.value,
+          sortDir: sortOrder.value,
+          date1: startDate.value,
+          date2: endDate.value,
+          type: roleStore.selectedTypes,
+          role: roleStore.selectedRole,
+        })
 
-          // Преобразование `fields` из объекта в массив
-          tableFields.value = Object.entries(response.table.fields).map(
+        if (response && response.table) {
+          orders.value = response.table.data || []
+          tableFields.value = Object.entries(response.table.fields || {}).map(
             ([key, field]) => ({
               name: key,
               title: field.title,
               width: field.width,
-              edit: field.edit || false,
+              type: field.type || 'string', // Убедитесь, что у каждого поля есть тип
+              permissions: field.permissions || { read: true, update: false },
             })
-          )
+          );
 
-          totalCount.value = response.header.total_count
+          totalCount.value = response.header.total_count || 0
           totalPages.value = Math.ceil(totalCount.value / itemsPerPage.value)
-        })
-        .catch((error) => {
-          console.error('Ошибка при загрузке заказов:', error)
+        } else {
           orders.value = []
+          totalCount.value = 0
           totalPages.value = 0
-        })
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке заказов:', error)
+        orders.value = []
+        totalCount.value = 0
+        totalPages.value = 0
+      }
     }
 
     const filteredTableFields = computed(() => {
-      const fields = _.filter(
-        tableFields.value,
-        (field) =>
-          !field.name.startsWith('ordersnom__status_') &&
-          field.name !== 'id' &&
-          field.name !== 'goz'
+      return _.cloneDeep(tableFields.value).filter(
+        (field) => field.name !== 'id' && field.name !== 'goz'
       )
-      fields.splice(1, 0, { name: 'statuses', title: 'Статусы' })
-      fields.forEach((field) => {
-        if (field.name === 'status_ready') field.title = ''
-      })
-      return fields
     })
-
-    const startRecord = computed(
-      () => (currentPage.value - 1) * itemsPerPage.value + 1
-    )
-    const endRecord = computed(() =>
-      Math.min(currentPage.value * itemsPerPage.value, totalCount.value)
-    )
 
     const tableColumns = computed(() => {
       return filteredTableFields.value.map((field) => {
-        let column = {
+        console.log(field.name, field.type) // Логируем каждое поле по имени и типу
+        console.log('---')
+        return {
           name: field.name,
           title: field.title,
           sortable: true,
+          format: (value) => formatValue(value, field.type),
         }
-
-        if (field.name === 'statuses') {
-          column.cellComponent = 'StatusCell'
-          column.sortable = false
-        } else if (field.name === 'clients__name') {
-          column.cellComponent = 'ClientNameCell'
-        }
-        return column
       })
     })
 
-    const StatusCell = {
-      name: 'StatusCell',
-      props: ['row'],
-      template: `<span v-html="renderStatus(row)"></span>`,
-      setup() {
-        const renderStatus = (row) => {
-          const activeStatuses = _.filter(
-            statuses,
-            (s) => row[s.status] && row[s.status].trim() !== ''
-          )
 
-          if (activeStatuses.length > 0) {
-            return activeStatuses
-              .map(
-                (s) =>
-                  `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
-              )
-              .join('')
-          } else {
-            return ''
-          }
-        }
-        return { renderStatus }
-      },
-    }
 
     const ClientNameCell = {
       name: 'ClientNameCell',
@@ -262,9 +221,6 @@ export default {
       sortOrder,
       itemsPerPage,
       totalCount,
-      startRecord,
-      endRecord,
-      StatusCell,
       ClientNameCell,
     }
   },
