@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import StatusDisplay from '@/modules/shared/shared/StatusDisplay.vue'
+import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'

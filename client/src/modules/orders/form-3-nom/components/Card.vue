@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { computed, defineProps, ref } from 'vue'
-import { formatValueCard } from '@/utils/formatters-2'
+import { formatValue } from '@/utils/formatters'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
 import type { Field, FieldValues } from '../types'
@@ -61,7 +61,7 @@ const formattedFieldValues = computed(() =>
   Object.fromEntries(
     Object.entries(props.fieldValues).map(([key, value]) => [
       key,
-      formatValueCard(value, key),
+      formatValue(value, key),
     ])
   )
 )

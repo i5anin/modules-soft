@@ -73,9 +73,9 @@
 
 <script>
 import { ref, computed } from 'vue'
-import SearchBar from '../shared/SearchBar.vue'
-import Pagination from '../shared/Pagination.vue'
-import StatusDisplay from '../shared/StatusDisplay.vue'
+import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
+import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
+import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 
 export default {
   name: 'DataTable',

@@ -59,7 +59,7 @@ import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
 import { getOrders } from '../api/list.ts'
 import { formatValue } from '@/utils/formatters-2.ts'
-import ServerSideTable from '@/modules/shared/server-side-data-table/ServerSideTable.vue'
+import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
 

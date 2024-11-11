@@ -5,25 +5,27 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/orders',
     name: 'OrdersTable',
-    component: () => import('@/modules/orders/form-1/components/index.vue'),
+    component: () =>
+      import('@/modules/orders/form-1-orders/components/index.vue'),
   },
   {
     path: '/orders/:orderId',
     name: 'OrderDetails',
-    component: () => import('@/modules/orders/form-2/components/index.vue'),
+    component: () =>
+      import('@/modules/orders/form-2-noms/components/index.vue'),
     props: true, // позволяет передавать orderId как параметр
   },
   {
     path: '/orders/:orderId/:id',
     name: 'OrderDetailsDetails',
-    component: () => import('@/modules/orders/form-3/components/index.vue'),
+    component: () => import('@/modules/orders/form-3-nom/components/index.vue'),
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
     path: '/nomenclatures/:clientId',
     name: 'Nomenclature',
     component: () =>
-      import('@/modules/nomenclatures/form-2-client/components/index.vue'),
+      import('@/modules/nomenclatures/form-2-client-noms/components/index.vue'),
     props: true,
   },
   {
