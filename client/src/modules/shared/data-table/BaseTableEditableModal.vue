@@ -28,7 +28,7 @@
                   <input
                     type="checkbox"
                     class="form-check-input"
-                    v-model="editableData[field.name]"
+                    v-model="updateData[field.name]"
                     :id="field.name"
                   />
                   <label class="form-check-label" :for="field.name">
@@ -40,7 +40,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="editableData[field.name]"
+                  v-model="updateData[field.name]"
                   :id="field.name"
                 />
               </template>
@@ -73,15 +73,15 @@ const props = defineProps({
 })
 const emit = defineEmits(['close'])
 
-const editableData = reactive({ ...props.rowData })
+const updateData = reactive({ ...props.rowData })
 
 const isBooleanField = computed(() => {
-  return typeof editableData[props.field.name] === 'boolean'
+  return typeof updateData[props.field.name] === 'boolean'
 })
 
 const saveChanges = () => {
   // Логика сохранения изменений
-  console.log('Сохраненные данные:', editableData)
+  console.log('Сохраненные данные:', updateData)
   emit('close')
 }
 </script>

@@ -22,7 +22,7 @@
 
       <Card
         v-if="selectedOrder && selectedOrder.header"
-        :editableFormFields="editableFormFields"
+        :updateFormFields="updateFormFields"
         :readonlyFormFields="readonlyFormFields"
         :fieldValues="fieldValues"
       />
@@ -125,12 +125,12 @@ const filteredHeaderFields = computed(() =>
     .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
 )
 
-const editableFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => field.edit === true)
+const updateFormFields = computed(() =>
+  filteredHeaderFields.value.filter((field) => field.update === true)
 )
 
 const readonlyFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => field.edit !== true)
+  filteredHeaderFields.value.filter((field) => field.update !== true)
 )
 
 // Преобразование значений полей в объект

@@ -4,11 +4,7 @@
       <div class="row">
         <div class="col-12">
           <!-- Editable fields with floating labels and form-check switches -->
-          <div
-            v-for="field in editableFormFields"
-            :key="field.name"
-            class="mb-3"
-          >
+          <div v-for="field in updateFormFields" :key="field.name" class="mb-3">
             <component
               :is="getFieldComponent(field)"
               :field="field"
@@ -44,13 +40,13 @@
 
 <script lang="ts" setup>
 import { computed, defineProps, ref } from 'vue'
-import { formatValue } from '@/utils/formatters'
+import { formatValueCard } from '@/utils/formatters'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
 import type { Field, FieldValues } from '../types'
 
 const props = defineProps<{
-  editableFormFields: Field[]
+  updateFormFields: Field[]
   readonlyFormFields: Field[]
   fieldValues: FieldValues
 }>()
@@ -61,13 +57,13 @@ const formattedFieldValues = computed(() =>
   Object.fromEntries(
     Object.entries(props.fieldValues).map(([key, value]) => [
       key,
-      formatValue(value, key),
+      formatValueCard(value, key),
     ])
   )
 )
 
 function getFieldComponent(field: Field) {
-  return field.edit ? EditableField : ReadonlyField
+  return field.update ? EditableField : ReadonlyField
 }
 </script>
 

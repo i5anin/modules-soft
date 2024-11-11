@@ -22,10 +22,17 @@ const routes: Array<RouteRecordRaw> = [
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
-    path: '/nomenclatures/:clientId',
+    path: '/clients',
+    name: 'Clients',
+    component: () =>
+      import('@/modules/clients-noms/form-1-clients/components/index.vue'),
+    props: true,
+  },
+  {
+    path: '/noms/:clientId',
     name: 'Nomenclature',
     component: () =>
-      import('@/modules/nomenclatures/form-2-client-noms/components/index.vue'),
+      import('@/modules/clients-noms/form-2-noms/components/index.vue'),
     props: true,
   },
   {

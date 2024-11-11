@@ -1,48 +1,60 @@
-// Удаляем все console.log из formatters.ts
 import moment from 'moment'
 import 'moment/locale/ru'
-
 moment.locale('ru')
-
-export function formatValue(value, type) {
-  console.log(value, type)
-  switch (type) {
-    case 'boolean':
-      return formatBoolean(value)
-    case 'integer':
-    case 'float':
-      return formatNumber(value)
-    case 'string':
-      return formatText(value)
-    case 'date':
-      return formatDate(value)
-    case 'timestamp':
-      return formatTimestamp(value)
-    case 'NULL':
-      return '' // Обработка пустого значения
-    default:
-      return value || ''
+export function formatValueCard(value, fieldName) {
+  if (fieldName.toLowerCase().includes('price')) {
+    return formatPrice(value)
   }
+  if (fieldName.toLowerCase().includes('date')) {
+    return formatDate(value)
+  }
+  if (fieldName.toLowerCase().includes('time')) {
+    return formatTime(value)
+  }
+  return value
 }
-
-function formatBoolean(value) {
-  return value ? '✅' : ''
+export function formatValue(value, fieldName) {
+  if (typeof value === 'boolean' && fieldName !== 'goz') {
+    return formatBoolean(value)
+  }
+  if (fieldName.toLowerCase().includes('price')) {
+    return formatPrice(value)
+  }
+  if (fieldName.toLowerCase().includes('date')) {
+    return formatDate(value)
+  }
+  if (fieldName.toLowerCase().includes('time')) {
+    return formatTime(value)
+  }
+  return value
 }
-
-function formatNumber(value) {
-  return value !== null ? value.toLocaleString('ru-RU') : ''
+export function formatDate(dateString) {
+  return moment(dateString).format('DD.MM.YYYY')
 }
-
-function formatText(value) {
-  return value || ''
+export function formatTime(dateString) {
+  const days = parseInt(dateString, 10)
+  return days === 0 ? '' : `${days} дней`
 }
-
-function formatDate(value) {
-  return value ? moment(value).format('DD.MM.YYYY') : ''
+export function formatPrice(price) {
+  const formatter = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  return formatter.format(price)
 }
-
-function formatTimestamp(value) {
-  return value ? moment(value).format('DD.MM.YYYY HH:mm') : ''
+export function formatBoolean(value) {
+  if (typeof value === 'boolean') {
+    return value ? '✅' : ''
+  }
+  return value
 }
-
-export default { formatValue }
+// Экспортируем объект formatters по умолчанию
+export default {
+  formatValue,
+  formatTime,
+  formatDate,
+  formatPrice,
+  formatBoolean,
+}

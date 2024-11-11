@@ -18,10 +18,10 @@
           <td
             v-for="field in filteredFields"
             :key="field.name"
-            @click="field.edit ? null : openModal(row, field)"
+            @click="field.update ? null : openModal(row, field)"
           >
             <!-- Если поле редактируемое, отображаем инпут прямо в таблице -->
-            <template v-if="field.edit">
+            <template v-if="field.update">
               <template v-if="typeof row[field.name] === 'boolean'">
                 <!-- Checkbox для булевых значений -->
                 <input

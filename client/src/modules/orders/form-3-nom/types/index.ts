@@ -3,7 +3,7 @@
 export interface Field {
   name: string
   title: string
-  edit: boolean
+  update: boolean
 }
 
 export type FieldValues = Record<string, string | boolean>

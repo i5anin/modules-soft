@@ -18,7 +18,7 @@
         <td>title1</td>
         <td>some text1</td>
         <td width="150px" class="text-center">
-          <router-link to="/edit/123"
+          <router-link to="/update/123"
             ><i class="bi bi-pencil-square action-btn"></i
           ></router-link>
           <i class="bi bi-trash3 text-danger action-btn ms-2"></i>

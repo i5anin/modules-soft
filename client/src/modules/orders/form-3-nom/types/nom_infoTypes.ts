@@ -1,6 +1,6 @@
 // types.ts
 export interface ModalOrderHeader {
-  fields: Record<string, { label: string; type: string; edit: boolean }>
+  fields: Record<string, { label: string; type: string; update: boolean }>
   data: Array<Record<string, any>>
 }
 

@@ -110,7 +110,7 @@ export default {
               name: key,
               title: field.title,
               width: field.width,
-              edit: field.edit || false,
+              update: field.update || false,
             })
           )
 
