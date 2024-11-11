@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { computed, defineProps, ref } from 'vue'
-import { formatValueCard } from '@/utils/formatters'
+import { formatValueCard } from '@/utils/formatters-2'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
 import type { Field, FieldValues } from '../types'

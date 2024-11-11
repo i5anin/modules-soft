@@ -4,9 +4,8 @@ import { handleResponse, handleError } from '@/modules/api/responseHandlers'
 import { GetOrdersParams, Order } from './types'
 
 export const getOrders = (params: GetOrdersParams): Promise<Order[]> => {
-  // Включаем client_id в параметры запроса
   return apiClient
-    .get<Order[]>('nom_dir', { params: { ...params, client_id: 418 } })
+    .get<Order[]>('nom_dir', { params }) // Убрано жестко прописанное client_id
     .then(handleResponse)
     .catch(handleError)
 }

@@ -59,11 +59,11 @@
 </template>
 
 <script setup>
-import StatusDisplay from './StatusDisplay.vue'
+import StatusDisplay from '@/modules/shared/shared/StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { formatValue } from '@/utils/formatters.ts'
+import { formatValue } from '@/utils/formatters-2.ts'
 
 const props = defineProps({
   fields: { type: Array, required: true },

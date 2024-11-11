@@ -3,37 +3,37 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // Определяем типы маршрутов
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: '/orders',
     name: 'OrdersTable',
     component: () => import('@/modules/orders/form-1/components/index.vue'),
   },
   {
-    path: '/:orderId',
+    path: '/orders/:orderId',
     name: 'OrderDetails',
     component: () => import('@/modules/orders/form-2/components/index.vue'),
     props: true, // позволяет передавать orderId как параметр
   },
   {
-    path: '/:orderId/:id',
+    path: '/orders/:orderId/:id',
     name: 'OrderDetailsDetails',
     component: () => import('@/modules/orders/form-3/components/index.vue'),
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
-    path: '/nomenclature',
+    path: '/nomenclatures/:clientId',
     name: 'Nomenclature',
     component: () =>
-      import('@/modules/nomenclature/form-1/components/index.vue'),
+      import('@/modules/nomenclatures/form-2/components/index.vue'),
     props: true,
   },
   {
-    path: '/sborka-test/:id',
+    path: '/test/sborka/:id',
     name: 'SborkaDetails',
     component: () => import('@/modules/shared/sborka/SborMain.vue'),
     props: true, // передача id как параметра
   },
   {
-    path: '/modal-tools-test/:no/:nomId',
+    path: '/test/modal-tools/:no/:nomId',
     name: 'modal-tools',
     component: () =>
       import('@/modules/orders/modal-tools/components/index.vue'),

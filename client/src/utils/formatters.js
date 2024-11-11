@@ -1,5 +1,3 @@
-
-
 // Удаляем все console.log из formatters.ts
 import moment from 'moment'
 import 'moment/locale/ru'
