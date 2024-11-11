@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/nomenclatures/:clientId',
     name: 'Nomenclature',
     component: () =>
-      import('@/modules/nomenclatures/form-2/components/index.vue'),
+      import('@/modules/nomenclatures/form-2-client/components/index.vue'),
     props: true,
   },
   {
