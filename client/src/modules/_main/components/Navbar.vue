@@ -26,23 +26,23 @@
       </div>
 
       <!-- Селектор типа -->
-      <div class="d-flex align-items-center">
-        <label for="type-selector" class="me-2 mb-0">Выбор типа:</label>
-        <select
-          class="form-select form-select-sm w-auto"
-          id="type-selector"
-          v-model="roleStore.selectedTypes"
-          @change="onTypeChange"
-        >
-          <option
-            v-for="(type, key) in roleStore.types"
-            :key="key"
-            :value="type"
-          >
-            {{ type }}
-          </option>
-        </select>
-      </div>
+      <!--      <div class="d-flex align-items-center">-->
+      <!--        <label for="type-selector" class="me-2 mb-0">Выбор типа:</label>-->
+      <!--        <select-->
+      <!--          class="form-select form-select-sm w-auto"-->
+      <!--          id="type-selector"-->
+      <!--          v-model="roleStore.selectedTypes"-->
+      <!--          @change="onTypeChange"-->
+      <!--        >-->
+      <!--          <option-->
+      <!--            v-for="(type, key) in roleStore.types"-->
+      <!--            :key="key"-->
+      <!--            :value="type"-->
+      <!--          >-->
+      <!--            {{ type }}-->
+      <!--          </option>-->
+      <!--        </select>-->
+      <!--      </div>-->
     </div>
   </header>
 </template>
