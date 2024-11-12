@@ -31,7 +31,7 @@
           :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
           class="icon-sm ms-2 me-2"
         />
-        <span>{{ formatValue(sbor[field.name], field.name) }}</span>
+        <span>{{ formatValue(sbor[field.name], field.type) }}</span>
         <font-awesome-icon
           :icon="['fas', 'circle-info']"
           :style="{ color: 'green' }"
@@ -41,7 +41,7 @@
       </span>
 
       <span v-else :title="generateTitle(field)" style="font-size: 13px">
-        {{ formatValue(sbor[field.name], field.name) }}
+        {{ formatValue(sbor[field.name], field.type) }}
       </span>
     </td>
   </tr>
@@ -57,21 +57,20 @@
   </template>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { Field, Sbor } from './SborNode.types'
+<script>
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@/utils/icons.ts'
 import formatters from '@/utils/formatters-2.ts'
 import { statuses } from '@/modules/shared/statuses.js'
 
-export default defineComponent({
+export default {
   name: 'SborNode',
   components: { FontAwesomeIcon },
   props: {
-    sbor: { type: Object as () => Sbor, required: true },
+    sbor: { type: Object, required: true },
     fields: {
-      type: [Object, Array] as () => Record<string, Field> | Field[],
+      type: [Object, Array],
       required: true,
     },
     depth: { type: Number, default: 0 },
@@ -105,13 +104,13 @@ export default defineComponent({
     const hasChildren = computed(
       () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
-    const formatValue = (
-      value: string | number | boolean | null,
-      fieldName: string
-    ) => formatters.formatValue(value, fieldName)
 
-    const generateTitle = (field: Field) =>
-      `Поле: ${field.title || 'Нет данных'}`
+    const formatValue = (value, fieldType) => {
+      console.log(value, fieldType)
+      return formatters.formatValue(value, fieldType)
+    }
+
+    const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
 
     const combinedStatuses = computed(() => {
       const activeStatuses = statuses.filter(
@@ -140,5 +139,5 @@ export default defineComponent({
       fieldsArray,
     }
   },
-})
+}
 </script>
