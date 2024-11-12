@@ -93,7 +93,10 @@ export default {
     }
 
     const handleRowClick = (row) => {
-      router.push({ name: 'OrderDetails', params: { orderId: row.id } })
+      router.push({
+        name: 'Nomenclature',
+        params: { clientId: row.clients__id },
+      })
     }
 
     const handlePageChange = (page) => {

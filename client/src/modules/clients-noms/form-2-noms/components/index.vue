@@ -2,6 +2,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
+        <!-- Кнопка Назад -->
+        <button @click="goBack" class="btn btn-secondary mb-3">Назад</button>
+
         <!-- Название клиента -->
         <h3 class="client-name mb-3">{{ clientName }}</h3>
 
@@ -36,13 +39,18 @@ export default {
     const sortColumn = ref('id')
     const sortOrder = ref('desc')
 
+    // Переход на страницу клиентов
+    const goBack = () => {
+      router.push({ name: 'Clients' })
+    }
+
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
 
     const fetchOrders = async () => {
       try {
         const response = await getOrders({
-          client_id: clientId.value, // Передаем client_id как параметр
+          client_id: clientId.value,
           page: currentPage.value,
           limit: itemsPerPage.value,
           sortCol: sortColumn.value,
@@ -98,6 +106,7 @@ export default {
       sortOrder,
       itemsPerPage,
       totalCount,
+      goBack,
     }
   },
 }
