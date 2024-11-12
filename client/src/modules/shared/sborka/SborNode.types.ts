@@ -11,5 +11,5 @@ export interface Field {
   name: string
   title: string
   width?: string | null
-  edit?: boolean
+  update?: boolean
 }

@@ -13,32 +13,57 @@
         <tr
           v-for="(row, rowIndex) in data"
           :key="rowIndex"
-          @click="openModal(row)"
           :style="rowLink ? 'cursor: pointer;' : ''"
         >
-          <td v-for="field in filteredFields" :key="field.name">
-            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+          <td
+            v-for="field in filteredFields"
+            :key="field.name"
+            @click="field.update ? null : openModal(row, field)"
+          >
+            <!-- Если поле редактируемое, отображаем инпут прямо в таблице -->
+            <template v-if="field.update">
+              <template v-if="typeof row[field.name] === 'boolean'">
+                <!-- Checkbox для булевых значений -->
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  v-model="row[field.name]"
+                />
+              </template>
+              <template v-else>
+                <!-- Текстовый инпут для остальных типов -->
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="row[field.name]"
+                />
+              </template>
+            </template>
+            <template v-else>
+              <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+              <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+            </template>
           </td>
         </tr>
       </tbody>
     </table>
 
+    <!-- Модальное окно для одного редактируемого поля -->
     <EditableModal
-      v-if="selectedRow"
+      v-if="selectedRow && selectedField"
       :rowData="selectedRow"
-      :fields="filteredFields"
-      @close="selectedRow = null"
+      :field="selectedField"
+      @close="closeModal"
     />
   </div>
 </template>
 
 <script setup>
-import StatusDisplay from './StatusDisplay.vue'
+import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { formatValue } from '@/utils/formatters.ts' // Импортируйте вашу функцию форматирования
+import { formatValue } from '@/utils/formatters-2.ts'
 
 const props = defineProps({
   fields: { type: Array, required: true },
@@ -51,15 +76,19 @@ const props = defineProps({
 
 const router = useRouter()
 const selectedRow = ref(null)
+const selectedField = ref(null)
 
 const filteredFields = computed(() =>
   props.fields.filter((field) => !props.excluded.includes(field.name))
 )
 
-const openModal = (row) => {
-  selectedRow.value = row // Сохраняем выбранную строку
-  if (props.rowLink && props.linkPath) {
-    router.push(props.linkPath(row)) // Навигация по пути, если нужно
-  }
+const openModal = (row, field) => {
+  selectedRow.value = row
+  selectedField.value = field
+}
+
+const closeModal = () => {
+  selectedRow.value = null
+  selectedField.value = null
 }
 </script>
