@@ -1,5 +1,27 @@
-# Vue 3 + Vite
+# Vue.js Проект
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Модульный проект на Vue.js для управления клиентами, заказами и их данными. Проект предоставляет динамическую таблицу с возможностью сортировки, поиска, и фильтрации, а также поддержку добавочных и международных телефонных номеров.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+### Основные маршруты
+
+- **Заказы**
+    - Главная страница заказов: [http://localhost:5173/orders](http://localhost:5173/orders)
+    - Детали заказа: [http://localhost:5173/orders/9814](http://localhost:5173/orders/9814)
+    - Конкретный элемент в заказе: [http://localhost:5173/orders/9814/53537](http://localhost:5173/orders/9814/53537)
+
+- **Клиенты и Номенклатуры**
+    - Список клиентов: [http://localhost:5173/clients](http://localhost:5173/clients)
+    - Номенклатура для клиента: [http://localhost:5173/noms/418](http://localhost:5173/noms/418)
+
+---
+
+## Описание проекта
+
+Проект предназначен для управления данными клиентов и заказов через удобный интерфейс. Приложение поддерживает пагинацию, сортировку, и фильтрацию данных, а также позволяет легко добавлять и управлять контентом через единый модульный интерфейс.
+
+## Установка и настройка
+
+1. **Клонирование репозитория:**
+   ```bash
+   git clone https://github.com/ваше_имя_пользователя/имя_проекта.git
+   cd имя_проекта
