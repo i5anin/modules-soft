@@ -3,6 +3,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // Определяем типы маршрутов
 const routes: Array<RouteRecordRaw> = [
   {
+    path: '/',
+    redirect: '/orders', // перенаправляет на основной маршрут, замените на нужный
+  },
+  {
     path: '/orders',
     name: 'OrdersTable',
     component: () =>

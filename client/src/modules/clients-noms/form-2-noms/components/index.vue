@@ -86,12 +86,6 @@ export default {
       }
     }
 
-    // Следим за изменениями clientId, чтобы обновлять данные при изменении маршрута
-    watch(
-      [clientId, roleStore.selectedTypes, roleStore.selectedRole],
-      fetchOrders
-    )
-
     onMounted(() => {
       fetchOrders()
     })
