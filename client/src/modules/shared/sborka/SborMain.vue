@@ -29,10 +29,11 @@
             <tbody>
               <SborNode
                 v-for="sbor in tableData"
-                :key="sbor.sbor_orders__id"
+                :key="sbor.id"
                 :sbor="sbor"
                 :depth="0"
               />
+              <!-- :key="sbor.sbor_orders__id" - было -->
             </tbody>
           </table>
         </div>
@@ -45,8 +46,6 @@
 import { computed, watch } from 'vue'
 import { useSborStore } from './useSborStore'
 import SborNode from './SborNode.vue'
-import { FontAwesomeIcon } from '@/utils/icons.ts'
-import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
   name: 'SborMain',
@@ -68,7 +67,6 @@ export default {
     watch(
       () => props.tableData,
       (newData) => {
-        console.log('Table data updated:', newData)
         sborStore.setTableData(newData)
       },
       { immediate: true }

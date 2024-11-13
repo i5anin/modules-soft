@@ -12,7 +12,7 @@
         />
       </span>
     </td>
-    <td>
+    <td :style="{ width: '40px', textAlign: 'center' }">
       <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
     <td
@@ -22,7 +22,11 @@
     >
       <span
         v-if="field === firstField"
-        :style="{ paddingLeft: `${depth * 35}px` }"
+        :style="{
+          paddingLeft: `${depth * 35}px`,
+          display: 'flex',
+          alignItems: 'center',
+        }"
       >
         <font-awesome-icon
           :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
@@ -77,7 +81,6 @@ export default {
     const toggle = () => {
       if (hasChildren.value) {
         isExpanded.value = !isExpanded.value
-        console.log('isExpanded:', isExpanded.value)
       }
     }
 
@@ -95,8 +98,18 @@ export default {
     const fieldsArray = computed(() => sborStore.filteredFields)
     const firstField = computed(() => fieldsArray.value[0])
     const combinedStatuses = computed(() => {
-      // Логика для вычисления `combinedStatuses`
-      return '' // пример, замените на актуальную логику
+      const activeStatuses = statuses.filter(
+        (status) =>
+          props.sbor[status.status] && props.sbor[status.status].trim()
+      )
+      return activeStatuses.length > 0
+        ? activeStatuses
+            .map(
+              (s) =>
+                `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
+            )
+            .join('')
+        : ''
     })
 
     const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
