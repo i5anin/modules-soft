@@ -2,7 +2,7 @@ import moment from 'moment'
 
 export function formatValue(value, type) {
   switch (type) {
-    case 'boolean':
+    case 'bool':
       return formatBoolean(value)
     case 'integer':
     case 'float':

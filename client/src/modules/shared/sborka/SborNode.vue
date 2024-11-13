@@ -60,7 +60,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSborStore } from './useSborStore'
+import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.ts'
 import { formatValue } from '@/utils/formatters-2.ts'
 import { statuses } from '@/modules/shared/statuses.js'
@@ -71,10 +71,10 @@ export default {
   props: {
     sbor: { type: Object, required: true },
     depth: { type: Number, default: 0 },
-    fields: { type: Array, default: () => [] }, // добавляем fields в props
+    fields: { type: Array, default: () => [] },
   },
   setup(props) {
-    const sborStore = useSborStore()
+    const sborStore = store()
     const router = useRouter()
     const isExpanded = ref(false)
 

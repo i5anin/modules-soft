@@ -44,7 +44,7 @@
 
 <script>
 import { computed, watch } from 'vue'
-import { useSborStore } from './useSborStore'
+import { store } from './store.js'
 import SborNode from './SborNode.vue'
 
 export default {
@@ -61,7 +61,7 @@ export default {
     },
   },
   setup(props) {
-    const sborStore = useSborStore()
+    const sborStore = store()
 
     // Следим за props и сразу обновляем store
     watch(
@@ -74,7 +74,7 @@ export default {
 
     watch(
       () => props.tableFields,
-      (newFields) => sborStore.setTableHeaders(newFields),
+      (newFields) => sborStore.setTableFields(newFields),
       { immediate: true }
     )
 
