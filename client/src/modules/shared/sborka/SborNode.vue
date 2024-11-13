@@ -115,6 +115,7 @@ export default {
     const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
 
     return {
+      formatValue,
       isExpanded,
       toggle,
       handleRowClick,
@@ -122,7 +123,6 @@ export default {
       firstField,
       combinedStatuses,
       hasChildren,
-      formatValue, // Теперь `formatValue` доступен в шаблоне
       generateTitle,
     }
   },

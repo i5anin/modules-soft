@@ -33,7 +33,6 @@
                 :sbor="sbor"
                 :depth="0"
               />
-              <!-- :key="sbor.sbor_orders__id" - было -->
             </tbody>
           </table>
         </div>
@@ -51,19 +50,12 @@ export default {
   name: 'SborMain',
   components: { SborNode },
   props: {
-    tableData: {
-      type: Array,
-      default: () => [],
-    },
-    tableFields: {
-      type: Array,
-      default: () => [],
-    },
+    tableData: Array,
+    tableFields: Array,
   },
   setup(props) {
     const sborStore = store()
 
-    // Следим за props и сразу обновляем store
     watch(
       () => props.tableData,
       (newData) => {
@@ -81,8 +73,6 @@ export default {
     return {
       tableData: computed(() => sborStore.tableData),
       filteredFields: computed(() => sborStore.filteredFields),
-      hasIsSborField: computed(() => sborStore.hasIsSborField),
-      hasStatusField: computed(() => sborStore.hasStatusField),
     }
   },
 }
