@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-container">
+  <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
     <div class="p-2">
       <router-link
@@ -9,7 +9,7 @@
         Назад к списку деталей заказа
       </router-link>
 
-      <div class="d-flex align-items-center mb-4">
+      <div class="d-flex align-items-center mb-2">
         <svg-icon
           type="mdi"
           :path="mdiBolt"
@@ -17,7 +17,7 @@
           color="red"
           :size="32"
         />
-        <h4 class="m-0">Информация по номенклатуре</h4>
+        <h6 class="m-0">Информация по номенклатуре</h6>
       </div>
 
       <Card

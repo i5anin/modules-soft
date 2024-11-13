@@ -5,7 +5,7 @@
 
     <Navbar />
 
-    <div class="py-3">
+    <div class="container-fluid bg-gradient bg">
       <!-- container -->
       <router-view />
     </div>
@@ -15,3 +15,9 @@
 <script setup>
 import Navbar from '@/modules/_main/components/Navbar.vue'
 </script>
+
+<style>
+body {
+  background-color: #e6e6e6 !important;
+}
+</style>

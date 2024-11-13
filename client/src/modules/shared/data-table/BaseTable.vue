@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h5 class="mt-4">{{ tableTitle }}</h5>
-    <table class="table table-striped table-sm mt-3 table-bordered table-hover">
+    <h6 class="mt-5">{{ tableTitle }}</h6>
+    <table
+      class="table-base table table-striped table-sm mt-3 table-bordered table-hover"
+    >
       <thead>
         <tr>
           <th v-for="field in filteredFields" :key="field.name">
@@ -103,3 +105,13 @@ const closeModal = () => {
   selectedField.value = null
 }
 </script>
+
+<style>
+.table-base {
+  border-radius: 12px !important;
+}
+
+.table-base > tbody > tr:hover > td {
+  background-color: #f3f8ff !important; /* Светло-голубой цвет при наведении */
+}
+</style>

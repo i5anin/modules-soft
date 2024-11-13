@@ -8,7 +8,7 @@
         </div>
         <div v-else>
           <table
-            class="table table-bordered table-striped table-sm table-hover"
+            class="table-sbor table table-bordered table-striped table-sm table-hover"
           >
             <thead>
               <tr style="font-size: 12px">
@@ -87,3 +87,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.table-sbor > tbody > tr:hover > td {
+  background-color: #f3f8ff !important; /* Светло-голубой цвет при наведении */
+}
+</style>
