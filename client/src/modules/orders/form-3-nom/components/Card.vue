@@ -63,7 +63,7 @@ const formattedFieldValues = computed(() =>
 )
 
 function getFieldComponent(field: Field) {
-  return field.update ? EditableField : ReadonlyField
+  return field.permissions.update ? EditableField : ReadonlyField
 }
 </script>
 

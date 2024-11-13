@@ -6,6 +6,15 @@
         <tr>
           <th v-for="field in filteredFields" :key="field.name">
             {{ field.title }}
+            <span v-if="field.permissions.update">
+              <SvgIcon
+                color="gray"
+                v-if="field.permissions.update"
+                type="mdi"
+                :path="mdiPencil"
+                style="width: 12px; height: 12px"
+              />
+            </span>
           </th>
         </tr>
       </thead>
@@ -21,7 +30,7 @@
             @click="field.update ? null : openModal(row, field)"
           >
             <!-- Если поле редактируемое, отображаем инпут прямо в таблице -->
-            <template v-if="field.update">
+            <template v-if="field.permissions.update">
               <template v-if="typeof row[field.name] === 'boolean'">
                 <!-- Checkbox для булевых значений -->
                 <input
@@ -49,12 +58,12 @@
     </table>
 
     <!-- Модальное окно для одного редактируемого поля -->
-    <EditableModal
-      v-if="selectedRow && selectedField"
-      :rowData="selectedRow"
-      :field="selectedField"
-      @close="closeModal"
-    />
+    <!--    <EditableModal-->
+    <!--      v-if="selectedRow && selectedField"-->
+    <!--      :rowData="selectedRow"-->
+    <!--      :field="selectedField"-->
+    <!--      @close="closeModal"-->
+    <!--    />-->
   </div>
 </template>
 
@@ -64,6 +73,8 @@ import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatValue } from '@/utils/formatters-2.ts'
+import { mdiPencil } from '@mdi/js'
+import SvgIcon from '@jamescoyle/vue-icon'
 
 const props = defineProps({
   fields: { type: Array, required: true },

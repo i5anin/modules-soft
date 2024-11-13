@@ -126,11 +126,15 @@ const filteredHeaderFields = computed(() =>
 )
 
 const updateFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => field.update === true)
+  filteredHeaderFields.value.filter(
+    (field) => field.permissions.update === true
+  )
 )
 
 const readonlyFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => field.update !== true)
+  filteredHeaderFields.value.filter(
+    (field) => field.permissions.update !== true
+  )
 )
 
 // Преобразование значений полей в объект
