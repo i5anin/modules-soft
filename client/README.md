@@ -25,3 +25,4 @@
    ```bash
    git clone https://github.com/ваше_имя_пользователя/имя_проекта.git
    cd имя_проекта
+   ```

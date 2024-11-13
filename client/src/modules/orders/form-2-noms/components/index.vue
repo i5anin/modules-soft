@@ -27,8 +27,8 @@
       <div class="sbor-main">
         <SborMain
           v-if="nomTableData.length > 0"
-          :nomtable="nomTableData"
-          :tableFields="filteredTableFields"
+          :table-data="nomTableData"
+          :table-fields="filteredTableFields"
         />
       </div>
     </div>

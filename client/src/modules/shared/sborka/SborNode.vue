@@ -1,6 +1,6 @@
 <template>
   <tr
-    @click.stop="toggle"
+    @click="toggle"
     :class="{ 'table-info': isExpanded, 'fw-bold': isExpanded }"
     style="table-layout: fixed"
   >
@@ -15,7 +15,6 @@
     <td>
       <span v-html="combinedStatuses" style="display: inline-flex"></span>
     </td>
-
     <td
       v-for="field in fieldsArray"
       :key="field.name"
@@ -23,7 +22,6 @@
     >
       <span
         v-if="field === firstField"
-        style="display: inline-flex; align-items: center; min-width: 100%"
         :style="{ paddingLeft: `${depth * 35}px` }"
       >
         <font-awesome-icon
@@ -39,13 +37,11 @@
           @click="handleRowClick"
         />
       </span>
-
       <span v-else :title="generateTitle(field)" style="font-size: 13px">
         {{ formatValue(sbor[field.name], field.type) }}
       </span>
     </td>
   </tr>
-
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="child in sbor.sbor_tree"
@@ -60,8 +56,9 @@
 <script>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useSborStore } from './useSborStore'
 import { FontAwesomeIcon } from '@/utils/icons.ts'
-import formatters from '@/utils/formatters-2.ts'
+import { formatValue } from '@/utils/formatters-2.ts'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
@@ -69,74 +66,51 @@ export default {
   components: { FontAwesomeIcon },
   props: {
     sbor: { type: Object, required: true },
-    fields: {
-      type: [Object, Array],
-      required: true,
-    },
     depth: { type: Number, default: 0 },
+    fields: { type: Array, default: () => [] }, // добавляем fields в props
   },
   setup(props) {
+    const sborStore = useSborStore()
     const router = useRouter()
     const isExpanded = ref(false)
 
-    const fieldsArray = computed(() => {
-      return Array.isArray(props.fields)
-        ? props.fields
-        : Object.keys(props.fields).map((key) => ({
-            name: key,
-            ...props.fields[key],
-          }))
-    })
-
-    const firstField = computed(() => fieldsArray.value[0])
-
     const toggle = () => {
-      if (hasChildren.value) isExpanded.value = !isExpanded.value
+      if (hasChildren.value) {
+        isExpanded.value = !isExpanded.value
+        console.log('isExpanded:', isExpanded.value)
+      }
     }
 
     const handleRowClick = () => {
+      sborStore.selectSbor(props.sbor)
       router.push({
         name: 'OrderDetailsDetails',
-        params: { id: props.sbor.ordersnom_id },
+        params: { id: props.sbor.sbor_orders__id },
       })
     }
 
     const hasChildren = computed(
       () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
-
-    const formatValue = (value, fieldType) => {
-      console.log(value, fieldType)
-      return formatters.formatValue(value, fieldType)
-    }
+    const fieldsArray = computed(() => sborStore.filteredFields)
+    const firstField = computed(() => fieldsArray.value[0])
+    const combinedStatuses = computed(() => {
+      // Логика для вычисления `combinedStatuses`
+      return '' // пример, замените на актуальную логику
+    })
 
     const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
-
-    const combinedStatuses = computed(() => {
-      const activeStatuses = statuses.filter(
-        (status) =>
-          props.sbor[status.status] && props.sbor[status.status].trim()
-      )
-      return activeStatuses.length > 0
-        ? activeStatuses
-            .map(
-              (s) =>
-                `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
-            )
-            .join('')
-        : ''
-    })
 
     return {
       isExpanded,
       toggle,
       handleRowClick,
-      hasChildren,
-      formatValue,
-      generateTitle,
+      fieldsArray,
       firstField,
       combinedStatuses,
-      fieldsArray,
+      hasChildren,
+      formatValue, // Теперь `formatValue` доступен в шаблоне
+      generateTitle,
     }
   },
 }

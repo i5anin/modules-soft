@@ -1,11 +1,10 @@
-//formatters.ts
+// formatters.ts
 import moment from 'moment'
 import 'moment/locale/ru'
 
 moment.locale('ru')
 
 export function formatValue(value, type) {
-  // console.log(value, type)
   switch (type) {
     case 'boolean':
       return formatBoolean(value)
@@ -44,5 +43,3 @@ function formatDate(value) {
 function formatTimestamp(value) {
   return value ? moment(value).format('DD.MM.YYYY HH:mm') : ''
 }
-
-export default { formatValue }

@@ -1,24 +1,21 @@
 <template>
   <div class="container-fluid">
-    <!--    <h5 class="mt-4">Номенклатуры</h5>-->
     <div class="row">
       <div class="col-12">
-        <div v-if="nomtable.length === 0" class="alert alert-warning">
+        <!-- Сообщение при отсутствии данных -->
+        <div v-if="tableData.length === 0" class="alert alert-warning">
           Нет данных для отображения.
         </div>
-        <!-- Контейнер для горизонтальной прокрутки -->
         <div v-else>
           <table
             class="table table-bordered table-striped table-sm table-hover"
           >
             <thead>
               <tr style="font-size: 12px">
-                <th
-                  scope="col"
-                  style="width: 40px"
-                  title="развернут статус"
-                ></th>
-                <th scope="col" style="width: 40px" title="статусы"></th>
+                <th scope="col" style="width: 30px" title="развернут статус">
+                  Сборка
+                </th>
+                <th scope="col" style="width: 30px" title="статусы">Статусы</th>
                 <th
                   scope="col"
                   v-for="field in filteredFields"
@@ -31,10 +28,9 @@
             </thead>
             <tbody>
               <SborNode
-                v-for="sbor in nomtable"
+                v-for="sbor in tableData"
                 :key="sbor.sbor_orders__id"
                 :sbor="sbor"
-                :fields="filteredFields"
                 :depth="0"
               />
             </tbody>
@@ -46,32 +42,50 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useSborStore } from './useSborStore'
 import SborNode from './SborNode.vue'
+import { FontAwesomeIcon } from '@/utils/icons.ts'
+import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
   name: 'SborMain',
   components: { SborNode },
   props: {
-    nomtable: {
+    tableData: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     tableFields: {
       type: Array,
-      required: true,
+      default: () => [],
     },
   },
   setup(props) {
-    const excludedFields = ['sbor_orders__id', 'is_sbor', 'ordersnom_id']
+    const sborStore = useSborStore()
 
-    const filteredFields = computed(() => {
-      return props.tableFields.filter(
-        (field) => !excludedFields.includes(field.name)
-      )
-    })
+    // Следим за props и сразу обновляем store
+    watch(
+      () => props.tableData,
+      (newData) => {
+        console.log('Table data updated:', newData)
+        sborStore.setTableData(newData)
+      },
+      { immediate: true }
+    )
 
-    return { filteredFields }
+    watch(
+      () => props.tableFields,
+      (newFields) => sborStore.setTableHeaders(newFields),
+      { immediate: true }
+    )
+
+    return {
+      tableData: computed(() => sborStore.tableData),
+      filteredFields: computed(() => sborStore.filteredFields),
+      hasIsSborField: computed(() => sborStore.hasIsSborField),
+      hasStatusField: computed(() => sborStore.hasStatusField),
+    }
   },
 }
 </script>

@@ -9,7 +9,7 @@
         <h3 class="client-name mb-3">{{ clientName }}</h3>
 
         <!-- Таблица данных -->
-        <SborMain :nomtable="orders" :tableFields="tableFields" />
+        <SborMain :table-data="orders" :table-fields="tableFields" />
       </div>
     </div>
   </div>
