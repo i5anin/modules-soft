@@ -1,8 +1,4 @@
-// formatters.ts
 import moment from 'moment'
-import 'moment/locale/ru'
-
-moment.locale('ru')
 
 export function formatValue(value, type) {
   switch (type) {
@@ -18,7 +14,7 @@ export function formatValue(value, type) {
     case 'timestamp':
       return formatTimestamp(value)
     case 'NULL':
-      return '' // Обработка пустого значения
+      return ''
     default:
       return value || ''
   }
@@ -29,11 +25,25 @@ function formatBoolean(value) {
 }
 
 function formatNumber(value) {
-  return value !== null ? value.toLocaleString('ru-RU') : ''
+  // Преобразуем строковое представление числа, если это строка
+  const numberValue = typeof value === 'string' ? parseFloat(value) : value
+
+  if (numberValue !== null && !isNaN(numberValue)) {
+    // Проверяем, есть ли у числа дробная часть
+    return Number.isInteger(numberValue)
+      ? numberValue.toLocaleString('ru-RU')
+      : numberValue.toFixed(2).toLocaleString('ru-RU')
+  }
+
+  return ''
 }
 
 function formatText(value) {
-  return value || ''
+  if (typeof value === 'number') {
+    return formatNumber(value) // Возвращаем отформатированное значение, если это число
+  } else {
+    return value || ''
+  }
 }
 
 function formatDate(value) {
