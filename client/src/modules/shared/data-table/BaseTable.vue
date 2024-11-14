@@ -96,8 +96,4 @@ const openModal = (row, field) => {
 .table-base {
   border-radius: 12px !important;
 }
-
-.table-base > tbody > tr:hover > td {
-  background-color: #f3f8ff !important; /* Светло-голубой цвет при наведении */
-}
 </style>

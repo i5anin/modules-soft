@@ -12,10 +12,12 @@
           >
             <thead>
               <tr style="font-size: 12px">
-                <th scope="col" style="width: 30px" title="развернут статус">
-                  Сборка
-                </th>
-                <th scope="col" style="width: 30px" title="статусы">Статусы</th>
+                <th
+                  scope="col"
+                  style="width: 30px"
+                  title="развернуть сборку"
+                ></th>
+                <th scope="col" style="width: 30px" title="статусы"></th>
                 <th
                   scope="col"
                   v-for="field in filteredFields"
@@ -77,9 +79,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.table-sbor > tbody > tr:hover > td {
-  background-color: #f3f8ff !important; /* Светло-голубой цвет при наведении */
-}
-</style>

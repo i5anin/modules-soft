@@ -19,7 +19,7 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
           <th

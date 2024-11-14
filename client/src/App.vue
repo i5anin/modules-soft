@@ -1,12 +1,7 @@
 <template>
   <div>
-    <!--    data-bs-theme="dark"-->
-    <!--    style="background-color: #aaaaaa; min-height: 100vh"-->
-
     <Navbar />
-
     <div class="container-fluid bg-gradient bg">
-      <!-- container -->
       <router-view />
     </div>
   </div>
@@ -19,5 +14,9 @@ import Navbar from '@/modules/_main/components/Navbar.vue'
 <style>
 body {
   background-color: #e6e6e6 !important;
+}
+
+.table > tbody > tr:hover > td {
+  background-color: #f3f8ff !important; /* Светло-голубой цвет при наведении */
 }
 </style>
