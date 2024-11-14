@@ -30,8 +30,8 @@
 
         <!-- Таблица данных -->
         <ServerSideTable
-          :headers="orders"
-          :items="tableColumns"
+          :headers="tableColumns"
+          :items="orders"
           :items-per-page-options="[15, 30, 50, 100]"
           :items-per-page="itemsPerPage"
           :current-page="currentPage"
@@ -39,7 +39,6 @@
           :total-count="totalCount"
           :sort-column="sortColumn"
           :sort-order="sortOrder"
-          :format-value="formatValue"
           :custom-components="{ StatusCell, ClientNameCell }"
           @row-click="handleRowClick"
           @page-change="handlePageChange"
@@ -58,7 +57,6 @@ import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import DateRangeFilter from './DateRangeFilter.vue'
 import { getOrders } from '../api/list.ts'
-import { formatValue } from '@/utils/formatters-2.ts'
 import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
@@ -195,9 +193,6 @@ export default {
     const ClientNameCell = {
       name: 'ClientNameCell',
       props: ['row', 'column'],
-      template: `<span :style="{ backgroundColor: row.goz ? 'lightgreen' : '' }">
-                    {{ row[column.name] }}
-                  </span>`,
     }
 
     const handleRowClick = (row) => {
@@ -251,7 +246,6 @@ export default {
       orders,
       tableFields,
       searchQuery,
-      formatValue,
       tableColumns,
       handleRowClick,
       handlePageChange,
@@ -274,8 +268,7 @@ export default {
 </script>
 
 <style>
-.date-range-filters,
-.filters {
+.date-range-filters {
   display: flex;
   gap: 16px;
 }

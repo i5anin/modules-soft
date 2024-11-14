@@ -23,7 +23,7 @@
       <thead>
         <tr>
           <th
-            v-for="column in items"
+            v-for="column in headers"
             :key="column.name"
             @click="column.sortable && sortBy(column.name)"
             :class="{ sortable: column.sortable }"
@@ -47,10 +47,14 @@
           <td colspan="100%" class="text-center">Нет данных</td>
         </tr>
         <tr
-          v-for="row in headers"
+          v-for="row in items"
           :key="row.id"
           @click="handleRowClick(row)"
-          :class="{ 'table-row': true, locked: row.locked }"
+          :class="{
+            'table-row': true,
+            locked: row.locked,
+            'table-success': row.goz,
+          }"
         >
           <td v-for="(field, index) in filteredFields" :key="index">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
@@ -83,8 +87,8 @@ export default {
   methods: { formatValue },
   components: { SearchBar, Pagination, StatusDisplay },
   props: {
-    headers: { type: Array, required: true },
     items: { type: Array, required: true },
+    headers: { type: Array, required: true },
     excluded: { type: Array, default: () => [] },
     itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
     totalPages: { type: Number, required: true },
@@ -107,13 +111,15 @@ export default {
     const loading = ref(false)
 
     const filteredFields = computed(() => {
-      return props.items.filter((field) => !props.excluded.includes(field.name))
+      return props.headers.filter(
+        (field) => !props.excluded.includes(field.name)
+      )
     })
 
-    const noData = computed(() => props.headers.length === 0)
+    const noData = computed(() => props.items.length === 0)
 
     const sortBy = (column) => {
-      const columnObj = props.items.find((col) => col.name === column)
+      const columnObj = props.headers.find((col) => col.name === column)
       if (!columnObj || !columnObj.sortable) return
       let newOrder = 'asc'
       if (props.sortColumn === column) {
