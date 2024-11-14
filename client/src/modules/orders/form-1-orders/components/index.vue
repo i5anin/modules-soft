@@ -30,8 +30,8 @@
 
         <!-- Таблица данных -->
         <ServerSideTable
-          :data="orders"
-          :columns="tableColumns"
+          :headers="orders"
+          :items="tableColumns"
           :items-per-page-options="[15, 30, 50, 100]"
           :items-per-page="itemsPerPage"
           :current-page="currentPage"
@@ -109,6 +109,7 @@ export default {
             ([key, field]) => ({
               name: key,
               title: field.title,
+              type: field.type,
               width: field.width,
               update: field.update || false,
             })
@@ -151,6 +152,7 @@ export default {
         let column = {
           name: field.name,
           title: field.title,
+          type: field.type,
           sortable: true,
         }
 

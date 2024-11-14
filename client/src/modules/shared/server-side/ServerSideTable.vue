@@ -23,7 +23,7 @@
       <thead>
         <tr>
           <th
-            v-for="column in columns"
+            v-for="column in items"
             :key="column.name"
             @click="column.sortable && sortBy(column.name)"
             :class="{ sortable: column.sortable }"
@@ -47,14 +47,14 @@
           <td colspan="100%" class="text-center">Нет данных</td>
         </tr>
         <tr
-          v-for="row in data"
+          v-for="row in headers"
           :key="row.id"
           @click="handleRowClick(row)"
           :class="{ 'table-row': true, locked: row.locked }"
         >
           <td v-for="(field, index) in filteredFields" :key="index">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else>{{ formatValue(row[field.name], field.name) }}</span>
+            <span v-else>{{ formatValue(row[field.name], field.type) }}</span>
           </td>
         </tr>
       </tbody>
@@ -72,17 +72,19 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
+import { formatValue } from '@/utils/formatters-2.ts'
 
 export default {
   name: 'ServerSideTable',
+  methods: { formatValue },
   components: { SearchBar, Pagination, StatusDisplay },
   props: {
-    data: { type: Array, required: true },
-    columns: { type: Array, required: true },
+    headers: { type: Array, required: true },
+    items: { type: Array, required: true },
     excluded: { type: Array, default: () => [] },
     itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
     totalPages: { type: Number, required: true },
@@ -90,7 +92,6 @@ export default {
     currentPage: { type: Number, required: true },
     sortColumn: { type: String, default: '' },
     sortOrder: { type: String, default: 'asc' },
-    formatValue: { type: Function, default: (value) => value },
     itemsPerPage: { type: Number, required: true },
   },
   emits: [
@@ -106,15 +107,13 @@ export default {
     const loading = ref(false)
 
     const filteredFields = computed(() => {
-      return props.columns.filter(
-        (field) => !props.excluded.includes(field.name)
-      )
+      return props.items.filter((field) => !props.excluded.includes(field.name))
     })
 
-    const noData = computed(() => props.data.length === 0)
+    const noData = computed(() => props.headers.length === 0)
 
     const sortBy = (column) => {
-      const columnObj = props.columns.find((col) => col.name === column)
+      const columnObj = props.items.find((col) => col.name === column)
       if (!columnObj || !columnObj.sortable) return
       let newOrder = 'asc'
       if (props.sortColumn === column) {
