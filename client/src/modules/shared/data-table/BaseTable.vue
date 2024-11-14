@@ -58,20 +58,11 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- Модальное окно для одного редактируемого поля -->
-    <!--    <EditableModal-->
-    <!--      v-if="selectedRow && selectedField"-->
-    <!--      :rowData="selectedRow"-->
-    <!--      :field="selectedField"-->
-    <!--      @close="closeModal"-->
-    <!--    />-->
   </div>
 </template>
 
 <script setup>
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
-import EditableModal from './BaseTableEditableModal.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatValue } from '@/utils/formatters-2.ts'
@@ -98,11 +89,6 @@ const filteredFields = computed(() =>
 const openModal = (row, field) => {
   selectedRow.value = row
   selectedField.value = field
-}
-
-const closeModal = () => {
-  selectedRow.value = null
-  selectedField.value = null
 }
 </script>
 
