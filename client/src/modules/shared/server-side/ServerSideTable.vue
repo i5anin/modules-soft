@@ -58,7 +58,10 @@
         >
           <td v-for="(field, index) in filteredFields" :key="index">
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span v-else>{{ formatValue(row[field.name], field.type) }}</span>
+            <span
+              v-else
+              v-html="formatValue(row[field.name], field.type)"
+            ></span>
           </td>
         </tr>
       </tbody>
