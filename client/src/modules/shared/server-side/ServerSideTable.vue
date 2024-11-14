@@ -19,7 +19,7 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
           <th
@@ -78,7 +78,7 @@ import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 
 export default {
-  name: 'DataTable',
+  name: 'ServerSideTable',
   components: { SearchBar, Pagination, StatusDisplay },
   props: {
     data: { type: Array, required: true },
