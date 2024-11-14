@@ -2,13 +2,7 @@
   <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
     <div class="p-2">
-      <router-link
-        :to="{ name: 'OrderDetails' }"
-        class="btn btn-secondary me-3 mb-2 btn-sm btn-outline-light"
-      >
-        Назад к списку деталей заказа
-      </router-link>
-
+      <BackButton targetRoute="OrderDetails" />
       <div class="d-flex align-items-center mb-2">
         <svg-icon
           type="mdi"
@@ -76,12 +70,13 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
-import { getModalOrderById } from '../api/nom_info.js'
+import { getModalOrderById } from '../api/nom_info.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
 import TpdTable from '@/modules/shared/data-table/BaseTable.vue'
+import BackButton from '@/modules/shared/BackButton.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()

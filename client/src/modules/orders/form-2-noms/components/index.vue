@@ -2,24 +2,7 @@
   <div>
     <div class="grid-container">
       <div class="p-2" :class="{ collapsed: isCollapsed }">
-        <router-link :to="{ name: 'OrdersTable' }" v-slot="{ href, isActive }">
-          <button
-            :class="[
-              'btn',
-              'btn-secondary',
-              'me-3',
-              'mb-2',
-              'btn-sm',
-              'btn-outline-light',
-              { active: isActive },
-            ]"
-            :href="href"
-          >
-            <svg-icon type="mdi" :path="path" class="me-1" />
-            Назад к заказам
-          </button>
-        </router-link>
-        <!-- Содержимое карточки -->
+        <BackButton targetRoute="OrdersTable" />
         <OrderInfoCard :header="headerData" />
       </div>
 
@@ -44,6 +27,7 @@ import { useRoleStore } from '@/modules/_main/store/index.js'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowLeft } from '@mdi/js'
 import SborMain from '@/modules/shared/sborka/SborMain.vue'
+import BackButton from '@/modules/shared/BackButton.vue'
 
 const router = useRouter()
 const roleStore = useRoleStore()

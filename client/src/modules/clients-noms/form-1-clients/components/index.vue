@@ -7,8 +7,8 @@
 
         <!-- Таблица данных -->
         <ServerSideTable
-          :data="clients || []"
-          :columns="tableFields || []"
+          :items="clients || []"
+          :headers="tableFields"
           :items-per-page-options="[15, 30, 50, 100]"
           :items-per-page="itemsPerPage"
           :current-page="currentPage"
