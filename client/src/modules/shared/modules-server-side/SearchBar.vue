@@ -16,7 +16,7 @@
         class="btn btn-link position-absolute top-50 end-0 translate-middle-y"
         style="padding: 0; color: gray"
       >
-        <i class="bi bi-x-circle"></i>
+        <i class="bi bi-x-circle me-3"></i>
       </button>
     </div>
     <button @click="onSearch" class="btn btn-primary" :disabled="loading">
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 export default {
   name: 'SearchBar',

@@ -29,15 +29,13 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import _ from 'lodash'
+import { useRouter } from 'vue-router'
 import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { getClients } from '../api/clients.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import BaseTable from '@/modules/shared/data-table/BaseTable.vue'
 
 export default {
-  components: { BaseTable, ServerSideTable },
+  components: { ServerSideTable },
   setup() {
     const clients = ref([])
     const tableFields = ref([])

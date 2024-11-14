@@ -71,23 +71,22 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+<script setup>
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
-import { getModalOrderById } from '../api/nom_info.ts'
+import { getModalOrderById } from '../api/nom_info.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
 import TpdTable from '@/modules/shared/data-table/BaseTable.vue'
-import type { ModalOrder } from '../types' // Подключите тип ModalOrder
 
 const roleStore = useRoleStore()
 const route = useRoute()
 const id = ref(route.params.id)
-const selectedOrder = ref<ModalOrder | null>(null)
+const selectedOrder = ref(null)
 
 const fetchOrderData = async () => {
   if (id.value) {
@@ -148,7 +147,7 @@ const fieldValues = computed(() =>
 )
 
 // Уникальные поля для каждой таблицы (без дублирования)
-const uniqueFields = (fields: Record<string, any>) => {
+const uniqueFields = (fields) => {
   const seen = new Set()
   return Object.entries(fields || {})
     .filter(([fieldName]) => {

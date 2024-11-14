@@ -16,9 +16,8 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import _ from 'lodash'
 import SborMain from '@/modules/shared/sborka/SborMain.vue'
 import { getOrders } from '../api/nom_dir.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'

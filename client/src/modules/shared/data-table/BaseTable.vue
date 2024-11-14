@@ -64,7 +64,6 @@
 <script setup>
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { formatValue } from '@/utils/formatters-2.ts'
 import { mdiPencil } from '@mdi/js'
 import SvgIcon from '@jamescoyle/vue-icon'
@@ -78,7 +77,6 @@ const props = defineProps({
   linkPath: { type: Function, default: null },
 })
 
-const router = useRouter()
 const selectedRow = ref(null)
 const selectedField = ref(null)
 

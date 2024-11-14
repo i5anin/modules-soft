@@ -52,12 +52,13 @@ export default {
   name: 'SborMain',
   components: { SborNode },
   props: {
-    tableData: Array,
-    tableFields: Array,
+    tableData: Array, // Пропс для исходных данных
+    tableFields: Array, // Пропс для исходных полей
   },
   setup(props) {
     const sborStore = store()
 
+    // Следим за изменениями в prop tableData и обновляем store
     watch(
       () => props.tableData,
       (newData) => {
@@ -66,16 +67,17 @@ export default {
       { immediate: true }
     )
 
+    // Следим за изменениями в prop tableFields и обновляем store
     watch(
       () => props.tableFields,
       (newFields) => sborStore.setTableFields(newFields),
       { immediate: true }
     )
 
-    return {
-      tableData: computed(() => sborStore.tableData),
-      filteredFields: computed(() => sborStore.filteredFields),
-    }
+    // filteredFields из store без дублирования переменных
+    const filteredFields = computed(() => sborStore.filteredFields)
+
+    return { filteredFields }
   },
 }
 </script>
