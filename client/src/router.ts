@@ -10,33 +10,36 @@ const routes: Array<RouteRecordRaw> = [
     path: '/orders',
     name: 'OrdersTable',
     component: () =>
-      import('@/modules/orders/form-1-orders/components/index.vue'),
+      import('@/modules/orders/form-1-orders/components/PagesOrders.vue'),
   },
   {
     path: '/orders/:orderId',
     name: 'OrderDetails',
     component: () =>
-      import('@/modules/orders/form-2-noms/components/index.vue'),
+      import('@/modules/orders/form-2-noms/components/PagesNomsDetail.vue'),
     props: true, // позволяет передавать orderId как параметр
   },
   {
     path: '/orders/:orderId/:id',
     name: 'OrderDetailsDetails',
-    component: () => import('@/modules/orders/form-3-nom/components/index.vue'),
+    component: () =>
+      import('@/modules/orders/form-3-nom/components/PagesNomDetail.vue'),
     props: true, // позволяет передавать orderId и id как параметры
   },
   {
     path: '/clients',
     name: 'Clients',
     component: () =>
-      import('@/modules/clients-noms/form-1-clients/components/index.vue'),
+      import(
+        '@/modules/clients-noms/form-1-clients/components/PagesClients.vue'
+      ),
     props: true,
   },
   {
     path: '/noms/:clientId',
     name: 'Nomenclature',
     component: () =>
-      import('@/modules/clients-noms/form-2-noms/components/index.vue'),
+      import('@/modules/clients-noms/form-2-noms/components/PagesNoms.vue'),
     props: true,
   },
   {
@@ -49,7 +52,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/test/modal-tools/:no/:nomId',
     name: 'modal-tools',
     component: () =>
-      import('@/modules/orders/modal-tools/components/index.vue'),
+      import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
     props: true, // передача no и nomId как параметров
   },
 ]
