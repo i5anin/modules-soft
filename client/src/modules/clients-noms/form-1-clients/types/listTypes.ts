@@ -8,7 +8,7 @@ export interface GetOrdersParams {
   date1?: string
   date2?: string
   type: string
-  role: string
+  module: string
 }
 
 export interface Order {

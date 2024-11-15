@@ -30,8 +30,8 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { getClients } from '../api/clients.ts'
+import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
 export default {
@@ -59,7 +59,7 @@ export default {
           sortCol: sortColumn.value,
           sortDir: sortOrder.value,
           type: roleStore.selectedTypes,
-          role: roleStore.selectedRole,
+          module: roleStore.selectedRole,
           search: searchSearch.value,
         })
 

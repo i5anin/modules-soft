@@ -6,11 +6,11 @@ import { GetModalOrderByIdParams, ModalOrder } from './types'
 export const getModalOrderById = (
   orderId: GetModalOrderByIdParams['orderId'],
   type: GetModalOrderByIdParams['type'],
-  role: GetModalOrderByIdParams['role']
+  module: GetModalOrderByIdParams['module']
 ): Promise<ModalOrder> => {
   return apiClient
     .get<ModalOrder>('nom_info', {
-      params: { id: orderId, type, module: role },
+      params: { id: orderId, type, module: module },
     })
     .then(handleResponse)
     .catch(handleError)

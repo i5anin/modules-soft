@@ -5,7 +5,7 @@ import { GetOrdersParams, Order } from './types'
 
 export const getClients = (params: GetOrdersParams): Promise<Order[]> => {
   return apiClient
-    .get<Order[]>('clients', { params }) // Убрано жестко прописанное client_id
+    .get<Order[]>('clients', { params })
     .then(handleResponse)
     .catch(handleError)
 }

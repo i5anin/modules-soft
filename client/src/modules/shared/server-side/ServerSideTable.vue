@@ -15,6 +15,30 @@
         </select>
       </div>
 
+      <!-- Фильтры по диапазону дат -->
+      <div
+        class="date-range-filters d-flex align-items-center justify-content-start mb-3"
+      >
+        <div class="d-flex align-items-center">
+          <label for="start-date" class="form-label fw-bold me-2 mb-0"
+            >Диапазон:</label
+          >
+          <DateRangeFilter
+            id="start-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="startDate"
+          />
+        </div>
+        <div class="d-flex align-items-center ms-3">
+          <label for="end-date" class="form-label fw-bold me-2 mb-0">-</label>
+          <DateRangeFilter
+            id="end-date"
+            class="custom-date-range-filter flex-grow-1"
+            v-model="endDate"
+          />
+        </div>
+      </div>
+
       <!-- SearchBar Component -->
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
@@ -84,11 +108,12 @@ import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 import { formatValue } from '@/utils/formatters-2.ts'
+import DateRangeFilter from '@/modules/shared/modules-server-side/DateRangeFilter.vue'
 
 export default {
   name: 'ServerSideTable',
   methods: { formatValue },
-  components: { SearchBar, Pagination, StatusDisplay },
+  components: { DateRangeFilter, SearchBar, Pagination, StatusDisplay },
   props: {
     items: { type: Array, required: true },
     headers: { type: Array, required: true },

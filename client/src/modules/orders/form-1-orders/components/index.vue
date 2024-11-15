@@ -2,32 +2,6 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <!-- Фильтры по диапазону дат -->
-        <div
-          class="date-range-filters d-flex align-items-center justify-content-start mb-3"
-        >
-          <div class="d-flex align-items-center">
-            <label for="start-date" class="form-label fw-bold me-2 mb-0"
-              >С</label
-            >
-            <DateRangeFilter
-              id="start-date"
-              class="custom-date-range-filter flex-grow-1"
-              v-model="startDate"
-            />
-          </div>
-          <div class="d-flex align-items-center ms-3">
-            <label for="end-date" class="form-label fw-bold me-2 mb-0"
-              >По</label
-            >
-            <DateRangeFilter
-              id="end-date"
-              class="custom-date-range-filter flex-grow-1"
-              v-model="endDate"
-            />
-          </div>
-        </div>
-
         <!-- Таблица данных -->
         <ServerSideTable
           :headers="tableColumns"
@@ -55,7 +29,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
-import DateRangeFilter from './DateRangeFilter.vue'
+import DateRangeFilter from '@/modules/shared/modules-server-side/DateRangeFilter.vue'
 import { getOrders } from '../api/list.ts'
 import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
@@ -78,8 +52,8 @@ export default {
     const currentPage = ref(1)
     const itemsPerPage = ref(15)
     const totalPages = ref(0)
-    const sortColumn = ref('id')
-    const sortOrder = ref('desc')
+    const sortColumn = ref('')
+    const sortOrder = ref('')
 
     const today = new Date()
     const threeMonthsAgo = new Date()
@@ -97,7 +71,7 @@ export default {
         date1: startDate.value,
         date2: endDate.value,
         type: roleStore.selectedTypes,
-        role: roleStore.selectedRole,
+        module: roleStore.selectedRole,
       })
         .then((response) => {
           orders.value = response.table.data
