@@ -84,7 +84,7 @@
             <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
             <span
               v-else
-              v-html="formatValue(row[field.name], field.type)"
+              v-html="formatValue(row[field.name], field.type, field.name)"
             ></span>
           </td>
         </tr>

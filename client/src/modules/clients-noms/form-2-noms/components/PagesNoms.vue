@@ -2,8 +2,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <BackButton />
         <!-- Кнопка Назад -->
+        <BackButton />
+
         <!-- Название клиента -->
         <h3 class="client-name mb-3">{{ clientName }}</h3>
 
@@ -16,7 +17,7 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import SborMain from '@/modules/shared/sborka/SborMain.vue'
 import { getOrders } from '../api/nom_dir.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'

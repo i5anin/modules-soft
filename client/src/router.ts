@@ -16,14 +16,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/orders/:orderId',
     name: 'OrderDetails',
     component: () =>
-      import('@/modules/orders/form-2-noms/components/PagesNomsDetail.vue'),
+      import(
+        '@/modules/orders/form-2-noms/components/PagesNomsOrderDetail.vue'
+      ),
     props: true, // позволяет передавать orderId как параметр
   },
   {
     path: '/orders/:orderId/:id',
     name: 'OrderDetailsDetails',
     component: () =>
-      import('@/modules/orders/form-3-nom/components/PagesNomDetail.vue'),
+      import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
     props: true, // позволяет передавать orderId и id как параметры
   },
   {

@@ -1,6 +1,10 @@
 import moment from 'moment'
 
-export function formatValue(value, type) {
+export function formatValue(value, type, key = '') {
+  if (key.toLowerCase().includes('price')) {
+    return formatCurrency(value)
+  }
+
   switch (type) {
     case 'bool':
       return formatBoolean(value)
@@ -57,4 +61,14 @@ function formatDate(value) {
 
 function formatTimestamp(value) {
   return value ? moment(value).format('DD.MM.YYYY HH:mm') : ''
+}
+
+function formatCurrency(value) {
+  const numberValue = typeof value === 'string' ? parseFloat(value) : value
+
+  if (numberValue !== null && !isNaN(numberValue)) {
+    return `${numberValue.toLocaleString('ru-RU')} ₽`
+  }
+
+  return ''
 }
