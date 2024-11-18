@@ -51,7 +51,7 @@
         </div>
       </div>
       <span v-else :title="generateTitle(field)" style="font-size: 13px">
-        {{ formatValue(sbor[field.name], field.type) }}
+        {{ formatValue(sbor[field.name], field.type, field.name) }}
       </span>
     </td>
   </tr>
