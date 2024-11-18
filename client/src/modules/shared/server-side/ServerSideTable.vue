@@ -21,9 +21,9 @@
         class="date-range-filters d-flex align-items-center justify-content-start mb-3"
       >
         <div class="d-flex align-items-center">
-          <label for="start-date" class="form-label fw-bold me-2 mb-0"
-            >Диапазон:</label
-          >
+          <label for="start-date" class="form-label fw-bold me-2 mb-0">
+            Диапазон:
+          </label>
           <DateRangeFilter
             id="start-date"
             class="custom-date-range-filter flex-grow-1"
