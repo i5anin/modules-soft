@@ -17,6 +17,7 @@
 
       <!-- Фильтры по диапазону дат -->
       <div
+        v-if="datepicker"
         class="date-range-filters d-flex align-items-center justify-content-start mb-3"
       >
         <div class="d-flex align-items-center">
@@ -26,7 +27,7 @@
           <DateRangeFilter
             id="start-date"
             class="custom-date-range-filter flex-grow-1"
-            v-model="startDate"
+            v-model="localStartDate"
           />
         </div>
         <div class="d-flex align-items-center ms-3">
@@ -34,7 +35,7 @@
           <DateRangeFilter
             id="end-date"
             class="custom-date-range-filter flex-grow-1"
-            v-model="endDate"
+            v-model="localEndDate"
           />
         </div>
       </div>
@@ -43,6 +44,7 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
+    <!-- Table -->
     <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
@@ -107,13 +109,13 @@ import { computed, ref } from 'vue'
 import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
-import { formatValue } from '@/utils/formatters-2.ts'
 import DateRangeFilter from '@/modules/shared/modules-server-side/DateRangeFilter.vue'
+import { formatValue } from '@/utils/formatters-2.ts'
 
 export default {
   name: 'ServerSideTable',
   methods: { formatValue },
-  components: { DateRangeFilter, SearchBar, Pagination, StatusDisplay },
+  components: { SearchBar, Pagination, StatusDisplay, DateRangeFilter },
   props: {
     items: { type: Array, required: true },
     headers: { type: Array, required: true },
@@ -125,6 +127,9 @@ export default {
     sortColumn: { type: String, default: '' },
     sortOrder: { type: String, default: 'asc' },
     itemsPerPage: { type: Number, required: true },
+    datepicker: { type: Boolean, default: false },
+    startDate: { type: String, default: null },
+    endDate: { type: String, default: null },
   },
   emits: [
     'row-click',
@@ -132,27 +137,28 @@ export default {
     'sort-change',
     'page-size-change',
     'search-change',
+    'date-range-change',
   ],
   setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
     const pageSizes = props.itemsPerPageOptions
     const loading = ref(false)
+    const localStartDate = ref(props.startDate)
+    const localEndDate = ref(props.endDate)
 
-    const filteredFields = computed(() => {
-      return props.headers.filter(
-        (field) => !props.excluded.includes(field.name)
-      )
-    })
+    const filteredFields = computed(() =>
+      props.headers.filter((field) => !props.excluded.includes(field.name))
+    )
 
     const noData = computed(() => props.items.length === 0)
 
     const sortBy = (column) => {
       const columnObj = props.headers.find((col) => col.name === column)
       if (!columnObj || !columnObj.sortable) return
-      let newOrder = 'asc'
-      if (props.sortColumn === column) {
-        newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
-      }
+      const newOrder =
+        props.sortColumn === column && props.sortOrder === 'asc'
+          ? 'desc'
+          : 'asc'
       emit('sort-change', { column, order: newOrder })
     }
 
@@ -172,6 +178,13 @@ export default {
       }, 500)
     }
 
+    const onDateChange = () => {
+      emit('date-range-change', {
+        startDate: localStartDate.value,
+        endDate: localEndDate.value,
+      })
+    }
+
     const goToPage = (page) => {
       emit('page-change', page)
     }
@@ -188,12 +201,15 @@ export default {
       handleRowClick,
       onPageSizeChange,
       onSearch,
+      onDateChange,
       goToPage,
       filteredFields,
       loading,
       currentPg,
       totalPg,
       totalCnt,
+      localStartDate,
+      localEndDate,
     }
   },
 }

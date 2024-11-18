@@ -4,6 +4,7 @@
       <div class="col-12">
         <!-- Таблица данных -->
         <ServerSideTable
+          datepicker
           :headers="tableColumns"
           :items="orders"
           :items-per-page-options="[15, 30, 50, 100]"
