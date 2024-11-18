@@ -1,11 +1,10 @@
 <template>
   <div class="input-group">
     <span class="input-group-text">
-      <font-awesome-icon :icon="['far', 'calendar']"
-    /></span>
+      <font-awesome-icon :icon="['far', 'calendar']" />
+    </span>
     <Datepicker
       id="singleDate"
-      :value="formattedDate"
       v-model="selectedDate"
       :enableTimePicker="false"
       :format="dateFormat"
@@ -27,7 +26,7 @@
 
 <script>
 import Datepicker from 'vue3-datepicker'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import customRuLocale from '@/utils/localize-ru.ts'
 import { FontAwesomeIcon } from '@/utils/icons.ts'
 
@@ -44,39 +43,41 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const selectedDate = ref(
-      props.modelValue ? new Date(props.modelValue) : null
-    )
     const dateFormat = 'dd.MM.yyyy'
 
-    //  Форматируем дату для отображения в Datepicker
-    const formattedDate = computed(() => {
-      return selectedDate.value
-        ? selectedDate.value.toLocaleDateString('ru-RU', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-        : ''
-    })
+    // Парсинг даты без UTC-сдвига
+    const parseDateToLocal = (dateString) => {
+      if (!dateString) return null
+      const [year, month, day] = dateString.split('-')
+      return new Date(year, month - 1, day) // Создаёт дату в локальном времени
+    }
+
+    // Форматирование даты в формат 'YYYY-MM-DD'
+    const formatDateToISO = (date) => {
+      if (!date) return null
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    }
+
+    const selectedDate = ref(
+      props.modelValue ? parseDateToLocal(props.modelValue) : null
+    )
 
     const clearDate = () => {
       selectedDate.value = null
     }
 
     watch(selectedDate, (newDate) => {
-      // Эмиттим событие обновления модели с отформатированной датой
-      emit(
-        'update:modelValue',
-        newDate ? newDate.toISOString().split('T')[0] : null
-      )
+      const formattedDate = formatDateToISO(newDate)
+      emit('update:modelValue', formattedDate)
     })
 
     return {
       selectedDate,
       dateFormat,
       customRuLocale,
-      formattedDate,
       clearDate,
     }
   },

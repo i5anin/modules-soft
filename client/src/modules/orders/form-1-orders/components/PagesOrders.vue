@@ -2,6 +2,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
+        <div class="mt-3">
+          <p>Выбранный диапазон: {{ startDate }} - {{ endDate }}</p>
+        </div>
         <!-- Таблица данных -->
         <ServerSideTable
           datepicker
@@ -20,6 +23,7 @@
           @sort-change="handleSortChange"
           @page-size-change="handlePageSizeChange"
           @search-change="handleSearchChange"
+          @date-range-change="handleDateRangeChange"
         />
       </div>
     </div>
@@ -30,18 +34,15 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
-import DateRangeFilter from '@/modules/shared/modules-server-side/DateRangeFilter.vue'
 import { getOrders } from '../api/list.ts'
 import ServerSideTable from '@/modules/shared/server-side/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { statuses } from '@/modules/shared/statuses.js'
 
 export default {
-  components: { DateRangeFilter, ServerSideTable },
+  components: { ServerSideTable },
   setup() {
     const router = useRouter()
-    const startDate = ref(null)
-    const endDate = ref(null)
     const orders = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
@@ -56,12 +57,15 @@ export default {
     const sortColumn = ref('')
     const sortOrder = ref('')
 
-    const today = new Date()
-    const threeMonthsAgo = new Date()
-    threeMonthsAgo.setMonth(today.getMonth() - 3)
-    startDate.value = threeMonthsAgo.toISOString().split('T')[0]
-    endDate.value = today.toISOString().split('T')[0]
+    // Инициализация диапазона дат
+    const defaultEndDate = new Date()
+    const defaultStartDate = new Date()
+    defaultStartDate.setMonth(defaultEndDate.getMonth() - 3)
 
+    const startDate = ref(defaultStartDate.toISOString().slice(0, 10))
+    const endDate = ref(defaultEndDate.toISOString().slice(0, 10))
+
+    // Получение данных с сервера
     const fetchOrders = () => {
       return getOrders({
         page: currentPage.value,
@@ -77,7 +81,6 @@ export default {
         .then((response) => {
           orders.value = response.table.data
 
-          // Преобразование `fields` из объекта в массив
           tableFields.value = Object.entries(response.table.fields).map(
             ([key, field]) => ({
               name: key,
@@ -113,16 +116,9 @@ export default {
       return fields
     })
 
-    const startRecord = computed(
-      () => (currentPage.value - 1) * itemsPerPage.value + 1
-    )
-    const endRecord = computed(() =>
-      Math.min(currentPage.value * itemsPerPage.value, totalCount.value)
-    )
-
-    const tableColumns = computed(() => {
-      return filteredTableFields.value.map((field) => {
-        let column = {
+    const tableColumns = computed(() =>
+      filteredTableFields.value.map((field) => {
+        const column = {
           name: field.name,
           title: field.title,
           type: field.type,
@@ -135,9 +131,10 @@ export default {
         } else if (field.name === 'clients__name') {
           column.cellComponent = 'ClientNameCell'
         }
+
         return column
       })
-    })
+    )
 
     const StatusCell = {
       name: 'StatusCell',
@@ -198,6 +195,21 @@ export default {
       fetchOrders()
     }
 
+    const handleDateRangeChange = ({
+      startDate: newStartDate,
+      endDate: newEndDate,
+    }) => {
+      console.log(
+        'Диапазон обновлен в родительском компоненте:',
+        newStartDate,
+        newEndDate
+      )
+      if (newStartDate) startDate.value = newStartDate
+      if (newEndDate) endDate.value = newEndDate
+      currentPage.value = 1
+      fetchOrders()
+    }
+
     watch(
       [
         startDate,
@@ -219,22 +231,19 @@ export default {
       startDate,
       endDate,
       orders,
-      tableFields,
-      searchQuery,
       tableColumns,
       handleRowClick,
       handlePageChange,
       handleSortChange,
       handlePageSizeChange,
       handleSearchChange,
+      handleDateRangeChange,
       currentPage,
       totalPages,
       sortColumn,
       sortOrder,
       itemsPerPage,
       totalCount,
-      startRecord,
-      endRecord,
       StatusCell,
       ClientNameCell,
     }
@@ -242,9 +251,16 @@ export default {
 }
 </script>
 
-<style>
-.date-range-filters {
-  display: flex;
-  gap: 16px;
+<style scoped>
+.table tbody tr.table-row {
+  cursor: pointer;
+}
+
+th.sortable {
+  cursor: pointer;
+}
+
+th.sortable:hover {
+  background-color: #f1f1f1;
 }
 </style>

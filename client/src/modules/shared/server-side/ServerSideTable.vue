@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <!-- Page Size Selection -->
+      <!-- Выбор количества элементов на странице -->
       <div class="d-flex align-items-center me-3">
         <label class="me-2">Показать на странице:</label>
         <select
@@ -21,13 +21,14 @@
         class="date-range-filters d-flex align-items-center justify-content-start mb-3"
       >
         <div class="d-flex align-items-center">
-          <label for="start-date" class="form-label fw-bold me-2 mb-0"
-            >Диапазон:</label
-          >
+          <label for="start-date" class="form-label fw-bold me-2 mb-0">
+            Диапазон:
+          </label>
           <DateRangeFilter
             id="start-date"
             class="custom-date-range-filter flex-grow-1"
             v-model="localStartDate"
+            @change="onDateChange"
           />
         </div>
         <div class="d-flex align-items-center ms-3">
@@ -36,15 +37,16 @@
             id="end-date"
             class="custom-date-range-filter flex-grow-1"
             v-model="localEndDate"
+            @change="onDateChange"
           />
         </div>
       </div>
 
-      <!-- SearchBar Component -->
+      <!-- Поисковая строка -->
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <!-- Table -->
+    <!-- Таблица -->
     <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
@@ -93,7 +95,7 @@
       </tbody>
     </table>
 
-    <!-- Pagination Component -->
+    <!-- Пагинация -->
     <Pagination
       :totalCount="totalCnt"
       :itemsPerPage="localItemsPerPage"
@@ -105,7 +107,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
@@ -179,6 +181,7 @@ export default {
     }
 
     const onDateChange = () => {
+      console.log('Новый диапазон:', localStartDate.value, localEndDate.value)
       emit('date-range-change', {
         startDate: localStartDate.value,
         endDate: localEndDate.value,
@@ -192,6 +195,11 @@ export default {
     const currentPg = computed(() => props.currentPage)
     const totalPg = computed(() => props.totalPages)
     const totalCnt = computed(() => props.totalCount)
+
+    // Автоматическое отслеживание изменений дат для отладки
+    watch([localStartDate, localEndDate], ([newStartDate, newEndDate]) => {
+      console.log('Диапазон обновлен:', newStartDate, newEndDate)
+    })
 
     return {
       localItemsPerPage,
