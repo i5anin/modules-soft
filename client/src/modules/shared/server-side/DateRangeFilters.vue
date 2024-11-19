@@ -1,8 +1,6 @@
 <template>
-  <div
-    class="date-range-filters d-flex align-items-center justify-content-start mb-3"
-  >
-    <div class="d-flex align-items-center">
+  <div class="d-flex me-3">
+    <div class="d-flex">
       <label for="start-date" class="form-label fw-bold me-2 mb-0"
         >Диапазон:</label
       >
