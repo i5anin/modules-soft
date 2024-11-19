@@ -1,101 +1,37 @@
 <template>
   <div>
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <!-- Выбор количества элементов на странице -->
-      <div class="d-flex align-items-center me-3">
-        <label class="me-2">Показать на странице:</label>
-        <select
-          v-model="localItemsPerPage"
-          class="form-select w-auto"
-          @change="onPageSizeChange"
-        >
-          <option v-for="size in pageSizes" :key="size" :value="size">
-            {{ size }}
-          </option>
-        </select>
-      </div>
+      <PageSizeSelector
+        :pageSizes="pageSizes"
+        :modelValue="localItemsPerPage"
+        @update:modelValue="localItemsPerPage = $event"
+        @page-size-change="onPageSizeChange"
+      />
 
-      <!-- Фильтры по диапазону дат -->
-      <div
+      <DateRangeFilters
         v-if="datepicker"
-        class="date-range-filters d-flex align-items-center justify-content-start mb-3"
-      >
-        <div class="d-flex align-items-center">
-          <label for="start-date" class="form-label fw-bold me-2 mb-0">
-            Диапазон:
-          </label>
-          <DateRangeFilter
-            id="start-date"
-            class="custom-date-range-filter flex-grow-1"
-            v-model="localStartDate"
-            @change="onDateChange"
-          />
-        </div>
-        <div class="d-flex align-items-center ms-3">
-          <label for="end-date" class="form-label fw-bold me-2 mb-0">-</label>
-          <DateRangeFilter
-            id="end-date"
-            class="custom-date-range-filter flex-grow-1"
-            v-model="localEndDate"
-            @change="onDateChange"
-          />
-        </div>
-      </div>
+        :start="localStartDate"
+        :end="localEndDate"
+        @update:start="localStartDate = $event"
+        @update:end="localEndDate = $event"
+        @date-range-change="onDateChange"
+      />
 
-      <!-- Поисковая строка -->
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <!-- Таблица -->
-    <table class="table table-striped table-bordered table-hover">
-      <thead>
-        <tr>
-          <th
-            v-for="column in headers"
-            :key="column.name"
-            @click="column.sortable && sortBy(column.name)"
-            :class="{ sortable: column.sortable }"
-          >
-            {{ column.title }}
-            <span v-if="column.sortable">
-              <i
-                v-if="sortColumn === column.name && sortOrder === 'asc'"
-                class="bi bi-caret-up-fill"
-              ></i>
-              <i
-                v-else-if="sortColumn === column.name && sortOrder === 'desc'"
-                class="bi bi-caret-down-fill"
-              ></i>
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="noData">
-          <td colspan="100%" class="text-center">Нет данных</td>
-        </tr>
-        <tr
-          v-for="row in items"
-          :key="row.id"
-          @click="handleRowClick(row)"
-          :class="{
-            'table-row': true,
-            locked: row.locked,
-            'table-success': row.goz,
-          }"
-        >
-          <td v-for="(field, index) in filteredFields" :key="index">
-            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span
-              v-else
-              v-html="formatValue(row[field.name], field.type, field.name)"
-            ></span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <Table
+      :headers="headers"
+      :items="items"
+      :sortColumn="sortColumn"
+      :sortOrder="sortOrder"
+      :excluded="excluded"
+      :filteredFields="filteredFields"
+      :formatValue="formatValue"
+      @row-click="handleRowClick"
+      @sort-change="sortBy"
+    />
 
-    <!-- Пагинация -->
     <Pagination
       :totalCount="totalCnt"
       :itemsPerPage="localItemsPerPage"
@@ -107,52 +43,62 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, defineProps, defineEmits } from 'vue'
+import { formatValue } from '@/utils/formatters-2.ts'
 import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
-import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
-import DateRangeFilter from '@/modules/shared/modules-server-side/DateRangeFilter.vue'
-import { formatValue } from '@/utils/formatters-2.ts'
+import Table from './Table.vue'
+import PageSizeSelector from './PageSizeSelector.vue'
+import DateRangeFilters from './DateRangeFilters.vue'
 
 export default {
   name: 'ServerSideTable',
-  methods: { formatValue },
-  components: { SearchBar, Pagination, StatusDisplay, DateRangeFilter },
-  props: {
-    items: { type: Array, required: true },
-    headers: { type: Array, required: true },
-    excluded: { type: Array, default: () => [] },
-    itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
-    totalPages: { type: Number, required: true },
-    totalCount: { type: Number, required: true },
-    currentPage: { type: Number, required: true },
-    sortColumn: { type: String, default: '' },
-    sortOrder: { type: String, default: 'asc' },
-    itemsPerPage: { type: Number, required: true },
-    datepicker: { type: Boolean, default: false },
-    startDate: { type: String, default: null },
-    endDate: { type: String, default: null },
+  components: {
+    Table,
+    SearchBar,
+    Pagination,
+    PageSizeSelector,
+    DateRangeFilters,
   },
-  emits: [
-    'row-click',
-    'page-change',
-    'sort-change',
-    'page-size-change',
-    'search-change',
-    'date-range-change',
-  ],
-  setup(props, { emit }) {
+  setup() {
+    const props = defineProps({
+      items: { type: Array, required: true },
+      headers: { type: Array, required: true },
+      excluded: { type: Array, default: () => [] },
+      itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
+      totalPages: { type: Number, required: true },
+      totalCount: { type: Number, required: true },
+      currentPage: { type: Number, required: true },
+      sortColumn: { type: String, default: '' },
+      sortOrder: { type: String, default: 'asc' },
+      itemsPerPage: { type: Number, required: true },
+      datepicker: { type: Boolean, default: false },
+      startDate: { type: String, default: '' },
+      endDate: { type: String, default: '' },
+    })
+
+    const emit = defineEmits([
+      'row-click',
+      'page-change',
+      'sort-change',
+      'page-size-change',
+      'search-change',
+      'date-range-change',
+    ])
+
+    const pageSizes = ref(props.itemsPerPageOptions)
     const localItemsPerPage = ref(props.itemsPerPage)
-    const pageSizes = props.itemsPerPageOptions
-    const loading = ref(false)
     const localStartDate = ref(props.startDate)
     const localEndDate = ref(props.endDate)
+    const loading = ref(false)
 
     const filteredFields = computed(() =>
       props.headers.filter((field) => !props.excluded.includes(field.name))
     )
 
-    const noData = computed(() => props.items.length === 0)
+    const totalCnt = computed(() => props.totalCount)
+    const currentPg = computed(() => props.currentPage)
+    const totalPg = computed(() => props.totalPages)
 
     const sortBy = (column) => {
       const columnObj = props.headers.find((col) => col.name === column)
@@ -181,7 +127,6 @@ export default {
     }
 
     const onDateChange = () => {
-      console.log('Новый диапазон:', localStartDate.value, localEndDate.value)
       emit('date-range-change', {
         startDate: localStartDate.value,
         endDate: localEndDate.value,
@@ -192,47 +137,24 @@ export default {
       emit('page-change', page)
     }
 
-    const currentPg = computed(() => props.currentPage)
-    const totalPg = computed(() => props.totalPages)
-    const totalCnt = computed(() => props.totalCount)
-
-    // Автоматическое отслеживание изменений дат для отладки
-    watch([localStartDate, localEndDate], ([newStartDate, newEndDate]) => {
-      console.log('Диапазон обновлен:', newStartDate, newEndDate)
-    })
-
     return {
-      localItemsPerPage,
       pageSizes,
-      noData,
+      localItemsPerPage,
+      localStartDate,
+      localEndDate,
+      filteredFields,
+      loading,
+      totalCnt,
+      currentPg,
+      totalPg,
       sortBy,
       handleRowClick,
       onPageSizeChange,
       onSearch,
       onDateChange,
       goToPage,
-      filteredFields,
-      loading,
-      currentPg,
-      totalPg,
-      totalCnt,
-      localStartDate,
-      localEndDate,
+      formatValue,
     }
   },
 }
 </script>
-
-<style scoped>
-.table tbody tr.table-row {
-  cursor: pointer;
-}
-
-th.sortable {
-  cursor: pointer;
-}
-
-th.sortable:hover {
-  background-color: #f1f1f1;
-}
-</style>

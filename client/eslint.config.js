@@ -20,7 +20,7 @@ export default [
     },
     rules: {
       'vue/multi-word-component-names': 'off',
-      'max-lines': ['warn', { max: 350 }],
+      'max-lines': ['warn', { max: 200 }],
       complexity: ['warn', { max: 10 }],
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': [
