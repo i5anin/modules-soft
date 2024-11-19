@@ -4,29 +4,23 @@
       <PageSizeSelector
         :pageSizes="pageSizes"
         :modelValue="localItemsPerPage"
-        @update:modelValue="localItemsPerPage = $event"
-        @page-size-change="onPageSizeChange"
+        @update:modelValue="updateItemsPerPage"
       />
-
       <DateRangeFilters
         v-if="datepicker"
         :start="localStartDate"
         :end="localEndDate"
-        @update:start="localStartDate = $event"
-        @update:end="localEndDate = $event"
-        @date-range-change="onDateChange"
+        @update:start="updateStartDate"
+        @update:end="updateEndDate"
       />
-
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <Table
+    <DataTable
       :headers="headers"
       :items="items"
       :sortColumn="sortColumn"
       :sortOrder="sortOrder"
-      :excluded="excluded"
-      :filteredFields="filteredFields"
       :formatValue="formatValue"
       @row-click="handleRowClick"
       @sort-change="sortBy"
@@ -43,57 +37,56 @@
 </template>
 
 <script>
-import { computed, ref, defineProps, defineEmits } from 'vue'
-import { formatValue } from '@/utils/formatters-2.ts'
+import { computed, ref } from 'vue'
 import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
-import Table from './Table.vue'
+import DataTable from './Table.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
 import DateRangeFilters from './DateRangeFilters.vue'
+import { formatValue } from '@/utils/formatters-2.js'
 
 export default {
   name: 'ServerSideTable',
   components: {
-    Table,
+    DataTable,
     SearchBar,
     Pagination,
     PageSizeSelector,
     DateRangeFilters,
   },
-  setup() {
-    const props = defineProps({
-      items: { type: Array, required: true },
-      headers: { type: Array, required: true },
-      excluded: { type: Array, default: () => [] },
-      itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
-      totalPages: { type: Number, required: true },
-      totalCount: { type: Number, required: true },
-      currentPage: { type: Number, required: true },
-      sortColumn: { type: String, default: '' },
-      sortOrder: { type: String, default: 'asc' },
-      itemsPerPage: { type: Number, required: true },
-      datepicker: { type: Boolean, default: false },
-      startDate: { type: String, default: '' },
-      endDate: { type: String, default: '' },
-    })
-
-    const emit = defineEmits([
-      'row-click',
-      'page-change',
-      'sort-change',
-      'page-size-change',
-      'search-change',
-      'date-range-change',
-    ])
-
-    const pageSizes = ref(props.itemsPerPageOptions)
+  props: {
+    items: { type: Array, required: true },
+    headers: { type: Array, required: true },
+    excluded: { type: Array, default: () => [] },
+    itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
+    totalPages: { type: Number, required: true },
+    totalCount: { type: Number, required: true },
+    currentPage: { type: Number, required: true },
+    sortColumn: { type: String, default: '' },
+    sortOrder: { type: String, default: 'asc' },
+    itemsPerPage: { type: Number, required: true },
+    datepicker: { type: Boolean, default: false },
+    startDate: { type: String, default: '' },
+    endDate: { type: String, default: '' },
+  },
+  emits: [
+    'row-click',
+    'page-change',
+    'sort-change',
+    'page-size-change',
+    'search-change',
+    'date-range-change',
+  ],
+  setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
     const localStartDate = ref(props.startDate)
     const localEndDate = ref(props.endDate)
     const loading = ref(false)
 
-    const filteredFields = computed(() =>
-      props.headers.filter((field) => !props.excluded.includes(field.name))
+    const pageSizes = computed(() => props.itemsPerPageOptions)
+
+    const filteredHeaders = computed(() =>
+      props.headers.filter((header) => !props.excluded.includes(header.name))
     )
 
     const totalCnt = computed(() => props.totalCount)
@@ -101,57 +94,57 @@ export default {
     const totalPg = computed(() => props.totalPages)
 
     const sortBy = (column) => {
-      const columnObj = props.headers.find((col) => col.name === column)
-      if (!columnObj || !columnObj.sortable) return
-      const newOrder =
-        props.sortColumn === column && props.sortOrder === 'asc'
-          ? 'desc'
-          : 'asc'
-      emit('sort-change', { column, order: newOrder })
+      const isAsc = props.sortColumn === column && props.sortOrder === 'asc'
+      emit('sort-change', { column, order: isAsc ? 'desc' : 'asc' })
     }
 
-    const handleRowClick = (row) => {
-      emit('row-click', row)
+    const handleRowClick = (row) => emit('row-click', row)
+
+    const updateItemsPerPage = (value) => {
+      localItemsPerPage.value = value
+      emit('page-size-change', value)
     }
 
-    const onPageSizeChange = () => {
-      emit('page-size-change', localItemsPerPage.value)
+    const updateStartDate = (value) => {
+      localStartDate.value = value
+      emit('date-range-change', {
+        startDate: value,
+        endDate: localEndDate.value,
+      })
+    }
+
+    const updateEndDate = (value) => {
+      localEndDate.value = value
+      emit('date-range-change', {
+        startDate: localStartDate.value,
+        endDate: value,
+      })
     }
 
     const onSearch = (query) => {
       loading.value = true
       emit('search-change', query)
-      setTimeout(() => {
-        loading.value = false
-      }, 500)
+      setTimeout(() => (loading.value = false), 500)
     }
 
-    const onDateChange = () => {
-      emit('date-range-change', {
-        startDate: localStartDate.value,
-        endDate: localEndDate.value,
-      })
-    }
-
-    const goToPage = (page) => {
-      emit('page-change', page)
-    }
+    const goToPage = (page) => emit('page-change', page)
 
     return {
       pageSizes,
       localItemsPerPage,
       localStartDate,
       localEndDate,
-      filteredFields,
+      filteredHeaders,
       loading,
       totalCnt,
       currentPg,
       totalPg,
       sortBy,
       handleRowClick,
-      onPageSizeChange,
+      updateItemsPerPage,
+      updateStartDate,
+      updateEndDate,
       onSearch,
-      onDateChange,
       goToPage,
       formatValue,
     }

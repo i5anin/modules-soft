@@ -1,10 +1,9 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-// Определяем типы маршрутов
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: '/',
-    redirect: '/orders', // перенаправляет на основной маршрут, замените на нужный
+    redirect: '/orders',
   },
   {
     path: '/orders',
@@ -19,14 +18,14 @@ const routes: Array<RouteRecordRaw> = [
       import(
         '@/modules/orders/form-2-noms/components/PagesNomsOrderDetail.vue'
       ),
-    props: true, // позволяет передавать orderId как параметр
+    props: true,
   },
   {
     path: '/orders/:orderId/:id',
     name: 'OrderDetailsDetails',
     component: () =>
       import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
-    props: true, // позволяет передавать orderId и id как параметры
+    props: true,
   },
   {
     path: '/clients',
@@ -48,18 +47,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/test/sborka/:id',
     name: 'SborkaDetails',
     component: () => import('@/modules/shared/sborka/SborMain.vue'),
-    props: true, // передача id как параметра
+    props: true,
   },
   {
     path: '/test/modal-tools/:no/:nomId',
     name: 'modal-tools',
     component: () =>
       import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
-    props: true, // передача no и nomId как параметров
+    props: true,
   },
 ]
 
-// Экспорт маршрутизатора с типизацией
 export default createRouter({
   history: createWebHistory(),
   routes,

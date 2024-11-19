@@ -199,11 +199,6 @@ export default {
       startDate: newStartDate,
       endDate: newEndDate,
     }) => {
-      console.log(
-        'Диапазон обновлен в родительском компоненте:',
-        newStartDate,
-        newEndDate
-      )
       if (newStartDate) startDate.value = newStartDate
       if (newEndDate) endDate.value = newEndDate
       currentPage.value = 1

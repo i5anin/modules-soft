@@ -24,8 +24,6 @@ import { useRouter } from 'vue-router'
 import { getOrderById } from '../api/nom_list.ts'
 import OrderInfoCard from './Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiArrowLeft } from '@mdi/js'
 import SborMain from '@/modules/shared/sborka/SborMain.vue'
 import BackButton from '@/modules/shared/BackButton.vue'
 
@@ -38,7 +36,6 @@ const headerData = ref({})
 const tableFields = ref({})
 const isCollapsed = ref(false)
 
-const path = mdiArrowLeft
 const selectedRole = computed(() => roleStore.selectedRole)
 
 // Получение данных заказа

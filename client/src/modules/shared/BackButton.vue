@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+// import { defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowLeft } from '@mdi/js'
@@ -40,12 +40,12 @@ import { mdiArrowLeft } from '@mdi/js'
 const router = useRouter()
 
 // Пропс с именем целевого маршрута; по умолчанию null
-const props = defineProps({
-  targetRoute: {
-    type: String,
-    default: null,
-  },
-})
+// const props = defineProps({
+//   targetRoute: {
+//     type: String,
+//     default: null,
+//   },
+// })
 
 // Функция для перехода "Назад" в истории маршрутов
 const goBack = () => {

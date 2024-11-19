@@ -46,16 +46,26 @@
 
 <script>
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
+import { computed } from 'vue'
 
 export default {
   components: { StatusDisplay },
   props: {
     headers: { type: Array, required: true },
     items: { type: Array, required: true },
-    filteredFields: { type: Array, required: true },
+    excluded: { type: Array, default: () => [] },
     sortColumn: { type: String, required: true },
     sortOrder: { type: String, required: true },
     formatValue: { type: Function, required: true },
+  },
+  setup(props) {
+    const filteredFields = computed(() =>
+      props.headers.filter((header) => !props.excluded.includes(header.name))
+    )
+
+    return {
+      filteredFields,
+    }
   },
 }
 </script>

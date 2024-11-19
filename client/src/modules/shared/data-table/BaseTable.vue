@@ -64,7 +64,7 @@
 <script setup>
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
 import { computed, ref } from 'vue'
-import { formatValue } from '@/utils/formatters-2.ts'
+import { formatValue } from '@/utils/formatters-2.js'
 import { mdiPencil } from '@mdi/js'
 import SvgIcon from '@jamescoyle/vue-icon'
 
