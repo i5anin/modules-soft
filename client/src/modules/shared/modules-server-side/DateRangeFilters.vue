@@ -27,18 +27,25 @@ import DateInput from './DateInput.vue'
 export default {
   components: { DateInput },
   props: {
-    start: { type: String, required: true },
-    end: { type: String, required: true },
+    start: { type: [String, null], required: true },
+    end: { type: [String, null], required: true },
   },
   emits: ['update:start', 'update:end', 'date-range-change'],
   methods: {
     updateStart(value) {
-      this.$emit('update:start', value)
-      this.$emit('date-range-change', { start: value, end: this.end })
+      const formattedValue =
+        value instanceof Date ? value.toISOString().split('T')[0] : null
+      this.$emit('update:start', formattedValue)
+      this.$emit('date-range-change', { start: formattedValue, end: this.end })
     },
     updateEnd(value) {
-      this.$emit('update:end', value)
-      this.$emit('date-range-change', { start: this.start, end: value })
+      const formattedValue =
+        value instanceof Date ? value.toISOString().split('T')[0] : null
+      this.$emit('update:end', formattedValue)
+      this.$emit('date-range-change', {
+        start: this.start,
+        end: formattedValue,
+      })
     },
   },
 }

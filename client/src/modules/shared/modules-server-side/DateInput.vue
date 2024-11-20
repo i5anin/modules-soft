@@ -44,22 +44,26 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const dateFormat = 'dd.MM.yyyy'
-    const localDate = ref(props.modelValue)
+    const localDate = ref(props.modelValue ? new Date(props.modelValue) : null)
 
     const clearDate = () => {
       localDate.value = null
     }
 
-    watch(localDate, (newValue) => {
-      emit('update:modelValue', newValue)
-    })
-
     watch(
       () => props.modelValue,
       (newValue) => {
-        localDate.value = newValue
+        localDate.value =
+          typeof newValue === 'string' ? new Date(newValue) : null
       }
     )
+
+    watch(localDate, (newValue) => {
+      emit(
+        'update:modelValue',
+        newValue ? newValue.toISOString().split('T')[0] : null
+      )
+    })
 
     return {
       localDate,

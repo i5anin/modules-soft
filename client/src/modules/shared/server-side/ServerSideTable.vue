@@ -79,8 +79,10 @@ export default {
   ],
   setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
-    const localStartDate = ref(props.startDate)
-    const localEndDate = ref(props.endDate)
+    const localStartDate = ref(
+      props.startDate ? new Date(props.startDate) : null
+    )
+    const localEndDate = ref(props.endDate ? new Date(props.endDate) : null)
     const loading = ref(false)
 
     const pageSizes = computed(() => props.itemsPerPageOptions)
@@ -108,16 +110,20 @@ export default {
     const updateStartDate = (value) => {
       localStartDate.value = value
       emit('date-range-change', {
-        startDate: value,
-        endDate: localEndDate.value,
+        startDate: value ? value.toISOString().split('T')[0] : '',
+        endDate: localEndDate.value
+          ? localEndDate.value.toISOString().split('T')[0]
+          : '',
       })
     }
 
     const updateEndDate = (value) => {
       localEndDate.value = value
       emit('date-range-change', {
-        startDate: localStartDate.value,
-        endDate: value,
+        startDate: localStartDate.value
+          ? localStartDate.value.toISOString().split('T')[0]
+          : '',
+        endDate: value ? value.toISOString().split('T')[0] : '',
       })
     }
 
