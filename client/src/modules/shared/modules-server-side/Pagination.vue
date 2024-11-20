@@ -1,4 +1,3 @@
-<!-- components/Pagination.vue -->
 <template>
   <div class="d-flex justify-content-between align-items-center">
     <p class="text-muted mb-0">
@@ -44,54 +43,29 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-
 export default {
   name: 'Pagination',
   props: {
-    totalCount: {
-      type: Number,
-      required: true,
-    },
-    itemsPerPage: {
-      type: Number,
-      required: true,
-    },
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-    totalPages: {
-      type: Number,
-      required: true,
-    },
+    totalCount: { type: Number, required: true },
+    itemsPerPage: { type: Number, required: true },
+    currentPage: { type: Number, required: true },
+    totalPages: { type: Number, required: true },
   },
   emits: ['page-change'],
-  setup(props, { emit }) {
-    const startRecord = computed(
-      () => (props.currentPage - 1) * props.itemsPerPage + 1
-    )
-    const endRecord = computed(() =>
-      Math.min(props.currentPage * props.itemsPerPage, props.totalCount)
-    )
-
-    const goToPage = (page) => {
+  methods: {
+    goToPage(page) {
       if (page < 1) page = 1
-      if (page > props.totalPages) page = props.totalPages
-      emit('page-change', page)
-    }
-
-    return {
-      startRecord,
-      endRecord,
-      goToPage,
-    }
+      if (page > this.totalPages) page = this.totalPages
+      this.$emit('page-change', page)
+    },
+  },
+  computed: {
+    startRecord() {
+      return (this.currentPage - 1) * this.itemsPerPage + 1
+    },
+    endRecord() {
+      return Math.min(this.currentPage * this.itemsPerPage, this.totalCount)
+    },
   },
 }
 </script>
-
-<style scoped>
-.pagination .page-item.disabled .page-link {
-  cursor: not-allowed;
-}
-</style>
