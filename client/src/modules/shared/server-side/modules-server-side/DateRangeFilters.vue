@@ -1,52 +1,91 @@
 <template>
-  <div class="d-flex me-3">
-    <div class="d-flex">
-      <label for="start-date" class="form-label fw-bold me-2 mb-0">
-        Диапазон:
-      </label>
-      <DateInput
-        id="start-date"
-        :modelValue="start"
-        @update:modelValue="updateStart"
-      />
-    </div>
-    <div class="d-flex align-items-center ms-3">
-      <label for="end-date" class="form-label fw-bold me-2 mb-0"></label>
-      <DateInput
-        id="end-date"
-        :modelValue="end"
-        @update:modelValue="updateEnd"
-      />
-    </div>
+  <div class="date-range-filters">
+    <input
+      type="date"
+      :value="formattedStartDate"
+      @input="onStartDateChange($event.target.value)"
+    />
+    <span> - </span>
+    <input
+      type="date"
+      :value="formattedEndDate"
+      @input="onEndDateChange($event.target.value)"
+    />
   </div>
 </template>
 
 <script>
-import DateInput from './DateInput.vue'
+import { ref, watch, computed } from 'vue'
 
 export default {
-  components: { DateInput },
+  name: 'DateRangeFilters',
   props: {
-    start: { type: [String, null], required: true },
-    end: { type: [String, null], required: true },
+    start: {
+      type: Date,
+      default: () => new Date(new Date().setMonth(new Date().getMonth() - 3)),
+    },
+    end: { type: Date, default: () => new Date() },
   },
-  emits: ['update:start', 'update:end', 'date-range-change'],
-  methods: {
-    updateStart(value) {
-      const formattedValue =
-        value instanceof Date ? value.toISOString().split('T')[0] : null
-      this.$emit('update:start', formattedValue)
-      this.$emit('date-range-change', { start: formattedValue, end: this.end })
-    },
-    updateEnd(value) {
-      const formattedValue =
-        value instanceof Date ? value.toISOString().split('T')[0] : null
-      this.$emit('update:end', formattedValue)
-      this.$emit('date-range-change', {
-        start: this.start,
-        end: formattedValue,
-      })
-    },
+  emits: ['update:start', 'update:end'],
+  setup(props, { emit }) {
+    const startDate = ref(props.start)
+    const endDate = ref(props.end)
+
+    const formattedStartDate = computed(() =>
+      startDate.value ? startDate.value.toISOString().split('T')[0] : ''
+    )
+    const formattedEndDate = computed(() =>
+      endDate.value ? endDate.value.toISOString().split('T')[0] : ''
+    )
+
+    const onStartDateChange = (value) => {
+      const date = value ? new Date(value) : null
+      startDate.value = date
+      emit('update:start', date)
+    }
+
+    const onEndDateChange = (value) => {
+      const date = value ? new Date(value) : null
+      endDate.value = date
+      emit('update:end', date)
+    }
+
+    // Watch for external changes to props
+    watch(
+      () => props.start,
+      (newVal) => {
+        startDate.value = new Date(newVal)
+      }
+    )
+
+    watch(
+      () => props.end,
+      (newVal) => {
+        endDate.value = new Date(newVal)
+      }
+    )
+
+    return {
+      startDate,
+      endDate,
+      formattedStartDate,
+      formattedEndDate,
+      onStartDateChange,
+      onEndDateChange,
+    }
   },
 }
 </script>
+
+<style scoped>
+.date-range-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type='date'] {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+</style>
