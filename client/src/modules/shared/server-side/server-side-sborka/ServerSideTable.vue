@@ -16,7 +16,7 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <DataTable
+    <SborMain
       :headers="headers"
       :items="items"
       :sortColumn="sortColumn"
@@ -38,17 +38,17 @@
 
 <script>
 import { computed, ref } from 'vue'
-import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
-import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
-import DataTable from './Table.vue'
+import SearchBar from '@/modules/shared/server-side/modules-server-side/SearchBar.vue'
+import Pagination from '@/modules/shared/server-side/modules-server-side/Pagination.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
-import DateRangeFilters from '../modules-server-side/DateRangeFilters.vue'
+import DateRangeFilters from '@/modules/shared/server-side/modules-server-side/DateRangeFilters.vue'
 import { formatValue } from '@/utils/formatters-2.js'
+import SborMain from '@/modules/shared/table/sborka/SborMain.vue'
 
 export default {
   name: 'ServerSideTable',
   components: {
-    DataTable,
+    SborMain,
     SearchBar,
     Pagination,
     PageSizeSelector,

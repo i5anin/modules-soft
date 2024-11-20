@@ -73,9 +73,9 @@ import { mdiBolt } from '@mdi/js'
 import { getModalOrderById } from '../api/nom_info.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from './Card.vue'
-import CaliberTable from '@/modules/shared/data-table/BaseTable.vue'
-import StrategyTable from '@/modules/shared/data-table/BaseTable.vue'
-import TpdTable from '@/modules/shared/data-table/BaseTable.vue'
+import CaliberTable from '@/modules/shared/table/data-table/BaseTable.vue'
+import StrategyTable from '@/modules/shared/table/data-table/BaseTable.vue'
+import TpdTable from '@/modules/shared/table/data-table/BaseTable.vue'
 import BackButton from '@/modules/shared/BackButton.vue'
 
 const roleStore = useRoleStore()

@@ -9,7 +9,18 @@
         <h3 class="client-name mb-3">{{ clientName }}</h3>
 
         <!-- Таблица данных -->
-        <SborMain :table-data="orders" :table-fields="tableFields" />
+        <ServerSideTable
+          :table-fields="tableFields"
+          :items="orders || []"
+          :headers="tableFields"
+          :items-per-page-options="[15, 30, 50, 100]"
+          :items-per-page="itemsPerPage"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :total-count="totalCount"
+          :sort-column="sortColumn"
+          :sort-order="sortOrder"
+        />
       </div>
     </div>
   </div>
@@ -18,13 +29,13 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import SborMain from '@/modules/shared/sborka/SborMain.vue'
 import { getOrders } from '../api/nom_dir.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/BackButton.vue'
+import ServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
 
 export default {
-  components: { BackButton, SborMain },
+  components: { ServerSideTable, BackButton },
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -38,11 +49,6 @@ export default {
     const totalPages = ref(0)
     const sortColumn = ref('id')
     const sortOrder = ref('desc')
-
-    // Переход на страницу клиентов
-    const goBack = () => {
-      router.push({ name: 'Clients' })
-    }
 
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
@@ -100,7 +106,6 @@ export default {
       sortOrder,
       itemsPerPage,
       totalCount,
-      goBack,
     }
   },
 }
