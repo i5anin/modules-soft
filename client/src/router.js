@@ -46,7 +46,7 @@ const routes = [
   {
     path: '/test/sborka/:id',
     name: 'SborkaDetails',
-    component: () => import('@/modules/shared/sborka/SborMain.vue'),
+    component: () => import('@/modules/shared/table/sborka/SborMain.vue'),
     props: true,
   },
   {
