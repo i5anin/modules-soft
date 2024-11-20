@@ -16,15 +16,7 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <SborMain
-      :headers="headers"
-      :items="items"
-      :sortColumn="sortColumn"
-      :sortOrder="sortOrder"
-      :formatValue="formatValue"
-      @row-click="handleRowClick"
-      @sort-change="sortBy"
-    />
+    <SborMain :tableData="items" :tableFields="filteredHeaders" />
 
     <Pagination
       :totalCount="totalCnt"
@@ -37,13 +29,13 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import SearchBar from '@/modules/shared/server-side/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/server-side/modules-server-side/Pagination.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
 import DateRangeFilters from '@/modules/shared/server-side/modules-server-side/DateRangeFilters.vue'
-import { formatValue } from '@/utils/formatters-2.js'
 import SborMain from '@/modules/shared/table/sborka/SborMain.vue'
+import { formatValue } from '@/utils/formatters-2.js'
 
 export default {
   name: 'ServerSideTable',
@@ -133,7 +125,9 @@ export default {
       setTimeout(() => (loading.value = false), 500)
     }
 
-    const goToPage = (page) => emit('page-change', page)
+    const goToPage = (page) => {
+      emit('page-change', page)
+    }
 
     return {
       pageSizes,
