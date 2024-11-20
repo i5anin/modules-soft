@@ -76,6 +76,7 @@ import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue } from '@/utils/formatters-2.js'
 import { statuses } from '@/modules/shared/statuses.js'
+import './SborNode.css'
 
 export default {
   name: 'SborNode',
@@ -141,47 +142,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.tree-node {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.branch-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 20px;
-}
-
-.branch-line::before {
-  content: '';
-  position: absolute;
-  left: 10px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: #989898;
-}
-
-.branch-line::after {
-  content: '';
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  width: 10px;
-  height: 1px;
-  background-color: #989898;
-}
-
-.last-child .branch-line::before {
-  height: 50%;
-}
-
-.node-content {
-  display: flex;
-  align-items: center;
-}
-</style>
