@@ -3,19 +3,25 @@
     <thead>
       <tr>
         <th
-          v-for="column in headers"
+          v-for="column in tableStore.filteredHeaders"
           :key="column.name"
-          @click="column.sortable && $emit('sort-change', column.name)"
+          @click="column.sortable && handleSortChange(column.name)"
           :class="{ sortable: column.sortable }"
         >
           {{ column.title }}
           <span v-if="column.sortable">
             <i
-              v-if="sortColumn === column.name && sortOrder === 'asc'"
+              v-if="
+                tableStore.sortColumn === column.name &&
+                tableStore.sortOrder === 'asc'
+              "
               class="bi bi-caret-up-fill"
             ></i>
             <i
-              v-else-if="sortColumn === column.name && sortOrder === 'desc'"
+              v-else-if="
+                tableStore.sortColumn === column.name &&
+                tableStore.sortOrder === 'desc'
+              "
               class="bi bi-caret-down-fill"
             ></i>
           </span>
@@ -23,16 +29,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-if="!items.length">
+      <tr v-if="!tableStore.items.length">
         <td colspan="100%" class="text-center">Нет данных</td>
       </tr>
       <tr
-        v-for="row in items"
+        v-for="row in tableStore.items"
         :key="row.id"
-        @click="$emit('row-click', row)"
+        @click="handleRowClick(row)"
         :class="{ locked: row.locked, 'table-success': row.goz }"
       >
-        <td v-for="field in filteredFields" :key="field.name">
+        <td v-for="field in tableStore.filteredHeaders" :key="field.name">
           <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
           <span
             v-else
@@ -45,26 +51,32 @@
 </template>
 
 <script>
+import { useServerSideTableStore } from './stores/serverSideTable'
 import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
-import { computed } from 'vue'
 
 export default {
   components: { StatusDisplay },
   props: {
-    headers: { type: Array, required: true },
-    items: { type: Array, required: true },
-    excluded: { type: Array, default: () => [] },
-    sortColumn: { type: String, required: true },
-    sortOrder: { type: String, required: true },
     formatValue: { type: Function, required: true },
   },
-  setup(props) {
-    const filteredFields = computed(() =>
-      props.headers.filter((header) => !props.excluded.includes(header.name))
-    )
+  setup(_, { emit }) {
+    const tableStore = useServerSideTableStore()
+
+    const handleSortChange = (column) => {
+      const isAsc =
+        tableStore.sortColumn === column && tableStore.sortOrder === 'asc'
+      tableStore.setSort(column, isAsc ? 'desc' : 'asc')
+      emit('sort-change', { column, order: tableStore.sortOrder })
+    }
+
+    const handleRowClick = (row) => {
+      emit('row-click', row)
+    }
 
     return {
-      filteredFields,
+      tableStore,
+      handleSortChange,
+      handleRowClick,
     }
   },
 }
