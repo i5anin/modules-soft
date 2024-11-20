@@ -1,13 +1,15 @@
 <template>
-  <div class="date-range-filters">
+  <div class="d-flex align-items-center gap-2">
     <input
       type="date"
+      class="form-control"
       :value="formattedStartDate"
       @input="onStartDateChange($event.target.value)"
     />
-    <span> - </span>
+    <span>до</span>
     <input
       type="date"
+      class="form-control"
       :value="formattedEndDate"
       @input="onEndDateChange($event.target.value)"
     />
@@ -78,14 +80,8 @@ export default {
 </script>
 
 <style scoped>
-.date-range-filters {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
+/* Стили для удобства отображения */
 input[type='date'] {
-  padding: 0.5rem;
-  font-size: 1rem;
+  min-width: 150px;
 }
 </style>
