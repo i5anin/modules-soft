@@ -5,7 +5,7 @@
     </span>
     <Datepicker
       id="singleDate"
-      v-model="selectedDate"
+      v-model="localDate"
       :enableTimePicker="false"
       :format="dateFormat"
       :locale="customRuLocale"
@@ -14,7 +14,7 @@
       class="form-control"
     />
     <button
-      v-if="selectedDate"
+      v-if="localDate"
       type="button"
       class="btn btn-secondary"
       @click="clearDate"
@@ -44,38 +44,25 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const dateFormat = 'dd.MM.yyyy'
-
-    // Парсинг даты без UTC-сдвига
-    const parseDateToLocal = (dateString) => {
-      if (!dateString) return null
-      const [year, month, day] = dateString.split('-')
-      return new Date(year, month - 1, day) // Создаёт дату в локальном времени
-    }
-
-    // Форматирование даты в формат 'YYYY-MM-DD'
-    const formatDateToISO = (date) => {
-      if (!date) return null
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      return `${year}-${month}-${day}`
-    }
-
-    const selectedDate = ref(
-      props.modelValue ? parseDateToLocal(props.modelValue) : null
-    )
+    const localDate = ref(props.modelValue)
 
     const clearDate = () => {
-      selectedDate.value = null
+      localDate.value = null
     }
 
-    watch(selectedDate, (newDate) => {
-      const formattedDate = formatDateToISO(newDate)
-      emit('update:modelValue', formattedDate)
+    watch(localDate, (newValue) => {
+      emit('update:modelValue', newValue)
     })
 
+    watch(
+      () => props.modelValue,
+      (newValue) => {
+        localDate.value = newValue
+      }
+    )
+
     return {
-      selectedDate,
+      localDate,
       dateFormat,
       customRuLocale,
       clearDate,
@@ -83,10 +70,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.input-group-text {
-  align-items: center;
-  display: flex;
-}
-</style>

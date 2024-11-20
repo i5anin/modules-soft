@@ -42,7 +42,7 @@ import SearchBar from '@/modules/shared/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/modules-server-side/Pagination.vue'
 import DataTable from './Table.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
-import DateRangeFilters from './DateRangeFilters.vue'
+import DateRangeFilters from '../modules-server-side/DateRangeFilters.vue'
 import { formatValue } from '@/utils/formatters-2.js'
 
 export default {

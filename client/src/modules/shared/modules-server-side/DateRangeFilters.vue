@@ -4,20 +4,28 @@
       <label for="start-date" class="form-label fw-bold me-2 mb-0">
         Диапазон:
       </label>
-      <DateRangeFilter id="start-date" :value="start" @input="updateStart" />
+      <DateInput
+        id="start-date"
+        :modelValue="start"
+        @update:modelValue="updateStart"
+      />
     </div>
     <div class="d-flex align-items-center ms-3">
       <label for="end-date" class="form-label fw-bold me-2 mb-0"></label>
-      <DateRangeFilter id="end-date" :value="end" @input="updateEnd" />
+      <DateInput
+        id="end-date"
+        :modelValue="end"
+        @update:modelValue="updateEnd"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import DateRangeFilter from '@/modules/shared/modules-server-side/DateInput.vue'
+import DateInput from './DateInput.vue'
 
 export default {
-  components: { DateRangeFilter },
+  components: { DateInput },
   props: {
     start: { type: String, required: true },
     end: { type: String, required: true },

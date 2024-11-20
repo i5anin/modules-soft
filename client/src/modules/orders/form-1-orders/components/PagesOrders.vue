@@ -2,9 +2,6 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="mt-3">
-          <p>Выбранный диапазон: {{ startDate }} - {{ endDate }}</p>
-        </div>
         <!-- Таблица данных -->
         <ServerSideTable
           datepicker
