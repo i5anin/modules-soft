@@ -35,7 +35,7 @@ import DataTable from './Table.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
 import DateRangeFilters from '../modules-server-side/DateRangeFilters.vue'
 import { formatValue } from '@/utils/formatters-2.js'
-import { onMounted } from 'vue'
+import { watch, onMounted } from 'vue'
 
 export default {
   name: 'ServerSideTable',
@@ -60,7 +60,8 @@ export default {
   setup(props, { emit }) {
     const tableStore = useServerSideTableStore()
 
-    onMounted(() => {
+    // Инициализация данных в сторе
+    const initializeStore = () => {
       tableStore.initializeTable({
         items: props.items,
         headers: props.headers,
@@ -72,22 +73,39 @@ export default {
         itemsPerPage: props.itemsPerPage,
         datepicker: props.datepicker,
       })
-    })
+    }
 
+    // Обновление при изменении пропсов
+    watch(
+      () => [
+        props.items,
+        props.headers,
+        props.totalCount,
+        props.totalPages,
+        props.currentPage,
+        props.sortColumn,
+        props.sortOrder,
+        props.itemsPerPage,
+        props.datepicker,
+      ],
+      initializeStore,
+      { immediate: true }
+    )
+
+    // Методы взаимодействия
     const updateItemsPerPage = (value) => {
-      tableStore.itemsPerPage = value
+      tableStore.setItemsPerPage(value)
       emit('page-size-change', value)
     }
 
     const onSearch = (query) => {
-      tableStore.toggleLoading(true)
-      tableStore.searchQuery = query
+      tableStore.setLoading(true)
       emit('search-change', query)
-      setTimeout(() => tableStore.toggleLoading(false), 500)
+      setTimeout(() => tableStore.setLoading(false), 500)
     }
 
     const goToPage = (page) => {
-      tableStore.currentPage = page
+      tableStore.setCurrentPage(page)
       emit('page-change', page)
     }
 
