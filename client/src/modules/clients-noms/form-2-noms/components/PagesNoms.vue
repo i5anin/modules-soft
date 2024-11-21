@@ -19,7 +19,6 @@
           :total-count="totalCount"
           :sort-column="sortColumn"
           :sort-order="sortOrder"
-          :custom-components="{ StatusCell, ClientNameCell }"
           @page-change="updatePage"
           @search-change="performSearch"
           @sort-change="updateSorting"
@@ -54,6 +53,7 @@ export default {
     const totalPages = ref(0)
     const sortColumn = ref('id')
     const sortOrder = ref('desc')
+    const searchQuery = ref('') // Переменная для строки поиска
 
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
@@ -68,6 +68,7 @@ export default {
           sortDir: sortOrder.value,
           type: roleStore.selectedTypes,
           role: roleStore.selectedRole,
+          query: searchQuery.value, // Передаем строку поиска
         })
 
         if (response && response.table) {
@@ -103,7 +104,7 @@ export default {
     }
 
     const performSearch = (query) => {
-      console.log('Поиск с запросом:', query)
+      searchQuery.value = query // Сохраняем строку поиска
       fetchNoms()
     }
 
@@ -116,6 +117,15 @@ export default {
     const updateItemsPerPage = (value) => {
       itemsPerPage.value = value
       fetchNoms()
+    }
+
+    const handleRowClick = (row) => {
+      console.log('Клик по строке:', row)
+    }
+
+    const handleDateRangeChange = (range) => {
+      console.log('Изменение диапазона дат:', range)
+      // Добавьте логику, если требуется
     }
 
     onMounted(() => {
@@ -136,6 +146,8 @@ export default {
       performSearch,
       updateSorting,
       updateItemsPerPage,
+      handleRowClick,
+      handleDateRangeChange,
     }
   },
 }
