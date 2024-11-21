@@ -6,7 +6,7 @@ import { handleError, handleResponse } from '@/modules/api/responseHandlers'
  * @param {Object} params - Параметры запроса
  * @returns {Promise<Array>} - Список номенклатуры клиента
  */
-export const getClientNomenclature = (params) => {
+export const getClientNom = (params) => {
   return apiClient
     .get('nom_dir', { params })
     .then(handleResponse)

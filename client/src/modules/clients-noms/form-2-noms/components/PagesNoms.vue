@@ -2,11 +2,10 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <!-- Кнопка Назад -->
-        <BackButton />
-
-        <!-- Название клиента -->
-        <h3 class="client-name mb-3">{{ clientName }}</h3>
+        <div class="d-flex align-items-center mb-1">
+          <BackButton class="me-3" />
+          <h3 class="client-name m-0">{{ clientName }}</h3>
+        </div>
 
         <!-- Таблица данных -->
         <SborkaServerSideTable
@@ -20,7 +19,7 @@
           :sort-column="sortColumn"
           :sort-order="sortOrder"
           @page-change="updatePage"
-          @search-change="performSearch"
+          @search-change="handleSearchChange"
           @sort-change="updateSorting"
           @page-size-change="updateItemsPerPage"
           @row-click="handleRowClick"
@@ -34,7 +33,7 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getClientNomenclature } from '../api/nom_dir.js'
+import { getClientNom } from '../api/nom_dir.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/BackButton.vue'
 import SborkaServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
@@ -60,7 +59,7 @@ export default {
 
     const fetchNoms = async () => {
       try {
-        const response = await getClientNomenclature({
+        const response = await getClientNom({
           client_id: clientId.value,
           page: currentPage.value,
           limit: itemsPerPage.value,
@@ -68,7 +67,7 @@ export default {
           sortDir: sortOrder.value,
           type: roleStore.selectedTypes,
           role: roleStore.selectedRole,
-          query: searchQuery.value, // Передаем строку поиска
+          search: searchQuery.value, // Передаем строку поиска
         })
 
         if (response && response.table) {
@@ -103,9 +102,10 @@ export default {
       fetchNoms()
     }
 
-    const performSearch = (query) => {
-      searchQuery.value = query // Сохраняем строку поиска
-      fetchNoms()
+    const handleSearchChange = (search) => {
+      searchQuery.value = search // Сохраняем строку поиска
+      currentPage.value = 1 // Сбрасываем на первую страницу
+      fetchNoms() // Вызываем обновление данных
     }
 
     const updateSorting = ({ column, order }) => {
@@ -143,7 +143,7 @@ export default {
       itemsPerPage,
       totalCount,
       updatePage,
-      performSearch,
+      handleSearchChange,
       updateSorting,
       updateItemsPerPage,
       handleRowClick,
