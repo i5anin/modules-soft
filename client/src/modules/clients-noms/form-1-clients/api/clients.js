@@ -1,11 +1,10 @@
-// nom_dir.ts
+// nom_dir.js
 import apiClient from '@/modules/api/apiClient'
 import { handleResponse, handleError } from '@/modules/api/responseHandlers'
-import { GetOrdersParams, Order } from './types'
 
-export const getClients = (params: GetOrdersParams): Promise<Order[]> => {
+export const getClients = (params) => {
   return apiClient
-    .get<Order[]>('clients', { params })
+    .get('clients', { params })
     .then(handleResponse)
     .catch(handleError)
 }

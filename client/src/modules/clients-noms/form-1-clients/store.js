@@ -1,7 +1,7 @@
 // Pinia Store Implementation
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { getOrders } from './api/clients.ts'
+import { getOrders } from './api/clients.js'
 import _ from 'lodash'
 import { statuses } from '@/modules/shared/statuses.js'
 

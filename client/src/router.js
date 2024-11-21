@@ -37,13 +37,13 @@ const clientsRoutes = [
   },
   {
     path: '/noms/:clientId',
-    name: 'Nomenclature',
+    name: 'Noms',
     component: () =>
       import('@/modules/clients-noms/form-2-noms/components/PagesNoms.vue'),
     props: true,
   },
   {
-    path: '/noms/:clientId/:id',
+    path: '/noms/:clientId/:nomId',
     name: 'NomDetails',
     component: () =>
       import(
