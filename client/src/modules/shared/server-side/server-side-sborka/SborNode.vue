@@ -65,7 +65,7 @@
       :fields="fields"
       :depth="depth + 1"
       :isLastChild="index === sbor.sbor_tree.length - 1"
-      :detail-route="detailRoute"
+      :detail="{ route: detail.route, idKey: detail.idKey }"
     />
   </template>
 </template>
@@ -77,6 +77,7 @@ import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue } from '@/utils/formatters-2.js'
 import { statuses } from '@/modules/shared/statuses.js'
+import './SborNode.css'
 
 export default {
   name: 'SborNode',
@@ -86,7 +87,11 @@ export default {
     depth: { type: Number, default: 0 },
     fields: { type: Array, default: () => [] },
     isLastChild: { type: Boolean, default: false },
-    detailRoute: String, // Новый пропс для маршрута детализации
+    detail: {
+      type: Object,
+      required: true,
+      default: () => ({ route: '', idKey: '' }), // Объект с маршрутом и ключом ID
+    },
   },
   setup(props) {
     const sborStore = store()
@@ -100,12 +105,11 @@ export default {
     }
 
     const handleRowClick = () => {
-      sborStore.selectSbor(props.sbor)
-      if (props.detailRoute) {
-        router.push({
-          name: props.detailRoute,
-          params: { id: props.sbor.id },
-        })
+      if (props.detail.route && props.detail.idKey) {
+        const id = props.sbor[props.detail.idKey] // Получаем значение ID
+        if (id) {
+          router.push({ name: props.detail.route, params: { id } })
+        }
       }
     }
 
