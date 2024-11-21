@@ -16,7 +16,11 @@
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
 
-    <SborMain :tableData="items" :tableFields="filteredHeaders" />
+    <SborMain
+      :tableData="items"
+      :tableFields="filteredHeaders"
+      :detail="{ route: 'NomDetails', idKey: 'nom_id' }"
+    />
 
     <Pagination
       :totalCount="totalCnt"
@@ -29,7 +33,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import SearchBar from '@/modules/shared/server-side/modules-server-side/SearchBar.vue'
 import Pagination from '@/modules/shared/server-side/modules-server-side/Pagination.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
