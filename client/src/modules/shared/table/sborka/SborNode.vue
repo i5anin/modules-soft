@@ -65,6 +65,7 @@
       :fields="fields"
       :depth="depth + 1"
       :isLastChild="index === sbor.sbor_tree.length - 1"
+      :detail="{ route: detail.route, idKey: detail.idKey }"
     />
   </template>
 </template>
@@ -86,6 +87,11 @@ export default {
     depth: { type: Number, default: 0 },
     fields: { type: Array, default: () => [] },
     isLastChild: { type: Boolean, default: false },
+    detail: {
+      type: Object,
+      required: true,
+      default: () => ({ route: '', idKey: '' }), // Объект с маршрутом и ключом ID
+    },
   },
   setup(props) {
     const sborStore = store()
@@ -99,11 +105,12 @@ export default {
     }
 
     const handleRowClick = () => {
-      sborStore.selectSbor(props.sbor)
-      router.push({
-        name: 'OrderDetailsDetails',
-        params: { id: props.sbor.sbor_orders__id },
-      })
+      if (props.detail.route && props.detail.idKey) {
+        const id = props.sbor[props.detail.idKey] // Получаем значение ID
+        if (id) {
+          router.push({ name: props.detail.route, params: { id } })
+        }
+      }
     }
 
     const hasChildren = computed(

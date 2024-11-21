@@ -4,7 +4,7 @@
       <div class="col-12">
         <!-- Сообщение при отсутствии данных -->
         <div v-if="tableData.length === 0" class="alert alert-warning">
-          Нет данных для отображения.
+          Нет данных.
         </div>
         <div v-else>
           <table
@@ -34,7 +34,7 @@
                 :key="sbor.id"
                 :sbor="sbor"
                 :depth="0"
-                :detail-route="detailRoute"
+                :detail="detail"
               />
             </tbody>
           </table>
@@ -56,6 +56,10 @@ export default {
     tableData: Array, // Пропс для исходных данных
     tableFields: Array, // Пропс для исходных полей
     detailRoute: String, // Пропс для маршрута
+    detail: {
+      type: Object,
+      default: () => ({ route: '', idKey: '' }), // Объект с двумя свойствами
+    },
   },
   setup(props) {
     const sborStore = store()
