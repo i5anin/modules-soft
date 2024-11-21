@@ -9,9 +9,8 @@
         <h3 class="client-name mb-3">{{ clientName }}</h3>
 
         <!-- Таблица данных -->
-        <ServerSideTable
-          :table-fields="tableFields"
-          :items="orders || []"
+        <SborkaServerSideTable
+          :items="orders"
           :headers="tableFields"
           :items-per-page-options="[15, 30, 50, 100]"
           :items-per-page="itemsPerPage"
@@ -20,6 +19,13 @@
           :total-count="totalCount"
           :sort-column="sortColumn"
           :sort-order="sortOrder"
+          :custom-components="{ StatusCell, ClientNameCell }"
+          @page-change="updatePage"
+          @search-change="performSearch"
+          @sort-change="updateSorting"
+          @page-size-change="updateItemsPerPage"
+          @row-click="handleRowClick"
+          @date-range-change="handleDateRangeChange"
         />
       </div>
     </div>
@@ -28,16 +34,15 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { getOrders } from '../api/nom_dir.ts'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/BackButton.vue'
-import ServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
+import SborkaServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
 
 export default {
-  components: { ServerSideTable, BackButton },
+  components: { SborkaServerSideTable, BackButton },
   setup() {
-    const router = useRouter()
     const route = useRoute()
     const clientName = ref('')
     const orders = ref([])
@@ -45,7 +50,7 @@ export default {
     const totalCount = ref(0)
     const roleStore = useRoleStore()
     const currentPage = ref(1)
-    const itemsPerPage = ref(20)
+    const itemsPerPage = ref(15)
     const totalPages = ref(0)
     const sortColumn = ref('id')
     const sortOrder = ref('desc')
@@ -92,6 +97,28 @@ export default {
       }
     }
 
+    const updatePage = (page) => {
+      currentPage.value = page
+      fetchOrders()
+    }
+
+    const performSearch = (query) => {
+      console.log('Поиск с запросом:', query)
+      // Логика для поиска
+      fetchOrders()
+    }
+
+    const updateSorting = ({ column, order }) => {
+      sortColumn.value = column
+      sortOrder.value = order
+      fetchOrders()
+    }
+
+    const updateItemsPerPage = (value) => {
+      itemsPerPage.value = value
+      fetchOrders()
+    }
+
     onMounted(() => {
       fetchOrders()
     })
@@ -106,6 +133,10 @@ export default {
       sortOrder,
       itemsPerPage,
       totalCount,
+      updatePage,
+      performSearch,
+      updateSorting,
+      updateItemsPerPage,
     }
   },
 }
