@@ -10,7 +10,7 @@
 
         <!-- Таблица данных -->
         <SborkaServerSideTable
-          :items="orders"
+          :items="noms"
           :headers="tableFields"
           :items-per-page-options="[15, 30, 50, 100]"
           :items-per-page="itemsPerPage"
@@ -35,7 +35,7 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getOrders } from '../api/nom_dir.ts'
+import { getClientNomenclature } from '../api/nom_dir.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/BackButton.vue'
 import SborkaServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
@@ -45,7 +45,7 @@ export default {
   setup() {
     const route = useRoute()
     const clientName = ref('')
-    const orders = ref([])
+    const noms = ref([])
     const tableFields = ref([])
     const totalCount = ref(0)
     const roleStore = useRoleStore()
@@ -58,9 +58,9 @@ export default {
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
 
-    const fetchOrders = async () => {
+    const fetchNoms = async () => {
       try {
-        const response = await getOrders({
+        const response = await getClientNomenclature({
           client_id: clientId.value,
           page: currentPage.value,
           limit: itemsPerPage.value,
@@ -71,7 +71,7 @@ export default {
         })
 
         if (response && response.table) {
-          orders.value = response.table.data || []
+          noms.value = response.table.data || []
           tableFields.value = Object.entries(response.table.fields || {}).map(
             ([key, field]) => ({
               name: key,
@@ -85,13 +85,13 @@ export default {
           totalCount.value = response.header.total_count || 0
           totalPages.value = Math.ceil(totalCount.value / itemsPerPage.value)
         } else {
-          orders.value = []
+          noms.value = []
           totalCount.value = 0
           totalPages.value = 0
         }
       } catch (error) {
-        console.error('Ошибка при загрузке заказов:', error)
-        orders.value = []
+        console.error('Ошибка при загрузке номенклатуры:', error)
+        noms.value = []
         totalCount.value = 0
         totalPages.value = 0
       }
@@ -99,33 +99,32 @@ export default {
 
     const updatePage = (page) => {
       currentPage.value = page
-      fetchOrders()
+      fetchNoms()
     }
 
     const performSearch = (query) => {
       console.log('Поиск с запросом:', query)
-      // Логика для поиска
-      fetchOrders()
+      fetchNoms()
     }
 
     const updateSorting = ({ column, order }) => {
       sortColumn.value = column
       sortOrder.value = order
-      fetchOrders()
+      fetchNoms()
     }
 
     const updateItemsPerPage = (value) => {
       itemsPerPage.value = value
-      fetchOrders()
+      fetchNoms()
     }
 
     onMounted(() => {
-      fetchOrders()
+      fetchNoms()
     })
 
     return {
       clientName,
-      orders,
+      noms,
       tableFields,
       currentPage,
       totalPages,
