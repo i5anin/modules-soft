@@ -55,7 +55,6 @@ export default {
   props: {
     tableData: Array, // Пропс для исходных данных
     tableFields: Array, // Пропс для исходных полей
-    detailRoute: String, // Пропс для маршрута
     detail: {
       type: Object,
       default: () => ({ route: '', idKey: '' }), // Объект с двумя свойствами
