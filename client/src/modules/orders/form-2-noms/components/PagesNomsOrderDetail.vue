@@ -2,7 +2,7 @@
   <div>
     <div class="grid-container">
       <div class="p-2" :class="{ collapsed: isCollapsed }">
-        <BackButton />
+        <BackButton targetRoute="OrdersTable" />
         <OrderInfoCard :header="headerData" />
       </div>
 

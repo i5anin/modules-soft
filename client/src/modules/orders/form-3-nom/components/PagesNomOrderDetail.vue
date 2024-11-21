@@ -2,7 +2,7 @@
   <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
     <div class="p-2">
-      <BackButton />
+      <BackButton targetRoute="OrderDetails" />
       <div class="d-flex align-items-center mb-2">
         <svg-icon
           type="mdi"
