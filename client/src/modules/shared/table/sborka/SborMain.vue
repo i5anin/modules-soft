@@ -34,6 +34,7 @@
                 :key="sbor.id"
                 :sbor="sbor"
                 :depth="0"
+                :detail-route="detailRoute"
               />
             </tbody>
           </table>
@@ -54,6 +55,7 @@ export default {
   props: {
     tableData: Array, // Пропс для исходных данных
     tableFields: Array, // Пропс для исходных полей
+    detailRoute: String, // Пропс для маршрута
   },
   setup(props) {
     const sborStore = store()

@@ -34,7 +34,7 @@ import SearchBar from '@/modules/shared/server-side/modules-server-side/SearchBa
 import Pagination from '@/modules/shared/server-side/modules-server-side/Pagination.vue'
 import PageSizeSelector from './PageSizeSelector.vue'
 import DateRangeFilters from '@/modules/shared/server-side/modules-server-side/DateRangeFilters.vue'
-import SborMain from '@/modules/shared/table/sborka/SborMain.vue'
+import SborMain from './SborMain.vue'
 import { formatValue } from '@/utils/formatters-2.js'
 
 export default {
@@ -96,6 +96,7 @@ export default {
 
     const updateItemsPerPage = (value) => {
       localItemsPerPage.value = value
+      emit('page-change', 1) // Устанавливаем текущую страницу на первую
       emit('page-size-change', value)
     }
 

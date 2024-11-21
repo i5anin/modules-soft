@@ -1,10 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const routes = [
-  {
-    path: '/',
-    redirect: '/orders',
-  },
+const ordersRoutes = [
   {
     path: '/orders',
     name: 'OrdersTable',
@@ -27,6 +23,9 @@ const routes = [
       import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
     props: true,
   },
+]
+
+const clientsRoutes = [
   {
     path: '/clients',
     name: 'Clients',
@@ -44,6 +43,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/noms/:clientId/:id',
+    name: 'NomDetails',
+    component: () =>
+      import(
+        '@/modules/clients-noms/form-3-nom/components/PagesNomOrderDetail.vue'
+      ),
+    props: true,
+  },
+]
+
+const testRoutes = [
+  {
     path: '/test/sborka/:id',
     name: 'SborkaDetails',
     component: () => import('@/modules/shared/table/sborka/SborMain.vue'),
@@ -56,6 +67,16 @@ const routes = [
       import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
+]
+
+const routes = [
+  {
+    path: '/',
+    redirect: '/orders',
+  },
+  ...ordersRoutes,
+  ...clientsRoutes,
+  ...testRoutes,
 ]
 
 export default createRouter({

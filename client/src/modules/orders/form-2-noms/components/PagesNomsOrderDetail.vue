@@ -12,6 +12,7 @@
           v-if="nomTableData.length > 0"
           :table-data="nomTableData"
           :table-fields="filteredTableFields"
+          detail-route="NomDetails"
         />
       </div>
     </div>

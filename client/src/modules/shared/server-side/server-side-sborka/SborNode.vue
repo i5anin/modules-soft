@@ -65,6 +65,7 @@
       :fields="fields"
       :depth="depth + 1"
       :isLastChild="index === sbor.sbor_tree.length - 1"
+      :detail-route="detailRoute"
     />
   </template>
 </template>
@@ -76,7 +77,6 @@ import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue } from '@/utils/formatters-2.js'
 import { statuses } from '@/modules/shared/statuses.js'
-import './SborNode.css'
 
 export default {
   name: 'SborNode',
@@ -86,6 +86,7 @@ export default {
     depth: { type: Number, default: 0 },
     fields: { type: Array, default: () => [] },
     isLastChild: { type: Boolean, default: false },
+    detailRoute: String, // Новый пропс для маршрута детализации
   },
   setup(props) {
     const sborStore = store()
@@ -100,10 +101,12 @@ export default {
 
     const handleRowClick = () => {
       sborStore.selectSbor(props.sbor)
-      router.push({
-        name: 'OrderDetailsDetails',
-        params: { id: props.sbor.sbor_orders__id },
-      })
+      if (props.detailRoute) {
+        router.push({
+          name: props.detailRoute,
+          params: { id: props.sbor.id },
+        })
+      }
     }
 
     const hasChildren = computed(
@@ -126,7 +129,7 @@ export default {
         : ''
     })
 
-    const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
+    const generateTitle = (field) => `Field: ${field.title || 'No data'}`
 
     return {
       isExpanded,
