@@ -40,12 +40,12 @@ import { mdiArrowLeft } from '@mdi/js'
 const router = useRouter()
 
 // Пропс с именем целевого маршрута; по умолчанию null
-// const props = defineProps({
-//   targetRoute: {
-//     type: String,
-//     default: null,
-//   },
-// })
+const props = defineProps({
+  targetRoute: {
+    type: String,
+    default: null,
+  },
+})
 
 // Функция для перехода "Назад" в истории маршрутов
 const goBack = () => {
