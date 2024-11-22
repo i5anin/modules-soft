@@ -22,7 +22,6 @@
           @search-change="handleSearchChange"
           @sort-change="updateSorting"
           @page-size-change="updateItemsPerPage"
-          @row-click="handleRowClick"
           @date-range-change="handleDateRangeChange"
         />
       </div>
@@ -119,10 +118,6 @@ export default {
       fetchNoms()
     }
 
-    const handleRowClick = (row) => {
-      console.log('Клик по строке:', row)
-    }
-
     const handleDateRangeChange = (range) => {
       console.log('Изменение диапазона дат:', range)
       // Добавьте логику, если требуется
@@ -146,7 +141,6 @@ export default {
       handleSearchChange,
       updateSorting,
       updateItemsPerPage,
-      handleRowClick,
       handleDateRangeChange,
     }
   },
