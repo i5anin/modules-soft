@@ -22,7 +22,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrderById } from '../api/nom_list.ts'
+import { getOrderById } from '../api/nom_list.js'
 import OrderInfoCard from './Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/table/sborka/SborMain.vue'
