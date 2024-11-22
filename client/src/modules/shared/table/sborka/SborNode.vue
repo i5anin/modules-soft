@@ -105,11 +105,11 @@ export default {
     }
 
     const handleRowClick = () => {
-      if (props.detail.route && props.detail.idKey) {
-        const id = props.sbor[props.detail.idKey] // Получаем значение ID
-        if (id) {
-          router.push({ name: props.detail.route, params: { id } })
-        }
+      const idOrder = props.sbor[props.detail.idKey]
+      if (props.detail.route && idOrder) {
+        router
+          .push({ name: props.detail.route, params: { idOrder } })
+          .catch(console.error)
       }
     }
 

@@ -90,7 +90,7 @@ export default {
     detail: {
       type: Object,
       required: true,
-      default: () => ({ route: '', idKey: '' }), // Объект с маршрутом и ключом ID
+      default: () => ({ route: '', idKey: '' }),
     },
   },
   setup(props) {
@@ -105,11 +105,11 @@ export default {
     }
 
     const handleRowClick = () => {
-      if (props.detail.route && props.detail.idKey) {
-        const id = props.sbor[props.detail.idKey] // Получаем значение ID
-        if (id) {
-          router.push({ name: props.detail.route, params: { id } })
-        }
+      const nomId = props.sbor[props.detail.idKey]
+      if (props.detail.route && nomId) {
+        router
+          .push({ name: props.detail.route, params: { nomId } })
+          .catch(console.error)
       }
     }
 

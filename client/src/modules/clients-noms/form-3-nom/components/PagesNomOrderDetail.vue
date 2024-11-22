@@ -2,7 +2,7 @@
   <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
     <div class="p-2">
-      <BackButton targetRoute="OrderDetails" />
+      <BackButton targetRoute="Noms" />
       <div class="d-flex align-items-center mb-2">
         <svg-icon
           type="mdi"
@@ -80,17 +80,15 @@ import BackButton from '@/modules/shared/BackButton.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const id = ref(route.params.nom_id)
+const id = ref(route.params.nomId)
 const selectedOrder = ref(null)
-
 const fetchOrderData = async () => {
-  console.log('Значение nom_id:', id.value)
   if (id.value) {
     try {
       selectedOrder.value = await getModalNomById(
         id.value,
-        roleStore.selectedTypes,
-        'noms'
+        'nom',
+        roleStore.selectedRole
       )
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)

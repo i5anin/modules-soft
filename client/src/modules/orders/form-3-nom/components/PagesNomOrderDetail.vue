@@ -88,7 +88,7 @@ const fetchOrderData = async () => {
     try {
       selectedOrder.value = await getModalOrderById(
         id.value,
-        roleStore.selectedTypes,
+        'orders',
         roleStore.selectedRole
       )
     } catch (error) {
