@@ -8,12 +8,6 @@
 </template>
 
 <script setup>
-/**
- * Основной компонент приложения.
- *
- * @component
- * @prop {Object} Navbar - Компонент навигационной панели.
- */
 import Navbar from '@/modules/_main/components/Navbar.vue'
 </script>
 
