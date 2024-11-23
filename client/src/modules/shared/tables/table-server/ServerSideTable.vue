@@ -38,11 +38,11 @@
 
 <script>
 import { computed, ref } from 'vue'
-import SearchBar from '@/modules/shared/server-side/modules-server-side/SearchBar.vue'
-import Pagination from '@/modules/shared/server-side/modules-server-side/Pagination.vue'
+import SearchBar from '@/modules/shared/search/SearchBar.vue'
+import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import DataTable from './Table.vue'
-import PageSizeSelector from './PageSizeSelector.vue'
-import DateRangeFilters from '@/modules/shared/server-side/modules-server-side/DateRangeFilters.vue'
+import PageSizeSelector from '../../pagination/PageSizeSelector.vue'
+import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
 import { formatValue } from '@/utils/formatters-2.js'
 
 export default {

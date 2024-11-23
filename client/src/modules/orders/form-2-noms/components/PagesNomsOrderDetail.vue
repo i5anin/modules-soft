@@ -25,8 +25,8 @@ import { useRouter } from 'vue-router'
 import { getOrderById } from '../api/nom_list.js'
 import OrderInfoCard from './Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import SborMain from '@/modules/shared/table/sborka/SborMain.vue'
-import BackButton from '@/modules/shared/BackButton.vue'
+import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
+import BackButton from '@/modules/shared/components/BackButton.vue'
 
 const router = useRouter()
 const roleStore = useRoleStore()

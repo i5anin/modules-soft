@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import StatusDisplay from '@/modules/shared/StatusDisplay.vue'
+import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
 import { computed, ref } from 'vue'
 

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getOrders } from './api/list.ts'
 import _ from 'lodash'
-import { statuses } from '@/modules/shared/statuses.js'
+import { statuses } from '@/modules/shared/logic/statuses.js'
 
 export const useOrdersStore = defineStore('orders', () => {
   const orders = ref([])

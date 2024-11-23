@@ -76,7 +76,7 @@ import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue } from '@/utils/formatters-2.js'
-import { statuses } from '@/modules/shared/statuses.js'
+import { statuses } from '@/modules/shared/logic/statuses.js'
 import './SborNode.css'
 
 export default {

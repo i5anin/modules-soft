@@ -12,7 +12,7 @@
 
 <script setup>
 import { computed, defineProps } from 'vue'
-import { statuses } from '@/modules/shared/statuses.js'
+import { statuses } from '@/modules/shared/logic/statuses.js'
 
 const props = defineProps({
   row: {

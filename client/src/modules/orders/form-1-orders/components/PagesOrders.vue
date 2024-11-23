@@ -32,9 +32,9 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import { getOrders } from '../api/list.ts'
-import ServerSideTable from '@/modules/shared/server-side/server-side/ServerSideTable.vue'
+import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import { statuses } from '@/modules/shared/statuses.js'
+import { statuses } from '@/modules/shared/logic/statuses.js'
 
 export default {
   components: { ServerSideTable },

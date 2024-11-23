@@ -34,8 +34,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getClientNom } from '../api/nom_dir.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import BackButton from '@/modules/shared/BackButton.vue'
-import SborkaServerSideTable from '@/modules/shared/server-side/server-side-sborka/ServerSideTable.vue'
+import BackButton from '@/modules/shared/components/BackButton.vue'
+import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideTable.vue'
 
 export default {
   components: { SborkaServerSideTable, BackButton },

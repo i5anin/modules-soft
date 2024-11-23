@@ -57,7 +57,7 @@ const testRoutes = [
   {
     path: '/test/sborka/:id',
     name: 'SborkaDetails',
-    component: () => import('@/modules/shared/table/sborka/SborMain.vue'),
+    component: () => import('@/modules/shared/tables/sborka/SborMain.vue'),
     props: true,
   },
   {

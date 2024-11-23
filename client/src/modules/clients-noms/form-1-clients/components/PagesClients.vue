@@ -31,7 +31,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getClients } from '../api/clients.js'
-import ServerSideTable from '@/modules/shared/server-side/server-side/ServerSideTable.vue'
+import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
 export default {
