@@ -1,4 +1,3 @@
-<!-- components/Pagination.vue -->
 <template>
   <div class="d-flex justify-content-between align-items-center">
     <p class="text-muted mb-0">
@@ -12,14 +11,14 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(1)"
         >
-          <a class="page-link" href="javascript:void(0)">«</a>
+          <button class="page-link" type="button">«</button>
         </li>
         <li
           class="page-item"
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(currentPage - 1)"
         >
-          <a class="page-link" href="javascript:void(0)">‹</a>
+          <button class="page-link" type="button">‹</button>
         </li>
         <li class="page-item active">
           <span class="page-link">{{ currentPage }}</span>
@@ -29,14 +28,14 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(currentPage + 1)"
         >
-          <a class="page-link" href="javascript:void(0)">›</a>
+          <button class="page-link" type="button">›</button>
         </li>
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(totalPages)"
         >
-          <a class="page-link" href="javascript:void(0)">»</a>
+          <button class="page-link" type="button">»</button>
         </li>
       </ul>
     </nav>
