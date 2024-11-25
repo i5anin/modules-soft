@@ -1,70 +1,77 @@
 <template>
   <div>
-    <table class="table table-striped table-bordered table-hover">
-      <thead>
-        <tr>
-          <th
-            v-for="column in headers"
-            :key="column.name"
-            @click="column.sortable && $emit('sort-change', column.name)"
-            :class="{ sortable: column.sortable }"
+    <!-- Индикатор загрузки -->
+    <LoadingSpinner v-if="loading" :padding="'35vh 0'" />
+
+    <!-- Таблица -->
+    <div v-else>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th
+              v-for="column in headers"
+              :key="column.name"
+              @click="column.sortable && $emit('sort-change', column.name)"
+              :class="{ sortable: column.sortable }"
+            >
+              {{ column.title }}
+              <span v-if="column.sortable">
+                <i
+                  v-if="sortColumn === column.name && sortOrder === 'asc'"
+                  class="bi bi-caret-up-fill"
+                ></i>
+                <i
+                  v-else-if="sortColumn === column.name && sortOrder === 'desc'"
+                  class="bi bi-caret-down-fill"
+                ></i>
+              </span>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="!items.length">
+            <td colspan="100%" class="text-center">Нет данных</td>
+          </tr>
+          <tr
+            v-for="row in items"
+            :key="row.id"
+            @click="$emit('row-click', row)"
+            :class="{ locked: row.locked, 'table-success': row.goz }"
           >
-            {{ column.title }}
-            <span v-if="column.sortable">
-              <i
-                v-if="sortColumn === column.name && sortOrder === 'asc'"
-                class="bi bi-caret-up-fill"
-              ></i>
-              <i
-                v-else-if="sortColumn === column.name && sortOrder === 'desc'"
-                class="bi bi-caret-down-fill"
-              ></i>
-            </span>
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!items.length">
-          <td colspan="100%" class="text-center">Нет данных</td>
-        </tr>
-        <tr
-          v-for="row in items"
-          :key="row.id"
-          @click="$emit('row-click', row)"
-          :class="{ locked: row.locked, 'table-success': row.goz }"
-        >
-          <td v-for="field in filteredFields" :key="field.name">
-            <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-            <span
-              v-else
-              v-html="formatValue(row[field.name], field.type, field.name)"
-            ></span>
-          </td>
-          <td @click.stop="handleEditClick(row)">
-            <button class="btn btn-sm">
-              <i class="bi bi-pencil-fill"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <EditModal
-      :visible="isModalVisible"
-      :row="selectedRow"
-      title="Редактирование строки"
-      @close="closeModal"
-    />
+            <td v-for="field in filteredFields" :key="field.name">
+              <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+              <span
+                v-else
+                v-html="formatValue(row[field.name], field.type, field.name)"
+              ></span>
+            </td>
+            <td @click.stop="handleEditClick(row)">
+              <button class="btn btn-sm">
+                <i class="bi bi-pencil-fill" style="color: gray"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <EditModal
+        :visible="isModalVisible"
+        :row="selectedRow"
+        title="Редактирование строки"
+        @close="closeModal"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue' // путь к компоненту
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
 import { computed, ref } from 'vue'
 
 export default {
-  components: { StatusDisplay, EditModal },
+  components: { LoadingSpinner, StatusDisplay, EditModal },
   props: {
     headers: { type: Array, required: true },
     items: { type: Array, required: true },
@@ -74,6 +81,7 @@ export default {
     formatValue: { type: Function, required: true },
   },
   setup(props, { emit }) {
+    const loading = ref(false) // состояние загрузки
     const filteredFields = computed(() =>
       props.headers.filter((header) => !props.excluded.includes(header.name))
     )
@@ -93,6 +101,7 @@ export default {
     }
 
     return {
+      loading,
       filteredFields,
       handleEditClick,
       isModalVisible,
