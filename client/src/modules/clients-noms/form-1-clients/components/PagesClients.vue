@@ -1,28 +1,26 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <!-- Заголовок -->
-        <h3 class="client-name mb-3">Список клиентов</h3>
+  <div class="row">
+    <div class="col-12">
+      <!-- Заголовок -->
+      <h3 class="client-name mb-3">Список клиентов</h3>
 
-        <!-- Таблица данных -->
-        <ServerSideTable
-          :items="clients || []"
-          :headers="tableFields"
-          :items-per-page-options="[15, 30, 50, 100]"
-          :items-per-page="itemsPerPage"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          :total-count="totalCount"
-          :sort-column="sortColumn"
-          :sort-order="sortOrder"
-          @row-click="handleRowClick"
-          @page-change="handlePageChange"
-          @sort-change="handleSortChange"
-          @page-size-change="handlePageSizeChange"
-          @search-change="handleSearchChange"
-        />
-      </div>
+      <!-- Таблица данных -->
+      <ServerSideTable
+        :items="clients || []"
+        :headers="tableFields"
+        :items-per-page-options="[15, 30, 50, 100]"
+        :items-per-page="itemsPerPage"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :total-count="totalCount"
+        :sort-column="sortColumn"
+        :sort-order="sortOrder"
+        @row-click="handleRowClick"
+        @page-change="handlePageChange"
+        @sort-change="handleSortChange"
+        @page-size-change="handlePageSizeChange"
+        @search-change="handleSearchChange"
+      />
     </div>
   </div>
 </template>

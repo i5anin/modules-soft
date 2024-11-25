@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <div class="container-fluid bg">
+    <div class="container-fluid">
       <router-view />
     </div>
   </div>
