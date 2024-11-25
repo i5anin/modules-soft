@@ -1,9 +1,12 @@
 <template>
-  <div class="d-flex align-items-center me-3">
-    <label class="me-2">Показать на странице:</label>
+  <div class="d-flex align-items-center gap-2">
+    <label for="pageSizeSelector" class="form-label mb-0">
+      Показать на странице:
+    </label>
     <select
+      id="pageSizeSelector"
+      class="form-select form-select-sm w-auto"
       :value="modelValue"
-      class="form-select w-auto"
       @change="handleChange"
     >
       <option v-for="size in pageSizes" :key="size" :value="size">
