@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <div class="container-fluid bg-gradient bg">
+    <div class="container-fluid bg">
       <router-view />
     </div>
   </div>
