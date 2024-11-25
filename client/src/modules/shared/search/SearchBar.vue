@@ -1,27 +1,33 @@
-<!-- components/SearchBar.vue -->
 <template>
-  <div class="search-bar d-flex align-items-center">
-    <label class="me-2">Поиск:</label>
-    <div class="position-relative">
+  <div class="search-bar">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="bi bi-search"></i>
+      </span>
       <input
         type="text"
         v-model="searchQuery"
-        class="form-control me-2 search-input"
+        class="form-control search-input"
         placeholder="Введите текст для поиска"
         :disabled="loading"
       />
       <button
         v-if="searchQuery"
         @click="clearSearch"
-        class="btn btn-link position-absolute top-50 end-0 translate-middle-y"
-        style="padding: 0; color: gray"
+        class="btn btn-outline-secondary"
+        type="button"
       >
-        <i class="bi bi-x-circle me-3"></i>
+        <i class="bi bi-x-circle"></i>
+      </button>
+      <button
+        @click="onSearch"
+        class="btn btn-primary"
+        :disabled="loading"
+        type="button"
+      >
+        Поиск
       </button>
     </div>
-    <button @click="onSearch" class="btn btn-primary" :disabled="loading">
-      Поиск
-    </button>
     <div v-if="loading" class="spinner-border ms-2" role="status">
       <span class="visually-hidden">Загрузка...</span>
     </div>
@@ -63,6 +69,10 @@ export default {
 
 <style scoped>
 .search-bar .search-input {
-  width: 300px;
+  width: auto;
+  min-width: 300px;
+}
+.input-group-text {
+  background-color: #f8f9fa;
 }
 </style>
