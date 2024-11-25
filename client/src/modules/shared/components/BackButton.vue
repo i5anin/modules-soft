@@ -1,34 +1,17 @@
 <template>
   <div>
+    <!-- Кнопка "Назад" -->
     <router-link
       v-if="targetRoute"
       :to="{ name: targetRoute }"
-      :class="[
-        'btn',
-        'btn-secondary',
-        'me-3',
-        'mb-2',
-        'btn-sm',
-        'btn-outline-light',
-      ]"
+      :class="[btnClasses]"
     >
       <SvgIcon type="mdi" :path="mdiArrowLeft" class="me-1" />
-      Назад
+      <span v-if="showText">Назад</span>
     </router-link>
-    <button
-      v-else
-      @click="goBack"
-      :class="[
-        'btn',
-        'btn-secondary',
-        'me-3',
-        'mb-2',
-        'btn-sm',
-        'btn-outline-light',
-      ]"
-    >
+    <button v-else @click="goBack" :class="[btnClasses]">
       <SvgIcon type="mdi" :path="mdiArrowLeft" class="me-1" />
-      Назад
+      <span v-if="showText">Назад</span>
     </button>
   </div>
 </template>
@@ -41,13 +24,27 @@ import { mdiArrowLeft } from '@mdi/js'
 
 const router = useRouter()
 
-// Пропс для передачи целевого маршрута
+// Пропсы компонента
 const props = defineProps({
   targetRoute: {
     type: String,
     default: null,
   },
+  showText: {
+    type: Boolean,
+    default: true, // Показывать текст по умолчанию
+  },
 })
+
+// Классы кнопки
+const btnClasses = [
+  'btn',
+  'btn-secondary',
+  'me-3',
+  'mb-2',
+  'btn-sm',
+  'btn-outline-light',
+]
 
 // Функция для перехода "Назад" в истории маршрутов
 const goBack = () => {
