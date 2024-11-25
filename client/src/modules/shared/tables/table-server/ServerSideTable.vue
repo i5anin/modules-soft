@@ -40,8 +40,8 @@
 import { computed, ref } from 'vue'
 import SearchBar from '@/modules/shared/search/SearchBar.vue'
 import Pagination from '@/modules/shared/pagination/Pagination.vue'
+import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
 import DataTable from './Table.vue'
-import PageSizeSelector from '../../pagination/PageSizeSelector.vue'
 import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
 import { formatValue } from '@/utils/formatters-2.js'
 
