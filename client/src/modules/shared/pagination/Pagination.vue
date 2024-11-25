@@ -6,6 +6,7 @@
 
     <nav aria-label="Page navigation">
       <ul class="pagination mb-0">
+        <!-- Кнопка перехода к первой странице -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === 1 }"
@@ -13,6 +14,8 @@
         >
           <button class="page-link" type="button">«</button>
         </li>
+
+        <!-- Кнопка перехода на предыдущую страницу -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === 1 }"
@@ -20,9 +23,19 @@
         >
           <button class="page-link" type="button">‹</button>
         </li>
-        <li class="page-item active">
-          <span class="page-link">{{ currentPage }}</span>
+
+        <!-- Отображение страниц -->
+        <li
+          v-for="page in visiblePages"
+          :key="page"
+          class="page-item"
+          :class="{ active: page === currentPage }"
+          @click="goToPage(page)"
+        >
+          <button class="page-link" type="button">{{ page }}</button>
         </li>
+
+        <!-- Кнопка перехода на следующую страницу -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
@@ -30,6 +43,8 @@
         >
           <button class="page-link" type="button">›</button>
         </li>
+
+        <!-- Кнопка перехода к последней странице -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
@@ -74,6 +89,16 @@ export default {
       Math.min(props.currentPage * props.itemsPerPage, props.totalCount)
     )
 
+    const visiblePages = computed(() => {
+      const pages = []
+      const maxPagesToShow = 5
+      const endPage = Math.min(props.totalPages, maxPagesToShow)
+      for (let i = 1; i <= endPage; i++) {
+        pages.push(i)
+      }
+      return pages
+    })
+
     const goToPage = (page) => {
       if (page < 1) page = 1
       if (page > props.totalPages) page = props.totalPages
@@ -83,6 +108,7 @@ export default {
     return {
       startRecord,
       endRecord,
+      visiblePages,
       goToPage,
     }
   },
@@ -92,5 +118,11 @@ export default {
 <style scoped>
 .pagination .page-item.disabled .page-link {
   cursor: not-allowed;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 </style>
