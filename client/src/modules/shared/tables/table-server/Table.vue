@@ -12,7 +12,7 @@
               v-for="column in headers"
               :key="column.name"
               @click="column.sortable && $emit('sort-change', column.name)"
-              :class="{ sortable: column.sortable }"
+              :style="{ fontSize: '0.90rem' }"
             >
               {{ column.title }}
               <span v-if="column.sortable">
