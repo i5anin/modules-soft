@@ -6,7 +6,12 @@
   >
     <!-- Иконка разворачивания/сворачивания -->
     <td :style="{ width: '40px', textAlign: 'center' }">
-      <span v-if="hasChildren" title="Развернуть/Свернуть">
+      <span
+        v-if="hasChildren"
+        title="Развернуть/Свернуть"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+      >
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
           class="icon-sm"
@@ -16,7 +21,12 @@
 
     <!-- Статусы -->
     <td :style="{ width: '40px', textAlign: 'center' }">
-      <span v-html="combinedStatuses" style="display: inline-flex"></span>
+      <span
+        v-html="combinedStatuses"
+        style="display: inline-flex"
+        data-bs-toggle="tooltip"
+        :data-bs-title="'Активные статусы: ' + statusTooltip"
+      ></span>
     </td>
 
     <!-- Поля -->
@@ -41,16 +51,28 @@
             :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
             class="icon-sm me-2"
           />
-          <span>{{ formatValue(sbor[field.name], field.type) }}</span>
+          <span
+            :data-bs-toggle="fieldTooltip ? 'tooltip' : ''"
+            :data-bs-title="generateTitle(field)"
+          >
+            {{ formatValue(sbor[field.name], field.type) }}
+          </span>
           <font-awesome-icon
             :icon="['fas', 'circle-info']"
             :style="{ color: 'green' }"
             class="icon-sm ms-2 me-2"
             @click.stop="handleRowClick"
+            data-bs-toggle="tooltip"
+            title="Дополнительная информация"
           />
         </div>
       </div>
-      <span v-else :title="generateTitle(field)" style="font-size: 13px">
+      <span
+        v-else
+        :title="generateTitle(field)"
+        data-bs-toggle="tooltip"
+        style="font-size: 13px"
+      >
         {{ formatValue(sbor[field.name], field.type, field.name) }}
       </span>
     </td>
@@ -71,7 +93,8 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { Tooltip } from 'bootstrap'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
@@ -133,7 +156,25 @@ export default {
         : ''
     })
 
-    const generateTitle = (field) => `Field: ${field.title || 'No data'}`
+    const statusTooltip = computed(() =>
+      statuses
+        .filter((status) => props.sbor[status.status])
+        .map((status) => status.label)
+        .join(', ')
+    )
+
+    const generateTitle = (field) =>
+      `Поле: ${field.title || 'No data'}\nПеременная: ${field.name || 'No data'}`
+
+    // Инициализация Bootstrap tooltips
+    onMounted(() => {
+      const tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      )
+      tooltipTriggerList.map(
+        (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
+      )
+    })
 
     return {
       isExpanded,
@@ -145,7 +186,15 @@ export default {
       hasChildren,
       formatValue,
       generateTitle,
+      statusTooltip,
     }
   },
 }
 </script>
+
+<style>
+.tooltip-inner {
+  white-space: pre-line; /* Учитывать переносы \n */
+  text-align: left; /* Выравнивание текста по левому краю */
+}
+</style>
