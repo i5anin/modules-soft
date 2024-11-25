@@ -1,5 +1,17 @@
 import moment from 'moment'
 
+export function getTextAlignment(type, key = '') {
+  if (key.toLowerCase().includes('price')) {
+    return 'right' // Цена выравнивается по правому краю
+  }
+
+  if (type === 'date' || type === 'timestamp') {
+    return 'center' // Дата и время выравниваются по центру
+  }
+
+  return 'left' // Все остальное выравнивается по левому краю
+}
+
 export function formatValue(value, type, key = '') {
   if (key.toLowerCase().includes('price')) {
     return formatCurrency(value)

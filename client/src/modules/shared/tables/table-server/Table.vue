@@ -39,13 +39,18 @@
             @click="$emit('row-click', row)"
             :class="{ locked: row.locked, 'table-success': row.goz }"
           >
-            <td v-for="field in filteredFields" :key="field.name">
+            <td
+              v-for="field in filteredFields"
+              :key="field.name"
+              :style="{ textAlign: getTextAlignment(field.type, field.name) }"
+            >
               <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
               <span
                 v-else
                 v-html="formatValue(row[field.name], field.type, field.name)"
               ></span>
             </td>
+
             <td @click.stop="handleEditClick(row)">
               <button class="btn btn-sm">
                 <i class="bi bi-pencil-fill" style="color: gray"></i>
@@ -79,6 +84,7 @@ export default {
     sortColumn: { type: String, required: true },
     sortOrder: { type: String, required: true },
     formatValue: { type: Function, required: true },
+    getTextAlignment: { type: Function, default: true },
   },
   setup(props, { emit }) {
     const loading = ref(false) // состояние загрузки

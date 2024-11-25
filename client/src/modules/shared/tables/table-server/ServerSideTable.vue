@@ -22,6 +22,7 @@
       :sortColumn="sortColumn"
       :sortOrder="sortOrder"
       :formatValue="formatValue"
+      :getTextAlignment="getTextAlignment"
       @row-click="handleRowClick"
       @sort-change="sortBy"
     />
@@ -43,7 +44,7 @@ import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
 import DataTable from './Table.vue'
 import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
-import { formatValue } from '@/utils/formatters-2.js'
+import { formatValue, getTextAlignment } from '@/utils/formatters-2.js'
 
 export default {
   name: 'ServerSideTable',
@@ -153,6 +154,7 @@ export default {
       onSearch,
       goToPage,
       formatValue,
+      getTextAlignment,
     }
   },
 }
