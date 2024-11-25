@@ -5,7 +5,9 @@
     style="table-layout: fixed"
   >
     <!-- Иконка разворачивания/сворачивания -->
-    <td :style="{ width: '40px', textAlign: 'center' }">
+    <td
+      :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
+    >
       <span
         v-if="hasChildren"
         title="Развернуть/Свернуть"
@@ -20,7 +22,9 @@
     </td>
 
     <!-- Статусы -->
-    <td :style="{ width: '40px', textAlign: 'center' }">
+    <td
+      :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
+    >
       <span
         v-html="combinedStatuses"
         style="display: inline-flex"
@@ -30,7 +34,11 @@
     </td>
 
     <!-- Поля -->
-    <td v-for="field in fieldsArray" :key="field.name" style="font-size: 12px">
+    <td
+      v-for="field in fieldsArray"
+      :key="field.name"
+      :style="{ fontSize: '12px', verticalAlign: 'middle' }"
+    >
       <div
         v-if="field === firstField"
         class="tree-node"
@@ -77,7 +85,6 @@
       </span>
     </td>
   </tr>
-
   <!-- Рекурсивный вызов для дочерних узлов -->
   <template v-if="isExpanded && hasChildren">
     <SborNode
