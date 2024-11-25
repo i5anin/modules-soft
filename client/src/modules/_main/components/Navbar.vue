@@ -1,9 +1,9 @@
 <template>
-  <header class="navbar navbar-expand-lg navbar-light">
+  <header class="navbar navbar-expand-lg">
     <div
       class="container-fluid d-flex justify-content-between align-items-center"
     >
-      <router-link class="navbar-brand mb-0 h1" to="/">
+      <router-link class="navbar-brand mb-0" to="/">
         <BackButton :showText="false" />
       </router-link>
       <!-- Селектор роли -->

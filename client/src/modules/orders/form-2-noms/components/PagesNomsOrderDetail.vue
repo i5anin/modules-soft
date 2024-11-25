@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="grid-container">
-      <div class="p-2" :class="{ collapsed: isCollapsed }">
+      <div :class="{ collapsed: isCollapsed }">
         <!--        <BackButton targetRoute="OrdersTable" />-->
         <OrderInfoCard :header="headerData" />
       </div>
