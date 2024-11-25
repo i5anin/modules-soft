@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <div class="d-flex align-items-center mb-1">
-          <BackButton targetRoute="Clients" class="me-3" />
+          <!--          <BackButton targetRoute="Clients" class="me-3" />-->
           <h3 class="client-name m-0">{{ clientName }}</h3>
         </div>
 
