@@ -38,32 +38,53 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, defineProps, ref } from 'vue'
+<script>
+import { computed, ref } from 'vue'
 import { formatValueCard } from '@/utils/formatters'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
-import type { Field, FieldValues } from '../types'
 
-const props = defineProps<{
-  updateFormFields: Field[]
-  readonlyFormFields: Field[]
-  fieldValues: FieldValues
-}>()
+export default {
+  components: {
+    EditableField,
+    ReadonlyField,
+  },
+  props: {
+    updateFormFields: {
+      type: Array,
+      required: true,
+    },
+    readonlyFormFields: {
+      type: Array,
+      required: true,
+    },
+    fieldValues: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
+    const localFieldValues = ref({ ...props.fieldValues })
 
-const localFieldValues = ref({ ...props.fieldValues })
+    const formattedFieldValues = computed(() =>
+      Object.fromEntries(
+        Object.entries(props.fieldValues).map(([key, value]) => [
+          key,
+          formatValueCard(value, key),
+        ])
+      )
+    )
 
-const formattedFieldValues = computed(() =>
-  Object.fromEntries(
-    Object.entries(props.fieldValues).map(([key, value]) => [
-      key,
-      formatValueCard(value, key),
-    ])
-  )
-)
+    function getFieldComponent(field) {
+      return field.permissions.update ? EditableField : ReadonlyField
+    }
 
-function getFieldComponent(field: Field) {
-  return field.permissions.update ? EditableField : ReadonlyField
+    return {
+      localFieldValues,
+      formattedFieldValues,
+      getFieldComponent,
+    }
+  },
 }
 </script>
 
