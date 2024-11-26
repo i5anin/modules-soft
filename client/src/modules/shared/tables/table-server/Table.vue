@@ -117,3 +117,19 @@ export default {
   },
 }
 </script>
+
+<style>
+.table th,
+.table td {
+  min-width: 8px; /* Минимальная ширина столбцов */
+  max-width: 300px; /* Максимальная ширина столбцов */
+  word-wrap: break-word; /* Перенос длинного текста */
+  overflow: hidden; /* Скрыть текст, который выходит за границы */
+  text-overflow: ellipsis; /* Добавить многоточие, если текст обрезается */
+}
+
+.table th,
+.table td {
+  word-wrap: break-word; /* предотвращает переполнение текста */
+}
+</style>
