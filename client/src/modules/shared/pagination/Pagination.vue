@@ -90,12 +90,26 @@ export default {
     )
 
     const visiblePages = computed(() => {
-      const pages = []
       const maxPagesToShow = 5
-      const endPage = Math.min(props.totalPages, maxPagesToShow)
-      for (let i = 1; i <= endPage; i++) {
+      const pages = []
+
+      const half = Math.floor(maxPagesToShow / 2)
+      let startPage = Math.max(1, props.currentPage - half)
+      let endPage = Math.min(props.totalPages, props.currentPage + half)
+
+      // Корректируем диапазон, чтобы всегда показывать `maxPagesToShow` страниц, если это возможно
+      if (endPage - startPage + 1 < maxPagesToShow) {
+        if (startPage === 1) {
+          endPage = Math.min(props.totalPages, startPage + maxPagesToShow - 1)
+        } else if (endPage === props.totalPages) {
+          startPage = Math.max(1, endPage - maxPagesToShow + 1)
+        }
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
         pages.push(i)
       }
+
       return pages
     })
 
