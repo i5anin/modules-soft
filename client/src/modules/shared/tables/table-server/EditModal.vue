@@ -12,7 +12,7 @@
           <h5 class="modal-title">{{ title }}</h5>
         </div>
         <div class="modal-body">
-          <div v-for="(value, key) in editableRow" :key="key" class="mb-3">
+          <div v-for="(value, key) in headersMap" :key="key" class="mb-3">
             <label :for="key" class="form-label">
               {{ headersMap[key] || key }}
             </label>
