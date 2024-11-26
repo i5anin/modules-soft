@@ -62,8 +62,10 @@
       <EditModal
         :visible="isModalVisible"
         :row="selectedRow"
+        :headers="headers"
         title="Редактирование строки"
         @close="closeModal"
+        @save="saveRowChanges"
       />
     </div>
   </div>
@@ -96,9 +98,14 @@ export default {
     const selectedRow = ref(null)
 
     const handleEditClick = (row) => {
-      console.log('Редактирование строки:', row)
-      selectedRow.value = row
-      isModalVisible.value = true
+      selectedRow.value = row // Текущая строка
+      isModalVisible.value = true // Показ модального окна
+    }
+
+    const saveRowChanges = (updatedRow) => {
+      // Логика сохранения изменений
+      console.log('Сохранено:', updatedRow)
+      isModalVisible.value = false
     }
 
     const closeModal = () => {
@@ -113,6 +120,7 @@ export default {
       isModalVisible,
       selectedRow,
       closeModal,
+      saveRowChanges,
     }
   },
 }
