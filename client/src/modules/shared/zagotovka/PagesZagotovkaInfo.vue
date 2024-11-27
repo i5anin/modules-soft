@@ -1,23 +1,37 @@
 <template>
-  <div>
-    <h1>{{ zagotovka?.title || 'Информация о заготовке' }}</h1>
-    <div v-if="zagotovka">
-      <div v-for="(field, key) in zagotovka.fields" :key="key">
-        <p v-if="field.permissions.read">
-          <strong>{{ field.title }}:</strong>
-          <span v-if="typeof zagotovka.data[key] !== 'object'">
-            {{ zagotovka.data[key] }}
-          </span>
-          <span v-else>
-            <span v-for="(val, subKey) in zagotovka.data[key]" :key="subKey">
-              {{ subKey }}: {{ val }}
-            </span>
-          </span>
-        </p>
-      </div>
+  <div class="container mt-4">
+    <h1 class="mb-4">{{ zagotovka?.title || 'Информация о заготовке' }}</h1>
+    <div v-if="zagotovka && zagotovka.fields">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Значение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(field, key) in zagotovka.fields || []" :key="key">
+            <td class="fw-bold">{{ field.title }}</td>
+            <td>
+              <span v-if="typeof zagotovka.data[key] !== 'object'">
+                {{ zagotovka.data[key] }}
+              </span>
+              <span v-else>
+                <div
+                  v-for="(val, subKey) in zagotovka.data[key]"
+                  :key="subKey"
+                  class="mb-1"
+                >
+                  {{ subKey }}: {{ val }}
+                </div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-else>
-      <p>Загрузка данных о заготовке...</p>
+      <p class="text-muted">Загрузка данных о заготовке...</p>
     </div>
   </div>
 </template>
@@ -27,12 +41,18 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getZagotovkaInfo } from './api/zagotovka'
 
-const zagotovka = ref(null)
+const zagotovka = ref({
+  title: '',
+  fields: [],
+  data: {},
+})
+
 const route = useRoute()
 
 const fetchData = async (params) => {
   try {
-    zagotovka.value = await getZagotovkaInfo(params)
+    const data = await getZagotovkaInfo(params)
+    zagotovka.value = data
   } catch (error) {
     console.error('Ошибка при загрузке информации о заготовке:', error)
   }
