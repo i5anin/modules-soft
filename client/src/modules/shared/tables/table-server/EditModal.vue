@@ -14,7 +14,8 @@
           <h5 class="modal-title">{{ title }}</h5>
           <button
             type="button"
-            class="btn"
+            class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 2.5rem; height: 2.5rem"
             aria-label="Close"
             @click="closeModal"
           >
@@ -38,7 +39,11 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="saveChanges">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            @click="saveChanges"
+          >
             Сохранить
           </button>
         </div>
@@ -72,10 +77,8 @@ export default {
   },
   emits: ['close', 'save'],
   setup(props, { emit }) {
-    // Создаем реактивную копию строки для редактирования
     const editableRow = reactive({ ...props.row })
 
-    // Маппинг заголовков (имя -> заголовок)
     const headersMap = computed(() =>
       props.headers.reduce((map, header) => {
         map[header.name] = header.title || header.name
@@ -83,7 +86,6 @@ export default {
       }, {})
     )
 
-    // Следим за изменением `row` и обновляем `editableRow`
     watch(
       () => props.row,
       (newRow) => {
@@ -91,12 +93,10 @@ export default {
       }
     )
 
-    // Закрыть модальное окно
     const closeModal = () => {
       emit('close')
     }
 
-    // Сохранить изменения
     const saveChanges = () => {
       emit('save', { ...editableRow })
     }
