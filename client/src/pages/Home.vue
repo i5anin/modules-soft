@@ -1,36 +1,60 @@
 <template>
-  <!--  <h1>Расчет Заказа Метролог</h1>-->
-
-  <!--  <router-link to="/add" class="btn btn-primary">Add</router-link>-->
-
-  <!--  <hr>-->
-
-  <Table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Edit / Remove</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>title1</td>
-        <td>some text1</td>
-        <td width="150px" class="text-center">
-          <router-link to="/update/123"
-            ><i class="bi bi-pencil-square action-btn"></i
-          ></router-link>
-          <i class="bi bi-trash3 text-danger action-btn ms-2"></i>
-        </td>
-      </tr>
-    </tbody>
-  </Table>
+  <div class="container mt-4">
+    <h4>Список маршрутов</h4>
+    <div
+      v-for="(group, groupName) in groupedRoutes"
+      :key="groupName"
+      class="mb-4"
+    >
+      <h6 class="mt-3 text-capitalize">{{ groupName }}</h6>
+      <table class="table table-bordered table-striped mt-3">
+        <thead>
+          <tr>
+            <th scope="col">Название маршрута</th>
+            <th scope="col">Путь</th>
+            <th scope="col">Ссылка</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="route in group" :key="route.path">
+            <td>{{ route.name || 'Без имени' }}</td>
+            <td>{{ route.path }}</td>
+            <td>
+              <router-link :to="route.path" class="btn btn-primary btn-sm">
+                Перейти
+              </router-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import Table from '@/modules/form-1/components/index.vue'
+import { useRouter } from 'vue-router'
 
-// import useHome from '../store/home.module.js'
-// const _home = useHome()
+// Определение группы маршрутов по базовому префиксу
+const getBasePrefix = (path) => {
+  const segments = path.split('/').filter(Boolean)
+  if (segments.length === 0) return 'root'
+  const base = segments[0].replace(/s$/, '') // Убираем "s" в конце, если есть
+  return base
+}
+
+const router = useRouter()
+
+// Группировка маршрутов
+const groupedRoutes = router.options.routes.reduce((acc, route) => {
+  const prefix = getBasePrefix(route.path)
+  if (!acc[prefix]) acc[prefix] = []
+  acc[prefix].push(route)
+  return acc
+}, {})
 </script>
+
+<style>
+.container {
+  max-width: 800px;
+}
+</style>

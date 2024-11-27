@@ -3,13 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 const ordersRoutes = [
   {
     path: '/orders',
-    name: 'OrdersTable',
+    name: 'Orders',
     component: () =>
       import('@/modules/orders/form-1-orders/components/PagesOrders.vue'),
   },
   {
     path: '/order/:orderId',
-    name: 'OrderDetails',
+    name: 'Order',
     component: () =>
       import(
         '@/modules/orders/form-2-noms/components/PagesNomsOrderDetail.vue'
@@ -18,7 +18,7 @@ const ordersRoutes = [
   },
   {
     path: '/order/:orderId/details/:idOrder',
-    name: 'OrderDetailsDetails',
+    name: 'OrderDetails',
     component: () =>
       import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
     props: true,
@@ -56,13 +56,13 @@ const clientsRoutes = [
 const testRoutes = [
   {
     path: '/test/modal-tools/:no/:nomId',
-    name: 'modal-tools',
+    name: 'ModalTools',
     component: () =>
       import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
   {
-    path: '/zagotovka',
+    path: '/test/zagotovka',
     name: 'ZagotovkaInfo',
     component: () =>
       import('@/modules/shared/zagotovka/PagesZagotovkaInfo.vue'),
@@ -73,7 +73,8 @@ const testRoutes = [
 const routes = [
   {
     path: '/',
-    redirect: '/orders',
+    name: 'Home',
+    component: () => import('@/pages/Home.vue'),
   },
   ...ordersRoutes,
   ...clientsRoutes,
