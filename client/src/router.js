@@ -62,7 +62,7 @@ const testRoutes = [
     props: true,
   },
   {
-    path: '/test/zagotovka',
+    path: '/test/modal-zag',
     name: 'ZagotovkaInfo',
     component: () =>
       import('@/modules/shared/zagotovka/PagesZagotovkaInfo.vue'),

@@ -39,12 +39,15 @@
             </td>
             <td>
               <router-link
+                v-if="canNavigate(route.path)"
                 :to="generatePath(route.path)"
                 class="btn btn-primary btn-sm"
-                :disabled="!canNavigate(route.path)"
               >
                 Перейти
               </router-link>
+              <button v-else class="btn btn-primary btn-sm" disabled>
+                Перейти
+              </button>
             </td>
           </tr>
         </tbody>
