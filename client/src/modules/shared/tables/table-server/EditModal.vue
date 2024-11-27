@@ -8,8 +8,18 @@
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div
+          class="modal-header d-flex justify-content-between align-items-center"
+        >
           <h5 class="modal-title">{{ title }}</h5>
+          <button
+            type="button"
+            class="btn"
+            aria-label="Close"
+            @click="closeModal"
+          >
+            <i class="bi bi-x"></i>
+          </button>
         </div>
         <div class="modal-body">
           <div v-for="(value, key) in headersMap" :key="key" class="mb-3">
@@ -26,10 +36,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" @click="saveChanges">
-            Save changes
-          </button>
-          <button type="button" class="btn btn-secondary" @click="closeModal">
-            Close
+            Сохранить
           </button>
         </div>
       </div>
@@ -53,7 +60,7 @@ export default {
     },
     row: {
       type: Object,
-      required: true,
+      default: () => ({}), // Пустой объект по умолчанию
     },
     headers: {
       type: Array,
