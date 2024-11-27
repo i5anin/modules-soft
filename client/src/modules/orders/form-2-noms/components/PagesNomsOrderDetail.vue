@@ -12,7 +12,7 @@
           v-if="nomTableData.length > 0"
           :table-data="nomTableData"
           :table-fields="filteredTableFields"
-          :detail="{ route: 'OrderDetailsDetails', idKey: 'ordersnom_id' }"
+          :detail="{ route: 'OrderDetails', idKey: 'ordersnom_id' }"
         />
       </div>
     </div>

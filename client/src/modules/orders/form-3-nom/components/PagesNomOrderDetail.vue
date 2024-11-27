@@ -27,9 +27,8 @@
       <!-- Таблица данных по калибрам -->
       <CaliberTable
         v-if="
-          selectedOrder &&
-          !selectedOrder.table_cal?.error &&
-          selectedOrder.table_cal?.data?.length
+          selectedOrder?.table_cal?.data &&
+          selectedOrder?.table_cal?.data.length
         "
         :fields="uniqueTableFields"
         :data="selectedOrder.table_cal?.data"
@@ -76,18 +75,17 @@ import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
 import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
-import BackButton from '@/modules/shared/components/BackButton.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const id = ref(route.params.id)
+const idOrder = ref(route.params.idOrder)
 const selectedOrder = ref(null)
 
 const fetchOrderData = async () => {
-  if (id.value) {
+  if (idOrder.value) {
     try {
       selectedOrder.value = await getModalOrderById(
-        id.value,
+        idOrder.value,
         'orders',
         roleStore.selectedRole
       )

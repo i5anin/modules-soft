@@ -8,7 +8,7 @@ const ordersRoutes = [
       import('@/modules/orders/form-1-orders/components/PagesOrders.vue'),
   },
   {
-    path: '/order/:orderId',
+    path: '/order/:orderId/noms',
     name: 'Order',
     component: () =>
       import(
@@ -17,7 +17,7 @@ const ordersRoutes = [
     props: true,
   },
   {
-    path: '/order/:orderId/details/:idOrder',
+    path: '/order/:orderId/nom/:idOrder',
     name: 'OrderDetails',
     component: () =>
       import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
