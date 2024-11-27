@@ -61,6 +61,13 @@ const testRoutes = [
       import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
+  {
+    path: '/zagotovka',
+    name: 'ZagotovkaInfo',
+    component: () =>
+      import('@/modules/shared/zagotovka/PagesZagotovkaInfo.vue'),
+    props: true,
+  },
 ]
 
 const routes = [
