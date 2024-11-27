@@ -22,16 +22,19 @@
           </button>
         </div>
         <div class="modal-body">
-          <div v-for="(value, key) in headersMap" :key="key" class="mb-3">
-            <label :for="key" class="form-label">
-              {{ headersMap[key] || key }}
-            </label>
+          <div
+            v-for="(value, key) in headersMap"
+            :key="key"
+            class="form-floating mb-3"
+          >
             <input
               type="text"
               class="form-control"
               :id="key"
               v-model="editableRow[key]"
+              placeholder="Введите значение"
             />
+            <label :for="key">{{ headersMap[key] || key }}</label>
           </div>
         </div>
         <div class="modal-footer">
