@@ -83,19 +83,32 @@ function formatBoolean(value) {
  * Форматирует числовое значение.
  *
  * @param {number|string} value - Число или строка, содержащая число.
- * @returns {string} - Отформатированное число с разделением тысяч и двумя знаками после запятой.
+ * @param {boolean} [isPrice=false] - Если true, форматируется как цена с двумя знаками после запятой.
+ * @returns {string} - Отформатированное число с разделением тысяч.
  */
-function formatNumber(value) {
+function formatNumber(value, isPrice = false) {
   const numberValue = typeof value === 'string' ? parseFloat(value) : value
 
   if (numberValue !== null && !isNaN(numberValue)) {
-    return numberValue
+    if (isPrice) {
+      // Форматирование цен с двумя знаками после запятой
+      return numberValue
+        .toFixed(2)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+        .replace('.', ',')
+    }
+
+    // Форматирование обычных чисел (убираем незначащие нули)
+    const formatted = numberValue
       .toFixed(2)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
       .replace('.', ',')
+    return formatted.endsWith(',00')
+      ? formatted.slice(0, -3) // Убираем ",00" для целых чисел
+      : formatted
   }
 
-  return '0,00' // Возвращаем "0,00" для пустых или неверных значений
+  return '0' // Возвращаем "0" для пустых или неверных значений
 }
 
 /**
@@ -152,11 +165,5 @@ function formatTimestamp(value) {
  * @returns {string} - Значение в формате "1 234,00 ₽".
  */
 function formatCurrency(value) {
-  const numberValue = typeof value === 'string' ? parseFloat(value) : value
-
-  if (numberValue !== null && !isNaN(numberValue)) {
-    return `${formatNumber(numberValue)} ₽` // Используем `formatNumber` и добавляем неразрывный пробел
-  }
-
-  return '0,00 ₽' // Возвращаем "0,00 ₽" для пустых или неверных значений
+  return `${formatNumber(value, true)}\u00A0₽` // Используем `formatNumber` с isPrice = true
 }
