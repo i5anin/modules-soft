@@ -8,7 +8,7 @@ const ordersRoutes = [
       import('@/modules/orders/form-1-orders/components/PagesOrders.vue'),
   },
   {
-    path: '/orders/:orderId',
+    path: '/order/:orderId',
     name: 'OrderDetails',
     component: () =>
       import(
@@ -17,7 +17,7 @@ const ordersRoutes = [
     props: true,
   },
   {
-    path: '/orders/:orderId/:id',
+    path: '/order/:orderId/details/:idOrder',
     name: 'OrderDetailsDetails',
     component: () =>
       import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
@@ -36,14 +36,14 @@ const clientsRoutes = [
     props: true,
   },
   {
-    path: '/noms/:clientId',
+    path: '/client/:clientId',
     name: 'Noms',
     component: () =>
       import('@/modules/clients-noms/form-2-noms/components/PagesNoms.vue'),
     props: true,
   },
   {
-    path: '/noms/:clientId/:nomId',
+    path: '/client/:clientId/nom/:nomId',
     name: 'NomDetails',
     component: () =>
       import(
@@ -54,12 +54,6 @@ const clientsRoutes = [
 ]
 
 const testRoutes = [
-  {
-    path: '/test/sborka/:id',
-    name: 'SborkaDetails',
-    component: () => import('@/modules/shared/tables/sborka/SborMain.vue'),
-    props: true,
-  },
   {
     path: '/test/modal-tools/:no/:nomId',
     name: 'modal-tools',
