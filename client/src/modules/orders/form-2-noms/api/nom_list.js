@@ -1,4 +1,3 @@
-// orders.js
 import apiClient from '@/modules/api/apiClient'
 import { handleResponse, handleError } from '@/modules/api/responseHandlers'
 
