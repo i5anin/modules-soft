@@ -11,16 +11,14 @@ const ordersRoutes = [
     path: '/order/:orderId/noms',
     name: 'Order',
     component: () =>
-      import(
-        '@/modules/orders/form-2-noms/components/PagesNomsOrderDetail.vue'
-      ),
+      import('@/modules/orders/form-2-noms/components/PagesOrderNoms.vue'),
     props: true,
   },
   {
     path: '/order/:orderId/nom/:idOrder',
     name: 'OrderDetails',
     component: () =>
-      import('@/modules/orders/form-3-nom/components/PagesNomOrderDetail.vue'),
+      import('@/modules/orders/form-3-nom/components/PagesOrderDetail.vue'),
     props: true,
   },
 ]
@@ -39,7 +37,9 @@ const clientsRoutes = [
     path: '/client/:clientId',
     name: 'Noms',
     component: () =>
-      import('@/modules/clients-noms/form-2-noms/components/PagesNoms.vue'),
+      import(
+        '@/modules/clients-noms/form-2-noms/components/PagesClientNoms.vue'
+      ),
     props: true,
   },
   {
@@ -47,7 +47,7 @@ const clientsRoutes = [
     name: 'NomDetails',
     component: () =>
       import(
-        '@/modules/clients-noms/form-3-nom/components/PagesNomOrderDetail.vue'
+        '@/modules/clients-noms/form-3-nom/components/PagesClientNomDetail.vue'
       ),
     props: true,
   },
@@ -64,8 +64,7 @@ const testRoutes = [
   {
     path: '/test/modal-zag',
     name: 'ZagotovkaInfo',
-    component: () =>
-      import('@/modules/shared/zagotovka/PagesZagotovkaInfo.vue'),
+    component: () => import('@/modules/shared/zagotovka/ModalZagotovka.vue'),
     props: true,
   },
 ]
