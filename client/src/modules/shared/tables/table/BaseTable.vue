@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h6 class="mt-5">{{ tableTitle }}</h6>
+    <h6>{{ tableTitle }}</h6>
     <table
       class="table-base table table-striped table-sm mt-3 table-bordered table-hover"
     >
@@ -8,7 +8,7 @@
         <tr>
           <th v-for="field in filteredFields" :key="field.name">
             {{ field.title }}
-            <span v-if="field.permissions.update">
+            <span v-if="field.permissions.update" title="Можно редактировать">
               <SvgIcon
                 color="gray"
                 v-if="field.permissions.update"

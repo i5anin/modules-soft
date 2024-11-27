@@ -1,7 +1,7 @@
 <template>
   <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
-    <div class="p-2">
+    <div>
       <BackButton targetRoute="Noms" />
       <div class="d-flex align-items-center mb-2">
         <svg-icon
