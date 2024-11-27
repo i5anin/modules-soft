@@ -83,18 +83,19 @@ function formatBoolean(value) {
  * Форматирует числовое значение.
  *
  * @param {number|string} value - Число или строка, содержащая число.
- * @returns {string} - Отформатированное число с разделением тысяч.
+ * @returns {string} - Отформатированное число с разделением тысяч и двумя знаками после запятой.
  */
 function formatNumber(value) {
   const numberValue = typeof value === 'string' ? parseFloat(value) : value
 
   if (numberValue !== null && !isNaN(numberValue)) {
-    return Number.isInteger(numberValue)
-      ? numberValue.toLocaleString('ru-RU')
-      : numberValue.toFixed(2).toLocaleString('ru-RU')
+    return numberValue
+      .toFixed(2)
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      .replace('.', ',')
   }
 
-  return ''
+  return '0,00' // Возвращаем "0,00" для пустых или неверных значений
 }
 
 /**
@@ -154,8 +155,8 @@ function formatCurrency(value) {
   const numberValue = typeof value === 'string' ? parseFloat(value) : value
 
   if (numberValue !== null && !isNaN(numberValue)) {
-    return `${numberValue.toLocaleString('ru-RU')} ₽`
+    return `${formatNumber(numberValue)} ₽` // Используем `formatNumber` и добавляем неразрывный пробел
   }
 
-  return ''
+  return '0,00 ₽' // Возвращаем "0,00 ₽" для пустых или неверных значений
 }
