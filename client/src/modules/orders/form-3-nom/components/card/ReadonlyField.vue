@@ -1,5 +1,6 @@
 <template>
   <div @click="handleFormClick" style="cursor: pointer">
+    <!-- Заголовок -->
     <div class="field-label d-flex align-items-center">
       <span>{{ field.title }}</span>
       <font-awesome-icon
@@ -12,8 +13,12 @@
         title="Дополнительная информация"
       />
     </div>
+
+    <!-- Значение -->
     <div class="field-value" :style="{ color: value ? '' : '#d8d8d8' }">
-      <span v-if="!isBoolean">{{ value || 'Нет данных' }}</span>
+      <span v-if="!isBoolean" @click.stop="handleFormClick">
+        {{ value || 'Нет данных' }}
+      </span>
       <div v-else class="form-check form-switch d-inline-block me-3">
         <input
           type="checkbox"
@@ -39,12 +44,15 @@ export default {
   },
   emits: ['field-click', 'icon-click'],
   setup(props, { emit }) {
-    const isBoolean = computed(() => typeof props.field.value === 'boolean')
+    const isBoolean = computed(() => typeof props.value === 'boolean')
+
     const handleIconClick = (name) => {
       console.log(`Icon clicked: ${name}`)
       emit('icon-click', name)
     }
+
     const handleFormClick = () => {
+      console.log(`Field clicked: ${props.field.name}`)
       emit('field-click', props.field.name)
     }
 

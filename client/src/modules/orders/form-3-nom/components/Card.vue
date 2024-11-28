@@ -29,7 +29,6 @@
                   :field="field"
                   :value="formattedFieldValues[field.name]"
                   @field-click="handleFieldClick"
-                  @icon-click="handleIconClick"
                 />
               </div>
             </div>
@@ -37,14 +36,23 @@
         </div>
       </div>
     </div>
+
+    <!-- Модалка -->
+    <ModalZagInfo
+      :visible="modalVisible"
+      :type="modalType"
+      :kolvo-add="modalKolvoAdd"
+      :id="modalId"
+      @close="modalVisible = false"
+    />
   </div>
 </template>
 
 <script>
 import { ref, computed } from 'vue'
-import { formatValueCard } from '@/utils/formatters'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
+import ModalZagInfo from '@/modules/shared/zagotovka/ModalZagotovka.vue'
 
 export default {
   props: {
@@ -64,6 +72,7 @@ export default {
   components: {
     EditableField,
     ReadonlyField,
+    ModalZagInfo,
   },
   setup(props) {
     const localFieldValues = ref({ ...props.fieldValues })
@@ -72,7 +81,7 @@ export default {
       Object.fromEntries(
         Object.entries(props.fieldValues).map(([key, value]) => [
           key,
-          formatValueCard(value, key),
+          value, // Здесь можно использовать форматтеры
         ])
       )
     )
@@ -81,26 +90,43 @@ export default {
       return field.permissions.update ? EditableField : ReadonlyField
     }
 
+    const modalVisible = ref(false)
+    const modalType = ref('')
+    const modalKolvoAdd = ref('')
+    const modalId = ref('')
+
     const handleFieldClick = (name) => {
       if (['zag_nom', 'zag_tech'].includes(name)) {
-        console.log('Field clicked:', name)
-        console.log('nom_id_nom:', formattedFieldValues.value.nom_id_nom)
-        console.log('kolvo_add:', formattedFieldValues.value.kolvo_add)
-        console.log('ordersnom__id:', formattedFieldValues.value.ordersnom__id)
-      }
-    }
+        modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
+        modalKolvoAdd.value = formattedFieldValues.value.kolvo_add
 
-    const handleIconClick = (name) => {
-      console.log('Icon clicked:', name)
-      // Можно добавить дополнительные действия
+        if (name === 'zag_nom') {
+          modalId.value = formattedFieldValues.value.nom_id_nom
+        } else if (name === 'zag_tech') {
+          modalId.value = formattedFieldValues.value.ordersnom__id
+        }
+
+        console.log('Клик по полю:', name)
+        console.log('Тип модалки (modalType):', modalType.value)
+        console.log(
+          'Количество добавления (modalKolvoAdd):',
+          modalKolvoAdd.value
+        )
+        console.log('ID для модалки (modalId):', modalId.value)
+
+        modalVisible.value = true
+      }
     }
 
     return {
       localFieldValues,
       formattedFieldValues,
       getFieldComponent,
+      modalVisible,
+      modalType,
+      modalKolvoAdd,
+      modalId,
       handleFieldClick,
-      handleIconClick,
     }
   },
 }

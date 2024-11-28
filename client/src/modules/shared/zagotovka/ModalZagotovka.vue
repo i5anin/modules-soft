@@ -18,32 +18,37 @@
           ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Название</th>
-                <th>Значение</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="field in zagotovka.fields" :key="field.key">
-                <td>{{ field.title }}</td>
-                <td>
-                  <span v-if="!isObject(zagotovka.data[field.key])">
-                    {{ zagotovka.data[field.key] || '—' }}
-                  </span>
-                  <template v-else>
-                    <div
-                      v-for="(value, subKey) in zagotovka.data[field.key]"
-                      :key="subKey"
-                    >
-                      {{ subKey }}: {{ value }}
-                    </div>
-                  </template>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <template v-if="loading">
+            <p>Загрузка данных...</p>
+          </template>
+          <template v-else>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Значение</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="field in zagotovka.fields" :key="field.title">
+                  <td>{{ field.title }}</td>
+                  <td>
+                    <span v-if="!isObject(zagotovka.data[field.key])">
+                      {{ zagotovka.data[field.key] || '—' }}
+                    </span>
+                    <template v-else>
+                      <div
+                        v-for="(value, subKey) in zagotovka.data[field.key]"
+                        :key="subKey"
+                      >
+                        {{ subKey }}: {{ value }}
+                      </div>
+                    </template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </template>
         </div>
       </div>
     </div>
@@ -51,15 +56,16 @@
 </template>
 
 <script>
-import { reactive, watch, computed } from 'vue'
+import { reactive, watch, ref } from 'vue'
+import { getZagotovkaInfo } from './api/zagotovka.js'
 
 export default {
-  name: 'ModalZagotovka',
+  name: 'ModalZagInfo',
   props: {
     visible: { type: Boolean, required: true },
-    zagData: { type: Object, required: true },
     type: { type: String, required: true },
-    nomId: { type: [String, Number], required: true },
+    kolvoAdd: { type: [String, Number], required: true },
+    id: { type: [String, Number], required: true },
   },
   emits: ['close'],
   setup(props, { emit }) {
@@ -69,25 +75,52 @@ export default {
       data: {},
     })
 
-    watch(
-      () => props.zagData,
-      (newData) => {
-        zagotovka.title = newData?.title || `Заготовка (${props.type})`
-        zagotovka.fields = newData?.fields || []
-        zagotovka.data = { ...newData?.data, nomId: props.nomId } || {}
-      },
-      { immediate: true }
-    )
+    const loading = ref(false)
+
+    const fetchZagotovkaData = async () => {
+      if (!props.visible) return
+
+      loading.value = true
+      try {
+        const response = await getZagotovkaInfo({
+          type: props.type,
+          kolvo_add: props.kolvoAdd,
+          id: props.id,
+        })
+        console.log('Response:', response)
+        zagotovka.title = response.title || `Данные (${props.type})`
+        zagotovka.fields = Object.entries(response.fields).map(
+          ([key, field]) => ({
+            key,
+            ...field,
+          })
+        )
+        zagotovka.data = response.data || {}
+      } catch (error) {
+        console.error('Ошибка загрузки данных заготовки:', error)
+      } finally {
+        loading.value = false
+      }
+    }
 
     const isObject = (value) =>
       value && typeof value === 'object' && !Array.isArray(value)
 
     const closeModal = () => emit('close')
 
+    watch(
+      () => props.visible,
+      (newValue) => {
+        if (newValue) fetchZagotovkaData()
+      },
+      { immediate: true }
+    )
+
     return {
       zagotovka,
       isObject,
       closeModal,
+      loading,
     }
   },
 }
