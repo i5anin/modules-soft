@@ -1,6 +1,5 @@
 <template>
   <div class="grid-container bg">
-    <!-- Левая колонка: Карточка с информацией -->
     <div>
       <div class="d-flex align-items-center mb-2">
         <svg-icon
@@ -21,40 +20,23 @@
       />
     </div>
 
-    <!-- Правая колонка: Таблицы -->
     <div class="table-section">
-      <!-- Таблица данных по калибрам -->
       <CaliberTable
-        v-if="
-          selectedOrder?.table_cal?.data &&
-          selectedOrder?.table_cal?.data.length
-        "
+        v-if="selectedOrder?.table_cal?.data?.length"
         :fields="uniqueTableFields"
         :data="selectedOrder.table_cal?.data"
         :tableTitle="selectedOrder.table_cal?.title"
         :excluded="['id']"
       />
-
-      <!-- Таблица данных по стратегии -->
       <StrategyTable
-        v-if="
-          selectedOrder &&
-          !selectedOrder.strat?.error &&
-          selectedOrder.strat?.data?.length
-        "
+        v-if="selectedOrder?.strat?.data?.length && !selectedOrder.strat?.error"
         :fields="uniqueTableFieldsStrat"
         :data="selectedOrder.strat?.data"
         :tableTitle="selectedOrder.strat?.title"
         :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
-
-      <!-- Таблица данных по TPD -->
       <TpdTable
-        v-if="
-          selectedOrder &&
-          !selectedOrder.tpd?.error &&
-          selectedOrder.tpd?.data?.length
-        "
+        v-if="selectedOrder?.tpd?.data?.length && !selectedOrder.tpd?.error"
         :fields="uniqueTableFieldsTpd"
         :data="selectedOrder.tpd?.data"
         :tableTitle="selectedOrder.tpd?.title"
@@ -80,7 +62,8 @@ const route = useRoute()
 const idOrder = ref(route.params.idOrder)
 const selectedOrder = ref(null)
 
-const fetchOrderData = async () => {
+// Загружаем данные заказа при монтировании компонента
+onMounted(async () => {
   if (idOrder.value) {
     try {
       selectedOrder.value = await getModalOrderById(
@@ -93,10 +76,7 @@ const fetchOrderData = async () => {
       selectedOrder.value = null
     }
   }
-}
-
-// Загружаем данные заказа при монтировании компонента
-onMounted(fetchOrderData)
+})
 
 // Фильтрация полей заголовка
 const filteredHeaderFields = computed(() =>
