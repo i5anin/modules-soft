@@ -62,6 +62,7 @@ const roleStore = useRoleStore()
 const route = useRoute()
 const id = ref(route.params.id)
 const selectedOrder = ref(null)
+const routeProps = defineProps(['type'])
 
 // Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
@@ -69,7 +70,7 @@ onMounted(async () => {
     try {
       selectedOrder.value = await getModalOrderById(
         id.value,
-        'orders',
+        routeProps.type,
         roleStore.selectedRole
       )
     } catch (error) {
