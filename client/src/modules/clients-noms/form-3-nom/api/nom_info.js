@@ -1,5 +1,5 @@
-import apiClient from '@/modules/api/apiClient'
-import { handleError, handleResponse } from '@/modules/api/responseHandlers'
+import apiClient from '@/modules/api/apiClient.js'
+import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
 
 /**
  * Получить модальную информацию о заказе по ID

@@ -1,5 +1,5 @@
-import apiClient from '@/modules/api/apiClient'
-import { handleResponse, handleError } from '@/modules/api/responseHandlers'
+import apiClient from '@/modules/api/apiClient.js'
+import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
 
 /**
  * Получает информацию о заготовке.
