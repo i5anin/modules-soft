@@ -50,7 +50,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
-import { getModalOrderById } from '../api/nom_info.js'
+import { getModalOrderAndNomsById } from '../api/nom_info.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
@@ -68,7 +68,7 @@ const routeProps = defineProps(['type'])
 onMounted(async () => {
   if (id.value) {
     try {
-      selectedOrder.value = await getModalOrderById(
+      selectedOrder.value = await getModalOrderAndNomsById(
         id.value,
         routeProps.type,
         roleStore.selectedRole

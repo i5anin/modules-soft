@@ -9,7 +9,7 @@ import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
  * @param {string} module - Модуль или роль
  * @returns {Promise<Object>} - Объект модального заказа
  */
-export const getModalOrderById = (id, type, module) => {
+export const getModalOrderAndNomsById = (id, type, module) => {
   return apiClient
     .get('nom_info', {
       params: { id, type, module },
@@ -17,12 +17,3 @@ export const getModalOrderById = (id, type, module) => {
     .then(handleResponse)
     .catch(handleError)
 }
-
-// export const getModalNomById = (id, type, module) => {
-//   return apiClient
-//     .get('nom_info', {
-//       params: { id, type, module },
-//     })
-//     .then(handleResponse)
-//     .catch(handleError)
-// }
