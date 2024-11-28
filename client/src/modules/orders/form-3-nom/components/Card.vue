@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
 import ModalZagInfo from '@/modules/shared/zagotovka/ModalZagotovka.vue'
@@ -99,21 +99,11 @@ export default {
       if (['zag_nom', 'zag_tech'].includes(name)) {
         modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
         modalKolvoAdd.value = formattedFieldValues.value.kolvo_add
-
         if (name === 'zag_nom') {
           modalId.value = formattedFieldValues.value.nom_id_nom
         } else if (name === 'zag_tech') {
           modalId.value = formattedFieldValues.value.ordersnom__id
         }
-
-        console.log('Клик по полю:', name)
-        console.log('Тип модалки (modalType):', modalType.value)
-        console.log(
-          'Количество добавления (modalKolvoAdd):',
-          modalKolvoAdd.value
-        )
-        console.log('ID для модалки (modalId):', modalId.value)
-
         modalVisible.value = true
       }
     }

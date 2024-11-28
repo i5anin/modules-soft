@@ -87,7 +87,6 @@ export default {
           kolvo_add: props.kolvoAdd,
           id: props.id,
         })
-        console.log('Response:', response)
         zagotovka.title = response.title || `Данные (${props.type})`
         zagotovka.fields = Object.entries(response.fields).map(
           ([key, field]) => ({

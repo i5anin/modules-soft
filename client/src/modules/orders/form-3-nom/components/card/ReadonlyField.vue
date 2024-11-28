@@ -47,12 +47,10 @@ export default {
     const isBoolean = computed(() => typeof props.value === 'boolean')
 
     const handleIconClick = (name) => {
-      console.log(`Icon clicked: ${name}`)
       emit('icon-click', name)
     }
 
     const handleFormClick = () => {
-      console.log(`Field clicked: ${props.field.name}`)
       emit('field-click', props.field.name)
     }
 

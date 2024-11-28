@@ -85,7 +85,6 @@ const filteredHeaderFields = computed(() => {
   const filteredFields = Object.entries(filterFieldPermissions(fields)).map(
     ([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps })
   )
-  console.log('Преобразованный объект полей:', filteredFields)
   return filteredFields
 })
 
