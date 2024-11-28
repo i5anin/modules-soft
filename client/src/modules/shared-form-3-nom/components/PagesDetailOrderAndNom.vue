@@ -60,15 +60,15 @@ import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const idOrder = ref(route.params.idOrder)
+const id = ref(route.params.id)
 const selectedOrder = ref(null)
 
 // Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
-  if (idOrder.value) {
+  if (id.value) {
     try {
       selectedOrder.value = await getModalOrderById(
-        idOrder.value,
+        id.value,
         'orders',
         roleStore.selectedRole
       )

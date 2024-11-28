@@ -15,7 +15,7 @@ const ordersRoutes = [
     props: true,
   },
   {
-    path: '/order/:orderId/nom/:idOrder',
+    path: '/order/:orderId/nom/:id',
     name: 'OrderDetails',
     component: () =>
       import(
@@ -45,7 +45,7 @@ const clientsRoutes = [
     props: true,
   },
   {
-    path: '/client/:clientId/nom/:nomId',
+    path: '/client/:clientId/nom/:id',
     name: 'NomDetails',
     component: () =>
       import(
