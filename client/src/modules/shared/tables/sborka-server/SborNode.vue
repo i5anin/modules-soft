@@ -132,11 +132,26 @@ export default {
     }
 
     const handleRowClick = () => {
-      const nomId = props.sbor[props.detail.idKey]
-      if (props.detail.route && nomId) {
+      console.log('handleRowClick called') // Лог вызова метода
+      const id = props.sbor[props.detail.idKey]
+      console.log('Extracted nomId:', id) // Лог извлеченного идентификатора
+
+      if (props.detail.route && id) {
+        console.log(
+          'Attempting to navigate to route:',
+          props.detail.route,
+          'with params:',
+          { id }
+        )
         router
-          .push({ name: props.detail.route, params: { nomId } })
-          .catch(console.error)
+          .push({ name: props.detail.route, params: { id } })
+          .then(() => console.log('Navigation successful')) // Лог успешной навигации
+          .catch((error) => console.error('Navigation error:', error)) // Лог ошибок навигации
+      } else {
+        console.warn(
+          'Navigation skipped. Reason:',
+          !props.detail.route ? 'Missing route' : 'Missing nomId'
+        )
       }
     }
 

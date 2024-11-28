@@ -106,7 +106,7 @@ const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      selectedOrder.value?.header?.data[0][field.name],
+      selectedOrder.value?.header?.data[0][field.name] ?? '', // Заменяем null на пустую строку
     ])
   )
 )

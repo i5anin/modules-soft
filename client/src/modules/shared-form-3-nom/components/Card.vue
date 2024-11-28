@@ -96,15 +96,23 @@ export default {
     const modalId = ref('')
 
     const handleFieldClick = (name) => {
+      console.log('Field clicked:', name) // Логируем, чтобы отладить клик
       if (['zag_nom', 'zag_tech'].includes(name)) {
         modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
-        modalKolvoAdd.value = formattedFieldValues.value.kolvo_add
+        modalKolvoAdd.value = formattedFieldValues.value.kolvo_add || 0 // Добавляем защиту от undefined
         if (name === 'zag_nom') {
-          modalId.value = formattedFieldValues.value.nom_id_nom
+          modalId.value =
+            formattedFieldValues.value.nom_id_nom ||
+            formattedFieldValues.value.nom__id ||
+            '' // Проверка значения
         } else if (name === 'zag_tech') {
-          modalId.value = formattedFieldValues.value.ordersnom__id
+          modalId.value = formattedFieldValues.value.ordersnom__id || '' // Проверка значения
         }
-        modalVisible.value = true
+        if (modalId.value) {
+          modalVisible.value = true
+        } else {
+          console.warn('Modal ID is missing for field:', name)
+        }
       }
     }
 
