@@ -22,6 +22,7 @@
       :sortColumn="sortColumn"
       :sortOrder="sortOrder"
       :formatValue="formatValue"
+      :edit-button="editButton"
       :getTextAlignment="getTextAlignment"
       @row-click="handleRowClick"
       @sort-change="sortBy"
@@ -69,6 +70,7 @@ export default {
     datepicker: { type: Boolean, default: false },
     startDate: { type: String, default: '' },
     endDate: { type: String, default: '' },
+    editButton: { type: Boolean, default: false },
   },
   emits: [
     'row-click',

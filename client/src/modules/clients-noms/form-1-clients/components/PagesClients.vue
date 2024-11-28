@@ -6,6 +6,7 @@
 
       <!-- Таблица данных -->
       <ServerSideTable
+        edit-button
         :items="clients || []"
         :headers="tableFields"
         :items-per-page-options="[15, 30, 50, 100]"

@@ -26,7 +26,7 @@
                 ></i>
               </span>
             </th>
-            <th></th>
+            <th v-if="editButton" title="колонка редактировать"></th>
           </tr>
         </thead>
         <tbody>
@@ -51,7 +51,7 @@
               ></span>
             </td>
 
-            <td @click.stop="handleEditClick(row)">
+            <td @click.stop="handleEditClick(row)" v-if="editButton">
               <button class="btn btn-sm">
                 <i class="bi bi-pencil-fill" style="color: gray"></i>
               </button>
@@ -60,6 +60,7 @@
         </tbody>
       </table>
       <EditModal
+        v-if="editButton"
         :visible="isModalVisible"
         :row="selectedRow"
         :headers="headers"
@@ -87,6 +88,7 @@ export default {
     sortOrder: { type: String, required: true },
     formatValue: { type: Function, required: true },
     getTextAlignment: { type: Function, default: true },
+    editButton: { type: Boolean, default: false },
   },
   setup(props, { emit }) {
     const loading = ref(false) // состояние загрузки
