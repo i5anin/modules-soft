@@ -56,6 +56,7 @@ import Card from './Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
 import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
+import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
 
 const roleStore = useRoleStore()
 const route = useRoute()
@@ -78,12 +79,15 @@ onMounted(async () => {
   }
 })
 
-// Фильтрация полей заголовка
-const filteredHeaderFields = computed(() =>
-  Object.entries(selectedOrder.value?.header?.fields || {}).map(
+// Фильтрация полей заголовка с использованием filterFieldPermissions
+const filteredHeaderFields = computed(() => {
+  const fields = selectedOrder.value?.header?.fields || {}
+  const filteredFields = Object.entries(filterFieldPermissions(fields)).map(
     ([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps })
   )
-)
+  console.log('Преобразованный объект полей:', filteredFields)
+  return filteredFields
+})
 
 const updateFormFields = computed(() =>
   filteredHeaderFields.value.filter(
