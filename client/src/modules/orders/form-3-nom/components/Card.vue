@@ -26,10 +26,15 @@
                 :key="field.name"
               >
                 <ReadonlyField
+                  color="red"
                   :field="field"
                   :value="formattedFieldValues[field.name]"
                 />
               </div>
+              {{ console.log(formattedFieldValues) }}
+              {{ console.log(formattedFieldValues.nom_id_nom) }}
+              {{ console.log(formattedFieldValues.kolvo_add) }}
+              {{ console.log(formattedFieldValues.ordersnom__id) }}
             </div>
           </div>
         </div>
@@ -38,32 +43,53 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, defineProps, ref } from 'vue'
+<script>
+import { ref, computed } from 'vue'
 import { formatValueCard } from '@/utils/formatters'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
-import type { Field, FieldValues } from '../types'
 
-const props = defineProps<{
-  updateFormFields: Field[]
-  readonlyFormFields: Field[]
-  fieldValues: FieldValues
-}>()
+export default {
+  props: {
+    updateFormFields: {
+      type: Array,
+      required: true,
+    },
+    readonlyFormFields: {
+      type: Array,
+      required: true,
+    },
+    fieldValues: {
+      type: Object,
+      required: true,
+    },
+  },
+  components: {
+    EditableField,
+    ReadonlyField,
+  },
+  setup(props) {
+    const localFieldValues = ref({ ...props.fieldValues })
 
-const localFieldValues = ref({ ...props.fieldValues })
+    const formattedFieldValues = computed(() =>
+      Object.fromEntries(
+        Object.entries(props.fieldValues).map(([key, value]) => [
+          key,
+          formatValueCard(value, key),
+        ])
+      )
+    )
 
-const formattedFieldValues = computed(() =>
-  Object.fromEntries(
-    Object.entries(props.fieldValues).map(([key, value]) => [
-      key,
-      formatValueCard(value, key),
-    ])
-  )
-)
+    function getFieldComponent(field) {
+      return field.permissions.update ? EditableField : ReadonlyField
+    }
 
-function getFieldComponent(field: Field) {
-  return field.permissions.update ? EditableField : ReadonlyField
+    return {
+      localFieldValues,
+      formattedFieldValues,
+      getFieldComponent,
+    }
+  },
 }
 </script>
 
