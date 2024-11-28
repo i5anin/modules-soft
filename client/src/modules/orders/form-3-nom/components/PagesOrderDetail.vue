@@ -13,7 +13,7 @@
       </div>
 
       <Card
-        v-if="selectedOrder && selectedOrder.header"
+        v-if="selectedOrder?.header"
         :updateFormFields="updateFormFields"
         :readonlyFormFields="readonlyFormFields"
         :fieldValues="fieldValues"
