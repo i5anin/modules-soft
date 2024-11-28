@@ -1,6 +1,6 @@
 // orders.js
-import apiClient from '@/modules/api/apiClient'
-import { handleError, handleResponse } from '@/modules/api/responseHandlers'
+import apiClient from '@/modules/api/apiClient.js'
+import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
 
 /**
  * Получение модального заказа по ID
@@ -17,3 +17,12 @@ export const getModalOrderById = (orderId, type, module) => {
     .then(handleResponse)
     .catch(handleError)
 }
+
+// export const getModalNomById = (id, type, module) => {
+//   return apiClient
+//     .get('nom_info', {
+//       params: { id, type, module },
+//     })
+//     .then(handleResponse)
+//     .catch(handleError)
+// }

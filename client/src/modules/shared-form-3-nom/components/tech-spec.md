@@ -65,10 +65,8 @@ classDiagram
 
 ```
 
-+ client\src\modules\orders\form-3-nom\components
-  + PagesOrderDetail.vue
-  + Card.vue
-    + EditableField.vue
-    + ReadonlyField.vue
-
-
+- client\src\modules\orders\form-3-nom\components
+  - PagesOrderDetail.vue
+  - Card.vue
+    - EditableField.vue
+    - ReadonlyField.vue

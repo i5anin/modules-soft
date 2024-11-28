@@ -59,10 +59,7 @@
             :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
             class="icon-sm me-2"
           />
-          <span
-            :data-bs-toggle="fieldTooltip ? 'tooltip' : ''"
-            :data-bs-title="generateTitle(field)"
-          >
+          <span data-bs-toggle="tooltip" :data-bs-title="generateTitle(field)">
             {{ formatValue(sbor[field.name], field.type) }}
           </span>
           <font-awesome-icon
