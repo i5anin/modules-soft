@@ -2,7 +2,6 @@
   <div class="grid-container bg">
     <!-- Левая колонка: Карточка с информацией -->
     <div>
-      <!--      <BackButton targetRoute="OrderDetails" />-->
       <div class="d-flex align-items-center mb-2">
         <svg-icon
           type="mdi"
@@ -96,25 +95,14 @@ const fetchOrderData = async () => {
   }
 }
 
+// Загружаем данные заказа при монтировании компонента
 onMounted(fetchOrderData)
 
-// Исключенные поля для отображения
-const excludedFields = [
-  'zag_tech_material_id',
-  'ordersnom__id',
-  'zag_buy_p1',
-  'zag_buy_p2',
-  'zag_buy_p3',
-  'zag_buy_p4',
-  'zag_buy_weight',
-  'nom_id_nom',
-]
-
-// Фильтрация полей заголовка с учетом новой структуры данных
+// Фильтрация полей заголовка
 const filteredHeaderFields = computed(() =>
-  Object.entries(selectedOrder.value?.header?.fields || {})
-    .filter(([fieldName]) => !excludedFields.includes(fieldName))
-    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
+  Object.entries(selectedOrder.value?.header?.fields || {}).map(
+    ([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps })
+  )
 )
 
 const updateFormFields = computed(() =>
@@ -165,12 +153,12 @@ const uniqueTableFieldsTpd = computed(() =>
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 400px 1fr; /* Фиксированная ширина слева и адаптивная справа */
+  grid-template-columns: 400px 1fr;
   gap: 16px;
 }
 
 .table-section {
-  width: 100%; /* Занимает оставшееся пространство справа */
+  width: 100%;
 }
 
 .card-body {
