@@ -1,6 +1,17 @@
 <template>
-  <div>
-    <div class="field-label">{{ field.title }}</div>
+  <div @click="handleFormClick" style="cursor: pointer">
+    <div class="field-label d-flex align-items-center">
+      <span>{{ field.title }}</span>
+      <font-awesome-icon
+        v-if="['zag_nom', 'zag_tech'].includes(field.name)"
+        @click.stop="handleClick(field.name)"
+        :icon="['fas', 'circle-info']"
+        :style="{ color: 'green', cursor: 'pointer' }"
+        class="icon-sm ms-2 me-2"
+        data-bs-toggle="tooltip"
+        title="Дополнительная информация"
+      />
+    </div>
     <div class="field-value" :style="{ color: value ? '' : '#d8d8d8' }">
       <span v-if="!isBoolean">{{ value || 'Нет данных' }}</span>
       <div v-else class="form-check form-switch d-inline-block me-3">
@@ -8,27 +19,34 @@
           type="checkbox"
           :checked="value"
           class="form-check-input"
-          :id="`switch-${field.name}`"
           disabled
         />
-        <label class="form-check-label" :for="`switch-${field.name}`">
-          {{ field.title }}
-        </label>
+        <label class="form-check-label">{{ field.title }}</label>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { defineProps, computed } from 'vue'
-import type { Field } from '../../types'
+<script>
+import { computed } from 'vue'
+import { FontAwesomeIcon } from '@/utils/icons.js'
 
-const props = defineProps<{
-  field: Field
-  value: string | boolean | number
-}>()
+export default {
+  components: { FontAwesomeIcon },
+  props: {
+    field: { type: Object, required: true },
+    value: { type: [String, Boolean, Number], required: true },
+  },
+  setup({ field }) {
+    const isBoolean = computed(() => typeof field.value === 'boolean')
+    const handleClick = (name) => console.log(`Icon clicked: ${name}`)
+    const handleFormClick = () =>
+      ['zag_nom', 'zag_tech'].includes(field.name) &&
+      console.log(`Form clicked: ${field.name}`)
 
-const isBoolean = computed(() => typeof props.value === 'boolean')
+    return { isBoolean, handleClick, handleFormClick }
+  },
+}
 </script>
 
 <style scoped>
