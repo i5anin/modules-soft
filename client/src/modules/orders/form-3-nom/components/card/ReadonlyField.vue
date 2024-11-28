@@ -4,7 +4,7 @@
       <span>{{ field.title }}</span>
       <font-awesome-icon
         v-if="['zag_nom', 'zag_tech'].includes(field.name)"
-        @click.stop="handleClick(field.name)"
+        @click.stop="handleIconClick(field.name)"
         :icon="['fas', 'circle-info']"
         :style="{ color: 'green', cursor: 'pointer' }"
         class="icon-sm ms-2 me-2"
@@ -37,14 +37,18 @@ export default {
     field: { type: Object, required: true },
     value: { type: [String, Boolean, Number], required: true },
   },
-  setup({ field }) {
-    const isBoolean = computed(() => typeof field.value === 'boolean')
-    const handleClick = (name) => console.log(`Icon clicked: ${name}`)
-    const handleFormClick = () =>
-      ['zag_nom', 'zag_tech'].includes(field.name) &&
-      console.log(`Form clicked: ${field.name}`)
+  emits: ['field-click', 'icon-click'],
+  setup(props, { emit }) {
+    const isBoolean = computed(() => typeof props.field.value === 'boolean')
+    const handleIconClick = (name) => {
+      console.log(`Icon clicked: ${name}`)
+      emit('icon-click', name)
+    }
+    const handleFormClick = () => {
+      emit('field-click', props.field.name)
+    }
 
-    return { isBoolean, handleClick, handleFormClick }
+    return { isBoolean, handleIconClick, handleFormClick }
   },
 }
 </script>

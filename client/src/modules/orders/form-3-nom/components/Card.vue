@@ -2,8 +2,8 @@
   <div class="card mb-2">
     <div class="card-body p-2">
       <div class="row">
+        <!-- Поля для редактирования -->
         <div class="col-12">
-          <!-- Editable fields with floating labels and form-check switches -->
           <div v-for="field in updateFormFields" :key="field.name" class="mb-3">
             <component
               :is="getFieldComponent(field)"
@@ -16,7 +16,7 @@
           </div>
         </div>
 
-        <!-- Readonly fields with styling for labels and values -->
+        <!-- Только для чтения -->
         <div class="col-12 mt-3">
           <div class="card-body p-2">
             <div class="row g-3">
@@ -26,15 +26,12 @@
                 :key="field.name"
               >
                 <ReadonlyField
-                  color="red"
                   :field="field"
                   :value="formattedFieldValues[field.name]"
+                  @field-click="handleFieldClick"
+                  @icon-click="handleIconClick"
                 />
               </div>
-              {{ console.log(formattedFieldValues) }}
-              {{ console.log(formattedFieldValues.nom_id_nom) }}
-              {{ console.log(formattedFieldValues.kolvo_add) }}
-              {{ console.log(formattedFieldValues.ordersnom__id) }}
             </div>
           </div>
         </div>
@@ -84,24 +81,27 @@ export default {
       return field.permissions.update ? EditableField : ReadonlyField
     }
 
+    const handleFieldClick = (name) => {
+      if (['zag_nom', 'zag_tech'].includes(name)) {
+        console.log('Field clicked:', name)
+        console.log('nom_id_nom:', formattedFieldValues.value.nom_id_nom)
+        console.log('kolvo_add:', formattedFieldValues.value.kolvo_add)
+        console.log('ordersnom__id:', formattedFieldValues.value.ordersnom__id)
+      }
+    }
+
+    const handleIconClick = (name) => {
+      console.log('Icon clicked:', name)
+      // Можно добавить дополнительные действия
+    }
+
     return {
       localFieldValues,
       formattedFieldValues,
       getFieldComponent,
+      handleFieldClick,
+      handleIconClick,
     }
   },
 }
 </script>
-
-<style scoped>
-.field-label {
-  font-size: 0.8rem;
-  color: #212529;
-  font-weight: 600;
-}
-
-.field-value {
-  font-size: 1rem;
-  color: #495057;
-}
-</style>
