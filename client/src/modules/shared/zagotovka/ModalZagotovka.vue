@@ -1,29 +1,24 @@
 <template>
   <div
-    v-if="visible"
+    v-if="visible && zagotovka.fields.length"
     class="modal fade show"
     tabindex="-1"
     role="dialog"
     style="display: block; background-color: rgba(0, 0, 0, 0.5)"
   >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
-          <h5 class="modal-title">{{ zagotovka.title || 'Заготовка' }}</h5>
+        <div class="modal-header">
+          <h5 class="modal-title">{{ zagotovka.title }}</h5>
           <button
             type="button"
-            class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center"
-            style="width: 2.5rem; height: 2.5rem"
+            class="btn-close"
             aria-label="Close"
             @click="closeModal"
-          >
-            <i class="bi bi-x"></i>
-          </button>
+          ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered">
             <thead>
               <tr>
                 <th>Название</th>
@@ -31,21 +26,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(field, key) in zagotovka.fields || []" :key="key">
-                <td class="fw-bold">{{ field.title }}</td>
+              <tr v-for="field in zagotovka.fields" :key="field.key">
+                <td>{{ field.title }}</td>
                 <td>
-                  <span v-if="typeof zagotovka.data[key] !== 'object'">
-                    {{ zagotovka.data[key] }}
+                  <span v-if="!isObject(zagotovka.data[field.key])">
+                    {{ zagotovka.data[field.key] || '—' }}
                   </span>
-                  <span v-else>
+                  <template v-else>
                     <div
-                      v-for="(val, subKey) in zagotovka.data[key]"
+                      v-for="(value, subKey) in zagotovka.data[field.key]"
                       :key="subKey"
-                      class="mb-1"
                     >
-                      {{ subKey }}: {{ val }}
+                      {{ subKey }}: {{ value }}
                     </div>
-                  </span>
+                  </template>
                 </td>
               </tr>
             </tbody>
@@ -57,23 +51,15 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 
 export default {
-  name: 'ZagotovkaModal',
+  name: 'ModalZagotovka',
   props: {
-    visible: {
-      type: Boolean,
-      required: true,
-    },
-    zagData: {
-      type: Object,
-      required: true,
-    },
-    type: {
-      type: String,
-      default: 'tech',
-    },
+    visible: { type: Boolean, required: true },
+    zagData: { type: Object, required: true },
+    type: { type: String, required: true },
+    nomId: { type: [String, Number], required: true },
   },
   emits: ['close'],
   setup(props, { emit }) {
@@ -86,32 +72,23 @@ export default {
     watch(
       () => props.zagData,
       (newData) => {
-        zagotovka.title = newData.title || `Заготовка (${props.type})`
-        zagotovka.fields = newData.fields || []
-        zagotovka.data = newData.data || {}
+        zagotovka.title = newData?.title || `Заготовка (${props.type})`
+        zagotovka.fields = newData?.fields || []
+        zagotovka.data = { ...newData?.data, nomId: props.nomId } || {}
       },
       { immediate: true }
     )
 
-    const closeModal = () => {
-      emit('close')
-    }
+    const isObject = (value) =>
+      value && typeof value === 'object' && !Array.isArray(value)
+
+    const closeModal = () => emit('close')
 
     return {
       zagotovka,
+      isObject,
       closeModal,
     }
   },
 }
 </script>
-
-<style scoped>
-.modal.fade.show {
-  display: block;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-dialog {
-  margin: 10% auto;
-}
-</style>
