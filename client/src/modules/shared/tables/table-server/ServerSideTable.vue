@@ -40,6 +40,7 @@
 
 <script>
 import { computed, ref } from 'vue'
+import moment from 'moment'
 import SearchBar from '@/modules/shared/search/SearchBar.vue'
 import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
@@ -83,9 +84,11 @@ export default {
   setup(props, { emit }) {
     const localItemsPerPage = ref(props.itemsPerPage)
     const localStartDate = ref(
-      props.startDate ? new Date(props.startDate) : null
+      props.startDate ? moment(props.startDate).toDate() : null
     )
-    const localEndDate = ref(props.endDate ? new Date(props.endDate) : null)
+    const localEndDate = ref(
+      props.endDate ? moment(props.endDate).toDate() : null
+    )
     const loading = ref(false)
 
     const pageSizes = computed(() => props.itemsPerPageOptions)
@@ -113,9 +116,9 @@ export default {
     const updateStartDate = (value) => {
       localStartDate.value = value
       emit('date-range-change', {
-        startDate: value ? value.toISOString().split('T')[0] : '',
+        startDate: value ? moment(value).format('YYYY-MM-DD') : '',
         endDate: localEndDate.value
-          ? localEndDate.value.toISOString().split('T')[0]
+          ? moment(localEndDate.value).format('YYYY-MM-DD')
           : '',
       })
     }
@@ -124,9 +127,9 @@ export default {
       localEndDate.value = value
       emit('date-range-change', {
         startDate: localStartDate.value
-          ? localStartDate.value.toISOString().split('T')[0]
+          ? moment(localStartDate.value).format('YYYY-MM-DD')
           : '',
-        endDate: value ? value.toISOString().split('T')[0] : '',
+        endDate: value ? moment(value).format('YYYY-MM-DD') : '',
       })
     }
 

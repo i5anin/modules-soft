@@ -25,9 +25,12 @@ export default {
   props: {
     start: {
       type: Date,
-      default: () => new Date(new Date().setMonth(new Date().getMonth() - 3)),
+      default: null,
     },
-    end: { type: Date, default: () => new Date() },
+    end: {
+      type: Date,
+      default: null,
+    },
   },
   emits: ['update:start', 'update:end'],
   setup(props, { emit }) {

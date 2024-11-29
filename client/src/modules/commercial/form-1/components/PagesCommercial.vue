@@ -35,7 +35,17 @@ import { useRoleStore } from '@/modules/_main/store/index.js'
 
 export default {
   components: { ServerSideTable },
-  setup() {
+  props: {
+    initialStartDate: {
+      type: String,
+      required: true,
+    },
+    initialEndDate: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const router = useRouter()
     const orders = ref([])
     const tableFields = ref([])
@@ -51,13 +61,9 @@ export default {
     const sortColumn = ref('')
     const sortOrder = ref('')
 
-    // Инициализация диапазона дат
-    const defaultEndDate = new Date()
-    const defaultStartDate = new Date()
-    defaultStartDate.setMonth(defaultEndDate.getMonth() - 3)
-
-    const startDate = ref(defaultStartDate.toISOString().slice(0, 10))
-    const endDate = ref(defaultEndDate.toISOString().slice(0, 10))
+    // Инициализация диапазона дат из пропсов
+    const startDate = ref(props.initialStartDate)
+    const endDate = ref(props.initialEndDate)
 
     // Получение данных с сервера
     const fetchOrders = () => {
