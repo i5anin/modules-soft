@@ -41,3 +41,4 @@ dist-ssr
 
 /server/storage/clockwork/
 /server/storage/debugbar/
+client/cypress/screenshots
