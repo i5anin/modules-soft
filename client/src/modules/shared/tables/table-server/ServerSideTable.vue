@@ -113,24 +113,25 @@ export default {
       emit('page-size-change', value)
     }
 
-    const updateStartDate = (value) => {
-      localStartDate.value = value
+    const updateDateRange = () => {
       emit('date-range-change', {
-        startDate: value ? moment(value).format('YYYY-MM-DD') : '',
+        startDate: localStartDate.value
+          ? moment(localStartDate.value).format('YYYY-MM-DD')
+          : '',
         endDate: localEndDate.value
           ? moment(localEndDate.value).format('YYYY-MM-DD')
           : '',
       })
     }
 
+    const updateStartDate = (value) => {
+      localStartDate.value = value
+      updateDateRange()
+    }
+
     const updateEndDate = (value) => {
       localEndDate.value = value
-      emit('date-range-change', {
-        startDate: localStartDate.value
-          ? moment(localStartDate.value).format('YYYY-MM-DD')
-          : '',
-        endDate: value ? moment(value).format('YYYY-MM-DD') : '',
-      })
+      updateDateRange()
     }
 
     const onSearch = (query) => {

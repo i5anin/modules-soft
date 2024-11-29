@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { ref, watch, computed } from 'vue'
+import { ref, computed } from 'vue'
 import moment from 'moment'
 
 export default {
@@ -55,21 +55,6 @@ export default {
       endDate.value = date
       emit('update:end', date)
     }
-
-    // Watch for external changes to props
-    watch(
-      () => props.start,
-      (newVal) => {
-        startDate.value = moment(newVal).toDate()
-      }
-    )
-
-    watch(
-      () => props.end,
-      (newVal) => {
-        endDate.value = moment(newVal).toDate()
-      }
-    )
 
     return {
       startDate,
