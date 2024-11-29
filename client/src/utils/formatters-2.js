@@ -87,28 +87,20 @@ function formatBoolean(value) {
  * @returns {string} - Отформатированное число с разделением тысяч.
  */
 function formatNumber(value, isPrice = false) {
-  const numberValue = typeof value === 'string' ? parseFloat(value) : value
+  const numberValue = Number(value)
 
-  if (numberValue !== null && !isNaN(numberValue)) {
-    if (isPrice) {
-      // Форматирование цен с двумя знаками после запятой
-      return numberValue
-        .toFixed(2)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-        .replace('.', ',')
-    }
-
-    // Форматирование обычных чисел (убираем незначащие нули)
-    const formatted = numberValue
-      .toFixed(2)
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-      .replace('.', ',')
-    return formatted.endsWith(',00')
-      ? formatted.slice(0, -3) // Убираем ",00" для целых чисел
-      : formatted
+  if (!isFinite(numberValue)) {
+    return '0' // Возвращаем "0" для некорректных значений
   }
 
-  return '0' // Возвращаем "0" для пустых или неверных значений
+  const formatted = numberValue
+    .toFixed(isPrice ? 2 : 0) // Для цены — 2 знака после запятой
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') // Разделение тысяч
+    .replace('.', ',') // Замена точки на запятую
+
+  return isPrice || !formatted.endsWith(',00')
+    ? formatted
+    : formatted.slice(0, -3) // Убираем ",00" для целых чисел
 }
 
 /**
