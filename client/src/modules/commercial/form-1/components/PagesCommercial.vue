@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getOrders } from '../api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
@@ -147,19 +147,6 @@ export default {
       currentPage.value = 1
       fetchOrders()
     }
-
-    watch(
-      [
-        startDate,
-        endDate,
-        () => roleStore.selectedTypes,
-        () => roleStore.selectedRole,
-      ],
-      () => {
-        currentPage.value = 1
-        fetchOrders()
-      }
-    )
 
     onMounted(() => {
       fetchOrders()

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import { getOrders } from '../api/list.js'
@@ -201,19 +201,6 @@ export default {
       currentPage.value = 1
       fetchOrders()
     }
-
-    watch(
-      [
-        startDate,
-        endDate,
-        () => roleStore.selectedTypes,
-        () => roleStore.selectedRole,
-      ],
-      () => {
-        currentPage.value = 1
-        fetchOrders()
-      }
-    )
 
     onMounted(() => {
       fetchOrders()
