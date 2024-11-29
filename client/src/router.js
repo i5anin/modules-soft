@@ -55,6 +55,15 @@ const clientsRoutes = [
   },
 ]
 
+const commercialRoutes = [
+  {
+    path: '/commercial',
+    name: 'Commercial',
+    component: () =>
+      import('@/modules/commercial/form-1/components/PagesCommercial.vue'),
+  },
+]
+
 const testRoutes = [
   {
     path: '/test/modal-tools/:no/:nomId',
@@ -71,6 +80,7 @@ const routes = [
     name: 'Home',
     component: () => import('@/pages/Home.vue'),
   },
+  ...commercialRoutes,
   ...ordersRoutes,
   ...clientsRoutes,
   ...testRoutes,
