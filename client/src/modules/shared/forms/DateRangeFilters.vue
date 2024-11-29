@@ -18,6 +18,7 @@
 
 <script>
 import { ref, watch, computed } from 'vue'
+import moment from 'moment'
 
 export default {
   name: 'DateRangeFilters',
@@ -34,20 +35,20 @@ export default {
     const endDate = ref(props.end)
 
     const formattedStartDate = computed(() =>
-      startDate.value ? startDate.value.toISOString().split('T')[0] : ''
+      startDate.value ? moment(startDate.value).format('YYYY-MM-DD') : ''
     )
     const formattedEndDate = computed(() =>
-      endDate.value ? endDate.value.toISOString().split('T')[0] : ''
+      endDate.value ? moment(endDate.value).format('YYYY-MM-DD') : ''
     )
 
     const onStartDateChange = (value) => {
-      const date = value ? new Date(value) : null
+      const date = value ? moment(value).toDate() : null
       startDate.value = date
       emit('update:start', date)
     }
 
     const onEndDateChange = (value) => {
-      const date = value ? new Date(value) : null
+      const date = value ? moment(value).toDate() : null
       endDate.value = date
       emit('update:end', date)
     }
@@ -56,14 +57,14 @@ export default {
     watch(
       () => props.start,
       (newVal) => {
-        startDate.value = new Date(newVal)
+        startDate.value = moment(newVal).toDate()
       }
     )
 
     watch(
       () => props.end,
       (newVal) => {
-        endDate.value = new Date(newVal)
+        endDate.value = moment(newVal).toDate()
       }
     )
 
