@@ -146,43 +146,21 @@ export default {
       }))
     })
 
-// Методы: разделение на собственные и внешние
+    // Методы: разделение на собственные и внешние
     const componentMethods = computed(() => {
-      let ownMethods = [];
-      let externalMethods = [];
+      const rawMethods = props.targetComponent?.methods || {}
+      const allMethods = Object.keys(rawMethods)
 
-      // Проверяем, экземпляр ли это компонента
-      if (props.targetComponent?.$options) {
-        const setupResult = props.targetComponent; // Экземпляр уже содержит методы
-        console.log(setupResult);
+      const ownMethods = allMethods.filter((method) =>
+        props.targetComponent.hasOwnProperty(method),
+      )
 
-        // Собственные свойства из setup, исключая ключи, начинающиеся с "_"
-        ownMethods = Object.keys(setupResult).filter(
-          (key) => !key.startsWith('_')
-        );
+      const externalMethods = allMethods.filter(
+        (method) => !props.targetComponent.hasOwnProperty(method),
+      )
 
-        // Методы из Options API, исключая ключи с "_"
-        if (setupResult.$options.methods) {
-          externalMethods = Object.keys(setupResult.$options.methods).filter(
-            (key) => !key.startsWith('_')
-          );
-        }
-      } else if (props.targetComponent?.setup) {
-        // Если это описание компонента
-        try {
-          const setupResult = props.targetComponent.setup();
-          ownMethods = Object.keys(setupResult).filter(
-            (key) => !key.startsWith('_')
-          );
-        } catch (error) {
-          console.error('Ошибка при вызове setup:', error);
-        }
-      }
-
-      return { ownMethods, externalMethods };
-    });
-
-
+      return { ownMethods, externalMethods }
+    })
 
     // События
     const componentEmits = computed(() => {
