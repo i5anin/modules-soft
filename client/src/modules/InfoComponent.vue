@@ -35,11 +35,7 @@
         <div v-if="componentMethods.ownMethods.length" class="mb-3">
           <h5>Собственные методы</h5>
           <ul class="list-group">
-            <li
-              v-for="method in componentMethods.ownMethods"
-              :key="method"
-              class="list-group-item"
-            >
+            <li v-for="method in componentMethods.ownMethods" :key="method" class="list-group-item">
               {{ method }}
             </li>
           </ul>
@@ -49,11 +45,7 @@
         <div v-if="componentMethods.externalMethods.length" class="mb-3">
           <h5>Внешние методы</h5>
           <ul class="list-group">
-            <li
-              v-for="method in componentMethods.externalMethods"
-              :key="method"
-              class="list-group-item"
-            >
+            <li v-for="method in componentMethods.externalMethods" :key="method" class="list-group-item">
               {{ method }}
             </li>
           </ul>
@@ -93,102 +85,88 @@
   </div>
 </template>
 
+<script setup>
+import { ref, computed } from 'vue';
+import InfoComponent from './InfoComponent.vue';
 
-<script>
-import { computed, reactive } from 'vue'
-
-export default {
-  name: 'InfoComponent',
-  props: {
-    targetComponent: {
-      type: Object,
-      required: true,
-    },
+// Используем defineProps для получения пропсов
+const props = defineProps({
+  targetComponent: {
+    type: Object,
+    required: true,
   },
-  setup(props) {
-    // Состояние для управления сворачиванием секций
-    const collapsedSections = reactive({
-      props: false,
-      methods: false,
-      emits: false,
-      children: false,
-    })
+});
 
-    const toggleSection = (section) => {
-      collapsedSections[section] = !collapsedSections[section]
+const collapsedSections = ref({
+  props: false,
+  methods: false,
+  emits: false,
+  children: false,
+});
+
+const toggleSection = (section) => {
+  collapsedSections.value[section] = !collapsedSections.value[section];
+};
+
+const componentName = computed(() => props.targetComponent?.name || 'Неизвестно');
+
+const apiStyle = computed(() => {
+  if (props.targetComponent?.setup) return 'Composition API';
+  if (
+    props.targetComponent?.data ||
+    props.targetComponent?.methods ||
+    props.targetComponent?.computed
+  ) return 'Options API';
+  return 'Неизвестно';
+});
+
+const componentProps = computed(() => {
+  const rawProps = props.targetComponent?.props || {};
+  if (!rawProps || typeof rawProps !== 'object') return [];
+  return Object.entries(rawProps).map(([key, value]) => ({
+    name: key,
+    type: value?.type?.name || 'unknown',
+    default: value?.default || null,
+  }));
+});
+
+const componentMethods = computed(() => {
+  let ownMethods = [];
+  let externalMethods = [];
+
+  if (props.targetComponent?.$options) {
+    const setupResult = props.targetComponent;
+    ownMethods = Object.keys(setupResult).filter(
+      (key) => typeof setupResult[key] === 'function'
+    );
+    if (setupResult.$options.methods) {
+      externalMethods = Object.keys(setupResult.$options.methods);
     }
-
-    // Имя компонента
-    const componentName = computed(() => props.targetComponent?.name || 'Неизвестно')
-
-    // API компонента (Composition или Options)
-    const apiStyle = computed(() => {
-      if (props.targetComponent?.setup) {
-        return 'Composition API'
-      }
-      if (
-        props.targetComponent?.data ||
-        props.targetComponent?.methods ||
-        props.targetComponent?.computed
-      ) {
-        return 'Options API'
-      }
-      return 'Неизвестно'
-    })
-
-    // Пропсы
-    const componentProps = computed(() => {
-      const rawProps = props.targetComponent?.props || {}
-      return Object.entries(rawProps).map(([key, value]) => ({
-        name: key,
-        type: value?.type?.name || 'unknown',
-        default: value?.default || null,
-      }))
-    })
-
-    // Методы: разделение на собственные и внешние
-    const componentMethods = computed(() => {
-      const rawMethods = props.targetComponent?.methods || {}
-      const allMethods = Object.keys(rawMethods)
-
-      const ownMethods = allMethods.filter((method) =>
-        props.targetComponent.hasOwnProperty(method),
-      )
-
-      const externalMethods = allMethods.filter(
-        (method) => !props.targetComponent.hasOwnProperty(method),
-      )
-
-      return { ownMethods, externalMethods }
-    })
-
-    // События
-    const componentEmits = computed(() => {
-      return Array.isArray(props.targetComponent?.emits)
-        ? props.targetComponent.emits
-        : []
-    })
-
-    // Дочерние компоненты
-    const componentChildren = computed(() => {
-      const rawComponents = props.targetComponent?.components || {}
-      return Object.values(rawComponents)
-    })
-
-    return {
-      collapsedSections,
-      toggleSection,
-      componentName,
-      apiStyle,
-      componentProps,
-      componentMethods,
-      componentEmits,
-      componentChildren,
+  } else if (props.targetComponent?.setup) {
+    try {
+      const setupResult = props.targetComponent.setup();
+      ownMethods = Object.keys(setupResult).filter(
+        (key) => typeof setupResult[key] === 'function'
+      );
+    } catch (error) {
+      console.error('Ошибка при вызове setup:', error);
     }
-  },
-}
+  }
+
+  return { ownMethods, externalMethods };
+});
+
+const componentEmits = computed(() => {
+  return Array.isArray(props.targetComponent?.emits)
+    ? props.targetComponent.emits
+    : [];
+});
+
+const componentChildren = computed(() => {
+  const rawComponents = props.targetComponent?.components || {};
+  return rawComponents ? Object.values(rawComponents) : [];
+});
 </script>
-
 
 <style>
 .map-container {
