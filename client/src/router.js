@@ -72,6 +72,13 @@ const testRoutes = [
       import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
+  {
+    path: '/docs',
+    name: 'Docs',
+    component: () =>
+      import('@/modules/InfoComponent2.vue'),
+    props: true,
+  },
 ]
 
 const routes = [
