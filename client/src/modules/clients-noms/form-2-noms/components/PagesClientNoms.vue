@@ -137,9 +137,9 @@ export default {
       itemsPerPage,
       totalCount,
       updatePage,
-      handleSearchChange,
       updateSorting,
       updateItemsPerPage,
+      handleSearchChange,
       handleDateRangeChange,
     }
   },

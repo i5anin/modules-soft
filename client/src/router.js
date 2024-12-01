@@ -76,7 +76,7 @@ const testRoutes = [
     path: '/docs',
     name: 'Docs',
     component: () =>
-      import('@/modules/InfoComponent2.vue'),
+      import('@/modules/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
 ]
