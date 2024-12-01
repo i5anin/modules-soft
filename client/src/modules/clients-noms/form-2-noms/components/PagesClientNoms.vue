@@ -36,6 +36,7 @@ import BackButton from '@/modules/shared/components/BackButton.vue'
 import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideTable.vue'
 
 export default {
+  name: 'PagesClientNoms',
   components: { SborkaServerSideTable, BackButton },
   setup() {
     const route = useRoute()
