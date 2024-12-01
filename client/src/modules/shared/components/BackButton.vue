@@ -22,6 +22,11 @@ import { useRouter } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowLeft } from '@mdi/js'
 
+// Указываем имя компонента
+defineOptions({
+  name: 'BackButton',
+})
+
 const router = useRouter()
 
 // Пропсы компонента
