@@ -22,18 +22,43 @@
     </section>
 
     <!-- Сворачиваемая секция: Методы -->
-    <section v-if="componentMethods.length" class="mb-4">
+    <section v-if="componentMethods.ownMethods.length || componentMethods.externalMethods.length" class="mb-4">
       <h4 class="mb-2 d-flex justify-content-between align-items-center">
         Методы:
         <button class="btn btn-link" @click="toggleSection('methods')">
           {{ collapsedSections.methods ? 'Развернуть' : 'Свернуть' }}
         </button>
       </h4>
-      <ul v-show="!collapsedSections.methods" class="list-group">
-        <li v-for="method in componentMethods" :key="method" class="list-group-item">
-          {{ method }}
-        </li>
-      </ul>
+
+      <div v-show="!collapsedSections.methods">
+        <!-- Собственные методы -->
+        <div v-if="componentMethods.ownMethods.length" class="mb-3">
+          <h5>Собственные методы</h5>
+          <ul class="list-group">
+            <li
+              v-for="method in componentMethods.ownMethods"
+              :key="method"
+              class="list-group-item"
+            >
+              {{ method }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Внешние методы -->
+        <div v-if="componentMethods.externalMethods.length" class="mb-3">
+          <h5>Внешние методы</h5>
+          <ul class="list-group">
+            <li
+              v-for="method in componentMethods.externalMethods"
+              :key="method"
+              class="list-group-item"
+            >
+              {{ method }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- Сворачиваемая секция: События -->
@@ -68,8 +93,9 @@
   </div>
 </template>
 
+
 <script>
-import { computed, reactive } from 'vue';
+import { computed, reactive } from 'vue'
 
 export default {
   name: 'InfoComponent',
@@ -86,58 +112,90 @@ export default {
       methods: false,
       emits: false,
       children: false,
-    });
+    })
 
     const toggleSection = (section) => {
-      collapsedSections[section] = !collapsedSections[section];
-    };
+      collapsedSections[section] = !collapsedSections[section]
+    }
 
     // Имя компонента
-    const componentName = computed(() => props.targetComponent?.name || 'Неизвестно');
+    const componentName = computed(() => props.targetComponent?.name || 'Неизвестно')
 
     // API компонента (Composition или Options)
     const apiStyle = computed(() => {
       if (props.targetComponent?.setup) {
-        return 'Composition API';
+        return 'Composition API'
       }
       if (
         props.targetComponent?.data ||
         props.targetComponent?.methods ||
         props.targetComponent?.computed
       ) {
-        return 'Options API';
+        return 'Options API'
       }
-      return 'Неизвестно';
-    });
+      return 'Неизвестно'
+    })
 
     // Пропсы
     const componentProps = computed(() => {
-      const rawProps = props.targetComponent?.props || {};
+      const rawProps = props.targetComponent?.props || {}
       return Object.entries(rawProps).map(([key, value]) => ({
         name: key,
         type: value?.type?.name || 'unknown',
         default: value?.default || null,
-      }));
+      }))
+    })
+
+// Методы: разделение на собственные и внешние
+    const componentMethods = computed(() => {
+      let ownMethods = [];
+      let externalMethods = [];
+
+      // Проверяем, экземпляр ли это компонента
+      if (props.targetComponent?.$options) {
+        const setupResult = props.targetComponent; // Экземпляр уже содержит методы
+        console.log(setupResult);
+
+        // Собственные свойства из setup, исключая ключи, начинающиеся с "_"
+        ownMethods = Object.keys(setupResult).filter(
+          (key) => !key.startsWith('_')
+        );
+
+        // Методы из Options API, исключая ключи с "_"
+        if (setupResult.$options.methods) {
+          externalMethods = Object.keys(setupResult.$options.methods).filter(
+            (key) => !key.startsWith('_')
+          );
+        }
+      } else if (props.targetComponent?.setup) {
+        // Если это описание компонента
+        try {
+          const setupResult = props.targetComponent.setup();
+          ownMethods = Object.keys(setupResult).filter(
+            (key) => !key.startsWith('_')
+          );
+        } catch (error) {
+          console.error('Ошибка при вызове setup:', error);
+        }
+      }
+
+      return { ownMethods, externalMethods };
     });
 
-    // Методы
-    const componentMethods = computed(() => {
-      const rawMethods = props.targetComponent?.methods || {};
-      return Object.keys(rawMethods);
-    });
+
 
     // События
     const componentEmits = computed(() => {
       return Array.isArray(props.targetComponent?.emits)
         ? props.targetComponent.emits
-        : [];
-    });
+        : []
+    })
 
     // Дочерние компоненты
     const componentChildren = computed(() => {
-      const rawComponents = props.targetComponent?.components || {};
-      return Object.values(rawComponents);
-    });
+      const rawComponents = props.targetComponent?.components || {}
+      return Object.values(rawComponents)
+    })
 
     return {
       collapsedSections,
@@ -148,10 +206,11 @@ export default {
       componentMethods,
       componentEmits,
       componentChildren,
-    };
+    }
   },
-};
+}
 </script>
+
 
 <style>
 .map-container {
