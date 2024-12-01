@@ -2,39 +2,64 @@
   <div class="container p-4 border rounded">
     <h3 class="mb-3">Информация о компоненте</h3>
     <p><strong>Имя компонента:</strong> {{ componentName || 'Неизвестно' }}</p>
+    <p><strong>API компонента:</strong> {{ apiStyle }}</p>
 
+    <!-- Сворачиваемая секция: Пропсы -->
     <section v-if="componentProps.length" class="mb-4">
-      <h4 class="mb-2">Пропсы:</h4>
-      <ul class="list-group">
+      <h4 class="mb-2 d-flex justify-content-between align-items-center">
+        Пропсы:
+        <button class="btn btn-link" @click="toggleSection('props')">
+          {{ collapsedSections.props ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </h4>
+      <ul v-show="!collapsedSections.props" class="list-group">
         <li v-for="prop in componentProps" :key="prop.name" class="list-group-item">
-          <strong>{{ prop.name }}</strong>
+          <strong :title="JSON.stringify(prop)">{{ prop.name }}</strong>
           <span v-if="prop.type">(тип: {{ prop.type }})</span>
           <span v-if="prop.default" class="text-muted"> - значение по умолчанию: {{ prop.default }}</span>
         </li>
       </ul>
     </section>
 
+    <!-- Сворачиваемая секция: Методы -->
     <section v-if="componentMethods.length" class="mb-4">
-      <h4 class="mb-2">Методы:</h4>
-      <ul class="list-group">
+      <h4 class="mb-2 d-flex justify-content-between align-items-center">
+        Методы:
+        <button class="btn btn-link" @click="toggleSection('methods')">
+          {{ collapsedSections.methods ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </h4>
+      <ul v-show="!collapsedSections.methods" class="list-group">
         <li v-for="method in componentMethods" :key="method" class="list-group-item">
           {{ method }}
         </li>
       </ul>
     </section>
 
+    <!-- Сворачиваемая секция: События -->
     <section v-if="componentEmits.length" class="mb-4">
-      <h4 class="mb-2">События:</h4>
-      <ul class="list-group">
+      <h4 class="mb-2 d-flex justify-content-between align-items-center">
+        События:
+        <button class="btn btn-link" @click="toggleSection('emits')">
+          {{ collapsedSections.emits ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </h4>
+      <ul v-show="!collapsedSections.emits" class="list-group">
         <li v-for="event in componentEmits" :key="event" class="list-group-item">
           {{ event }}
         </li>
       </ul>
     </section>
 
+    <!-- Сворачиваемая секция: Дочерние компоненты -->
     <section v-if="componentChildren.length" class="mb-4">
-      <h4 class="mb-2">Дочерние компоненты:</h4>
-      <ul class="list-group">
+      <h4 class="mb-2 d-flex justify-content-between align-items-center">
+        Дочерние компоненты:
+        <button class="btn btn-link" @click="toggleSection('children')">
+          {{ collapsedSections.children ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </h4>
+      <ul v-show="!collapsedSections.children" class="list-group">
         <li v-for="child in componentChildren" :key="child.name || child.__file" class="list-group-item">
           <InfoComponent :targetComponent="child" />
         </li>
@@ -44,7 +69,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 
 export default {
   name: 'InfoComponent',
@@ -55,10 +80,39 @@ export default {
     },
   },
   setup(props) {
-    const componentName = computed(() => props.targetComponent.name || 'Неизвестно');
+    // Состояние для управления сворачиванием секций
+    const collapsedSections = reactive({
+      props: false,
+      methods: false,
+      emits: false,
+      children: false,
+    });
 
+    const toggleSection = (section) => {
+      collapsedSections[section] = !collapsedSections[section];
+    };
+
+    // Имя компонента
+    const componentName = computed(() => props.targetComponent?.name || 'Неизвестно');
+
+    // API компонента (Composition или Options)
+    const apiStyle = computed(() => {
+      if (props.targetComponent?.setup) {
+        return 'Composition API';
+      }
+      if (
+        props.targetComponent?.data ||
+        props.targetComponent?.methods ||
+        props.targetComponent?.computed
+      ) {
+        return 'Options API';
+      }
+      return 'Неизвестно';
+    });
+
+    // Пропсы
     const componentProps = computed(() => {
-      const rawProps = props.targetComponent.props || {};
+      const rawProps = props.targetComponent?.props || {};
       return Object.entries(rawProps).map(([key, value]) => ({
         name: key,
         type: value?.type?.name || 'unknown',
@@ -66,24 +120,30 @@ export default {
       }));
     });
 
+    // Методы
     const componentMethods = computed(() => {
-      const rawMethods = props.targetComponent.methods || {};
+      const rawMethods = props.targetComponent?.methods || {};
       return Object.keys(rawMethods);
     });
 
+    // События
     const componentEmits = computed(() => {
-      return Array.isArray(props.targetComponent.emits)
+      return Array.isArray(props.targetComponent?.emits)
         ? props.targetComponent.emits
         : [];
     });
 
+    // Дочерние компоненты
     const componentChildren = computed(() => {
-      const rawComponents = props.targetComponent.components || {};
+      const rawComponents = props.targetComponent?.components || {};
       return Object.values(rawComponents);
     });
 
     return {
+      collapsedSections,
+      toggleSection,
       componentName,
+      apiStyle,
       componentProps,
       componentMethods,
       componentEmits,
@@ -93,4 +153,9 @@ export default {
 };
 </script>
 
-
+<style>
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+</style>
