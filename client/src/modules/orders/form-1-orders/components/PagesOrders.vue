@@ -51,16 +51,12 @@ export default {
     const currentPage = ref(1)
     const itemsPerPage = ref(15)
     const totalPages = ref(0)
-    const sortColumn = ref('')
-    const sortOrder = ref('')
+    const sortColumn = ref('date')
+    const sortOrder = ref('desc')
 
-    // Инициализация диапазона дат
-    const defaultEndDate = new Date()
-    const defaultStartDate = new Date()
-    defaultStartDate.setMonth(defaultEndDate.getMonth() - 3)
-
-    const startDate = ref(defaultStartDate.toISOString().slice(0, 10))
-    const endDate = ref(defaultEndDate.toISOString().slice(0, 10))
+    // Диапазон дат
+    const startDate = ref(null)
+    const endDate = ref(null)
 
     // Получение данных с сервера
     const fetchOrders = () => {
@@ -192,12 +188,10 @@ export default {
       fetchOrders()
     }
 
-    const handleDateRangeChange = ({
-      startDate: newStartDate,
-      endDate: newEndDate,
-    }) => {
-      if (newStartDate) startDate.value = newStartDate
-      if (newEndDate) endDate.value = newEndDate
+    const handleDateRangeChange = (newRange) => {
+      const { startDate: newStartDate, endDate: newEndDate } = newRange
+      startDate.value = newStartDate
+      endDate.value = newEndDate
       currentPage.value = 1
       fetchOrders()
     }

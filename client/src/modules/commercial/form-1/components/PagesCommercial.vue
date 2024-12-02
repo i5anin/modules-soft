@@ -58,8 +58,8 @@ export default {
     const currentPage = ref(1)
     const itemsPerPage = ref(15)
     const totalPages = ref(0)
-    const sortColumn = ref('')
-    const sortOrder = ref('')
+    const sortColumn = ref('date')
+    const sortOrder = ref('desc')
 
     // Инициализация диапазона дат из пропсов
     const startDate = ref(props.initialStartDate)
