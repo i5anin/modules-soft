@@ -11,7 +11,7 @@ const ordersRoutes = [
     path: '/order/:orderId/noms',
     name: 'Order',
     component: () =>
-      import('@/modules/orders/form-2-noms/components/PagesOrderNoms.vue'),
+      import('@/modules/orders/form-2-card-noms/components/PagesOrderNoms.vue'),
     props: true,
   },
   {
@@ -75,8 +75,7 @@ const testRoutes = [
   {
     path: '/docs',
     name: 'Docs',
-    component: () =>
-      import('@/modules/dynamic-docs/PagesViewer.vue'),
+    component: () => import('@/modules/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
 ]
