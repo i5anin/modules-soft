@@ -20,13 +20,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, defineProps, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getOrderById } from '../api/nom_list.js'
 import OrderInfoCard from './Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
-import BackButton from '@/modules/shared/components/BackButton.vue'
+
+// Объявление пропсов
+const props = defineProps({
+  type: { type: String, required: true },
+})
 
 const router = useRouter()
 const roleStore = useRoleStore()
@@ -41,11 +45,10 @@ const selectedRole = computed(() => roleStore.selectedRole)
 
 // Получение данных заказа
 const fetchOrderData = async () => {
-  const orderId = router.currentRoute.value.params.orderId
-  const type = roleStore.selectedTypes
+  const orderId = router.currentRoute.value.params.kpId
   const role = roleStore.selectedRole
   try {
-    const response = await getOrderById({ orderId, type, role })
+    const response = await getOrderById({ orderId, type: props.type, role })
     headerData.value = response.header
     tableFields.value = response.table.fields
     nomTableData.value = response.table.data
@@ -64,6 +67,7 @@ const filteredTableFields = computed(() => {
     }))
 })
 
+// Автоматическая загрузка данных при монтировании компонента
 onMounted(() => {
   fetchOrderData()
 })

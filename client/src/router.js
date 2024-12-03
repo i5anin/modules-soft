@@ -11,7 +11,7 @@ const ordersRoutes = [
     path: '/order/:orderId/noms',
     name: 'Order',
     component: () =>
-      import('@/modules/orders/form-2-card-noms/components/PagesOrderNoms.vue'),
+      import('@/modules/shared-form-2-card-noms/components/PagesCardNoms.vue'),
     props: true,
   },
   {
@@ -36,7 +36,7 @@ const clientsRoutes = [
     props: true,
   },
   {
-    path: '/client/:clientId',
+    path: '/client/:clientId/noms',
     name: 'Noms',
     component: () =>
       import(
@@ -57,10 +57,17 @@ const clientsRoutes = [
 
 const commercialRoutes = [
   {
-    path: '/commercial',
+    path: '/commercials',
     name: 'Commercial',
     component: () =>
       import('@/modules/commercial/form-1/components/PagesCommercial.vue'),
+  },
+  {
+    path: '/commercial/:kpId/noms',
+    name: 'CommercialNomDetails',
+    component: () =>
+      import('@/modules/shared-form-2-card-noms/components/PagesCardNoms.vue'),
+    props: (route) => ({ ...route.params, type: 'kp' }),
   },
 ]
 
