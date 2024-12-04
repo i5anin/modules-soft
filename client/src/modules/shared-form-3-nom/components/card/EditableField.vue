@@ -42,15 +42,20 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, defineProps } from 'vue'
-import { calculateHeight } from '../../utils/calculateHeight'
-import type { Field } from '../../types'
+<script setup>
+import { computed } from 'vue'
+import { calculateHeight } from '../../utils/calculateHeight.js'
 
-const props = defineProps<{
-  field: Field
-  modelValue: string | boolean | number
-}>()
+const props = defineProps({
+  field: {
+    type: Object,
+    required: true,
+  },
+  modelValue: {
+    type: [String, Boolean, Number],
+    required: true,
+  },
+})
 
 const isTextarea = computed(() => String(props.modelValue).length >= 40)
 const isCheckbox = computed(() => typeof props.modelValue === 'boolean')
