@@ -36,53 +36,43 @@
     <!-- Поля -->
     <td
       v-for="field in fieldsArray"
-      :key="field.name"
+      :key="field.name || 'default-key'"
       :style="{
         fontSize: '12px',
         verticalAlign: 'middle',
-        textAlign: getTextAlignment(field.type, field.name),
+        textAlign: getTextAlignment(field.type || 'string', field.name || ''),
       }"
     >
+      <!-- Основное поле (например, 'name') -->
       <div
-        v-if="field === firstField"
+        v-if="field.name === 'name'"
         class="tree-node"
         :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
       >
-        <!-- Ветвь связей -->
-        <div
-          v-if="depth > 0"
-          class="branch-line"
-          :class="{ 'last-child': isLastChild }"
-          :style="{ left: `${(depth - 1) * 20}px` }"
-        ></div>
-
-        <!-- Содержимое узла -->
-        <div class="node-content">
-          <font-awesome-icon
-            :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
-            :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-            class="icon-sm me-2"
-          />
-          <span data-bs-toggle="tooltip" :data-bs-title="generateTitle(field)">
-            {{ formatValue(sbor[field.name], field.type) }}
-          </span>
-          <font-awesome-icon
-            :icon="['fas', 'circle-info']"
-            :style="{ color: 'green' }"
-            class="icon-sm ms-2 me-2"
-            @click.stop="handleRowClick"
-            data-bs-toggle="tooltip"
-            title="Дополнительная информация"
-          />
-        </div>
+        <span data-bs-toggle="tooltip" :data-bs-title="generateTitle(field)">
+          {{
+            formatValue(
+              sbor[field.name] || '',
+              field.type || 'string',
+              field.name || ''
+            )
+          }}
+        </span>
       </div>
+      <!-- Остальные поля -->
       <span
         v-else
         :title="generateTitle(field)"
         data-bs-toggle="tooltip"
         style="font-size: 13px"
       >
-        {{ formatValue(sbor[field.name], field.type, field.name) }}
+        {{
+          formatValue(
+            sbor[field.name] || '',
+            field.type || 'string',
+            field.name || ''
+          )
+        }}
       </span>
     </td>
   </tr>
@@ -106,7 +96,7 @@ import { Tooltip } from 'bootstrap'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue } from '@/utils/formatters.js'
+import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/logic/statuses.js'
 import './SborNode.css'
 
@@ -136,26 +126,12 @@ export default {
     }
 
     const handleRowClick = () => {
-      console.log('handleRowClick called') // Лог вызова метода
       const id = props.sbor[props.detail.idKey]
-      console.log('Extracted nomId:', id) // Лог извлеченного идентификатора
-
       if (props.detail.route && id) {
-        console.log(
-          'Attempting to navigate to route:',
-          props.detail.route,
-          'with params:',
-          { id }
-        )
         router
           .push({ name: props.detail.route, params: { id } })
-          .then(() => console.log('Navigation successful')) // Лог успешной навигации
-          .catch((error) => console.error('Navigation error:', error)) // Лог ошибок навигации
-      } else {
-        console.warn(
-          'Navigation skipped. Reason:',
-          !props.detail.route ? 'Missing route' : 'Missing nomId'
-        )
+          .then(() => console.log('Navigation successful'))
+          .catch((error) => console.error('Navigation error:', error))
       }
     }
 
@@ -208,6 +184,7 @@ export default {
       combinedStatuses,
       hasChildren,
       formatValue,
+      getTextAlignment, // Делаем функцию доступной в шаблоне
       generateTitle,
       statusTooltip,
     }
