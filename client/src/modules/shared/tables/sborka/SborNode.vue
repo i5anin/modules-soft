@@ -27,10 +27,14 @@
     <td
       v-for="field in fieldsArray"
       :key="field.name"
-      :style="{ fontSize: '12px', verticalAlign: 'middle' }"
+      :style="{
+        fontSize: '12px',
+        verticalAlign: 'middle',
+        textAlign: getTextAlignment(field.type, field.name),
+      }"
     >
       <div
-        v-if="field === firstField"
+        v-if="field.name === 'name'"
         class="tree-node"
         :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
       >
@@ -83,12 +87,13 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue } from '@/utils/formatters.js'
+import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/logic/statuses.js'
 import './SborNode.css'
 
 export default {
   name: 'SborNode',
+  methods: { getTextAlignment },
   components: { FontAwesomeIcon },
   props: {
     sbor: { type: Object, required: true },
