@@ -64,7 +64,7 @@
             class="icon-sm me-2"
           />
           <span data-bs-toggle="tooltip" :data-bs-title="generateTitle(field)">
-            {{ formatValue(sbor[field.name], field.type) }}
+            {{ formatValue(sbor[field.name], field.type, field.name) }}
           </span>
           <font-awesome-icon
             :icon="['fas', 'circle-info']"

@@ -53,7 +53,9 @@
             :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
             class="icon-sm me-2"
           />
-          <span>{{ formatValue(sbor[field.name], field.type) }}</span>
+          <span>
+            {{ formatValue(sbor[field.name], field.type, field.name) }}
+          </span>
           <font-awesome-icon
             :icon="['fas', 'circle-info']"
             :style="{ color: 'green' }"
