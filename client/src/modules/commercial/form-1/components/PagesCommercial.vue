@@ -111,7 +111,10 @@ export default {
     )
 
     const handleRowClick = (row) => {
-      router.push({ name: 'CommercialNomDetails', params: { kpId: row.kp_id } })
+      router.push({
+        name: 'CommercialNomDetails',
+        params: { kpId: row.kp_list__id },
+      })
     }
 
     const handlePageChange = (page) => {
