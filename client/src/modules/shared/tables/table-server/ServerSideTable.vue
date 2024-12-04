@@ -46,7 +46,7 @@ import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
 import DataTable from './Table.vue'
 import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
-import { formatValue, getTextAlignment } from '@/utils/formatters-2.js'
+import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 
 export default {
   name: 'ServerSideTable',

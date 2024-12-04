@@ -40,7 +40,7 @@ const clientsRoutes = [
     name: 'Noms',
     component: () =>
       import(
-        '@/modules/clients-noms/form-2-noms/components/PagesClientNoms.vue'
+        '@/modules/clients-noms/form-2-clients-noms/components/PagesClientNoms.vue'
       ),
     props: true,
   },
@@ -60,7 +60,7 @@ const commercialRoutes = [
     path: '/commercials',
     name: 'Commercial',
     component: () =>
-      import('@/modules/commercial/form-1/components/PagesCommercial.vue'),
+      import('@/modules/commercial/form-1-kp/components/PagesCommercial.vue'),
   },
   {
     path: '/commercial/:kpId/noms',
@@ -82,7 +82,7 @@ const testRoutes = [
   {
     path: '/docs',
     name: 'Docs',
-    component: () => import('@/modules/dynamic-docs/PagesViewer.vue'),
+    component: () => import('@/pages/admin/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
 ]

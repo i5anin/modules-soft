@@ -1,60 +1,169 @@
 import moment from 'moment'
-import 'moment/locale/ru'
-moment.locale('ru')
-export function formatValueCard(value, fieldName) {
-  if (fieldName.toLowerCase().includes('price')) {
-    return formatPrice(value)
+
+/**
+ * Определяет выравнивание текста для отображения в таблице.
+ *
+ * @param {string} type - Тип данных (например, 'date', 'timestamp', 'bool', и т.д.).
+ * @param {string} [key=''] - Ключ данных, используется для дополнительных условий (например, содержит 'price').
+ * @returns {string} - Значение выравнивания текста ('left', 'center', 'right').
+ *
+ * Логика:
+ * - Если ключ включает 'price', возвращается 'right' (выравнивание по правому краю).
+ * - Если тип данных — 'date' или 'timestamp', возвращается 'center' (выравнивание по центру).
+ * - Для всех остальных случаев — 'left' (выравнивание по левому краю).
+ */
+export function getTextAlignment(type, key = '') {
+  if (key.toLowerCase().includes('price')) {
+    return 'right' // Цена выравнивается по правому краю
   }
-  if (fieldName.toLowerCase().includes('date')) {
-    return formatDate(value)
+
+  if (type === 'date' || type === 'timestamp') {
+    return 'center' // Дата и время выравниваются по центру
   }
-  if (fieldName.toLowerCase().includes('time')) {
-    return formatTime(value)
-  }
-  return value
+
+  return 'left' // Все остальное выравнивается по левому краю
 }
-export function formatValue(value, fieldName) {
-  if (typeof value === 'boolean' && fieldName !== 'goz') {
-    return formatBoolean(value)
+
+/**
+ * Форматирует значение для отображения в таблице.
+ *
+ * @param {*} value - Значение, которое требуется отформатировать.
+ * @param {string} type - Тип значения (например, 'bool', 'integer', 'date').
+ * @param {string} [key=''] - Ключ данных, используется для дополнительных условий (например, содержит 'price').
+ * @returns {string} - Отформатированное значение в строковом формате.
+ *
+ * Логика:
+ * - Если ключ включает 'price', форматируется как валюта (`formatCurrency`).
+ * - Тип данных определяет обработку:
+ *   - `bool`: через `formatBoolean`, возвращает ✅ или пустую строку.
+ *   - `integer`/`float`: через `formatNumber`, форматирует числа с разделением тысяч.
+ *   - `string`: через `formatText`, проверяет на email и генерирует `<a>`-ссылку для почты.
+ *   - `date`: через `formatDate`, возвращает дату в формате DD.MM.YYYY.
+ *   - `timestamp`: через `formatTimestamp`, добавляет время в формате DD.MM.YYYY HH:mm.
+ *   - `NULL`: возвращает пустую строку.
+ *   - Любой другой тип — возвращает значение как есть или пустую строку.
+ */
+export function formatValue(value, type, key = '') {
+  if (!key) {
+    console.warn(
+      'В форматтер передан пустой или отсутствующий ключ. Проверьте данные.'
+    )
+    return value || ''
   }
-  if (fieldName.toLowerCase().includes('price')) {
-    return formatPrice(value)
+
+  if (key.toLowerCase().includes('price')) {
+    return formatCurrency(value)
   }
-  if (fieldName.toLowerCase().includes('date')) {
-    return formatDate(value)
+
+  switch (type) {
+    case 'bool':
+      return formatBoolean(value)
+    case 'integer':
+    case 'float':
+      return formatNumber(value)
+    case 'string':
+      return formatText(value)
+    case 'date':
+      return formatDate(value)
+    case 'timestamp':
+      return formatTimestamp(value)
+    case 'NULL':
+      return ''
+    default:
+      console.warn(`Неизвестный тип данных "${type}" для ключа "${key}".`)
+      return value || ''
   }
-  if (fieldName.toLowerCase().includes('time')) {
-    return formatTime(value)
+}
+
+// Вспомогательные функции:
+
+/**
+ * Форматирует булевое значение.
+ *
+ * @param {boolean} value - Значение true или false.
+ * @returns {string} - '✅' для true, пустая строка для false.
+ */
+function formatBoolean(value) {
+  return value ? '✅' : ''
+}
+
+/**
+ * Форматирует числовое значение.
+ *
+ * @param {number|string} value - Число или строка, содержащая число.
+ * @param {boolean} [isPrice=false] - Если true, форматируется как цена с двумя знаками после запятой.
+ * @returns {string} - Отформатированное число с разделением тысяч.
+ */
+function formatNumber(value, isPrice = false) {
+  const numberValue = Number(value)
+
+  if (!isFinite(numberValue)) {
+    return '0' // Возвращаем "0" для некорректных значений
   }
-  return value
+
+  const formatted = numberValue
+    .toFixed(isPrice ? 2 : 0) // Для цены — 2 знака после запятой
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') // Разделение тысяч
+    .replace('.', ',') // Замена точки на запятую
+
+  return isPrice || !formatted.endsWith(',00')
+    ? formatted
+    : formatted.slice(0, -3) // Убираем ",00" для целых чисел
 }
-export function formatDate(dateString) {
-  return moment(dateString).format('DD.MM.YYYY')
-}
-export function formatTime(dateString) {
-  const days = parseInt(dateString, 10)
-  return days === 0 ? '' : `${days} дней`
-}
-export function formatPrice(price) {
-  const formatter = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
-  return formatter.format(price)
-}
-export function formatBoolean(value) {
-  if (typeof value === 'boolean') {
-    return value ? '✅' : ''
+
+/**
+ * Форматирует текстовое значение.
+ *
+ * @param {string|number} value - Значение для форматирования.
+ * @returns {string} - Отформатированное значение, email преобразуется в ссылку.
+ */
+function formatText(value) {
+  if (typeof value === 'number') {
+    return formatNumber(value)
+  } else if (typeof value === 'string' && isEmail(value)) {
+    return `<a href="mailto:${value}">${value}</a>`
+  } else {
+    return value || ''
   }
-  return value
 }
-// Экспортируем объект formatters по умолчанию
-export default {
-  formatValue,
-  formatTime,
-  formatDate,
-  formatPrice,
-  formatBoolean,
+
+/**
+ * Проверяет, является ли строка email.
+ *
+ * @param {string} value - Строка для проверки.
+ * @returns {boolean} - true, если строка является email.
+ */
+function isEmail(value) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(value)
+}
+
+/**
+ * Форматирует дату.
+ *
+ * @param {string|Date} value - Дата в строковом формате или объект Date.
+ * @returns {string} - Дата в формате DD.MM.YYYY.
+ */
+function formatDate(value) {
+  return value ? moment(value).format('DD.MM.YYYY') : ''
+}
+
+/**
+ * Форматирует метку времени.
+ *
+ * @param {string|Date} value - Дата и время.
+ * @returns {string} - Метка времени в формате DD.MM.YYYY HH:mm.
+ */
+function formatTimestamp(value) {
+  return value ? moment(value).format('DD.MM.YYYY HH:mm') : ''
+}
+
+/**
+ * Форматирует значение как валюту (рубли).
+ *
+ * @param {number|string} value - Число или строка, содержащая число.
+ * @returns {string} - Значение в формате "1 234,00 ₽".
+ */
+function formatCurrency(value) {
+  return `${formatNumber(value, true)}\u00A0₽` // Используем `formatNumber` с isPrice = true
 }

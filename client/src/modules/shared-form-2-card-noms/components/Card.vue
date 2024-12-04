@@ -8,8 +8,15 @@
       </div>
       <div class="card-body p-2">
         <div class="row g-3">
-          <div v-for="(field, name) in allFields" :key="name" class="col-md-6">
-            <div class="field-label">{{ field.title }}</div>
+          <div
+            v-for="(field, name) in allFields"
+            :key="name"
+            class="col-md-6"
+            :title="`${field?.type}&#10;${name || ''}`"
+          >
+            <div class="field-label">
+              {{ field.title }}
+            </div>
             <div
               class="field-value"
               :style="{
@@ -35,7 +42,7 @@
 import { computed, defineComponent, ref, reactive, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
-import { formatValue as formatterFormatValue } from '@/utils/formatters-2.js'
+import { formatValue } from '@/utils/formatters.js'
 import CommentSection from './CardComment.vue'
 
 export default defineComponent({
@@ -75,7 +82,11 @@ export default defineComponent({
         Object.fromEntries(
           Object.keys(props.header.fields || {}).map((name) => [
             name,
-            formatterFormatValue(props.header.data?.[name] ?? null, name),
+            formatValue(
+              props.header.data?.[name] ?? null,
+              props.header.fields[name]?.type || '',
+              name
+            ),
           ])
         )
       )

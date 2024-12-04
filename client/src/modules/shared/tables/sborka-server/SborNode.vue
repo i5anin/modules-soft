@@ -37,7 +37,11 @@
     <td
       v-for="field in fieldsArray"
       :key="field.name"
-      :style="{ fontSize: '12px', verticalAlign: 'middle' }"
+      :style="{
+        fontSize: '12px',
+        verticalAlign: 'middle',
+        textAlign: getTextAlignment(field.type, field.name),
+      }"
     >
       <div
         v-if="field === firstField"
@@ -102,7 +106,7 @@ import { Tooltip } from 'bootstrap'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue } from '@/utils/formatters-2.js'
+import { formatValue } from '@/utils/formatters.js'
 import { statuses } from '@/modules/shared/logic/statuses.js'
 import './SborNode.css'
 
