@@ -43,10 +43,23 @@ export function getTextAlignment(type, key = '') {
  *   - `NULL`: возвращает пустую строку.
  *   - Любой другой тип — возвращает значение как есть или пустую строку.
  */
-export function formatValue(value, type, key = '') {
+export function formatValue(value, type, key) {
+  const getCallerStack = () => {
+    const stack = new Error().stack
+    return stack
+      ? stack
+          .split('\n')
+          .slice(2) // Пропускаем первую строку (ошибка) и сам вызов `getCallerStack`
+          .join('\n')
+      : 'Стек вызовов недоступен'
+  }
+
   if (!key) {
     console.warn(
-      'В форматтер передан пустой или отсутствующий ключ. Проверьте данные.'
+      `В функцию форматтера передан некорректный ключ. Ключ отсутствует или пустой.
+      Значение: ${value}, Тип: ${type}
+      Стек вызова:
+      ${getCallerStack()}`
     )
     return value || ''
   }
@@ -59,6 +72,7 @@ export function formatValue(value, type, key = '') {
     case 'bool':
       return formatBoolean(value)
     case 'integer':
+    case 'int': // Обрабатываем int как integer
     case 'float':
       return formatNumber(value)
     case 'string':
@@ -70,7 +84,12 @@ export function formatValue(value, type, key = '') {
     case 'NULL':
       return ''
     default:
-      console.warn(`Неизвестный тип данных "${type}" для ключа "${key}".`)
+      console.warn(
+        `Неизвестный тип данных "${type}" для ключа "${key}".
+        Значение: ${value}
+        Стек вызова:
+        ${getCallerStack()}`
+      )
       return value || ''
   }
 }
