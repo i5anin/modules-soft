@@ -45,7 +45,7 @@
 <script>
 import { computed, watch } from 'vue'
 import { store } from './store.js'
-import SborNode from './SborNode.vue'
+import SborNode from './ServerSborNode.vue'
 
 export default {
   name: 'SborMain',

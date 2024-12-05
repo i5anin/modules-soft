@@ -23,7 +23,7 @@
 import { computed, defineProps, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getOrderById } from '../api/nom_list.js'
-import OrderInfoCard from './Card.vue'
+import OrderInfoCard from './form2Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
 

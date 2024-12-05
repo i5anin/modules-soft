@@ -8,6 +8,8 @@ const excludedFields = [
   'zag_buy_p4',
   'zag_buy_weight',
   'nom_id_nom',
+  'kp_list__id',
+  'kp_data__id',
 ]
 
 /**
@@ -45,7 +47,7 @@ export function filterFieldPermissions(fields) {
         },
       }
     }
-
+    console.log(updatedFields)
     return updatedFields
   }, {})
 }

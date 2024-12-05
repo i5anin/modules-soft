@@ -44,7 +44,7 @@ import moment from 'moment'
 import SearchBar from '@/modules/shared/search/SearchBar.vue'
 import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
-import DataTable from './Table.vue'
+import DataTable from './ComponentTable.vue'
 import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 

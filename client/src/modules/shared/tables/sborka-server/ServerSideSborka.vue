@@ -38,8 +38,7 @@ import SearchBar from '@/modules/shared/search/SearchBar.vue'
 import Pagination from '@/modules/shared/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
 import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
-import SborMain from './SborMain.vue'
-import { formatValue } from '@/utils/formatters.js'
+import SborMain from './ServerSborMain.vue'
 
 export default {
   name: 'ServerSideTable',
@@ -151,7 +150,6 @@ export default {
       updateEndDate,
       onSearch,
       goToPage,
-      formatValue,
     }
   },
 }

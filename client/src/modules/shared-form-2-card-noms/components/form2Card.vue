@@ -44,6 +44,7 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue } from '@/utils/formatters.js'
 import CommentSection from './CardComment.vue'
+import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
 
 export default defineComponent({
   components: { SvgIcon, CommentSection },
@@ -54,6 +55,23 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const useFilteredFields = ref(true) // Флаг для включения/выключения фильтрации
+
+    const allFields = computed(() => {
+      const fields = props.header.fields || {}
+      // Применяем фильтрацию, если флаг включён
+      const filteredFields = useFilteredFields.value
+        ? filterFieldPermissions(fields)
+        : fields
+
+      return Object.entries(filteredFields)
+        .filter(([name]) => !name.includes('comments'))
+        .reduce((acc, [name, field]) => {
+          acc[name] = field
+          return acc
+        }, {})
+    })
+
     const mdiFormatListBulletedTypeRef = ref(mdiFormatListBulletedType)
 
     // Подразделяем поля на основные и комментарии
@@ -61,15 +79,6 @@ export default defineComponent({
       return Object.entries(props.header.fields || {})
         .filter(([name]) => name.includes('comments'))
         .map(([name, field]) => ({ name, ...field }))
-    })
-
-    const allFields = computed(() => {
-      return Object.entries(props.header.fields || {})
-        .filter(([name]) => !name.includes('comments'))
-        .reduce((acc, [name, field]) => {
-          acc[name] = field
-          return acc
-        }, {})
     })
 
     // Реактивный объект для хранения значений полей
