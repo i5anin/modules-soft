@@ -5,6 +5,6 @@
 </template>
 
 <script setup>
-import PagesClients from '@/modules/clients-noms/form-2-clients-noms/components/PagesClientNoms.vue'
+import PagesClients from '@/pages/form-2/PagesClientNoms.vue'
 import InfoComponent from './InfoComponent.vue'
 </script>

@@ -4,23 +4,18 @@ const ordersRoutes = [
   {
     path: '/orders',
     name: 'Orders',
-    component: () =>
-      import('@/modules/orders/form-1-orders/components/PagesOrders.vue'),
+    component: () => import('@/pages/form-1/PagesOrders.vue'),
   },
   {
-    path: '/order/:orderId/noms',
+    path: '/order/:id/noms',
     name: 'Order',
-    component: () =>
-      import('@/modules/shared-form-2-card-noms/components/PagesCardNoms.vue'),
-    props: true,
+    component: () => import('@/pages/form-2/PagesCardNoms.vue'),
+    props: (route) => ({ ...route.params, type: 'orders' }),
   },
   {
     path: '/order/:orderId/nom/:id',
     name: 'OrderDetails',
-    component: () =>
-      import(
-        '@/modules/shared-form-3-nom/components/PagesDetailOrderAndNom.vue'
-      ),
+    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
     props: (route) => ({ ...route.params, type: 'orders' }),
   },
 ]
@@ -29,28 +24,19 @@ const clientsRoutes = [
   {
     path: '/clients',
     name: 'Clients',
-    component: () =>
-      import(
-        '@/modules/clients-noms/form-1-clients/components/PagesClients.vue'
-      ),
+    component: () => import('@/pages/form-1/PagesClients.vue'),
     props: true,
   },
   {
     path: '/client/:clientId/noms',
     name: 'Noms',
-    component: () =>
-      import(
-        '@/modules/clients-noms/form-2-clients-noms/components/PagesClientNoms.vue'
-      ),
+    component: () => import('@/pages/form-2/PagesClientNoms.vue'),
     props: true,
   },
   {
     path: '/client/:clientId/nom/:id',
     name: 'NomDetails',
-    component: () =>
-      import(
-        '@/modules/shared-form-3-nom/components/PagesDetailOrderAndNom.vue'
-      ),
+    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
     props: (route) => ({ ...route.params, type: 'nom' }),
   },
 ]
@@ -59,14 +45,12 @@ const commercialRoutes = [
   {
     path: '/commercials',
     name: 'Commercial',
-    component: () =>
-      import('@/modules/commercial/form-1-kp/components/PagesCommercial.vue'),
+    component: () => import('@/pages/form-1/PagesCommercial.vue'),
   },
   {
     path: '/commercial/:kpId/noms',
     name: 'CommercialNomDetails',
-    component: () =>
-      import('@/modules/shared-form-2-card-noms/components/PagesCardNoms.vue'),
+    component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     props: (route) => ({ ...route.params, type: 'kp' }),
   },
 ]
@@ -76,7 +60,7 @@ const testRoutes = [
     path: '/test/modal-tools/:no/:nomId',
     name: 'ModalTools',
     component: () =>
-      import('@/modules/orders/modal-tools/components/PagesModalTools.vue'),
+      import('@/modules/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
   {

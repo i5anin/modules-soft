@@ -30,7 +30,7 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getClientNom } from '../api/nom_dir.js'
+import { getClientNom } from '../../modules/clients-noms/form-2-clients-noms/api/nom_dir.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/components/BackButton.vue'
 import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideSborka.vue'
