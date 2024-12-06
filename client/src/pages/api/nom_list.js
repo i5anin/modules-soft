@@ -1,19 +1,35 @@
 import apiClient from '@/modules/api/apiClient.js'
-import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
+import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
 
 /**
- * Получение заказа по ID
+ * Проверка обязательных полей
+ * @param {Object} fields - объект с полями для проверки
+ * @param {Array<string>} requiredFields - список обязательных полей
+ * @throws {Error} - выбрасывает ошибку, если поле отсутствует
+ */
+const validateFields = (fields, requiredFields) => {
+  requiredFields.forEach((field) => {
+    if (!fields[field]) {
+      console.warn(`Поле "${field}" отсутствует или пустое.`)
+      throw new Error(`Обязательное поле "${field}" не заполнено.`)
+    }
+  })
+}
+
+/**
+ * Получение данных номенклатурного заказа по параметрам
  * @param {Object} params - параметры для запроса
- * @param {string} params.orderId - ID заказа
- * @param {string} params.type - тип заказа
- * @param {string} params.role - модуль или роль
  * @returns {Promise<Object>} - Объект заказа
  */
-export const getOrderById = (params) => {
-  return apiClient
-    .get('nom_list', {
-      params: { id: params.orderId, type: params.type, module: params.role },
-    })
-    .then(handleResponse)
-    .catch(handleError)
+export const getNomById = async (params) => {
+  try {
+    // Проверка обязательных параметров
+    validateFields(params, ['id', 'type', 'role'])
+
+    const response = await apiClient.get('nom_list', { params })
+    return handleResponse(response)
+  } catch (error) {
+    handleError(error)
+    throw error
+  }
 }

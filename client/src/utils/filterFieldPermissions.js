@@ -47,7 +47,7 @@ export function filterFieldPermissions(fields) {
         },
       }
     }
-    console.log(updatedFields)
+    // console.log(updatedFields)
     return updatedFields
   }, {})
 }
