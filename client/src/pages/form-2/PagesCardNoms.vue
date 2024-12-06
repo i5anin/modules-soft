@@ -18,40 +18,46 @@
 </template>
 
 <script setup>
-import { computed, defineProps, onMounted, ref, watch } from 'vue'
+import { computed, defineProps, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrderById } from '../../modules/form-2-card-noms/api/nom_list.js'
-import OrderInfoCard from '../../modules/form-2-card-noms/components/form2Card.vue'
+
+import { getNomById } from '@/pages/api/nom_list.js'
+import OrderInfoCard from '@/modules/form-2-card-noms/components/form2Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
 
+// Пропсы
 const props = defineProps({
   type: { type: String, required: true },
 })
 
+// Маршруты и стор
 const router = useRouter()
 const roleStore = useRoleStore()
 
+// Реактивные переменные
 const nomTableData = ref([])
 const headerData = ref({})
 const tableFields = ref({})
 const isCollapsed = ref(false)
 
+// Вычисляемые свойства
 const selectedRole = computed(() => roleStore.selectedRole)
 
 const fetchOrderData = async () => {
-  const id = router.currentRoute.value.params.id
-  const type = props.type
-  const role = selectedRole.value
-
+  const link_id = router.currentRoute.value.params.link_id
+  const queryParams = {
+    id: link_id,
+    type: props.type,
+    module: selectedRole.value,
+  }
   try {
-    const { header, table } = await getOrderById({ id, type, role })
+    const { header, table } = await getNomById(queryParams)
     headerData.value = header
     tableFields.value = table.fields
     nomTableData.value = table.data
   } catch (error) {
-    console.error('Ошибка при загрузке заказа:', error)
-    showErrorNotification('Ошибка при загрузке заказа. Попробуйте позже.')
+    console.error('Ошибка при загрузке данных:', error)
   }
 }
 
@@ -66,9 +72,8 @@ const filterTableFields = (fields) => {
 
 const filteredTableFields = computed(() => filterTableFields(tableFields.value))
 
+// Инициализация данных
 onMounted(fetchOrderData)
-
-watch(selectedRole, fetchOrderData)
 </script>
 
 <style scoped>
@@ -81,7 +86,6 @@ watch(selectedRole, fetchOrderData)
 .order-info-card,
 .sbor-main {
   width: 100%;
-  background-color: var(--background-color, #f8f9fa);
   border-radius: 8px;
 }
 
