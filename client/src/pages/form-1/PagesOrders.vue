@@ -31,7 +31,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
-import { getOrders } from '../../modules/orders/form-1-orders/api/list.js'
+import { getOrders } from '@/pages/api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { statuses } from '@/modules/shared/logic/statuses.js'
