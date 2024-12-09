@@ -55,6 +55,20 @@ const commercialRoutes = [
   },
 ]
 
+const specificationsRoutes = [
+  {
+    path: '/specifications',
+    name: 'Specifications',
+    component: () => import('@/pages/form-1/PagesCommercial.vue'),
+  },
+  {
+    path: '/specifications/:id/noms',
+    name: 'SpecificationsNomDetails',
+    component: () => import('@/pages/form-2/PagesCardNoms.vue'),
+    props: (route) => ({ ...route.params, type: 'specs' }),
+  },
+]
+
 const testRoutes = [
   {
     path: '/test/modal-tools/:no/:nomId',
@@ -81,6 +95,7 @@ const routes = [
   ...ordersRoutes,
   ...clientsRoutes,
   ...testRoutes,
+  ...specificationsRoutes,
 ]
 
 export default createRouter({

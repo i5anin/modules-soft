@@ -75,7 +75,7 @@ export default {
         sortDir: sortOrder.value,
         date1: startDate.value,
         date2: endDate.value,
-        type: 'kp',
+        type: 'specs',
         module: roleStore.selectedRole,
       })
         .then((response) => {
@@ -113,7 +113,7 @@ export default {
     const handleRowClick = (row) => {
       router.push({
         name: 'CommercialNomDetails',
-        params: { link_id: row.kp_list__id },
+        params: { id: row.specs__id },
       })
     }
 
