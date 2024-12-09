@@ -48,7 +48,7 @@ const commercialRoutes = [
     component: () => import('@/pages/form-1/PagesCommercial.vue'),
   },
   {
-    path: '/commercial/:link_id/noms',
+    path: '/commercial/:id/noms',
     name: 'CommercialNomDetails',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     props: (route) => ({ ...route.params, type: 'kp' }),
