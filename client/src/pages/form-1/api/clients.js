@@ -1,4 +1,3 @@
-// nom_dir.js
 import apiClient from '@/modules/api/apiClient.js'
 import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
 

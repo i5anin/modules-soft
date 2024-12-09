@@ -30,7 +30,7 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getClientNom } from '../../modules/clients-noms/form-2-clients-noms/api/nom_dir.js'
+import { getClientNom } from './api/nom_dir.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import BackButton from '@/modules/shared/components/BackButton.vue'
 import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideSborka.vue'
@@ -55,6 +55,8 @@ export default {
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
 
+    console.log(roleStore.selectedRole)
+
     const fetchNoms = async () => {
       try {
         const response = await getClientNom({
@@ -65,7 +67,7 @@ export default {
           sortDir: sortOrder.value,
           type: roleStore.selectedTypes,
           role: roleStore.selectedRole,
-          search: searchQuery.value, // Передаем строку поиска
+          search: searchQuery.value,
         })
 
         if (response && response.table) {
