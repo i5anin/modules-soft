@@ -45,7 +45,7 @@ const isCollapsed = ref(false)
 const selectedRole = computed(() => roleStore.selectedRole)
 
 const fetchOrderData = async () => {
-  const link_id = router.currentRoute.value.params.link_id
+  const link_id = router.currentRoute.value.params.id
   const queryParams = {
     id: link_id,
     type: props.type,
@@ -81,17 +81,5 @@ onMounted(fetchOrderData)
   display: grid;
   grid-template-columns: 400px 1fr;
   gap: 16px;
-}
-
-.order-info-card,
-.sbor-main {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.toggle-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
 }
 </style>

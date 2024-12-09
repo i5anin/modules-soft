@@ -24,7 +24,7 @@ const validateFields = (fields, requiredFields) => {
 export const getNomById = async (params) => {
   try {
     // Проверка обязательных параметров
-    validateFields(params, ['id', 'type', 'role'])
+    validateFields(params, ['id', 'type', 'module'])
 
     const response = await apiClient.get('nom_list', { params })
     return handleResponse(response)
