@@ -26,121 +26,105 @@
   </div>
 </template>
 
-<script>
-import { computed, onMounted, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getClients } from '../form-1/api/clients.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
-export default {
-  components: { ServerSideTable },
-  setup() {
-    const clients = ref([])
-    const tableFields = ref([])
-    const roleStore = useRoleStore()
-    const router = useRouter()
-    const currentPage = ref(1)
-    const itemsPerPage = ref(15)
-    const totalCount = ref(0)
-    const totalPages = computed(() =>
-      Math.ceil(totalCount.value / itemsPerPage.value)
-    )
-    const sortColumn = ref('id')
-    const sortOrder = ref('desc')
-    const searchSearch = ref('')
+// Реактивные переменные
+const clients = ref([])
+const tableFields = ref([])
+const currentPage = ref(1)
+const itemsPerPage = ref(15)
+const totalCount = ref(0)
+const sortColumn = ref('id')
+const sortOrder = ref('desc')
+const searchQuery = ref('')
 
-    const fetchClients = async () => {
-      try {
-        const response = await getClients({
-          page: currentPage.value,
-          limit: itemsPerPage.value,
-          sortCol: sortColumn.value,
-          sortDir: sortOrder.value,
-          type: roleStore.selectedTypes,
-          module: roleStore.selectedRole,
-          search: searchSearch.value,
-        })
+// Вычисляемые свойства
+const totalPages = computed(() =>
+  Math.ceil(totalCount.value / itemsPerPage.value)
+)
 
-        if (response && response.table) {
-          clients.value = response.table.data || []
+// Стор и роутер
+const roleStore = useRoleStore()
+const router = useRouter()
 
-          // Фильтрация полей по условию read === true
-          tableFields.value = Object.entries(response.table.fields || {})
-            .filter(([, field]) => field.permissions?.read) // Только поля с read: true
-            .map(([key, field]) => ({
-              name: key,
-              title: field.title,
-              width: field.width,
-              type: field.type || 'string',
-              permissions: field.permissions || { read: true, update: false },
-            }))
-
-          totalCount.value =
-            response?.header?.total_count || clients.value.length
-        } else {
-          clients.value = []
-          totalCount.value = 0
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке списка клиентов:', error)
-        clients.value = []
-        totalCount.value = 0
-      }
-    }
-
-    const handleRowClick = (row) => {
-      router.push({
-        name: 'Noms',
-        params: { clientId: row.clients__id },
-      })
-    }
-
-    const handlePageChange = (page) => {
-      currentPage.value = page
-      fetchClients() // Используйте fetchClients вместо fetchOrders
-    }
-
-    const handleSortChange = ({ column, order }) => {
-      sortColumn.value = column
-      sortOrder.value = order
-      currentPage.value = 1
-      fetchClients() // Используйте fetchClients вместо fetchOrders
-    }
-
-    const handlePageSizeChange = (size) => {
-      itemsPerPage.value = size
-      currentPage.value = 1
-      fetchClients() // Используйте fetchClients вместо fetchOrders
-    }
-
-    const handleSearchChange = (search) => {
-      searchSearch.value = search
-      currentPage.value = 1
-      fetchClients() // Используйте fetchClients вместо fetchOrders
-    }
-
-    onMounted(() => {
-      fetchClients()
+// Получение данных клиентов
+const fetchClients = async () => {
+  try {
+    const response = await getClients({
+      page: currentPage.value,
+      limit: itemsPerPage.value,
+      sortCol: sortColumn.value,
+      sortDir: sortOrder.value,
+      type: roleStore.selectedTypes,
+      module: roleStore.selectedRole,
+      search: searchQuery.value,
     })
 
-    return {
-      clients,
-      tableFields,
-      currentPage,
-      totalPages,
-      sortColumn,
-      sortOrder,
-      itemsPerPage,
-      totalCount,
-      handleRowClick,
-      handlePageChange,
-      handleSortChange,
-      handlePageSizeChange,
-      handleSearchChange,
+    if (response && response.table) {
+      clients.value = response.table.data || []
+
+      // Фильтрация полей
+      tableFields.value = Object.entries(response.table.fields || {})
+        .filter(([, field]) => field.permissions?.read)
+        .map(([key, field]) => ({
+          name: key,
+          title: field.title,
+          width: field.width,
+          type: field.type || 'string',
+          permissions: field.permissions || { read: true, update: false },
+        }))
+
+      totalCount.value = response.header?.total_count || clients.value.length
+    } else {
+      clients.value = []
+      totalCount.value = 0
     }
-  },
+  } catch (error) {
+    console.error('Ошибка при загрузке списка клиентов:', error)
+    clients.value = []
+    totalCount.value = 0
+  }
 }
+
+// Обработчики событий
+const handleRowClick = (row) => {
+  router.push({
+    name: 'Noms',
+    params: { clientId: row.clients__id },
+  })
+}
+
+const handlePageChange = (page) => {
+  currentPage.value = page
+  fetchClients()
+}
+
+const handleSortChange = ({ column, order }) => {
+  sortColumn.value = column
+  sortOrder.value = order
+  currentPage.value = 1
+  fetchClients()
+}
+
+const handlePageSizeChange = (size) => {
+  itemsPerPage.value = size
+  currentPage.value = 1
+  fetchClients()
+}
+
+const handleSearchChange = (search) => {
+  searchQuery.value = search
+  currentPage.value = 1
+  fetchClients()
+}
+
+// Загрузка данных при монтировании
+onMounted(fetchClients)
 </script>
 
 <style scoped>
