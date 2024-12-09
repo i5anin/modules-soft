@@ -4,7 +4,14 @@ const ordersRoutes = [
   {
     path: '/orders',
     name: 'Orders',
-    component: () => import('@/pages/form-1/PagesOrders.vue'),
+    component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
+    props: (route) => ({
+      ...route.params,
+      type: 'orders',
+      link: 'id',
+      route: 'Order',
+      edit: false,
+    }),
   },
   {
     path: '/order/:id/noms',
@@ -45,11 +52,12 @@ const commercialRoutes = [
   {
     path: '/commercials',
     name: 'Commercial',
-    component: () => import('@/pages/form-1/PagesCommercial.vue'),
+    component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     props: (route) => ({
       ...route.params,
       type: 'kp',
       link: 'specs__id',
+      route: 'Order',
       edit: true,
     }),
   },
@@ -70,11 +78,12 @@ const specificationsRoutes = [
   {
     path: '/specifications',
     name: 'Specifications',
-    component: () => import('@/pages/form-1/PagesCommercial.vue'),
+    component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     props: (route) => ({
       ...route.params,
       type: 'specs',
       link: 'id',
+      route: 'Order',
       edit: true,
     }),
   },
