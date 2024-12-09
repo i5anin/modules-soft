@@ -29,7 +29,7 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrder as getClients } from '@/pages/form-1/api/list.js'
+import { getClients } from '../form-1/api/clients.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
