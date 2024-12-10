@@ -1,27 +1,24 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-12">
-        <!-- Таблица данных -->
-        <ServerSideTable
-          datepicker
-          :headers="tableColumns"
-          :items="orders"
-          :items-per-page-options="[15, 30, 50, 100]"
-          :items-per-page="itemsPerPage"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          :total-count="totalCount"
-          :sort-column="sortColumn"
-          :sort-order="sortOrder"
-          @row-click="handleRowClick"
-          @page-change="handlePageChange"
-          @sort-change="handleSortChange"
-          @page-size-change="handlePageSizeChange"
-          @search-change="handleSearchChange"
-          @date-range-change="handleDateRangeChange"
-        />
-      </div>
+  <div class="row">
+    <div class="col-12">
+      <ServerSideTable
+        datepicker
+        :headers="tableColumns"
+        :items="orders"
+        :items-per-page-options="[15, 30, 50, 100]"
+        :items-per-page="itemsPerPage"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :total-count="totalCount"
+        :sort-column="sortColumn"
+        :sort-order="sortOrder"
+        @row-click="navigateToRow"
+        @page-change="updatePage"
+        @sort-change="updateSort"
+        @page-size-change="updatePageSize"
+        @search-change="updateSearch"
+        @date-range-change="updateDateRange"
+      />
     </div>
   </div>
 </template>
@@ -34,35 +31,40 @@ import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTabl
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { processFields } from '@/modules/test/fieldsProcessor.js'
 
-// Пропсы
 const props = defineProps({
   type: { type: String, required: true },
   link: { type: String, required: true },
   edit: { type: Boolean, required: true },
   route: { type: String, required: true },
 })
-// Реактивные переменные
+
 const orders = ref([])
 const tableFields = ref([])
 const totalCount = ref(0)
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
-const totalPages = computed(() =>
-  Math.ceil(totalCount.value / itemsPerPage.value)
-)
 const sortColumn = ref('date')
 const sortOrder = ref('desc')
 
-// Инициализация диапазона дат
 const startDate = ref(props.initialStartDate)
 const endDate = ref(props.initialEndDate)
 
-// Стор и роутер
+const totalPages = computed(() =>
+  Math.ceil(totalCount.value / itemsPerPage.value)
+)
+const tableColumns = computed(() =>
+  tableFields.value.map(({ name, title, type }) => ({
+    name,
+    title,
+    type,
+    sortable: true,
+  }))
+)
+
 const roleStore = useRoleStore()
 const router = useRouter()
 
-// Получение данных с сервера
 const fetchOrders = async () => {
   try {
     const response = await getOrders({
@@ -73,104 +75,82 @@ const fetchOrders = async () => {
       sortDir: sortOrder.value,
       date1: startDate.value,
       date2: endDate.value,
-      type: props.type, // Используем пропсы
+      type: props.type,
       module: roleStore.selectedRole,
     })
 
     if (response?.table) {
-      // Применяем processFields к полям таблицы
-      const processedFields = processFields(
+      tableFields.value = processFields(
         Object.entries(response.table.fields).map(([key, field]) => ({
           key,
           ...field,
         }))
       )
-
-      // Преобразуем обработанные поля в нужный формат
-      tableFields.value = processedFields
-        .filter((field) => field.modified) // Оставляем только поля, прошедшие фильтр
-        .map((field) => ({
-          name: field.key,
-          title: field.title,
-          type: field.type,
-          width: field.width,
-          update: field.update || false,
+        .filter(({ modified }) => modified)
+        .map(({ key, title, type, width, update }) => ({
+          name: key,
+          title,
+          type,
+          width,
+          update: update || false,
         }))
 
-      // Заполняем данные таблицы
       orders.value = response.table.data
-
-      // Обновляем общее количество
       totalCount.value = response.header.total_count
     } else {
-      orders.value = []
-      totalCount.value = 0
+      resetData()
     }
   } catch (error) {
-    console.error('Ошибка при загрузке заказов:', error)
-    orders.value = []
-    totalCount.value = 0
+    console.error(error)
+    resetData()
   }
 }
 
-// Колонки таблицы
-const tableColumns = computed(() =>
-  tableFields.value.map((field) => ({
-    name: field.name,
-    title: field.title,
-    type: field.type,
-    sortable: true,
-  }))
-)
-
-// Обработчики событий
-const handleRowClick = (row) => {
-  router.push({
-    name: props.route,
-    params: { id: row[props.link] }, // Используем link из пропсов
-  })
+const resetData = () => {
+  orders.value = []
+  totalCount.value = 0
 }
 
-const handlePageChange = (page) => {
+const navigateToRow = (row) => {
+  router.push({ name: props.route, params: { id: row[props.link] } })
+}
+
+const updatePage = (page) => {
   currentPage.value = page
   fetchOrders()
 }
 
-const handleSortChange = ({ column, order }) => {
+const updateSort = ({ column, order }) => {
   sortColumn.value = column
   sortOrder.value = order
   currentPage.value = 1
   fetchOrders()
 }
 
-const handlePageSizeChange = (size) => {
+const updatePageSize = (size) => {
   itemsPerPage.value = size
   currentPage.value = 1
   fetchOrders()
 }
 
-const handleSearchChange = (query) => {
+const updateSearch = (query) => {
   searchQuery.value = query
   currentPage.value = 1
   fetchOrders()
 }
 
-const handleDateRangeChange = ({
-  startDate: newStartDate,
-  endDate: newEndDate,
-}) => {
-  if (newStartDate) startDate.value = newStartDate
-  if (newEndDate) endDate.value = newEndDate
+const updateDateRange = ({ startDate: newStart, endDate: newEnd }) => {
+  if (newStart) startDate.value = newStart
+  if (newEnd) endDate.value = newEnd
   currentPage.value = 1
   fetchOrders()
 }
 
-// Загрузка данных при монтировании
 onMounted(fetchOrders)
 </script>
 
 <style scoped>
-.table tbody tr.table-row {
+.table tbody tr {
   cursor: pointer;
 }
 
