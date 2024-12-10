@@ -17,6 +17,10 @@ export function getTextAlignment(type, key = '') {
     return 'right' // Цена выравнивается по правому краю
   }
 
+  if (type === 'bool') {
+    return 'center' // Булевые значения выравниваются по центру
+  }
+
   if (type === 'date' || type === 'timestamp') {
     return 'center' // Дата и время выравниваются по центру
   }
