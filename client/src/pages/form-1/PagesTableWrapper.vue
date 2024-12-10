@@ -32,6 +32,7 @@ import { useRouter } from 'vue-router'
 import { getOrders } from '@/pages/form-1/api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
+import { processFields } from '@/modules/test/fieldsProcessor.js'
 
 // Пропсы
 const props = defineProps({
@@ -77,18 +78,29 @@ const fetchOrders = async () => {
     })
 
     if (response?.table) {
-      orders.value = response.table.data
+      // Применяем processFields к полям таблицы
+      const processedFields = processFields(
+        Object.entries(response.table.fields).map(([key, field]) => ({
+          key,
+          ...field,
+        }))
+      )
 
-      tableFields.value = Object.entries(response.table.fields).map(
-        ([key, field]) => ({
-          name: key,
+      // Преобразуем обработанные поля в нужный формат
+      tableFields.value = processedFields
+        .filter((field) => field.modified) // Оставляем только поля, прошедшие фильтр
+        .map((field) => ({
+          name: field.key,
           title: field.title,
           type: field.type,
           width: field.width,
           update: field.update || false,
-        })
-      )
+        }))
 
+      // Заполняем данные таблицы
+      orders.value = response.table.data
+
+      // Обновляем общее количество
       totalCount.value = response.header.total_count
     } else {
       orders.value = []
