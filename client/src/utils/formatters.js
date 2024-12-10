@@ -48,6 +48,11 @@ export function getTextAlignment(type, key = '') {
  *   - Любой другой тип — возвращает значение как есть или пустую строку.
  */
 export function formatValue(value, type, key) {
+  // Проверяем, является ли значение объектом
+  if (isObject(value)) {
+    return '[Object]'
+  }
+
   const getCallerStack = () => {
     const stack = new Error().stack
     return stack
@@ -189,4 +194,8 @@ function formatTimestamp(value) {
  */
 function formatCurrency(value) {
   return `${formatNumber(value, true)}\u00A0₽` // Используем `formatNumber` с isPrice = true
+}
+
+function isObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value)
 }
