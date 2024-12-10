@@ -4,14 +4,14 @@
       <ServerSideTable
         datepicker
         :headers="tableColumns"
-        :items="orders"
+        :items="items"
         :items-per-page-options="[15, 30, 50, 100]"
         :items-per-page="itemsPerPage"
         :current-page="currentPage"
         :total-pages="totalPages"
         :total-count="totalCount"
         :sort-column="sortColumn"
-        :sort-order="sortOrder"
+        :sort-item="sortItem"
         @row-click="navigateToRow"
         @page-change="updatePage"
         @sort-change="updateSort"
@@ -26,7 +26,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrders } from '@/pages/form-1/api/list.js'
+import { getItems } from '@/pages/form-1/api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import { processFields } from '@/modules/test/fieldsProcessor.js'
@@ -38,14 +38,14 @@ const props = defineProps({
   route: { type: String, required: true },
 })
 
-const orders = ref([])
+const items = ref([])
 const tableFields = ref([])
 const totalCount = ref(0)
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
 const sortColumn = ref('date')
-const sortOrder = ref('desc')
+const sortItem = ref('desc')
 
 const startDate = ref(props.initialStartDate)
 const endDate = ref(props.initialEndDate)
@@ -65,14 +65,14 @@ const tableColumns = computed(() =>
 const roleStore = useRoleStore()
 const router = useRouter()
 
-const fetchOrders = async () => {
+const fetchItems = async () => {
   try {
-    const response = await getOrders({
+    const response = await getItems({
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: searchQuery.value,
       sortCol: sortColumn.value,
-      sortDir: sortOrder.value,
+      sortDir: sortItem.value,
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
@@ -95,7 +95,7 @@ const fetchOrders = async () => {
           update: update || false,
         }))
 
-      orders.value = response.table.data
+      items.value = response.table.data
       totalCount.value = response.header.total_count
     } else {
       resetData()
@@ -107,7 +107,7 @@ const fetchOrders = async () => {
 }
 
 const resetData = () => {
-  orders.value = []
+  items.value = []
   totalCount.value = 0
 }
 
@@ -117,36 +117,36 @@ const navigateToRow = (row) => {
 
 const updatePage = (page) => {
   currentPage.value = page
-  fetchOrders()
+  fetchItems()
 }
 
-const updateSort = ({ column, order }) => {
+const updateSort = ({ column, item }) => {
   sortColumn.value = column
-  sortOrder.value = order
+  sortItem.value = item
   currentPage.value = 1
-  fetchOrders()
+  fetchItems()
 }
 
 const updatePageSize = (size) => {
   itemsPerPage.value = size
   currentPage.value = 1
-  fetchOrders()
+  fetchItems()
 }
 
 const updateSearch = (query) => {
   searchQuery.value = query
   currentPage.value = 1
-  fetchOrders()
+  fetchItems()
 }
 
 const updateDateRange = ({ startDate: newStart, endDate: newEnd }) => {
   if (newStart) startDate.value = newStart
   if (newEnd) endDate.value = newEnd
   currentPage.value = 1
-  fetchOrders()
+  fetchItems()
 }
 
-onMounted(fetchOrders)
+onMounted(fetchItems)
 </script>
 
 <style scoped>
