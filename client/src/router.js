@@ -56,8 +56,8 @@ const commercialRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'kp',
-      link: 'specs__id',
-      route: 'Order',
+      link: 'kp_list__id',
+      route: 'CommercialNomDetails',
       edit: true,
     }),
   },
@@ -72,6 +72,12 @@ const commercialRoutes = [
       edit: true,
     }),
   },
+  {
+    path: '/commercial/:kpId/nom/:id',
+    name: 'NomDetails',
+    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
+    props: (route) => ({ ...route.params, type: 'kp' }),
+  },
 ]
 
 const specificationsRoutes = [
@@ -82,8 +88,8 @@ const specificationsRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'specs',
-      link: 'id',
-      route: 'Order',
+      link: 'specs__id',
+      route: 'SpecificationsNomDetails',
       edit: true,
     }),
   },
@@ -97,6 +103,12 @@ const specificationsRoutes = [
       link: 'id',
       edit: true,
     }),
+  },
+  {
+    path: '/specifications/:specsId/nom/:id',
+    name: 'NomDetails',
+    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
+    props: (route) => ({ ...route.params, type: 'specs' }),
   },
 ]
 
