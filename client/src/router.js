@@ -126,6 +126,12 @@ const testRoutes = [
     component: () => import('@/pages/admin/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
+  {
+    path: '/test-fields-processor',
+    name: 'TestFieldsProcessor',
+    component: () => import('@/modules/test/fieldsProcessor.vue'),
+    props: true,
+  },
 ]
 
 const routes = [
