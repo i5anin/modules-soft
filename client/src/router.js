@@ -127,7 +127,7 @@ const testRoutes = [
     props: true,
   },
   {
-    path: '/test-fields-processor',
+    path: '/fields-processor',
     name: 'TestFieldsProcessor',
     component: () => import('@/modules/test/fieldsProcessor.vue'),
     props: true,
