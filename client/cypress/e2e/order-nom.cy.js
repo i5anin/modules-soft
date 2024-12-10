@@ -1,38 +1,30 @@
-describe('Страница номенклатуры order с разными ролями', () => {
-  const orderId = 1840 // Идентификатор ордера для формирования URL страницы
-  const orderUrl = `/order/${orderId}/noms` // URL страницы номенклатуры
-  const roles = ['managers', 'metrolog', 'omts', 'tech_calc'] // Список ролей для проверки
+describe('Страница номенклатуры ордера с разными ролями', () => {
+  const orderId = 1840
+  const orderUrl = `/order/${orderId}/noms`
+  const roles = ['managers', 'metrolog', 'omts', 'tech_calc']
 
   roles.forEach((role) => {
     it(`должна корректно загружаться для роли "${role}"`, () => {
-      // Устанавливаем выбранную роль в localStorage перед загрузкой страницы
+      // Устанавливаем значение в localStorage
       cy.visit(orderUrl, {
         onBeforeLoad(win) {
           win.localStorage.setItem('selectedRole', role)
         },
       })
 
-      // Проверяем, что URL страницы содержит идентификатор ордера и корректный путь
+      // Проверяем, что страница загрузилась
       cy.url().should('include', orderUrl)
 
-      // Убеждаемся, что значение роли правильно установлено в localStorage
+      // Проверяем, что значение из localStorage установлено правильно
       cy.window().then((win) => {
         expect(win.localStorage.getItem('selectedRole')).to.eq(role)
       })
 
-      // Небольшая задержка перед проверкой таблицы
-      cy.wait(100)
-
-      // Проверяем, что таблица с данными отображается на странице
-      cy.get('.table-sbor')
-        .should('exist') // Убедимся, что таблица существует в DOM
-        .and('be.visible') // Убедимся, что таблица видима пользователю
-
-      // Проверяем, что таблица содержит хотя бы одну строку с данными
+      // Проверяем, что таблица с данными отображается
+      cy.get('.table-sbor').should('exist').and('be.visible')
       cy.get('.table-sbor tbody tr').should('have.length.greaterThan', 0)
 
-      // Здесь можно добавить дополнительные проверки для специфических ролей
-      // Например, проверка доступных кнопок или других элементов интерфейса
+      // Дополнительные проверки для каждого значения роли можно добавить здесь
     })
   })
 })
