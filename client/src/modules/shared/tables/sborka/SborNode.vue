@@ -20,7 +20,7 @@
     <td
       :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
     >
-      <span v-html="combinedStatuses" style="display: inline-flex"></span>
+      <StatusDisplay :row="sbor" />
     </td>
 
     <!-- Поля -->
@@ -90,13 +90,11 @@ import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-import { statuses } from '@/modules/shared/logic/statuses.js'
-import './SborNode.css'
+import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue' // Импорт компонента
 
 export default {
   name: 'SborNode',
-  methods: { getTextAlignment },
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, StatusDisplay },
   props: {
     sbor: { type: Object, required: true },
     depth: { type: Number, default: 0 },
@@ -105,7 +103,7 @@ export default {
     detail: {
       type: Object,
       required: true,
-      default: () => ({ route: '', idKey: '' }), // Объект с маршрутом и ключом ID
+      default: () => ({ route: '', idKey: '' }),
     },
   },
   setup(props) {
@@ -132,21 +130,6 @@ export default {
       () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
     const fieldsArray = computed(() => sborStore.filteredFields)
-    const firstField = computed(() => fieldsArray.value[0])
-    const combinedStatuses = computed(() => {
-      const activeStatuses = statuses.filter(
-        (status) =>
-          props.sbor[status.status] && props.sbor[status.status].trim()
-      )
-      return activeStatuses.length > 0
-        ? activeStatuses
-            .map(
-              (s) =>
-                `<span class="badge ${s.badgeClass} me-1">${s.label}</span>`
-            )
-            .join('')
-        : ''
-    })
 
     const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
 
@@ -155,11 +138,10 @@ export default {
       toggle,
       handleRowClick,
       fieldsArray,
-      firstField,
-      combinedStatuses,
       hasChildren,
       formatValue,
       generateTitle,
+      getTextAlignment,
     }
   },
 }
