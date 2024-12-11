@@ -52,7 +52,7 @@ const hasStatuses = computed(() => formattedStatuses.value.length > 0)
 <style scoped>
 .status-display {
   display: flex;
-  gap: 10px;
+  gap: 3px;
   justify-content: center;
   align-items: center;
   height: 100%;

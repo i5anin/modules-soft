@@ -8,7 +8,10 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
           <tr>
-            <th v-if="showStatusColumn" :style="{ fontSize: '0.90rem' }">
+            <th
+              v-if="showStatusColumn"
+              :style="{ fontSize: '0.90rem', width: '50px' }"
+            >
               Статусы
             </th>
             <th
