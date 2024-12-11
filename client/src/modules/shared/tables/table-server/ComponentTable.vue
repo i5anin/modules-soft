@@ -8,7 +8,9 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
           <tr>
-            <th :style="{ fontSize: '0.90rem' }">Статусы</th>
+            <th v-if="showStatusColumn" :style="{ fontSize: '0.90rem' }">
+              Статусы
+            </th>
             <th
               v-for="column in headers"
               :key="column.name"
@@ -40,7 +42,7 @@
             @click="$emit('row-click', row)"
             :class="{ locked: row.locked, 'table-success': row.goz }"
           >
-            <td>
+            <td v-if="showStatusColumn">
               <StatusDisplay :row="row" />
             </td>
             <td
@@ -52,8 +54,6 @@
                 v-html="formatValue(row[field.name], field.type, field.name)"
               ></span>
             </td>
-
-            <!-- Колонка статусов -->
 
             <td @click.stop="handleEditClick(row)" v-if="editButton">
               <button class="btn btn-sm">
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue' // путь к компоненту
+import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
 import { computed, ref } from 'vue'
@@ -95,17 +95,25 @@ export default {
     editButton: { type: Boolean, default: false },
   },
   setup(props, { emit }) {
-    const loading = ref(false) // состояние загрузки
+    const loading = ref(false)
     const filteredFields = computed(() =>
       props.headers.filter((header) => !props.excluded.includes(header.name))
     )
+
+    const showStatusColumn = computed(() => {
+      const firstItem = props.items[0]
+      if (!firstItem) return false
+      return Object.keys(firstItem).some((key) =>
+        key.toLowerCase().includes('status')
+      )
+    })
 
     const isModalVisible = ref(false)
     const selectedRow = ref(null)
 
     const handleEditClick = (row) => {
-      selectedRow.value = row // Текущая строка
-      isModalVisible.value = true // Показ модального окна
+      selectedRow.value = row
+      isModalVisible.value = true
     }
 
     const saveRowChanges = (updatedRow) => {
@@ -121,6 +129,7 @@ export default {
     return {
       loading,
       filteredFields,
+      showStatusColumn,
       handleEditClick,
       isModalVisible,
       selectedRow,
@@ -134,15 +143,10 @@ export default {
 <style>
 .table th,
 .table td {
-  min-width: 8px; /* Минимальная ширина столбцов */
-  max-width: 300px; /* Максимальная ширина столбцов */
-  word-wrap: break-word; /* Перенос длинного текста */
-  overflow: hidden; /* Скрыть текст, который выходит за границы */
-  text-overflow: ellipsis; /* Добавить многоточие, если текст обрезается */
-}
-
-.table th,
-.table td {
-  word-wrap: break-word; /* предотвращает переполнение текста */
+  min-width: 8px;
+  max-width: 300px;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

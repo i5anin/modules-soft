@@ -17,6 +17,7 @@ const exclusionConfig = {
     'ordersnom__status_cal',
     'ordersnom_id',
     'sbor_orders__id',
+    'specs__spec_no',
   ],
   patterns: [/status/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
 }
