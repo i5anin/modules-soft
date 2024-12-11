@@ -8,6 +8,7 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
           <tr>
+            <th :style="{ fontSize: '0.90rem' }">Статусы</th>
             <th
               v-for="column in headers"
               :key="column.name"
@@ -26,7 +27,7 @@
                 ></i>
               </span>
             </th>
-            <th v-if="editButton" title="колонка редактировать"></th>
+            <th v-if="editButton" title="Колонка редактировать"></th>
           </tr>
         </thead>
         <tbody>
@@ -39,17 +40,20 @@
             @click="$emit('row-click', row)"
             :class="{ locked: row.locked, 'table-success': row.goz }"
           >
+            <td>
+              <StatusDisplay :row="row" />
+            </td>
             <td
               v-for="field in filteredFields"
               :key="field.name"
               :style="{ textAlign: getTextAlignment(field.type, field.name) }"
             >
-              <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
               <span
-                v-else
                 v-html="formatValue(row[field.name], field.type, field.name)"
               ></span>
             </td>
+
+            <!-- Колонка статусов -->
 
             <td @click.stop="handleEditClick(row)" v-if="editButton">
               <button class="btn btn-sm">
@@ -105,7 +109,6 @@ export default {
     }
 
     const saveRowChanges = (updatedRow) => {
-      // Логика сохранения изменений
       console.log('Сохранено:', updatedRow)
       isModalVisible.value = false
     }

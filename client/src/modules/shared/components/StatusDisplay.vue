@@ -1,11 +1,12 @@
 <template>
-  <div class="status-display">
-    <span v-for="(statusObj, index) in formattedStatuses" :key="index">
-      <span
-        v-if="row[statusObj.key] && row[statusObj.key].trim() !== ''"
-        :class="['badge', statusObj.badgeClass]"
-        >{{ row[statusObj.key] }}
-      </span>
+  <div v-if="hasStatuses" class="status-display">
+    <span
+      :title="statusObj.description"
+      v-for="(statusObj, index) in formattedStatuses"
+      :key="index"
+      :class="['badge', statusObj.badgeClass || 'bg-black']"
+    >
+      {{ statusObj.label }}
     </span>
   </div>
 </template>
@@ -21,14 +22,20 @@ const props = defineProps({
   },
 })
 
-// Форматирование статусов, проверяя окончание ключей
+// Форматируем статусы, проверяя окончание ключей
 const formattedStatuses = computed(() => {
   return statuses
     .map((statusObj) => {
       const rowKey = Object.keys(props.row).find((key) =>
-        key.endsWith(statusObj.status)
+        key.endsWith(statusObj.suffix)
       )
-      return rowKey ? { ...statusObj, key: rowKey } : null
+      return rowKey
+        ? {
+            ...statusObj,
+            key: rowKey,
+            badgeClass: statusObj.badgeClass || 'bg-black', // Устанавливаем чёрный цвет по умолчанию
+          }
+        : null
     })
     .filter(
       (statusObj) =>
@@ -37,6 +44,9 @@ const formattedStatuses = computed(() => {
         props.row[statusObj.key].trim() !== ''
     )
 })
+
+// Проверяем, есть ли хотя бы один статус
+const hasStatuses = computed(() => formattedStatuses.value.length > 0)
 </script>
 
 <style scoped>
@@ -51,5 +61,10 @@ const formattedStatuses = computed(() => {
 .badge {
   padding: 5px;
   border-radius: 4px;
+}
+
+.bg-black {
+  background-color: black;
+  color: white;
 }
 </style>
