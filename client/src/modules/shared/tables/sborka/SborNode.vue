@@ -91,6 +91,7 @@ import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue' // Импорт компонента
+import './SborNode.css'
 
 export default {
   name: 'SborNode',

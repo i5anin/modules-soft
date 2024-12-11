@@ -79,7 +79,7 @@ onMounted(fetchOrderData)
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 270px 1fr;
   gap: 4px;
 }
 </style>
