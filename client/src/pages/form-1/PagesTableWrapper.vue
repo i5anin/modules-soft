@@ -36,6 +36,7 @@ const props = defineProps({
   link: { type: String, required: true },
   edit: { type: Boolean, required: true },
   route: { type: String, required: true },
+  routeAccess: { type: Array, required: true },
 })
 
 const items = ref([])
@@ -112,9 +113,12 @@ const resetData = () => {
 }
 
 const navigateToRow = (row) => {
-  router.push({ name: props.route, params: { id: row[props.link] } })
+  if (props.routeAccess.includes(roleStore.selectedRole)) {
+    router.push({ name: props.route, params: { id: row[props.link] } })
+  } else {
+    alert(`Переход невозможен для роли: ${roleStore.selectedRole}`)
+  }
 }
-
 const updatePage = (page) => {
   currentPage.value = page
   fetchItems()

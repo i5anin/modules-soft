@@ -91,6 +91,7 @@ const specificationsRoutes = [
       link: 'specs__id',
       route: 'SpecificationsNomDetails',
       edit: true,
+      routeAccess: ['managers'],
     }),
   },
   {
