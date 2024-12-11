@@ -80,6 +80,6 @@ onMounted(fetchOrderData)
 .grid-container {
   display: grid;
   grid-template-columns: 400px 1fr;
-  gap: 16px;
+  gap: 4px;
 }
 </style>

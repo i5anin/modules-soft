@@ -112,13 +112,22 @@ const resetData = () => {
   totalCount.value = 0
 }
 
+const selectedRow = ref(null) // Переменная для хранения выбранной строки
+
 const navigateToRow = (row) => {
-  if (props.routeAccess.includes(roleStore.selectedRole)) {
+  console.log('Выбранная строка:', row)
+
+  if (
+    !Array.isArray(props.routeAccess) || // Если routeAccess не массив, считаем доступ полным
+    !props.routeAccess.length || // Если массив пустой, доступ полный
+    props.routeAccess.includes(roleStore.selectedRole) // Роль имеет доступ
+  ) {
     router.push({ name: props.route, params: { id: row[props.link] } })
   } else {
     alert(`Переход невозможен для роли: ${roleStore.selectedRole}`)
   }
 }
+
 const updatePage = (page) => {
   currentPage.value = page
   fetchItems()
