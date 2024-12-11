@@ -1,50 +1,40 @@
 <template>
-  <div>
-    <div v-if="header" class="card border-light mb-2">
-      <div class="card-header bg-transparent border-success border-light p-2">
-        <span class="mdi mdi-format-list-bulleted-type"></span>
-        <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
-        Информация о заказе {{ fieldValues['orders__id'] || '' }}
-      </div>
-      <div class="card-body p-2">
-        <div class="row g-3">
-          <div
-            v-for="(field, name) in allFields"
-            :key="name"
-            class="col-md-6"
-            :title="`${field?.type}&#10;${name || ''}`"
-          >
-            <div class="field-label">
-              {{ field.title }}
-            </div>
-            <div
-              class="field-value"
-              :style="{
-                color: fieldValues[name] ? '' : '#d8d8d8',
-              }"
-            >
-              {{ fieldValues[name] || 'Нет данных' }}
-            </div>
-          </div>
+  <div v-if="header" class="card border-light mb-2">
+    <div class="card-header bg-transparent border-success border-light p-2">
+      <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
+      Информация о заказе {{ fieldValues['orders__id'] || '' }}
+    </div>
+    <div class="card-body p-2 row g-3">
+      <div
+        v-for="(field, name) in allFields"
+        :key="name"
+        class="col-md-6"
+        :title="`${field?.type}&#10;${name || ''}`"
+      >
+        <div class="field-label">{{ field.title }}</div>
+        <div
+          class="field-value"
+          :style="{ color: fieldValues[name] ? '' : '#d8d8d8' }"
+        >
+          {{ fieldValues[name] || 'Нет данных' }}
         </div>
       </div>
-      <!-- Компонент для отображения комментариев -->
-      <CommentSection
-        class="card-footer bg-transparent border-success"
-        :commentFields="commentFields"
-        :fieldValues="fieldValuesComputed"
-      />
     </div>
+    <CommentSection
+      class="card-footer bg-transparent border-success"
+      :commentFields="commentFields"
+      :fieldValues="fieldValuesComputed"
+    />
   </div>
 </template>
 
 <script>
-import { computed, defineComponent, ref, reactive, watch } from 'vue'
+import { computed, defineComponent, reactive, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue } from '@/utils/formatters.js'
 import CommentSection from './CardComment.vue'
-import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
+import { processFields } from '@/modules/test/fieldsProcessor.js'
 
 export default defineComponent({
   components: { SvgIcon, CommentSection },
@@ -55,36 +45,30 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const useFilteredFields = ref(true) // Флаг для включения/выключения фильтрации
-
     const allFields = computed(() => {
       const fields = props.header.fields || {}
-      // Применяем фильтрацию, если флаг включён
-      const filteredFields = useFilteredFields.value
-        ? filterFieldPermissions(fields)
-        : fields
+      const fieldsArray = Object.entries(fields).map(([key, value]) => ({
+        key,
+        ...value,
+      }))
+      const processedFields = processFields(fieldsArray)
 
-      return Object.entries(filteredFields)
-        .filter(([name]) => !name.includes('comments'))
-        .reduce((acc, [name, field]) => {
-          acc[name] = field
+      return processedFields
+        .filter((field) => field.permissions?.read) // Фильтруем только видимые поля
+        .reduce((acc, field) => {
+          acc[field.key] = field
           return acc
         }, {})
     })
 
-    const mdiFormatListBulletedTypeRef = ref(mdiFormatListBulletedType)
-
-    // Подразделяем поля на основные и комментарии
     const commentFields = computed(() => {
       return Object.entries(props.header.fields || {})
         .filter(([name]) => name.includes('comments'))
         .map(([name, field]) => ({ name, ...field }))
     })
 
-    // Реактивный объект для хранения значений полей
     const fieldValues = reactive({})
 
-    // Обновление fieldValues на основе props.header.data
     const updateFieldValues = () => {
       Object.assign(
         fieldValues,
@@ -101,22 +85,14 @@ export default defineComponent({
       )
     }
 
-    // Наблюдаем за изменениями в props.header и обновляем fieldValues
-    watch(
-      () => props.header,
-      () => updateFieldValues(),
-      { immediate: true }
-    )
-
-    // Комментарии обрабатываются отдельно
-    const fieldValuesComputed = computed(() => fieldValues)
+    watch(() => props.header, updateFieldValues, { immediate: true })
 
     return {
-      mdiFormatListBulletedType: mdiFormatListBulletedTypeRef,
+      mdiFormatListBulletedType,
       allFields,
       commentFields,
       fieldValues,
-      fieldValuesComputed,
+      fieldValuesComputed: computed(() => fieldValues),
     }
   },
 })

@@ -18,8 +18,19 @@ const exclusionConfig = {
     'ordersnom_id',
     'sbor_orders__id',
     'specs__spec_no',
+    'zag_tech_material_id',
+    'ordersnom__id',
+    'zag_buy_p1',
+    'zag_buy_p2',
+    'zag_buy_p3',
+    'zag_buy_p4',
+    'zag_buy_weight',
+    'nom_id_nom',
+    'kp_list__id',
+    'kp_data__id',
+    'orders__comments',
   ],
-  patterns: [/status/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
+  patterns: [/status/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
 }
 
 /**
