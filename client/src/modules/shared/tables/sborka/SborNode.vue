@@ -110,6 +110,15 @@ export default {
     const router = useRouter()
     const isExpanded = ref(false)
 
+    console.log(props.detail)
+
+    if (!props.detail.route || !props.detail.idKey) {
+      console.warn(
+        'Detail prop is missing or incomplete. Expected { route: "", idKey: "" }.',
+        props.detail
+      )
+    }
+
     const toggle = () => {
       if (hasChildren.value) {
         isExpanded.value = !isExpanded.value
@@ -120,12 +129,10 @@ export default {
       const idKey = props.detail.idKey
       const id = idKey && props.sbor ? props.sbor[idKey] : null
       const f2id = props.sbor?.f2id // Дополнительно извлекаем f2id
-      console.log(f2id)
-      console.log(props.sbor)
 
       if (!id) {
         console.error('Missing required parameter: id', {
-          f2id,
+          id,
           sbor: props.sbor,
         })
         return
