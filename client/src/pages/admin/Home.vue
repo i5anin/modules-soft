@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="mt-4">
     <h4>Список маршрутов</h4>
     <div
       v-for="(group, groupName) in groupedRoutes"
@@ -10,15 +10,19 @@
       <table class="table table-bordered table-striped mt-3">
         <thead>
           <tr>
-            <th scope="col">Название маршрута</th>
-            <th scope="col">Путь</th>
-            <th scope="col">Параметры</th>
-            <th scope="col">Ссылка</th>
+            <th scope="col" style="width: 15%">Название маршрута</th>
+            <th scope="col" style="width: 15%">Путь</th>
+            <th scope="col" style="width: 15%">Параметры</th>
+            <th scope="col" style="width: 10%">Тип</th>
+            <th scope="col" style="width: 10%">ID перехода/Route</th>
+            <th scope="col" style="width: 10%">Редактирование</th>
+            <th scope="col" style="width: 10%">Доступы</th>
+            <th scope="col" style="width: 5%">Ссылка</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="route in group" :key="route.path">
-            <td>{{ route.name || 'Без имени' }}</td>
+            <td>{{ route.name || '' }}</td>
             <td>{{ route.path }}</td>
             <td>
               <div v-if="hasParams(route.path)" class="d-flex gap-2">
@@ -36,6 +40,24 @@
                 </div>
               </div>
               <span v-else></span>
+            </td>
+            <td>{{ route.props && route.props.type }}</td>
+            <td>
+              <template v-if="route.props && route.props.link">
+                {{ route.props.link }}
+                <template v-if="route.props.route"
+                  >({{ route.props.route }})</template
+                >
+              </template>
+            </td>
+
+            <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
+            <td>
+              {{
+                route.props && route.props.routeAccess
+                  ? route.props.routeAccess.join(', ')
+                  : ''
+              }}
             </td>
             <td>
               <router-link
@@ -64,17 +86,26 @@ import { useRouter } from 'vue-router'
 const getBasePrefix = (path) => {
   const segments = path.split('/').filter(Boolean)
   if (segments.length === 0) return 'root'
-  const base = segments[0].replace(/s$/, '') // Убираем "s" в конце, если есть
-  return base
+  // Убираем "s" в конце, если есть
+  return segments[0].replace(/s$/, '')
 }
 
 const router = useRouter()
 
-// Группировка маршрутов
+// Группировка маршрутов с извлечением props
 const groupedRoutes = router.options.routes.reduce((acc, route) => {
   const prefix = getBasePrefix(route.path)
+
+  // Извлекаем props, если функция передана
+  const props =
+    typeof route.props === 'function' ? route.props({ params: {} }) : {}
+
   if (!acc[prefix]) acc[prefix] = []
-  acc[prefix].push(route)
+  acc[prefix].push({
+    ...route,
+    props, // Добавляем обработанные props
+  })
+
   return acc
 }, {})
 
@@ -114,12 +145,3 @@ const canNavigate = (path) => {
   return extractParams(path).every((param) => params[path][param])
 }
 </script>
-
-<style>
-.container {
-  max-width: 800px;
-}
-.input-group {
-  flex-grow: 1;
-}
-</style>
