@@ -10,7 +10,7 @@
           v-if="nomTableData.length > 0"
           :table-data="nomTableData"
           :table-fields="filteredTableFields"
-          :detail="{ route: 'OrderDetails', idKey: 'ordersnom_id' }"
+          :detail="detail1.value"
         />
       </div>
     </div>
@@ -29,6 +29,10 @@ import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
 // Пропсы
 const props = defineProps({
   type: { type: String, required: true },
+  link: { type: String, required: true },
+  edit: { type: Boolean, required: true },
+  route: { type: String, required: true },
+  routeAccess: { type: Array, required: true },
 })
 
 // Маршруты и стор
@@ -43,6 +47,13 @@ const isCollapsed = ref(false)
 
 // Вычисляемые свойства
 const selectedRole = computed(() => roleStore.selectedRole)
+
+const detail1 = computed(() => ({
+  route: props.route,
+  idKey: props.link,
+}))
+
+console.log('[PagesCardNoms.vue]', detail1.value)
 
 const fetchOrderData = async () => {
   const link_id = router.currentRoute.value.params.id
@@ -61,16 +72,14 @@ const fetchOrderData = async () => {
   }
 }
 
-const filterTableFields = (fields) => {
-  return Object.entries(fields)
+const filteredTableFields = computed(() => {
+  return Object.entries(tableFields.value)
     .filter(([key]) => !key.startsWith('status_'))
     .map(([key, field]) => ({
       name: key,
       ...field,
     }))
-}
-
-const filteredTableFields = computed(() => filterTableFields(tableFields.value))
+})
 
 // Инициализация данных
 onMounted(fetchOrderData)

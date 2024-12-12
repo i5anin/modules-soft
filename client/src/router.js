@@ -67,6 +67,7 @@ const commercialRoutes = [
       link: 'kp_list__id',
       route: 'CommercialNomDetails',
       edit: true,
+      routeAccess: ['managers', 'metrolog', 'omts'],
     }),
   },
   {
@@ -77,6 +78,7 @@ const commercialRoutes = [
       ...route.params,
       type: 'kp',
       link: 'id',
+      route: 'NomDetails',
       edit: true,
     }),
   },

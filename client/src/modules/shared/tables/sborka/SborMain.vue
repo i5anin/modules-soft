@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue'
+import { computed, watch, toRefs } from 'vue'
 import { store } from './store.js'
 import SborNode from './SborNode.vue'
 
@@ -48,36 +48,49 @@ export default {
   name: 'SborMain',
   components: { SborNode },
   props: {
-    tableData: Array, // Пропс для исходных данных
-    tableFields: Array, // Пропс для исходных полей
+    tableData: {
+      type: Array,
+      required: true,
+    },
+    tableFields: {
+      type: Array,
+      required: true,
+    },
     detail: {
       type: Object,
-      default: () => ({ route: '', idKey: '' }), // Объект с двумя свойствами
+      default: () => ({ route: '', idKey: '' }),
     },
   },
   setup(props) {
+    const { tableData, tableFields } = toRefs(props)
     const sborStore = store()
 
-    // Следим за изменениями в prop tableData и обновляем store
+    // Watch tableData and update store
     watch(
-      () => props.tableData,
+      tableData,
       (newData) => {
         sborStore.setTableData(newData)
       },
       { immediate: true }
     )
 
-    // Следим за изменениями в prop tableFields и обновляем store
+    // Watch tableFields and update store
     watch(
-      () => props.tableFields,
-      (newFields) => sborStore.setTableFields(newFields),
+      tableFields,
+      (newFields) => {
+        sborStore.setTableFields(newFields)
+      },
       { immediate: true }
     )
 
-    // filteredFields из store без дублирования переменных
+    // filteredFields from store
     const filteredFields = computed(() => sborStore.filteredFields)
 
-    return { filteredFields }
+    return {
+      filteredFields,
+      tableData,
+      tableFields,
+    }
   },
 }
 </script>

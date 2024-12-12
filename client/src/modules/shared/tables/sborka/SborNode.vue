@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
@@ -106,18 +106,23 @@ export default {
     },
   },
   setup(props) {
+    const { sbor, depth, fields, detail } = toRefs(props)
     const sborStore = store()
     const router = useRouter()
     const isExpanded = ref(false)
 
-    console.log(props.detail)
-
-    if (!props.detail.route || !props.detail.idKey) {
-      console.warn(
-        'Detail prop is missing or incomplete. Expected { route: "", idKey: "" }.',
-        props.detail
-      )
-    }
+    watch(
+      detail,
+      (newDetail) => {
+        if (!newDetail.route || !newDetail.idKey) {
+          console.warn(
+            'Detail prop is missing or incomplete. Expected { route: "", idKey: "" }.',
+            newDetail
+          )
+        }
+      },
+      { immediate: true }
+    )
 
     const toggle = () => {
       if (hasChildren.value) {
@@ -126,28 +131,28 @@ export default {
     }
 
     const handleRowClick = () => {
-      const idKey = props.detail.idKey
-      const id = idKey && props.sbor ? props.sbor[idKey] : null
-      const f2id = props.sbor?.f2id // Дополнительно извлекаем f2id
+      const idKey = detail.value.idKey
+      const id = idKey && sbor.value ? sbor.value[idKey] : null
+      const f2id = sbor.value?.f2id
 
       if (!id) {
         console.error('Missing required parameter: id', {
           id,
-          sbor: props.sbor,
+          sbor: sbor.value,
         })
         return
       }
 
       router
         .push({
-          name: props.detail.route,
-          params: { [idKey]: id, f2id }, // Добавляем f2id в параметры маршрута
+          name: detail.value.route,
+          params: { [idKey]: id, f2id },
         })
         .catch(console.error)
     }
 
     const hasChildren = computed(
-      () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
+      () => sbor.value.sbor_tree && sbor.value.sbor_tree.length > 0
     )
 
     const fieldsArray = computed(() => sborStore.filteredFields)
