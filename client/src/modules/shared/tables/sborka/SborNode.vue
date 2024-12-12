@@ -38,7 +38,6 @@
         class="tree-node"
         :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
       >
-        <!-- Ветвь связей -->
         <div
           v-if="depth > 0"
           class="branch-line"
@@ -46,7 +45,6 @@
           :style="{ left: `${(depth - 1) * 20}px` }"
         ></div>
 
-        <!-- Содержимое узла -->
         <div class="node-content">
           <font-awesome-icon
             :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
@@ -74,12 +72,12 @@
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="(child, index) in sbor.sbor_tree"
-      :key="child.ordersnom_id"
+      :key="child[detail.idKey]"
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
       :isLastChild="index === sbor.sbor_tree.length - 1"
-      :detail="{ route: detail.route, idKey: detail.idKey }"
+      :detail="detail"
     />
   </template>
 </template>
@@ -90,7 +88,7 @@ import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue' // Импорт компонента
+import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import './SborNode.css'
 
 export default {
@@ -119,17 +117,32 @@ export default {
     }
 
     const handleRowClick = () => {
-      const id = props.sbor[props.detail.idKey]
-      if (props.detail.route && id) {
-        router
-          .push({ name: props.detail.route, params: { id } })
-          .catch(console.error)
+      const idKey = props.detail.idKey
+      const id = idKey && props.sbor ? props.sbor[idKey] : null
+      const f2id = props.sbor?.f2id // Дополнительно извлекаем f2id
+      console.log(f2id)
+      console.log(props.sbor)
+
+      if (!id) {
+        console.error('Missing required parameter: id', {
+          f2id,
+          sbor: props.sbor,
+        })
+        return
       }
+
+      router
+        .push({
+          name: props.detail.route,
+          params: { [idKey]: id, f2id }, // Добавляем f2id в параметры маршрута
+        })
+        .catch(console.error)
     }
 
     const hasChildren = computed(
       () => props.sbor.sbor_tree && props.sbor.sbor_tree.length > 0
     )
+
     const fieldsArray = computed(() => sborStore.filteredFields)
 
     const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`

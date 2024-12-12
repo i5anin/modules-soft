@@ -17,13 +17,21 @@ const ordersRoutes = [
     path: '/order/:id/noms',
     name: 'Order',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
-    props: (route) => ({ ...route.params, type: 'orders' }),
+    props: (route) => ({
+      ...route.params,
+      type: 'orders',
+      link: 'ordersnom_id',
+      route: 'OrderDetails',
+    }),
   },
   {
-    path: '/order/:orderId/nom/:id',
+    path: '/order/:id/nom/:f2id',
     name: 'OrderDetails',
     component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
-    props: (route) => ({ ...route.params, type: 'orders' }),
+    props: (route) => ({
+      ...route.params,
+      type: 'orders',
+    }),
   },
 ]
 
