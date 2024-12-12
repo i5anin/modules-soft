@@ -36,7 +36,6 @@ const props = defineProps({
   link: { type: String, required: true },
   edit: { type: Boolean, required: true },
   route: { type: String, required: true },
-  routeAccess: { type: Array, required: true },
 })
 
 const items = ref([])
@@ -63,7 +62,6 @@ const tableColumns = computed(() =>
   }))
 )
 
-const roleStore = useRoleStore()
 const router = useRouter()
 
 const fetchItems = async () => {
@@ -77,7 +75,6 @@ const fetchItems = async () => {
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
-      module: roleStore.selectedRole,
     })
 
     if (response?.table) {
@@ -116,16 +113,7 @@ const selectedRow = ref(null) // Переменная для хранения в
 
 const navigateToRow = (row) => {
   console.log('Выбранная строка:', row)
-
-  if (
-    !Array.isArray(props.routeAccess) || // Если routeAccess не массив, считаем доступ полным
-    !props.routeAccess.length || // Если массив пустой, доступ полный
-    props.routeAccess.includes(roleStore.selectedRole) // Роль имеет доступ
-  ) {
-    router.push({ name: props.route, params: { id: row[props.link] } })
-  } else {
-    alert(`Переход невозможен для роли: ${roleStore.selectedRole}`)
-  }
+  router.push({ name: props.route, params: { id: row[props.link] } })
 }
 
 const updatePage = (page) => {

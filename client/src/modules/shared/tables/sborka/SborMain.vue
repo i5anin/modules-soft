@@ -58,12 +58,14 @@ export default {
     },
     detail: {
       type: Object,
-      default: () => ({ route: '', idKey: '' }),
+      required: true,
     },
   },
   setup(props) {
     const { tableData, tableFields } = toRefs(props)
     const sborStore = store()
+
+    console.log('[SborMain.vue]', props.detail)
 
     // Watch tableData and update store
     watch(

@@ -60,7 +60,7 @@ import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const id = ref(route.params.id)
+const id = ref(route.params.nom_id)
 const selectedOrder = ref(null)
 const routeProps = defineProps(['type'])
 

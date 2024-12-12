@@ -10,7 +10,7 @@
           v-if="nomTableData.length > 0"
           :table-data="nomTableData"
           :table-fields="filteredTableFields"
-          :detail="detail1.value"
+          :detail="detail"
         />
       </div>
     </div>
@@ -30,9 +30,7 @@ import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
 const props = defineProps({
   type: { type: String, required: true },
   link: { type: String, required: true },
-  edit: { type: Boolean, required: true },
   route: { type: String, required: true },
-  routeAccess: { type: Array, required: true },
 })
 
 // Маршруты и стор
@@ -48,12 +46,12 @@ const isCollapsed = ref(false)
 // Вычисляемые свойства
 const selectedRole = computed(() => roleStore.selectedRole)
 
-const detail1 = computed(() => ({
+const detail = computed(() => ({
   route: props.route,
   idKey: props.link,
 }))
 
-console.log('[PagesCardNoms.vue]', detail1.value)
+console.log('[PagesCardNoms.vue]', detail.value)
 
 const fetchOrderData = async () => {
   const link_id = router.currentRoute.value.params.id

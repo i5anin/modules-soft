@@ -16,7 +16,6 @@
             <th scope="col" style="width: 10%">Тип</th>
             <th scope="col" style="width: 10%">ID перехода/Route</th>
             <th scope="col" style="width: 10%">Редактирование</th>
-            <th scope="col" style="width: 10%">Доступы</th>
             <th scope="col" style="width: 5%">Ссылка</th>
           </tr>
         </thead>
@@ -52,13 +51,6 @@
             </td>
 
             <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
-            <td>
-              {{
-                route.props && route.props.routeAccess
-                  ? route.props.routeAccess.join(', ')
-                  : ''
-              }}
-            </td>
             <td>
               <router-link
                 v-if="canNavigate(route.path)"

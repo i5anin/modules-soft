@@ -106,10 +106,12 @@ export default {
     },
   },
   setup(props) {
-    const { sbor, depth, fields, detail } = toRefs(props)
+    const { sbor, detail } = toRefs(props)
     const sborStore = store()
     const router = useRouter()
     const isExpanded = ref(false)
+
+    console.log('[SborNode]', props.detail)
 
     watch(
       detail,
@@ -131,9 +133,8 @@ export default {
     }
 
     const handleRowClick = () => {
-      const idKey = detail.value.idKey
-      const id = idKey && sbor.value ? sbor.value[idKey] : null
-      const f2id = sbor.value?.f2id
+      const idKey = detail.value.idKey // Например: 'ordersnom_id'
+      const id = sbor.value[idKey] // Получаем ID из sbor
 
       if (!id) {
         console.error('Missing required parameter: id', {
@@ -143,12 +144,16 @@ export default {
         return
       }
 
+      console.log('Navigating to:', detail.value.route, 'with ID:', id)
+
       router
         .push({
-          name: detail.value.route,
-          params: { [idKey]: id, f2id },
+          name: detail.value.route, // Например: 'OrderDetails'
+          params: { [idKey]: id, nom_id: id }, // Передаем id и f2id как одно и то же значение
         })
-        .catch(console.error)
+        .catch((error) => {
+          console.error('Error navigating to route:', error)
+        })
     }
 
     const hasChildren = computed(
