@@ -152,15 +152,4 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.table {
-  table-layout: fixed; /* Фиксированная ширина колонок */
-  width: 100%; /* Ширина таблицы на 100% */
-}
-
-.table th {
-  font-size: 0.9rem;
-  text-align: center;
-  vertical-align: middle;
-}
 </style>

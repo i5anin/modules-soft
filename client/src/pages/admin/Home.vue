@@ -5,7 +5,9 @@
       v-for="(group, groupName) in groupedRoutes"
       :key="groupName"
       class="mb-4"
-      :style="{ color: groupName === 'test' ? 'blue' : 'inherit' }"
+      :style="{
+        color: ['test', 'dev'].includes(groupName) ? 'blue' : 'inherit',
+      }"
     >
       <h6 class="mt-3 text-capitalize">{{ groupName }}</h6>
       <table class="table table-bordered table-striped mt-3">
@@ -15,7 +17,8 @@
             <th scope="col" style="width: 15%">Путь</th>
             <th scope="col" style="width: 15%">Параметры</th>
             <th scope="col" style="width: 10%">Тип</th>
-            <th scope="col" style="width: 10%">ID перехода/Route</th>
+            <th scope="col" style="width: 10%">ID перехода</th>
+            <th scope="col" style="width: 10%">Route Vue</th>
             <th scope="col" style="width: 10%">Редактирование</th>
             <th scope="col" style="width: 5%">Ссылка</th>
           </tr>
@@ -43,12 +46,10 @@
             </td>
             <td>{{ route.props && route.props.type }}</td>
             <td>
-              <template v-if="route.props && route.props.link">
-                {{ route.props.link }}
-                <template v-if="route.props.route"
-                  >({{ route.props.route }})</template
-                >
-              </template>
+              {{ route.props.link }}
+            </td>
+            <td>
+              {{ route.props.route }}
             </td>
             <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
             <td>

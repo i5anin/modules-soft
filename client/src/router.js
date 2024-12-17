@@ -63,7 +63,6 @@ const commercialRoutes = [
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     props: (route) => ({
       ...route.params,
-      edit: true,
       type: 'kp',
       link: 'kp_list__id',
       route: 'CommercialNomDetails',
@@ -76,8 +75,6 @@ const commercialRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'kp',
-      link: 'kp_data__id',
-      route: 'kpNomDetails',
     }),
   },
 ]
@@ -113,24 +110,24 @@ const specificationsRoutes = [
   },
 ]
 
-const testRoutes = [
+const devRoutes = [
   {
-    path: '/test/modal-tools/:no/:nomId',
+    path: '/dev/modal-tools/:no/:nomId',
     name: 'ModalTools',
     component: () =>
       import('@/modules/modal-tools/components/PagesModalTools.vue'),
     props: true,
   },
   {
-    path: '/test/docs',
+    path: '/dev/docs',
     name: 'Docs',
     component: () => import('@/pages/admin/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
   {
-    path: '/test/fields-processor',
-    name: 'TestFieldsProcessor',
-    component: () => import('@/modules/test/fieldsProcessor.vue'),
+    path: '/dev/fields-processor',
+    name: 'devFieldsProcessor',
+    component: () => import('@/modules/dev/fieldsProcessor.vue'),
     props: true,
   },
 ]
@@ -144,7 +141,7 @@ const routes = [
   ...commercialRoutes,
   ...ordersRoutes,
   ...clientsRoutes,
-  ...testRoutes,
+  ...devRoutes,
   ...specificationsRoutes,
 ]
 
