@@ -42,8 +42,8 @@ const fetchAllData = async () => {
         page: 1,
         limit: 15,
         search: '',
-        sortCol: 'date',
-        sortDir: 'desc',
+        sortCol: '',
+        sortDir: '',
         type: type,
         module: module,
       }

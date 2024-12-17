@@ -72,8 +72,8 @@ const fetchItems = async () => {
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: searchQuery.value,
-      sortCol: sortColumn.value || 'date', // По умолчанию сортировка по 'date'
-      sortDir: sortItem.value || 'desc', // По убыванию
+      sortCol: sortColumn.value, // По умолчанию сортировка по 'date'
+      sortDir: sortItem.value, // По убыванию
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
