@@ -24,12 +24,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getItems } from '@/pages/form-1/api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
-import { useRoleStore } from '@/modules/_main/store/index.js'
+import { getItems } from '@/pages/form-1/api/list.js'
 import { processFields } from '@/modules/test/fieldsProcessor.js'
+import { useRoleStore } from '@/modules/_main/store/index.js'
 
 const props = defineProps({
   type: { type: String, required: true },
@@ -44,15 +44,19 @@ const totalCount = ref(0)
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
-const sortColumn = ref('date')
-const sortItem = ref('desc')
+const sortColumn = ref(null)
+const sortItem = ref(null)
 
-const startDate = ref(props.initialStartDate)
-const endDate = ref(props.initialEndDate)
+const startDate = ref(null)
+const endDate = ref(null)
+
+const router = useRouter()
+const roleStore = useRoleStore()
 
 const totalPages = computed(() =>
   Math.ceil(totalCount.value / itemsPerPage.value)
 )
+
 const tableColumns = computed(() =>
   tableFields.value.map(({ name, title, type }) => ({
     name,
@@ -62,36 +66,47 @@ const tableColumns = computed(() =>
   }))
 )
 
-const router = useRouter()
-
 const fetchItems = async () => {
   try {
     const response = await getItems({
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: searchQuery.value,
-      sortCol: sortColumn.value,
-      sortDir: sortItem.value,
+      sortCol: sortColumn.value || '', // Если sortColumn пуст, передаем пустую строку
+      sortDir: sortItem.value || '', // Если sortItem пуст, передаем пустую строку
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
+      module: roleStore.selectedRole,
     })
 
     if (response?.table) {
-      tableFields.value = processFields(
+      const fields = processFields(
         Object.entries(response.table.fields).map(([key, field]) => ({
           key,
           ...field,
         }))
-      )
-        .filter(({ modified }) => modified)
-        .map(({ key, title, type, width, update }) => ({
-          name: key,
-          title,
-          type,
-          width,
-          update: update || false,
-        }))
+      ).filter(({ modified }) => modified)
+
+      tableFields.value = fields.map(({ key, title, type, width, update }) => ({
+        name: key,
+        title,
+        type,
+        width,
+        update: update || false,
+      }))
+
+      // Динамическая сортировка: ищем первое поле с "date" в ключе
+      const dateField = fields.find(({ key }) => key?.includes('date')) // Исправлено на key
+      console.log(fields)
+      console.log(dateField)
+      if (dateField) {
+        sortColumn.value = dateField.key // Устанавливаем ключ найденного поля
+        sortItem.value = 'desc' // По умолчанию сортировка по убыванию
+      } else {
+        sortColumn.value = '' // Если нет поля с "date", сброс сортировки
+        sortItem.value = ''
+      }
 
       items.value = response.table.data
       totalCount.value = response.header.total_count
@@ -99,7 +114,7 @@ const fetchItems = async () => {
       resetData()
     }
   } catch (error) {
-    console.error(error)
+    console.error('Error fetching items:', error)
     resetData()
   }
 }
@@ -109,10 +124,7 @@ const resetData = () => {
   totalCount.value = 0
 }
 
-const selectedRow = ref(null) // Переменная для хранения выбранной строки
-
 const navigateToRow = (row) => {
-  console.log('Выбранная строка:', row)
   router.push({ name: props.route, params: { id: row[props.link] } })
 }
 

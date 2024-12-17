@@ -63,6 +63,7 @@ const commercialRoutes = [
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     props: (route) => ({
       ...route.params,
+      edit: true,
       type: 'kp',
       link: 'kp_list__id',
       route: 'CommercialNomDetails',
