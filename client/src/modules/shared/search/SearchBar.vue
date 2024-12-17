@@ -1,35 +1,28 @@
 <template>
   <div class="search-bar">
-    <div class="input-group">
-      <span class="input-group-text">
-        <i class="bi bi-search"></i>
-      </span>
-      <input
-        type="text"
-        v-model="searchQuery"
-        class="form-control search-input"
-        placeholder="Введите текст для поиска"
-        :disabled="loading"
-      />
-      <button
+    <div class="position-relative">
+      <!-- Prepend с иконкой поиска -->
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+        <!-- Поле ввода -->
+        <input
+          type="text"
+          v-model="searchQuery"
+          class="form-control search-input"
+          placeholder="Введите текст для поиска"
+          :disabled="loading"
+          @keyup.enter="onSearch"
+        />
+
+        <!-- Кнопка очистки -->
+      </div>
+      <span
         v-if="searchQuery"
+        class="form-control-clear bi bi-x"
         @click="clearSearch"
-        class="btn btn-outline-secondary"
-        type="button"
-      >
-        <i class="bi bi-x-circle"></i>
-      </button>
-      <button
-        @click="onSearch"
-        class="btn btn-primary"
-        :disabled="loading"
-        type="button"
-      >
-        Поиск
-      </button>
-    </div>
-    <div v-if="loading" class="spinner-border ms-2" role="status">
-      <span class="visually-hidden">Загрузка...</span>
+      ></span>
     </div>
   </div>
 </template>
@@ -74,5 +67,26 @@ export default {
 }
 .input-group-text {
   background-color: #f8f9fa;
+}
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 100px;
+}
+
+.form-control-clear {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+.form-control-clear:hover {
+  color: #495057;
 }
 </style>
