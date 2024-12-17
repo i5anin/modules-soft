@@ -50,13 +50,12 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
-import { getModalOrderAndNomsById } from './api/nom_info.js'
+import { getNomDetailsById } from './api/nom_info.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from '../../modules/form-3-nom/components/Form3Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
 import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
-import { filterFieldPermissions } from '@/utils/dev/filterFieldPermissions.js'
 
 const roleStore = useRoleStore()
 const route = useRoute()
@@ -68,7 +67,7 @@ const routeProps = defineProps(['type'])
 onMounted(async () => {
   if (id.value) {
     try {
-      selectedOrder.value = await getModalOrderAndNomsById(
+      selectedOrder.value = await getNomDetailsById(
         id.value,
         routeProps.type,
         roleStore.selectedRole
@@ -83,7 +82,7 @@ onMounted(async () => {
 // Фильтрация полей заголовка с использованием filterFieldPermissions
 const filteredHeaderFields = computed(() => {
   const fields = selectedOrder.value?.header?.fields || {}
-  const filteredFields = Object.entries(filterFieldPermissions(fields)).map(
+  const filteredFields = Object.entries(fields).map(
     ([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps })
   )
   return filteredFields
