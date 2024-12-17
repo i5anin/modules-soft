@@ -52,7 +52,9 @@
             </template>
             <template v-else>
               <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
-              <span v-else>{{ formatValue(row[field.name], field.type) }}</span>
+              <span v-else>
+                {{ formatValue(row[field.name], field.type, field.name) }}
+              </span>
             </template>
           </td>
         </tr>

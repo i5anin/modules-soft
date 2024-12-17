@@ -66,7 +66,7 @@ export function formatValue(value, type, key) {
   if (!key) {
     console.warn(
       `В функцию форматтера передан некорректный ключ. Ключ отсутствует или пустой.
-      Значение: ${value}, Тип: ${type}
+      value: ${value}, type: ${type}
       Стек вызова:
       ${getCallerStack()}`
     )
@@ -95,7 +95,7 @@ export function formatValue(value, type, key) {
     default:
       console.warn(
         `Неизвестный тип данных "${type}" для ключа "${key}".
-        Значение: ${value}
+        value: ${value}
         Стек вызова:
         ${getCallerStack()}`
       )
@@ -131,7 +131,7 @@ function formatNumber(value, isPrice = false) {
 
   const formatted = numberValue
     .toFixed(isPrice ? 2 : 0) // Для цены — 2 знака после запятой
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') // Разделение тысяч
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F') // Разделение тысяч
     .replace('.', ',') // Замена точки на запятую
 
   return isPrice || !formatted.endsWith(',00')

@@ -59,12 +59,13 @@ import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
 
 const roleStore = useRoleStore()
 const route = useRoute()
-const id = ref(route.params.nom_id)
+const id = ref(route.params.id)
 const selectedOrder = ref(null)
 const routeProps = defineProps(['type'])
 
 // Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
+  console.log(id.value)
   if (id.value) {
     try {
       selectedOrder.value = await getNomDetailsById(
