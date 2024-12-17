@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ loading }}
     <!-- Индикатор загрузки -->
     <LoadingSpinner v-if="loading" :padding="'35vh 0'" />
 
@@ -15,9 +16,9 @@
               Статусы
             </th>
             <th
-              v-for="column in headers"
+              v-for="column in filteredFields"
               :key="column.name"
-              @click="column.sortable && $emit('sort-change', column.name)"
+              @click="handleSort(column)"
               :style="{ fontSize: '0.90rem' }"
             >
               {{ column.title }}
@@ -42,7 +43,7 @@
           <tr
             v-for="row in items"
             :key="row.id"
-            @click="$emit('row-click', row)"
+            @click="emit('row-click', row)"
             :class="{ locked: row.locked, 'table-success': row.goz }"
           >
             <td v-if="showStatusColumn">
@@ -58,7 +59,7 @@
               ></span>
             </td>
 
-            <td @click.stop="handleEditClick(row)" v-if="editButton">
+            <td @click.stop="openEditModal(row)" v-if="editButton">
               <button class="btn btn-sm">
                 <i class="bi bi-pencil-fill" style="color: gray"></i>
               </button>
@@ -79,67 +80,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps, defineEmits } from 'vue'
 import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
-import { computed, ref } from 'vue'
 
-export default {
-  components: { LoadingSpinner, StatusDisplay, EditModal },
-  props: {
-    headers: { type: Array, required: true },
-    items: { type: Array, required: true },
-    excluded: { type: Array, default: () => [] },
-    sortColumn: { type: String, required: true },
-    sortItem: { type: String, required: true },
-    formatValue: { type: Function, required: true },
-    getTextAlignment: { type: Function, default: true },
-    editButton: { type: Boolean, default: false },
-  },
-  setup(props, { emit }) {
-    const loading = ref(false)
-    const filteredFields = computed(() =>
-      props.headers.filter((header) => !props.excluded.includes(header.name))
-    )
+const props = defineProps({
+  headers: { type: Array, required: true },
+  items: { type: Array, required: true },
+  excluded: { type: Array, default: () => [] },
+  sortColumn: { type: String, required: true },
+  sortItem: { type: String, required: true },
+  formatValue: { type: Function, required: true },
+  getTextAlignment: { type: Function, default: () => 'left' },
+  editButton: { type: Boolean, default: false },
+})
+const emit = defineEmits(['row-click', 'sort-change'])
 
-    const showStatusColumn = computed(() => {
-      const firstItem = props.items[0]
-      if (!firstItem) return false
-      return Object.keys(firstItem).some((key) =>
-        key.toLowerCase().includes('status')
-      )
-    })
+const loading = ref(false)
+const isModalVisible = ref(false)
+const selectedRow = ref(null)
 
-    const isModalVisible = ref(false)
-    const selectedRow = ref(null)
+const filteredFields = computed(() =>
+  props.headers.filter((header) => !props.excluded.includes(header.name))
+)
 
-    const handleEditClick = (row) => {
-      selectedRow.value = row
-      isModalVisible.value = true
-    }
+const showStatusColumn = computed(() => {
+  const firstItem = props.items[0]
+  return (
+    firstItem &&
+    Object.keys(firstItem).some((key) => key.toLowerCase().includes('status'))
+  )
+})
 
-    const saveRowChanges = (updatedRow) => {
-      console.log('Сохранено:', updatedRow)
-      isModalVisible.value = false
-    }
+const handleSort = (column) => {
+  if (column.sortable) emit('sort-change', column.name)
+}
 
-    const closeModal = () => {
-      isModalVisible.value = false
-      selectedRow.value = null
-    }
+const openEditModal = (row) => {
+  selectedRow.value = row
+  isModalVisible.value = true
+}
 
-    return {
-      loading,
-      filteredFields,
-      showStatusColumn,
-      handleEditClick,
-      isModalVisible,
-      selectedRow,
-      closeModal,
-      saveRowChanges,
-    }
-  },
+const closeModal = () => {
+  isModalVisible.value = false
+  selectedRow.value = null
+}
+
+const saveRowChanges = (updatedRow) => {
+  console.log('Сохранено:', updatedRow)
+  closeModal()
 }
 </script>
 
