@@ -23,11 +23,11 @@
               {{ column.title }}
               <span v-if="column.sortable">
                 <i
-                  v-if="sortColumn === column.name && sortOrder === 'asc'"
+                  v-if="sortColumn === column.name && sortItem === 'asc'"
                   class="bi bi-caret-up-fill"
                 ></i>
                 <i
-                  v-else-if="sortColumn === column.name && sortOrder === 'desc'"
+                  v-else-if="sortColumn === column.name && sortItem === 'desc'"
                   class="bi bi-caret-down-fill"
                 ></i>
               </span>
@@ -92,7 +92,7 @@ export default {
     items: { type: Array, required: true },
     excluded: { type: Array, default: () => [] },
     sortColumn: { type: String, required: true },
-    sortOrder: { type: String, required: true },
+    sortItem: { type: String, required: true },
     formatValue: { type: Function, required: true },
     getTextAlignment: { type: Function, default: true },
     editButton: { type: Boolean, default: false },
@@ -151,5 +151,16 @@ export default {
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.table {
+  table-layout: fixed; /* Фиксированная ширина колонок */
+  width: 100%; /* Ширина таблицы на 100% */
+}
+
+.table th {
+  font-size: 0.9rem;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>

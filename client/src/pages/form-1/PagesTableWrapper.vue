@@ -45,7 +45,7 @@ const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
 const sortColumn = ref(null)
-const sortItem = ref('desc')
+const sortItem = ref(null)
 
 const startDate = ref(null)
 const endDate = ref(null)
@@ -72,8 +72,8 @@ const fetchItems = async () => {
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: searchQuery.value,
-      sortCol: sortColumn.value || '',
-      sortDir: sortItem.value || '',
+      sortCol: sortColumn.value || 'date', // По умолчанию сортировка по 'date'
+      sortDir: sortItem.value || 'desc', // По убыванию
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
@@ -95,16 +95,6 @@ const fetchItems = async () => {
         width,
         update: update || false,
       }))
-
-      // Динамическая сортировка: ищем первое поле с "date" в ключе
-      const dateField = fields.find(({ key }) => key?.includes('date')) // Исправлено на key
-      if (dateField) {
-        sortColumn.value = dateField.key // Устанавливаем ключ найденного поля
-        sortItem.value = 'desc' // По умолчанию сортировка по убыванию
-      } else {
-        sortColumn.value = '' // Если нет поля с "date", сброс сортировки
-        sortItem.value = ''
-      }
 
       items.value = response.table.data
       totalCount.value = response.header.total_count

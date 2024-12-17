@@ -80,12 +80,6 @@ const commercialRoutes = [
       route: 'kpNomDetails',
     }),
   },
-  {
-    path: '/commercial/:id/nom/:nom_id',
-    name: 'kpNomDetails',
-    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
-    props: (route) => ({ ...route.params, type: 'kp' }),
-  },
 ]
 
 const specificationsRoutes = [
@@ -128,13 +122,13 @@ const testRoutes = [
     props: true,
   },
   {
-    path: '/docs',
+    path: '/test/docs',
     name: 'Docs',
     component: () => import('@/pages/admin/dynamic-docs/PagesViewer.vue'),
     props: true,
   },
   {
-    path: '/fields-processor',
+    path: '/test/fields-processor',
     name: 'TestFieldsProcessor',
     component: () => import('@/modules/test/fieldsProcessor.vue'),
     props: true,

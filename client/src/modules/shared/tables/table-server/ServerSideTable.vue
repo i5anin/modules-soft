@@ -20,7 +20,7 @@
       :headers="headers"
       :items="items"
       :sortColumn="sortColumn"
-      :sortOrder="sortOrder"
+      :sortItem="sortItem"
       :formatValue="formatValue"
       :edit-button="editButton"
       :getTextAlignment="getTextAlignment"
@@ -66,7 +66,7 @@ export default {
     totalCount: { type: Number, required: true },
     currentPage: { type: Number, required: true },
     sortColumn: { type: String, default: '' },
-    sortOrder: { type: String, default: 'asc' },
+    sortItem: { type: String, default: '' },
     itemsPerPage: { type: Number, required: true },
     datepicker: { type: Boolean, default: false },
     startDate: { type: String, default: '' },
@@ -102,8 +102,8 @@ export default {
     const totalPg = computed(() => props.totalPages)
 
     const sortBy = (column) => {
-      const isAsc = props.sortColumn === column && props.sortOrder === 'asc'
-      emit('sort-change', { column, order: isAsc ? 'desc' : 'asc' })
+      const isAsc = props.sortColumn === column && props.sortItem === 'asc'
+      emit('sort-change', { column, item: isAsc ? 'desc' : 'asc' })
     }
 
     const handleRowClick = (row) => emit('row-click', row)
