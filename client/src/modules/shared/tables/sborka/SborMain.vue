@@ -15,7 +15,6 @@
               <th scope="col" style="width: 30px" title="статусы"></th>
 
               <th
-                scope="col"
                 v-for="field in filteredFields"
                 :key="field.name"
                 :style="{ width: field.width || 'auto' }"
@@ -65,25 +64,20 @@ export default {
     const { tableData, tableFields } = toRefs(props)
     const sborStore = store()
 
-    console.log('[SborMain.vue]', props.detail)
-
     // Watch tableData and update store
-    watch(
-      tableData,
-      (newData) => {
-        sborStore.setTableData(newData)
-      },
-      { immediate: true }
-    )
+    watch(tableData, (newData) => sborStore.setTableData(newData), {
+      immediate: true,
+    })
 
     // Watch tableFields and update store
-    watch(
-      tableFields,
-      (newFields) => {
-        sborStore.setTableFields(newFields)
-      },
-      { immediate: true }
-    )
+    watch(tableFields, (newFields) => sborStore.setTableFields(newFields), {
+      immediate: true,
+    })
+
+    // Filtered fields with read permissions
+    // const filteredFields = computed(() =>
+    //   tableFields.value.filter((field) => field.permissions?.read)
+    // )
 
     // filteredFields from store
     const filteredFields = computed(() => sborStore.filteredFields)
