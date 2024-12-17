@@ -34,7 +34,6 @@ import { useRoleStore } from '@/modules/_main/store/index.js'
 const props = defineProps({
   type: { type: String, required: true },
   link: { type: String, required: true },
-  edit: { type: Boolean, required: true },
   route: { type: String, required: true },
 })
 
@@ -44,8 +43,8 @@ const totalCount = ref(0)
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
-const sortColumn = ref(null)
-const sortItem = ref(null)
+const sortColumn = ref('')
+const sortItem = ref('')
 
 const startDate = ref(null)
 const endDate = ref(null)
