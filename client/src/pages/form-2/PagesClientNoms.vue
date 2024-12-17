@@ -55,8 +55,6 @@ export default {
     // Получаем client_id из параметров маршрута
     const clientId = computed(() => route.params.clientId)
 
-    console.log(roleStore.selectedRole)
-
     const fetchNoms = async () => {
       try {
         const response = await getClientNom({

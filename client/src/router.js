@@ -81,7 +81,7 @@ const commercialRoutes = [
 
 const specificationsRoutes = [
   {
-    path: '/specifications',
+    path: '/specs',
     name: 'Specifications',
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     props: (route) => ({
@@ -92,7 +92,7 @@ const specificationsRoutes = [
     }),
   },
   {
-    path: '/specification/:id/noms',
+    path: '/spec/:id/noms',
     name: 'SpecificationsNomDetails',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     props: (route) => ({
@@ -103,7 +103,7 @@ const specificationsRoutes = [
     }),
   },
   {
-    path: '/specification/:id/nom/:nom_id',
+    path: '/spec/:id/nom/:nom_id',
     name: 'SpecNomDetails',
     component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
     props: (route) => ({ ...route.params, type: 'specs' }),
