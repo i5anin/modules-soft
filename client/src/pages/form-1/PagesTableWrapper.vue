@@ -28,7 +28,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { getItems } from '@/pages/form-1/api/list.js'
-import { processFields } from '@/modules/test/fieldsProcessor.js'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
 const props = defineProps({

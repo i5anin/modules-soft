@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { processFields } from '@/modules/test/fieldsProcessor.js'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 // Конфигурация колонок таблицы
 const tableConfig = [

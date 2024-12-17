@@ -35,7 +35,7 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { formatValue } from '@/utils/formatters.js'
 import CommentSection from './CardComment.vue'
-import { processFields } from '@/modules/test/fieldsProcessor.js'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 export default defineComponent({
   components: { SvgIcon, CommentSection },

@@ -56,7 +56,7 @@ import Card from '../../modules/form-3-nom/components/Form3Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
 import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
-import { filterFieldPermissions } from '@/utils/filterFieldPermissions.js'
+import { filterFieldPermissions } from '@/utils/dev/filterFieldPermissions.js'
 
 const roleStore = useRoleStore()
 const route = useRoute()

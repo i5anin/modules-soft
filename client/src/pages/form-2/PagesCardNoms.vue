@@ -25,6 +25,7 @@ import { getNomById } from './api/nom_list.js'
 import OrderInfoCard from '@/modules/form-2-card-noms/components/Form2Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 // Пропсы
 const props = defineProps({
@@ -51,8 +52,6 @@ const detail = computed(() => ({
   idKey: props.link,
 }))
 
-console.log('[PagesCardNoms.vue]', detail.value)
-
 const fetchOrderData = async () => {
   const link_id = router.currentRoute.value.params.id
   const queryParams = {
@@ -63,7 +62,22 @@ const fetchOrderData = async () => {
   try {
     const { header, table } = await getNomById(queryParams)
     headerData.value = header
-    tableFields.value = table.fields
+
+    // Обработка fields через processFields
+    const processedFields = processFields(
+      Object.entries(table.fields).map(([key, field]) => ({
+        key,
+        ...field,
+      }))
+    )
+
+    // Преобразуем обратно в объект
+    tableFields.value = processedFields.reduce((acc, field) => {
+      acc[field.key] = { ...field }
+      delete acc[field.key].key // Убираем ключ 'key' из результата
+      return acc
+    }, {})
+
     nomTableData.value = table.data
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)
@@ -72,7 +86,7 @@ const fetchOrderData = async () => {
 
 const filteredTableFields = computed(() => {
   return Object.entries(tableFields.value)
-    .filter(([key]) => !key.startsWith('status_'))
+    .filter(([key, field]) => field.permissions?.read) // Только те, у кого read === true
     .map(([key, field]) => ({
       name: key,
       ...field,
