@@ -41,7 +41,7 @@ const formattedStatuses = computed(() => {
       (statusObj) =>
         statusObj &&
         props.row[statusObj.key] &&
-        props.row[statusObj.key].trim() !== ''
+        String(props.row[statusObj.key]).trim() !== ''
     )
 })
 

@@ -104,7 +104,7 @@ export function formatValue(value, type, key) {
     case 'bool':
       return formatBoolean(value)
     case 'integer':
-    case 'int': // Обрабатываем int как integer
+    case 'int':
     case 'float':
       return formatNumber(value)
     case 'string':

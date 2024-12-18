@@ -113,7 +113,7 @@ export default {
     const router = useRouter()
     const isExpanded = ref(false)
 
-    console.log('[SborNode]', props.detail)
+    // console.log('[SborNode]', props.detail)
 
     watch(
       detail,
