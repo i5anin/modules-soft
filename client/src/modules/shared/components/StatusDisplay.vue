@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
 import { statuses } from '@/modules/shared/logic/statuses.js'
 
 const props = defineProps({
@@ -22,6 +22,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['statusFound'])
+
 // Форматируем статусы, проверяя окончание ключей
 const formattedStatuses = computed(() => {
   return statuses
@@ -29,6 +31,18 @@ const formattedStatuses = computed(() => {
       const rowKey = Object.keys(props.row).find((key) =>
         key.endsWith(statusObj.suffix)
       )
+      if (rowKey && statusObj.suffix === '_otgruzka') {
+        console.log(
+          'Status with suffix _otgruzka found:',
+          rowKey,
+          props.row[rowKey]
+        )
+        emit('statusFound', {
+          suffix: '_otgruzka',
+          key: rowKey,
+          value: props.row[rowKey],
+        })
+      }
       return rowKey
         ? {
             ...statusObj,

@@ -42,12 +42,13 @@ export const statuses = [
     label: 'С',
     description: 'На слесарной обработке',
   },
-  // { зачеркивается
-  //   suffix: '_otgruzka',
-  //   badgeClass: 'bg-success',
-  //   label: 'ОТГР',
-  //   description: 'Отгрузка',
-  // },
+  {
+    //зачеркивается
+    suffix: '_otgruzka', //но этот элемент нужен
+    badgeClass: 'bg-success',
+    label: '', //лейбл скрыт
+    description: 'Отгрузка',
+  },
   {
     suffix: '_zagotovka',
     badgeClass: 'bg-success',
