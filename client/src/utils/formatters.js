@@ -38,10 +38,9 @@ function formatStrategy(strategy) {
   const rows = Object.entries(strategy).map(([key, entry]) => {
     const rowColor = entry.color ? `background-color: ${entry.color};` : ''
     return `
-      <div style="padding: 5px; ${rowColor}">
-        <b>${entry.no}</b> (${entry.type}):
-        ${entry.t_op_left ? `Осталось: ${entry.t_op_left} ч` : 'Нет данных'}
-        ${entry.color ? ` | Цвет: ${entry.color}` : ''}
+      <div style="padding: 0 2px; ${rowColor}">
+        <b>${entry.no}</b> ${entry.type}:
+        ${entry.t_op_left ? `Ост: ${parseFloat(entry.t_op_left).toFixed(2)}ч` : '-'}
       </div>
     `
   })
