@@ -32,11 +32,6 @@ const formattedStatuses = computed(() => {
         key.endsWith(statusObj.suffix)
       )
       if (rowKey && statusObj.suffix === '_otgruzka') {
-        console.log(
-          'Status with suffix _otgruzka found:',
-          rowKey,
-          props.row[rowKey]
-        )
         emit('statusFound', {
           suffix: '_otgruzka',
           key: rowKey,

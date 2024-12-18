@@ -34,6 +34,7 @@
       }"
     >
       <div
+        @click.stop="handleRowClick"
         v-if="field.name === 'name' || field.name === 'description'"
         :style="{
           textDecoration:
@@ -41,8 +42,16 @@
             (field.name === 'name' || field.name === 'description')
               ? 'line-through'
               : 'none',
+          cursor: 'pointer',
         }"
+        title="Нажмите для взаимодействия"
       >
+        <font-awesome-icon
+          v-if="field.name === 'name'"
+          :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
+          :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
+          class="icon-sm me-2"
+        />
         <span v-html="formatValue(sbor[field.name], field.type, field.name)" />
       </div>
 
@@ -156,7 +165,6 @@ const generateTitle = (field) =>
 const handleStatusFound = (status) => {
   if (status.suffix === '_otgruzka' && status.value === true) {
     otgruzkaAccepted.value = true
-    console.log(otgruzkaAccepted)
   }
 }
 </script>
