@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ loading }}
     <!-- Индикатор загрузки -->
     <LoadingSpinner v-if="loading" :padding="'35vh 0'" />
 
