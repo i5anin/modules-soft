@@ -63,42 +63,11 @@
         </div>
       </div>
 
-      <div
+      <StrategyDisplay
         v-else-if="field.name === 'strat'"
-        class="tree-node"
-        :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
-        @click.stop="toggleStrat"
-      >
-        <div class="node-content">
-          <span v-if="!isStratExpanded">
-            <div class="mini-strategy">
-              <span
-                v-for="entry in Object.entries(sbor[field.name])"
-                :key="entry[0]"
-                :style="{
-                  backgroundColor: entry[1].color || '#aaaaaa',
-                  display: 'inline-block',
-                  width: '16px',
-                  height: '16px',
-                  margin: '0 2px',
-                }"
-              >
-                <div
-                  :style="{
-                    fontSize: '8px',
-                    color: 'white',
-                    transform: 'translate(5%, 11%)',
-                    fontWeight: 'bold',
-                  }"
-                >
-                  {{ entry[0] }}
-                </div></span
-              >
-            </div>
-          </span>
-          <span v-else v-html="formatStrategy(sbor[field.name])"></span>
-        </div>
-      </div>
+        :strategy="sbor[field.name]"
+        :depth="depth"
+      />
 
       <span
         v-else
@@ -128,17 +97,14 @@ import { computed, ref, toRefs, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import {
-  formatValue,
-  getTextAlignment,
-  formatStrategy,
-} from '@/utils/formatters.js'
+import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
+import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
 import './SborNode.css'
 
 export default {
   name: 'SborNode',
-  components: { FontAwesomeIcon, StatusDisplay },
+  components: { FontAwesomeIcon, StatusDisplay, StrategyDisplay },
   props: {
     sbor: { type: Object, required: true },
     depth: { type: Number, default: 0 },
@@ -155,7 +121,6 @@ export default {
     const sborStore = store()
     const router = useRouter()
     const isExpanded = ref(false)
-    const isStratExpanded = ref(false)
 
     watch(
       detail,
@@ -173,12 +138,6 @@ export default {
     const toggle = () => {
       if (hasChildren.value) {
         isExpanded.value = !isExpanded.value
-      }
-    }
-
-    const toggleStrat = () => {
-      if (sbor.value.strat) {
-        isStratExpanded.value = !isStratExpanded.value
       }
     }
 
@@ -216,15 +175,12 @@ export default {
     return {
       isExpanded,
       toggle,
-      toggleStrat,
       handleRowClick,
       fieldsArray,
       hasChildren,
       formatValue,
-      formatStrategy,
       generateTitle,
       getTextAlignment,
-      isStratExpanded,
     }
   },
 }
