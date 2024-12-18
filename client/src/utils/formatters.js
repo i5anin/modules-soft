@@ -29,26 +29,6 @@ export function getTextAlignment(type, key = '') {
 }
 
 /**
- * Форматирует вложенный объект со стратегией в красивую строку.
- *
- * @param {Object} strategy - Вложенный объект с данными стратегии.
- * @returns {string} - Отформатированная строка с ключами и значениями.
- */
-export function formatStrategy(strategy) {
-  const rows = Object.entries(strategy).map(([key, entry]) => {
-    const rowColor = entry.color ? `background-color: ${entry.color};` : ''
-    return `
-      <div style="padding: 0 2px; ${rowColor}">
-        <b>${entry.no}</b> ${entry.type}:
-        ${entry.t_op_left ? `Ост: ${parseFloat(entry.t_op_left).toFixed(2)}ч` : '-'}
-      </div>
-    `
-  })
-
-  return `<div style="font-family: monospace;">${rows.join('')}</div>`
-}
-
-/**
  * Форматирует значение для отображения в таблице.
  *
  * @param {*} value - Значение, которое требуется отформатировать.

@@ -1,7 +1,9 @@
 <template>
   <div
     class="tree-node"
+    @click="toggle"
     :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
+    style="cursor: pointer"
   >
     <div class="node-content">
       <span v-if="!isExpanded">
@@ -17,7 +19,7 @@
               width: '18px',
               height: '18px',
               margin: '0 2px',
-              borderRadius: '4px' /* добавим скругление для лучшего визуала */,
+              borderRadius: '4px',
             }"
           >
             <div
@@ -25,7 +27,7 @@
                 fontSize: '8px',
                 color: 'white',
                 fontWeight: 'bold',
-                lineHeight: '8px' /* выравниваем текст */,
+                lineHeight: '8px',
               }"
             >
               {{ entry[0] }}
@@ -33,14 +35,60 @@
           </span>
         </div>
       </span>
-      <span v-else v-html="formattedStrategy"></span>
+      <span v-else>
+        <div class="full-strategy">
+          <div
+            v-for="entry in strategyEntries"
+            :key="entry[0]"
+            :style="{
+              backgroundColor: getColor(entry[1]),
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              margin: '1px 0',
+              padding: '4px',
+              borderRadius: '4px',
+              width: '100%',
+              minHeight: '20px',
+              boxSizing: 'border-box',
+            }"
+          >
+            <div
+              :style="{
+                fontSize: '12px',
+                color: 'white',
+                fontWeight: 'bold',
+                lineHeight: '12px',
+                marginRight: '8px',
+              }"
+            >
+              {{ entry[0] }}:
+            </div>
+            <div
+              :style="{
+                fontSize: '12px',
+                color: 'white',
+                lineHeight: '12px',
+                flex: '1',
+              }"
+            >
+              {{ entry[1].type || '-' }}
+              {{ entry[1].cnc_name || '-' }}
+              {{
+                entry[1].t_op_left
+                  ? `[Ост: ${parseFloat(entry[1].t_op_left).toFixed(2)}ч]`
+                  : ''
+              }}
+            </div>
+          </div>
+        </div>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { formatStrategy } from '@/utils/formatters.js'
+import { computed, ref } from 'vue'
 
 export default {
   name: 'StrategyDisplay',
@@ -72,16 +120,13 @@ export default {
     }
 
     const toggle = () => {
-      isExpanded.value = !isExpanded.value
+      isExpanded.value = !isExpanded.value // Переключаем состояние
     }
 
     const strategyEntries = computed(() => Object.entries(props.strategy))
 
-    const formattedStrategy = computed(() => formatStrategy(props.strategy))
-
     return {
       strategyEntries,
-      formattedStrategy,
       isExpanded,
       toggle,
       getColor,
@@ -94,5 +139,11 @@ export default {
 .mini-strategy {
   display: flex;
   flex-wrap: wrap;
+}
+
+.full-strategy {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 </style>
