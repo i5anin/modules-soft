@@ -51,9 +51,9 @@
             :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
             class="icon-sm me-2"
           />
-          <span>
-            {{ formatValue(sbor[field.name], field.type, field.name) }}
-          </span>
+          <span
+            v-html="formatValue(sbor[field.name], field.type, field.name)"
+          ></span>
           <font-awesome-icon
             :icon="['fas', 'circle-info']"
             :style="{ color: 'green' }"
@@ -62,13 +62,15 @@
           />
         </div>
       </div>
-      <span v-else :title="generateTitle(field)" style="font-size: 13px">
-        {{ formatValue(sbor[field.name], field.type, field.name) }}
-      </span>
+      <span
+        v-else
+        v-html="formatValue(sbor[field.name], field.type, field.name)"
+        :title="generateTitle(field)"
+        style="font-size: 13px"
+      ></span>
     </td>
   </tr>
-
-  <!-- Рекурсивный вызов для дочерних узлов -->
+  <!-- CRITICAL: Рекурсивный вызов для дочерних узлов. Удаление нарушит вложенное отображение. -->
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="(child, index) in sbor.sbor_tree"
@@ -83,7 +85,7 @@
 </template>
 
 <script>
-import { computed, ref, watch, toRefs } from 'vue'
+import { computed, ref, toRefs, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
@@ -162,7 +164,8 @@ export default {
 
     const fieldsArray = computed(() => sborStore.filteredFields)
 
-    const generateTitle = (field) => `Поле: ${field.title || 'Нет данных'}`
+    const generateTitle = (field) =>
+      `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
 
     return {
       isExpanded,
