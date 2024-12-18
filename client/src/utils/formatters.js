@@ -34,7 +34,7 @@ export function getTextAlignment(type, key = '') {
  * @param {Object} strategy - Вложенный объект с данными стратегии.
  * @returns {string} - Отформатированная строка с ключами и значениями.
  */
-function formatStrategy(strategy) {
+export function formatStrategy(strategy) {
   const rows = Object.entries(strategy).map(([key, entry]) => {
     const rowColor = entry.color ? `background-color: ${entry.color};` : ''
     return `

@@ -62,6 +62,44 @@
           />
         </div>
       </div>
+
+      <div
+        v-else-if="field.name === 'strat'"
+        class="tree-node"
+        :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
+        @click.stop="toggleStrat"
+      >
+        <div class="node-content">
+          <span v-if="!isStratExpanded">
+            <div class="mini-strategy">
+              <span
+                v-for="entry in Object.entries(sbor[field.name])"
+                :key="entry[0]"
+                :style="{
+                  backgroundColor: entry[1].color || '#aaaaaa',
+                  display: 'inline-block',
+                  width: '16px',
+                  height: '16px',
+                  margin: '0 2px',
+                }"
+              >
+                <div
+                  :style="{
+                    fontSize: '8px',
+                    color: 'white',
+                    transform: 'translate(5%, 11%)',
+                    fontWeight: 'bold',
+                  }"
+                >
+                  {{ entry[0] }}
+                </div></span
+              >
+            </div>
+          </span>
+          <span v-else v-html="formatStrategy(sbor[field.name])"></span>
+        </div>
+      </div>
+
       <span
         v-else
         v-html="formatValue(sbor[field.name], field.type, field.name)"
@@ -70,7 +108,8 @@
       ></span>
     </td>
   </tr>
-  <!-- CRITICAL: Рекурсивный вызов для дочерних узлов. Удаление нарушит вложенное отображение. -->
+
+  <!-- Рекурсивный вызов для дочерних узлов -->
   <template v-if="isExpanded && hasChildren">
     <SborNode
       v-for="(child, index) in sbor.sbor_tree"
@@ -89,7 +128,11 @@ import { computed, ref, toRefs, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue, getTextAlignment } from '@/utils/formatters.js'
+import {
+  formatValue,
+  getTextAlignment,
+  formatStrategy,
+} from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import './SborNode.css'
 
@@ -112,8 +155,7 @@ export default {
     const sborStore = store()
     const router = useRouter()
     const isExpanded = ref(false)
-
-    // console.log('[SborNode]', props.detail)
+    const isStratExpanded = ref(false)
 
     watch(
       detail,
@@ -134,9 +176,15 @@ export default {
       }
     }
 
+    const toggleStrat = () => {
+      if (sbor.value.strat) {
+        isStratExpanded.value = !isStratExpanded.value
+      }
+    }
+
     const handleRowClick = () => {
-      const idKey = detail.value.idKey // Например: 'ordersnom_id'
-      const id = sbor.value[idKey] // Получаем ID из sbor
+      const idKey = detail.value.idKey
+      const id = sbor.value[idKey]
 
       if (!id) {
         console.error('Missing required parameter: id', {
@@ -146,12 +194,10 @@ export default {
         return
       }
 
-      console.log('Navigating to:', detail.value.route, 'with ID:', id)
-
       router
         .push({
-          name: detail.value.route, // Например: 'OrderDetails'
-          params: { [idKey]: id, nom_id: id }, // Передаем id и f2id как одно и то же значение
+          name: detail.value.route,
+          params: { [idKey]: id, nom_id: id },
         })
         .catch((error) => {
           console.error('Error navigating to route:', error)
@@ -170,12 +216,15 @@ export default {
     return {
       isExpanded,
       toggle,
+      toggleStrat,
       handleRowClick,
       fieldsArray,
       hasChildren,
       formatValue,
+      formatStrategy,
       generateTitle,
       getTextAlignment,
+      isStratExpanded,
     }
   },
 }
