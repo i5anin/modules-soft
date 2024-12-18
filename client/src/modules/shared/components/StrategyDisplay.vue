@@ -10,19 +10,22 @@
             v-for="entry in strategyEntries"
             :key="entry[0]"
             :style="{
-              backgroundColor: entry[1].color || '#aaaaaa',
-              display: 'inline-block',
-              width: '16px',
-              height: '16px',
+              backgroundColor: getColor(entry[1]),
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '18px',
+              height: '18px',
               margin: '0 2px',
+              borderRadius: '4px' /* добавим скругление для лучшего визуала */,
             }"
           >
             <div
               :style="{
                 fontSize: '8px',
                 color: 'white',
-                transform: 'translate(5%, 11%)',
                 fontWeight: 'bold',
+                lineHeight: '8px' /* выравниваем текст */,
               }"
             >
               {{ entry[0] }}
@@ -54,6 +57,20 @@ export default {
   setup(props) {
     const isExpanded = ref(false)
 
+    const colorMapping = {
+      LightGreen: '#198754',
+      Red: '#dc3545',
+      Orange: '#FFA500',
+      LimeGreen: '#90EE90',
+      Default: '#aaaaaa',
+    }
+
+    const getColor = (entry) => {
+      return entry.color in colorMapping
+        ? colorMapping[entry.color]
+        : entry.color || colorMapping.Default
+    }
+
     const toggle = () => {
       isExpanded.value = !isExpanded.value
     }
@@ -67,6 +84,7 @@ export default {
       formattedStrategy,
       isExpanded,
       toggle,
+      getColor,
     }
   },
 }
