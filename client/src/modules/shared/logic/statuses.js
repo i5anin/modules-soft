@@ -42,12 +42,12 @@ export const statuses = [
     label: 'С',
     description: 'На слесарной обработке',
   },
-  {
-    suffix: '_otgruzka',
-    badgeClass: 'bg-success',
-    label: 'О',
-    description: 'Нет информации об оплате',
-  },
+  // { зачеркивается
+  //   suffix: '_otgruzka',
+  //   badgeClass: 'bg-success',
+  //   label: 'ОТГР',
+  //   description: 'Отгрузка',
+  // },
   {
     suffix: '_zagotovka',
     badgeClass: 'bg-success',
@@ -76,7 +76,6 @@ export const statuses = [
     suffix: '_metall_zakupka',
     badgeClass: 'bg-dark',
     label: 'М',
-    description:
-      'Требуется закупка металла (если металл предоставлен со стороны заказчика, то статус отсутствует)',
+    description: 'Требуется закупка металла',
   },
 ]
