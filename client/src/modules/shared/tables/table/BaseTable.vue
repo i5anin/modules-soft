@@ -8,6 +8,7 @@
         <tr>
           <th v-for="field in filteredFields" :key="field.name">
             {{ field.title }}
+            {{ field.permissions.read }}
             <span v-if="field.permissions.update" title="Можно редактировать">
               <SvgIcon
                 color="gray"

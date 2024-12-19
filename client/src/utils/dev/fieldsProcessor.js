@@ -5,6 +5,7 @@
  */
 const exclusionConfig = {
   excludedKeys: [
+    'specs_op_id',
     'color',
     'comments',
     'exp',
@@ -30,6 +31,7 @@ const exclusionConfig = {
     'kp_data__id',
     'orders__comments',
     'link_id',
+    'instr_price_sum',
   ],
   patterns: [/status/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
 }
@@ -80,7 +82,7 @@ export function processFields(fields, config = exclusionConfig) {
         modified: true,
       }
     }
-
+    console.log({ ...field, modified: false })
     return { ...field, modified: false }
   })
 }

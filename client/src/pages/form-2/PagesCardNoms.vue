@@ -30,7 +30,7 @@ import { processFields } from '@/utils/dev/fieldsProcessor.js'
 // Пропсы
 const props = defineProps({
   type: { type: String, required: true },
-  link: { type: String, required: true, default: 'link_id' },
+  link: { type: String, required: true },
   route: { type: String, required: true },
 })
 
@@ -49,7 +49,7 @@ const selectedRole = computed(() => roleStore.selectedRole)
 
 const detail = computed(() => ({
   route: props.route,
-  idKey: props.link,
+  idKey: 'link_id',
 }))
 
 const fetchOrderData = async () => {
@@ -86,7 +86,7 @@ const fetchOrderData = async () => {
 
 const filteredTableFields = computed(() => {
   return Object.entries(tableFields.value)
-    .filter(([key, field]) => field.permissions?.read) // Только те, у кого read === true
+    .filter(([_, field]) => field.permissions?.read) // Только те, у кого read === true
     .map(([key, field]) => ({
       name: key,
       ...field,

@@ -18,7 +18,7 @@
               alignItems: 'center',
               width: '18px',
               height: '18px',
-              margin: '0 2px',
+              margin: '1px 2px',
               borderRadius: '4px',
             }"
           >

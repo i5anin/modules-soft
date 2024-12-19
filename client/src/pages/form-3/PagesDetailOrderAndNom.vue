@@ -26,14 +26,12 @@
         :fields="uniqueTableFields"
         :data="selectedOrder.table_cal?.data"
         :tableTitle="selectedOrder.table_cal?.title"
-        :excluded="['id']"
       />
       <StrategyTable
         v-if="selectedOrder?.strat?.data?.length && !selectedOrder.strat?.error"
         :fields="uniqueTableFieldsStrat"
         :data="selectedOrder.strat?.data"
         :tableTitle="selectedOrder.strat?.title"
-        :excluded="['ordersnom_id', 'op_id', 'pokr_id', 'id', 'nom_id']"
       />
       <TpdTable
         v-if="selectedOrder?.tpd?.data?.length && !selectedOrder.tpd?.error"
@@ -52,6 +50,7 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getNomDetailsById } from './api/nom_info.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 import Card from '../../modules/form-3-nom/components/Form3Card.vue'
 import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
 import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
@@ -65,7 +64,6 @@ const routeProps = defineProps(['type'])
 
 // Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
-  console.log(id.value)
   if (id.value) {
     try {
       selectedOrder.value = await getNomDetailsById(
@@ -80,13 +78,42 @@ onMounted(async () => {
   }
 })
 
-// Фильтрация полей заголовка с использованием filterFieldPermissions
+// Уникальные поля
+const uniqueFields = (fields) => {
+  const seen = new Set()
+  return Object.entries(fields || {})
+    .filter(([fieldName]) => {
+      if (seen.has(fieldName)) return false
+      seen.add(fieldName)
+      return true
+    })
+    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
+}
+
+// Обработка полей через processFields
+const processedFields = (fields) => {
+  const unique = uniqueFields(fields)
+  return processFields(unique)
+}
+
+// Вычисляемые свойства для таблиц
+const uniqueTableFields = computed(() =>
+  processedFields(selectedOrder.value?.table_cal?.fields)
+)
+const uniqueTableFieldsStrat = computed(() =>
+  processedFields(selectedOrder.value?.strat?.fields)
+)
+const uniqueTableFieldsTpd = computed(() =>
+  processedFields(selectedOrder.value?.tpd?.fields)
+)
+
+// Поля заголовка
 const filteredHeaderFields = computed(() => {
   const fields = selectedOrder.value?.header?.fields || {}
-  const filteredFields = Object.entries(fields).map(
-    ([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps })
-  )
-  return filteredFields
+  return Object.entries(fields).map(([key, fieldProps]) => ({
+    name: key,
+    ...fieldProps,
+  }))
 })
 
 const updateFormFields = computed(() =>
@@ -106,31 +133,9 @@ const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      selectedOrder.value?.header?.data[0][field.name] ?? '', // Заменяем null на пустую строку
+      selectedOrder.value?.header?.data?.[0]?.[field.name] ?? '', // Заменяем null на пустую строку
     ])
   )
-)
-
-// Уникальные поля для каждой таблицы (без дублирования)
-const uniqueFields = (fields) => {
-  const seen = new Set()
-  return Object.entries(fields || {})
-    .filter(([fieldName]) => {
-      if (seen.has(fieldName)) return false
-      seen.add(fieldName)
-      return true
-    })
-    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
-}
-
-const uniqueTableFields = computed(() =>
-  uniqueFields(selectedOrder.value?.table_cal?.fields)
-)
-const uniqueTableFieldsStrat = computed(() =>
-  uniqueFields(selectedOrder.value?.strat?.fields)
-)
-const uniqueTableFieldsTpd = computed(() =>
-  uniqueFields(selectedOrder.value?.tpd?.fields)
 )
 </script>
 
