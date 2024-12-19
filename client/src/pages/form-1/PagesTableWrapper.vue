@@ -33,7 +33,7 @@ import { useRoleStore } from '@/modules/_main/store/index.js'
 
 const props = defineProps({
   type: { type: String, required: true },
-  link: { type: String, required: true },
+  link: { type: String, required: true, default: 'link_id' },
   route: { type: String, required: true },
 })
 

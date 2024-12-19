@@ -8,9 +8,7 @@ const ordersRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'orders',
-      link: 'id',
       route: 'Order',
-      edit: false,
     }),
   },
   {
@@ -20,7 +18,6 @@ const ordersRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'orders',
-      link: 'ordersnom_id',
       route: 'OrderDetails',
     }),
   },
@@ -40,7 +37,10 @@ const clientsRoutes = [
     path: '/clients',
     name: 'Clients',
     component: () => import('@/pages/form-1/PagesClients.vue'),
-    props: (route) => ({ ...route.params, edit: true }),
+    props: (route) => ({
+      ...route.params,
+      edit: true,
+    }),
   },
   {
     path: '/client/:clientId/noms',
@@ -64,7 +64,6 @@ const commercialRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'kp',
-      link: 'kp_list__id',
       route: 'CommercialNomDetails',
     }),
   },
@@ -87,7 +86,6 @@ const specificationsRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'specs',
-      link: 'specs__id',
       route: 'SpecificationsNomDetails',
     }),
   },
@@ -98,7 +96,6 @@ const specificationsRoutes = [
     props: (route) => ({
       ...route.params,
       type: 'specs',
-      link: 'specs_nom__id',
       route: 'SpecNomDetails',
     }),
   },

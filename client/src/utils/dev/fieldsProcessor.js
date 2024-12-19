@@ -29,6 +29,7 @@ const exclusionConfig = {
     'kp_list__id',
     'kp_data__id',
     'orders__comments',
+    'link_id',
   ],
   patterns: [/status/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
 }
