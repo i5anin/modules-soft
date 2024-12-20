@@ -87,7 +87,7 @@ const fetchItems = async () => {
           key,
           ...field,
         }))
-      ).filter((field) => field.modified)
+      )
 
       tableFields.value = fields
 
