@@ -6,9 +6,8 @@
     >
       <thead>
         <tr>
-          <th v-for="field in filteredFields" :key="field.name">
+          <th v-for="field in filteredFields" :key="field.key">
             {{ field.title }}
-            {{ field.permissions.read }}
             <span v-if="field.permissions.update" title="Можно редактировать">
               <SvgIcon
                 color="gray"
@@ -29,17 +28,17 @@
         >
           <td
             v-for="field in filteredFields"
-            :key="field.name"
+            :key="field.key"
             @click="field.update ? null : openModal(row, field)"
           >
             <!-- Если поле редактируемое, отображаем инпут прямо в таблице -->
             <template v-if="field.permissions.update">
-              <template v-if="typeof row[field.name] === 'boolean'">
+              <template v-if="typeof row[field.key] === 'boolean'">
                 <!-- Checkbox для булевых значений -->
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  v-model="row[field.name]"
+                  v-model="row[field.key]"
                 />
               </template>
               <template v-else>
@@ -47,14 +46,14 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="row[field.name]"
+                  v-model="row[field.key]"
                 />
               </template>
             </template>
             <template v-else>
-              <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
+              <StatusDisplay v-if="field.key === 'statuses'" :row="row" />
               <span v-else>
-                {{ formatValue(row[field.name], field.type, field.name) }}
+                {{ formatValue(row[field.key], field.type, field.key) }}
               </span>
             </template>
           </td>
@@ -84,7 +83,7 @@ const selectedRow = ref(null)
 const selectedField = ref(null)
 
 const filteredFields = computed(() =>
-  props.fields.filter((field) => !props.excluded.includes(field.name))
+  props.fields.filter((field) => !props.excluded.includes(field.key))
 )
 
 const openModal = (row, field) => {

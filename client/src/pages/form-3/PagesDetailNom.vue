@@ -13,7 +13,7 @@
       </div>
 
       <Card
-        v-if="selectedOrder?.header"
+        v-if="selectedItem?.header"
         :updateFormFields="updateFormFields"
         :readonlyFormFields="readonlyFormFields"
         :fieldValues="fieldValues"
@@ -22,22 +22,22 @@
 
     <div class="table-section">
       <CaliberTable
-        v-if="selectedOrder?.table_cal?.data?.length"
+        v-if="selectedItem?.table_cal?.data?.length"
         :fields="uniqueTableFields"
-        :data="selectedOrder.table_cal?.data"
-        :tableTitle="selectedOrder.table_cal?.title"
+        :data="selectedItem.table_cal?.data"
+        :tableTitle="selectedItem.table_cal?.title"
       />
       <StrategyTable
-        v-if="selectedOrder?.strat?.data?.length && !selectedOrder.strat?.error"
+        v-if="selectedItem?.strat?.data?.length"
         :fields="uniqueTableFieldsStrat"
-        :data="selectedOrder.strat?.data"
-        :tableTitle="selectedOrder.strat?.title"
+        :data="selectedItem.strat?.data"
+        :tableTitle="selectedItem.strat?.title"
       />
       <TpdTable
-        v-if="selectedOrder?.tpd?.data?.length && !selectedOrder.tpd?.error"
+        v-if="selectedItem?.tpd?.data?.length"
         :fields="uniqueTableFieldsTpd"
-        :data="selectedOrder.tpd?.data"
-        :tableTitle="selectedOrder.tpd?.title"
+        :data="selectedItem.tpd?.data"
+        :tableTitle="selectedItem.tpd?.title"
       />
     </div>
   </div>
@@ -50,30 +50,32 @@ import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiBolt } from '@mdi/js'
 import { getNomDetailsById } from './api/nom_info.js'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import { processFields } from '@/utils/dev/fieldsProcessor.js'
-import Card from '../../modules/form-3-nom/components/Form3Card.vue'
-import CaliberTable from '@/modules/shared/tables/table/BaseTable.vue'
-import StrategyTable from '@/modules/shared/tables/table/BaseTable.vue'
-import TpdTable from '@/modules/shared/tables/table/BaseTable.vue'
+import Card from '@/modules/form-3-nom/components/Form3Card.vue'
+import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
 
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
+
+const CaliberTable = BaseTable
+const StrategyTable = BaseTable
+const TpdTable = BaseTable
 const roleStore = useRoleStore()
 const route = useRoute()
 const id = ref(route.params.id)
-const selectedOrder = ref(null)
+const selectedItem = ref(null)
 const routeProps = defineProps(['type'])
 
 // Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
   if (id.value) {
     try {
-      selectedOrder.value = await getNomDetailsById(
+      selectedItem.value = await getNomDetailsById(
         id.value,
         routeProps.type,
         roleStore.selectedRole
       )
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
-      selectedOrder.value = null
+      selectedItem.value = null
     }
   }
 })
@@ -87,7 +89,7 @@ const uniqueFields = (fields) => {
       seen.add(fieldName)
       return true
     })
-    .map(([fieldName, fieldProps]) => ({ name: fieldName, ...fieldProps }))
+    .map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
 }
 
 // Обработка полей через processFields
@@ -98,20 +100,20 @@ const processedFields = (fields) => {
 
 // Вычисляемые свойства для таблиц
 const uniqueTableFields = computed(() =>
-  processedFields(selectedOrder.value?.table_cal?.fields)
+  processedFields(selectedItem.value?.table_cal?.fields)
 )
 const uniqueTableFieldsStrat = computed(() =>
-  processedFields(selectedOrder.value?.strat?.fields)
+  processedFields(selectedItem.value?.strat?.fields)
 )
 const uniqueTableFieldsTpd = computed(() =>
-  processedFields(selectedOrder.value?.tpd?.fields)
+  processedFields(selectedItem.value?.tpd?.fields)
 )
 
 // Поля заголовка
 const filteredHeaderFields = computed(() => {
-  const fields = selectedOrder.value?.header?.fields || {}
+  const fields = selectedItem.value?.header?.fields || {}
   return Object.entries(fields).map(([key, fieldProps]) => ({
-    name: key,
+    key,
     ...fieldProps,
   }))
 })
@@ -133,7 +135,7 @@ const fieldValues = computed(() =>
   Object.fromEntries(
     filteredHeaderFields.value.map((field) => [
       field.name,
-      selectedOrder.value?.header?.data?.[0]?.[field.name] ?? '', // Заменяем null на пустую строку
+      selectedItem.value?.header?.data?.[0]?.[field.name] ?? '', // Заменяем null на пустую строку
     ])
   )
 )

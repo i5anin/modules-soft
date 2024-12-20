@@ -26,7 +26,7 @@ const ordersRoutes = [
   {
     path: '/order/:id/nom/:nom_id',
     name: 'OrderDetails',
-    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
+    component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали позиции заказа' },
     props: (route) => ({
       ...route.params,
@@ -56,7 +56,7 @@ const clientsRoutes = [
   {
     path: '/client/:clientId/nom/:id',
     name: 'NomDetails',
-    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
+    component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали номенклатуры клиента' },
     props: (route) => ({ ...route.params, type: 'nom' }),
   },
@@ -112,7 +112,7 @@ const specificationsRoutes = [
   {
     path: '/spec/:id/nom/:nom_id',
     name: 'SpecNomDetails',
-    component: () => import('@/pages/form-3/PagesDetailOrderAndNom.vue'),
+    component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали позиции спецификации' },
     props: (route) => ({ ...route.params, type: 'specs' }),
   },
