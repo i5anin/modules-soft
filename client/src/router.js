@@ -170,7 +170,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const defaultTitle = 'Моя Админка'
+  const defaultTitle = 'Админка'
   document.title = to.meta.title || defaultTitle
   next()
 })

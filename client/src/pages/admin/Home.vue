@@ -17,7 +17,6 @@
             <th scope="col" style="width: 15%">Путь</th>
             <th scope="col" style="width: 15%">Параметры</th>
             <th scope="col" style="width: 10%">Тип</th>
-            <th scope="col" style="width: 10%">ID перехода</th>
             <th scope="col" style="width: 10%">Route Vue</th>
             <th scope="col" style="width: 10%">Редактирование</th>
             <th scope="col" style="width: 5%">Ссылка</th>
@@ -46,9 +45,6 @@
             </td>
             <td>{{ route.props && route.props.type }}</td>
             <td>
-              {{ route.props.link }}
-            </td>
-            <td>
               {{ route.props.route }}
             </td>
             <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
@@ -60,7 +56,7 @@
               >
                 Перейти
               </router-link>
-              <button v-else class="btn btn-primary btn-sm" disabled>
+              <button v-else class="btn btn-light btn-sm" disabled>
                 Перейти
               </button>
             </td>

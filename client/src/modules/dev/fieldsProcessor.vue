@@ -27,8 +27,8 @@ const fetchData = async () => {
     search: '',
     sortCol: '',
     sortDir: '',
-    type: 'orders', // Фиксированный тип для одного запроса
-    module: 'managers', // Фиксированный модуль для одного запроса
+    type: 'orders',
+    module: 'managers',
   }
 
   const queryString = new URLSearchParams(queryParams).toString()
