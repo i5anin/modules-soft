@@ -26,10 +26,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { getItems } from '@/pages/form-1/api/list.js'
-import { processFields } from '@/utils/dev/fieldsProcessor.js'
+import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 const props = defineProps({
   type: { type: String, required: true },
@@ -88,9 +88,7 @@ const fetchItems = async () => {
           ...field,
         }))
       )
-
       tableFields.value = fields
-
       items.value = response.table.data
       totalCount.value = response.header.total_count
     } else {
