@@ -57,11 +57,13 @@ const totalPages = computed(() =>
 )
 
 const tableColumns = computed(() =>
-  tableFields.value.map(({ name, title, type }) => ({
-    name,
-    title,
-    type,
+  tableFields.value.map((field) => ({
+    name: field.key,
+    title: field.title,
+    type: field.type,
     sortable: true,
+    width: field.width,
+    update: field.update,
   }))
 )
 
@@ -71,8 +73,8 @@ const fetchItems = async () => {
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: searchQuery.value,
-      sortCol: sortColumn.value, // По умолчанию сортировка по 'date'
-      sortDir: sortItem.value, // По убыванию
+      sortCol: sortColumn.value,
+      sortDir: sortItem.value,
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
@@ -85,15 +87,9 @@ const fetchItems = async () => {
           key,
           ...field,
         }))
-      ).filter(({ modified }) => modified)
+      ).filter((field) => field.modified)
 
-      tableFields.value = fields.map(({ key, title, type, width, update }) => ({
-        name: key,
-        title,
-        type,
-        width,
-        update: update || false,
-      }))
+      tableFields.value = fields
 
       items.value = response.table.data
       totalCount.value = response.header.total_count
