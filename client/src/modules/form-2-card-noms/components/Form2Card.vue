@@ -2,8 +2,7 @@
   <div v-if="header" class="card border-light mb-2">
     <div class="card-header bg-transparent border-success border-light p-2">
       <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
-      <!-- TODO: убрать хардкод orders__id-->
-      Информация о заказе {{ fieldValues['orders__id'] || '' }}
+      Информация о заказе
     </div>
     <div class="card-body p-2 row g-3">
       <div
