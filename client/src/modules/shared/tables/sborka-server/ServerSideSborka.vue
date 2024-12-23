@@ -34,10 +34,10 @@
 
 <script>
 import { computed, ref } from 'vue'
-import SearchBar from '@/modules/shared/search/SearchBar.vue'
-import Pagination from '@/modules/shared/pagination/Pagination.vue'
-import PageSizeSelector from '@/modules/shared/pagination/PageSizeSelector.vue'
-import DateRangeFilters from '@/modules/shared/forms/DateRangeFilters.vue'
+import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
+import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
+import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
+import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
 import SborMain from './ServerSborMain.vue'
 
 export default {
