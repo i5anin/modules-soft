@@ -20,7 +20,7 @@
     <td
       :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
     >
-      <StatusDisplay :row="sbor" />
+      <StatusDisplay :row="sbor" @statusFound="handleStatusFound" />
     </td>
 
     <!-- Поля -->
@@ -34,18 +34,30 @@
       }"
     >
       <div
-        v-if="field.name === 'name'"
         class="tree-node"
-        :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
+        @click.stop="handleRowClick"
+        v-if="field.name === 'name' || field.name === 'description'"
+        :style="{
+          paddingLeft: field.name === 'name' ? `${depth * 20}px` : '0px',
+          position: 'relative',
+          textDecoration:
+            otgruzkaAccepted &&
+            (field.name === 'name' || field.name === 'description')
+              ? 'line-through'
+              : 'none',
+          cursor: 'pointer',
+        }"
+        title="Нажмите для взаимодействия"
       >
         <div
-          v-if="depth > 0"
+          v-if="field.name === 'name' && depth > 0"
           class="branch-line"
           :class="{ 'last-child': isLastChild }"
           :style="{ left: `${(depth - 1) * 20}px` }"
         />
-        <div class="node-content" @click.stop="handleRowClick">
+        <div>
           <font-awesome-icon
+            v-if="field.name === 'name'"
             :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
             :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
             class="icon-sm me-2"
@@ -86,7 +98,7 @@
 </template>
 
 <script setup>
-import { computed, ref, toRefs, watch } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
@@ -111,19 +123,13 @@ const { sbor, detail } = toRefs(props)
 const sborStore = store()
 const router = useRouter()
 const isExpanded = ref(false)
+const otgruzkaAccepted = ref(false)
 
-watch(
-  detail,
-  (newDetail) => {
-    if (!newDetail.route || !newDetail.idKey) {
-      console.warn(
-        'Detail prop is missing or incomplete. Expected { route: "", idKey: "" }.',
-        newDetail
-      )
-    }
-  },
-  { immediate: true }
-)
+const handleStatusFound = (status) => {
+  if (status.suffix === '_otgruzka' && status.value === true) {
+    otgruzkaAccepted.value = true
+  }
+}
 
 const toggle = () => {
   if (hasChildren.value) {
@@ -162,12 +168,3 @@ const fieldsArray = computed(() => sborStore.filteredFields)
 const generateTitle = (field) =>
   `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
 </script>
-
-<style scoped>
-.table-info {
-  background-color: #f8f9fa;
-}
-.fw-bold {
-  font-weight: bold;
-}
-</style>
