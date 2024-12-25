@@ -20,7 +20,7 @@
     <td
       :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
     >
-      <StatusDisplay :row="sbor" @statusFound="handleStatusFound" />
+      <StatusDisplay :row="sbor" />
     </td>
 
     <!-- Поля -->
@@ -34,25 +34,26 @@
       }"
     >
       <div
-        @click.stop="handleRowClick"
-        v-if="field.name === 'name' || field.name === 'description'"
-        :style="{
-          textDecoration:
-            otgruzkaAccepted &&
-            (field.name === 'name' || field.name === 'description')
-              ? 'line-through'
-              : 'none',
-          cursor: 'pointer',
-        }"
-        title="Нажмите для взаимодействия"
+        v-if="field.name === 'name'"
+        class="tree-node"
+        :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
       >
-        <font-awesome-icon
-          v-if="field.name === 'name'"
-          :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
-          :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-          class="icon-sm me-2"
+        <div
+          v-if="depth > 0"
+          class="branch-line"
+          :class="{ 'last-child': isLastChild }"
+          :style="{ left: `${(depth - 1) * 20}px` }"
         />
-        <span v-html="formatValue(sbor[field.name], field.type, field.name)" />
+        <div class="node-content" @click.stop="handleRowClick">
+          <font-awesome-icon
+            :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
+            :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
+            class="icon-sm me-2"
+          />
+          <span
+            v-html="formatValue(sbor[field.name], field.type, field.name)"
+          />
+        </div>
       </div>
 
       <StrategyDisplay
@@ -110,7 +111,6 @@ const { sbor, detail } = toRefs(props)
 const sborStore = store()
 const router = useRouter()
 const isExpanded = ref(false)
-const otgruzkaAccepted = ref(false)
 
 watch(
   detail,
@@ -161,19 +161,12 @@ const fieldsArray = computed(() => sborStore.filteredFields)
 
 const generateTitle = (field) =>
   `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
-
-const handleStatusFound = (status) => {
-  if (status.suffix === '_otgruzka' && status.value === true) {
-    otgruzkaAccepted.value = true
-  }
-}
 </script>
 
 <style scoped>
 .table-info {
   background-color: #f8f9fa;
 }
-
 .fw-bold {
   font-weight: bold;
 }

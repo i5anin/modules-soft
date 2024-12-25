@@ -9,9 +9,11 @@ export const store = defineStore('sbor', {
   }),
   getters: {
     filteredFields(state) {
-      return state.tableFields
+      const excludedFields = ['sbor_orders__id', 'is_sbor', 'ordersnom_id']
+      return state.tableFields.filter(
+        (field) => !excludedFields.includes(field.name)
+      )
     },
-
     hasIsSborField(state) {
       return state.tableData.some((row) => row.is_sbor === true)
     },
@@ -39,6 +41,9 @@ export const store = defineStore('sbor', {
     },
     setTableFields(fields) {
       this.tableFields = fields
+    },
+    selectSbor(sbor) {
+      this.selectedSbor = sbor
     },
   },
 })
