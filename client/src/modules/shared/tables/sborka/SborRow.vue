@@ -47,7 +47,7 @@
               : 'none',
           cursor: 'pointer',
         }"
-        title="Нажмите для взаимодействия"
+        title="Нажмите для перехода"
       >
         <div
           v-if="field.name === 'name' && depth > 0"
@@ -106,6 +106,7 @@ import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
 import './SborNode.css'
+import SborNode from '@/modules/shared/tables/sborka-server/ServerSborNode.vue'
 
 const props = defineProps({
   sbor: { type: Object, required: true },

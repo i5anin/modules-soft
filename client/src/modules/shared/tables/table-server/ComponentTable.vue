@@ -55,7 +55,7 @@
             >
               <span
                 v-html="formatValue(row[field.name], field.type, field.name)"
-              ></span>
+              />
             </td>
 
             <td @click.stop="openEditModal(row)" v-if="editButton">

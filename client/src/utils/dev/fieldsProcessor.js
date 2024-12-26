@@ -33,7 +33,7 @@ const exclusionConfig = {
     'link_id',
     'instr_price_sum',
   ],
-  patterns: [/status/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
+  patterns: [/status/, /specs_nom__status_/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
 }
 
 /**
