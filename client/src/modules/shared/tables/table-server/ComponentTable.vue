@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
@@ -95,15 +95,25 @@ const props = defineProps({
   getTextAlignment: { type: Function, default: () => 'left' },
   editButton: { type: Boolean, default: false },
 })
+
 const emit = defineEmits(['row-click', 'sort-change'])
 
 const loading = ref(false)
 const isModalVisible = ref(false)
 const selectedRow = ref(null)
 
-const filteredFields = computed(() =>
-  props.headers.filter((header) => !props.excluded.includes(header.name))
+const normalizedHeaders = computed(() =>
+  props.headers.map((header) => ({
+    ...header,
+    permissions: header.permissions || { read: true },
+  }))
 )
+
+const filteredFields = computed(() => {
+  return normalizedHeaders.value.filter(
+    (header) => !props.excluded.includes(header.name) && header.permissions.read
+  )
+})
 
 const showStatusColumn = computed(() => {
   const firstItem = props.items[0]

@@ -29,11 +29,9 @@ import { useRouter } from 'vue-router'
 import { getItems } from '@/pages/form-1/api/list.js'
 import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
-import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 const props = defineProps({
   type: { type: String, required: true },
-  link: { type: String, required: true, default: 'link_id' },
   route: { type: String, required: true },
 })
 
@@ -82,12 +80,12 @@ const fetchItems = async () => {
     })
 
     if (response?.table) {
-      const fields = processFields(
-        Object.entries(response.table.fields).map(([key, field]) => ({
+      const fields = Object.entries(response.table.fields)
+        .filter(([_, field]) => field.permissions?.read) // Фильтруем только поля с read: true
+        .map(([key, field]) => ({
           key,
           ...field,
         }))
-      )
       tableFields.value = fields
       items.value = response.table.data
       totalCount.value = response.header.total_count
@@ -106,7 +104,7 @@ const resetData = () => {
 }
 
 const navigateToRow = (row) => {
-  router.push({ name: props.route, params: { id: row[props.link] } })
+  router.push({ name: props.route, params: { id: row.link_id } })
 }
 
 const updatePage = (page) => {
