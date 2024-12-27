@@ -42,8 +42,10 @@ const clientsRoutes = [
     component: () => import('@/pages/form-1/PagesClients.vue'),
     meta: { title: 'Клиенты' },
     props: (route) => ({
+      route: 'Noms',
       ...route.params,
       edit: true,
+      type: 'nom',
     }),
   },
   {
@@ -51,7 +53,12 @@ const clientsRoutes = [
     name: 'Noms',
     component: () => import('@/pages/form-2/PagesClientNoms.vue'),
     meta: { title: 'Номенклатура клиента' },
-    props: true,
+    props: (route) => ({
+      route: 'NomDetails',
+      ...route.params,
+      edit: true,
+      type: 'nom',
+    }),
   },
   {
     path: '/client/:clientId/nom/:id',
