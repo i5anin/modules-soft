@@ -10,7 +10,7 @@
         :style="{ color: 'green', cursor: 'pointer' }"
         class="icon-sm ms-2 me-2"
         data-bs-toggle="tooltip"
-        title="Дополнительная информация"
+        title="Дополнительная информация заготовки"
       />
     </div>
 
