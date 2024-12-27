@@ -85,9 +85,9 @@
 
   <!-- Рекурсивный вызов для дочерних узлов -->
   <template v-if="isExpanded && hasChildren">
-    <SborNode
+    <SborRow
       v-for="(child, index) in sbor.sbor_tree"
-      :key="child[detail.idKey]"
+      :key="child.id"
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
@@ -105,8 +105,8 @@ import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
-import './SborNode.css'
-import SborNode from './SborRow.vue'
+import './SborRow.css'
+import SborRow from './SborRow.vue'
 
 const props = defineProps({
   sbor: { type: Object, required: true },
@@ -116,7 +116,7 @@ const props = defineProps({
   detail: {
     type: Object,
     required: true,
-    default: () => ({ route: '', idKey: '' }),
+    default: () => ({ route: '' }),
   },
 })
 
@@ -139,8 +139,7 @@ const toggle = () => {
 }
 
 const handleRowClick = () => {
-  const idKey = detail.value.idKey
-  const id = sbor.value[idKey]
+  const id = sbor.value.link_id
 
   if (!id) {
     console.error('Missing required parameter: id', {
@@ -153,7 +152,7 @@ const handleRowClick = () => {
   router
     .push({
       name: detail.value.route,
-      params: { [idKey]: id, nom_id: id },
+      params: { nom_id: id },
     })
     .catch((error) => {
       console.error('Error navigating to route:', error)

@@ -60,7 +60,7 @@ const StrategyTable = BaseTable
 const TpdTable = BaseTable
 const roleStore = useRoleStore()
 const route = useRoute()
-const id = ref(route.params.id)
+const id = ref(route.params.nom_id)
 const selectedItem = ref(null)
 const routeProps = defineProps(['type'])
 
