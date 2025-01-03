@@ -6,7 +6,7 @@ import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
  * @param {Object} params - параметры для запроса.
  * @returns {Promise<Object>} - Промис с данными заказа.
  */
-export const getOrders = (params) => {
+export const getItems = (params) => {
   return apiClient
     .get('list', { params }) // Передаём параметры напрямую
     .then(handleResponse)

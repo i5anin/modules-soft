@@ -13,9 +13,7 @@
             <tr style="font-size: 12px">
               <th scope="col" style="width: 30px" title="развернуть"></th>
               <th scope="col" style="width: 30px" title="статусы"></th>
-
               <th
-                scope="col"
                 v-for="field in filteredFields"
                 :key="field.name"
                 :style="{ width: field.width || 'auto' }"
@@ -25,7 +23,7 @@
             </tr>
           </thead>
           <tbody>
-            <SborNode
+            <SborRow
               v-for="sbor in tableData"
               :key="sbor.id"
               :sbor="sbor"
@@ -39,45 +37,47 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, watch } from 'vue'
+import SborRow from './SborRow.vue'
 import { store } from './store.js'
-import SborNode from './SborNode.vue'
 
-export default {
-  name: 'SborMain',
-  components: { SborNode },
-  props: {
-    tableData: Array, // Пропс для исходных данных
-    tableFields: Array, // Пропс для исходных полей
-    detail: {
-      type: Object,
-      default: () => ({ route: '', idKey: '' }), // Объект с двумя свойствами
-    },
+// Props
+const props = defineProps({
+  tableData: {
+    type: Array,
+    required: true,
   },
-  setup(props) {
-    const sborStore = store()
-
-    // Следим за изменениями в prop tableData и обновляем store
-    watch(
-      () => props.tableData,
-      (newData) => {
-        sborStore.setTableData(newData)
-      },
-      { immediate: true }
-    )
-
-    // Следим за изменениями в prop tableFields и обновляем store
-    watch(
-      () => props.tableFields,
-      (newFields) => sborStore.setTableFields(newFields),
-      { immediate: true }
-    )
-
-    // filteredFields из store без дублирования переменных
-    const filteredFields = computed(() => sborStore.filteredFields)
-
-    return { filteredFields }
+  tableFields: {
+    type: Array,
+    required: true,
   },
-}
+  detail: {
+    type: Object,
+    required: true,
+  },
+})
+
+// Store
+const sborStore = store()
+
+// Computed
+const filteredFields = computed(() => sborStore.filteredFields)
+
+// Watchers
+watch(
+  () => props.tableData,
+  (newData) => {
+    sborStore.setTableData(newData)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.tableFields,
+  (newFields) => {
+    sborStore.setTableFields(newFields)
+  },
+  { immediate: true }
+)
 </script>

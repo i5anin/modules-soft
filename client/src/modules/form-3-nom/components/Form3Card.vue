@@ -43,89 +43,81 @@
       :type="modalType"
       :kolvo-add="modalKolvoAdd"
       :id="modalId"
-      @close="modalVisible = false"
+      @close="closeModal"
     />
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, ref } from 'vue'
 import EditableField from './card/EditableField.vue'
 import ReadonlyField from './card/ReadonlyField.vue'
 import ModalZagInfo from '@/modules/shared/zagotovka/ModalZagotovka.vue'
 
-export default {
-  props: {
-    updateFormFields: {
-      type: Array,
-      required: true,
-    },
-    readonlyFormFields: {
-      type: Array,
-      required: true,
-    },
-    fieldValues: {
-      type: Object,
-      required: true,
-    },
+// Props
+const props = defineProps({
+  updateFormFields: {
+    type: Array,
+    required: true,
   },
-  components: {
-    EditableField,
-    ReadonlyField,
-    ModalZagInfo,
+  readonlyFormFields: {
+    type: Array,
+    required: true,
   },
-  setup(props) {
-    const localFieldValues = ref({ ...props.fieldValues })
-
-    const formattedFieldValues = computed(() =>
-      Object.fromEntries(
-        Object.entries(props.fieldValues).map(([key, value]) => [
-          key,
-          value, // Здесь можно использовать форматтеры
-        ])
-      )
-    )
-
-    function getFieldComponent(field) {
-      return field.permissions.update ? EditableField : ReadonlyField
-    }
-
-    const modalVisible = ref(false)
-    const modalType = ref('')
-    const modalKolvoAdd = ref('')
-    const modalId = ref('')
-
-    const handleFieldClick = (name) => {
-      console.log('Field clicked:', name) // Логируем, чтобы отладить клик
-      if (['zag_nom', 'zag_tech'].includes(name)) {
-        modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
-        modalKolvoAdd.value = formattedFieldValues.value.kolvo_add || 0 // Добавляем защиту от undefined
-        if (name === 'zag_nom') {
-          modalId.value =
-            formattedFieldValues.value.nom_id_nom ||
-            formattedFieldValues.value.nom__id ||
-            '' // Проверка значения
-        } else if (name === 'zag_tech') {
-          modalId.value = formattedFieldValues.value.ordersnom__id || '' // Проверка значения
-        }
-        if (modalId.value) {
-          modalVisible.value = true
-        } else {
-          console.warn('Modal ID is missing for field:', name)
-        }
-      }
-    }
-
-    return {
-      localFieldValues,
-      formattedFieldValues,
-      getFieldComponent,
-      modalVisible,
-      modalType,
-      modalKolvoAdd,
-      modalId,
-      handleFieldClick,
-    }
+  fieldValues: {
+    type: Object,
+    required: true,
   },
+})
+
+// Local state
+const localFieldValues = ref({ ...props.fieldValues })
+const modalVisible = ref(false)
+const modalType = ref('')
+const modalKolvoAdd = ref('')
+const modalId = ref('')
+
+// Computed properties
+const formattedFieldValues = computed(() => {
+  return Object.fromEntries(
+    Object.entries(props.fieldValues).map(([key, value]) => [key, value || ''])
+  )
+})
+
+// Methods
+const getFieldComponent = (field) => {
+  return field.permissions.update ? EditableField : ReadonlyField
+}
+
+const handleFieldClick = (name) => {
+  console.log('Field clicked:', name) // Логируем, чтобы отладить клик
+  if (['zag_nom', 'zag_tech'].includes(name)) {
+    modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
+    modalKolvoAdd.value = formattedFieldValues.value.kolvo_add || 0 // Добавляем защиту от undefined
+    if (name === 'zag_nom') {
+      modalId.value =
+        formattedFieldValues.value.nom_id_nom ||
+        formattedFieldValues.value.nom__id ||
+        '' // Проверка значения
+    } else if (name === 'zag_tech') {
+      modalId.value = formattedFieldValues.value.ordersnom__id || '' // Проверка значения
+    }
+    if (modalId.value) {
+      modalVisible.value = true
+    } else {
+      console.warn('Modal ID is missing for field:', name)
+    }
+  }
+}
+
+const closeModal = () => {
+  modalVisible.value = false
 }
 </script>
+
+<style scoped>
+.card {
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+</style>

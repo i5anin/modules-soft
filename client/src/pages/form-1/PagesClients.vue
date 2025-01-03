@@ -39,8 +39,8 @@ const tableFields = ref([])
 const currentPage = ref(1)
 const itemsPerPage = ref(15)
 const totalCount = ref(0)
-const sortColumn = ref('id')
-const sortOrder = ref('desc')
+const sortColumn = ref('')
+const sortOrder = ref('')
 const searchQuery = ref('')
 
 // Вычисляемые свойства
@@ -95,7 +95,7 @@ const fetchClients = async () => {
 const handleRowClick = (row) => {
   router.push({
     name: 'Noms',
-    params: { clientId: row.clients__id },
+    params: { clientId: row.link_id },
   })
 }
 

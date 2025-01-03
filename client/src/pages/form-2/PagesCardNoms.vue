@@ -10,7 +10,7 @@
           v-if="nomTableData.length > 0"
           :table-data="nomTableData"
           :table-fields="filteredTableFields"
-          :detail="{ route: 'OrderDetails', idKey: 'ordersnom_id' }"
+          :detail="detail"
         />
       </div>
     </div>
@@ -25,10 +25,13 @@ import { getNomById } from './api/nom_list.js'
 import OrderInfoCard from '@/modules/form-2-card-noms/components/Form2Card.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
+import { processFields } from '@/utils/dev/fieldsProcessor.js'
 
 // Пропсы
 const props = defineProps({
   type: { type: String, required: true },
+  link: { type: String, required: true },
+  route: { type: String, required: true },
 })
 
 // Маршруты и стор
@@ -44,6 +47,11 @@ const isCollapsed = ref(false)
 // Вычисляемые свойства
 const selectedRole = computed(() => roleStore.selectedRole)
 
+const detail = computed(() => ({
+  route: props.route,
+  idKey: 'link_id',
+}))
+
 const fetchOrderData = async () => {
   const link_id = router.currentRoute.value.params.id
   const queryParams = {
@@ -54,23 +62,36 @@ const fetchOrderData = async () => {
   try {
     const { header, table } = await getNomById(queryParams)
     headerData.value = header
-    tableFields.value = table.fields
+
+    // Обработка fields через processFields
+    const processedFields = processFields(
+      Object.entries(table.fields).map(([key, field]) => ({
+        key,
+        ...field,
+      }))
+    )
+
+    // Преобразуем обратно в объект
+    tableFields.value = processedFields.reduce((acc, field) => {
+      acc[field.key] = { ...field }
+      delete acc[field.key].key // Убираем ключ 'key' из результата
+      return acc
+    }, {})
+
     nomTableData.value = table.data
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)
   }
 }
 
-const filterTableFields = (fields) => {
-  return Object.entries(fields)
-    .filter(([key]) => !key.startsWith('status_'))
+const filteredTableFields = computed(() => {
+  return Object.entries(tableFields.value)
+    .filter(([_, field]) => field.permissions?.read) // Только те, у кого read === true
     .map(([key, field]) => ({
       name: key,
       ...field,
     }))
-}
-
-const filteredTableFields = computed(() => filterTableFields(tableFields.value))
+})
 
 // Инициализация данных
 onMounted(fetchOrderData)
@@ -79,7 +100,7 @@ onMounted(fetchOrderData)
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 16px;
+  grid-template-columns: 270px 1fr;
+  gap: 4px;
 }
 </style>

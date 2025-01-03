@@ -9,24 +9,30 @@
         <thead>
           <tr>
             <th
-              v-for="column in headers"
+              v-if="showStatusColumn"
+              :style="{ fontSize: '0.90rem', width: '50px' }"
+            >
+              Статусы
+            </th>
+            <th
+              v-for="column in filteredFields"
               :key="column.name"
-              @click="column.sortable && $emit('sort-change', column.name)"
+              @click="handleSort(column)"
               :style="{ fontSize: '0.90rem' }"
             >
               {{ column.title }}
               <span v-if="column.sortable">
                 <i
-                  v-if="sortColumn === column.name && sortOrder === 'asc'"
+                  v-if="sortColumn === column.name && sortItem === 'asc'"
                   class="bi bi-caret-up-fill"
                 ></i>
                 <i
-                  v-else-if="sortColumn === column.name && sortOrder === 'desc'"
+                  v-else-if="sortColumn === column.name && sortItem === 'desc'"
                   class="bi bi-caret-down-fill"
                 ></i>
               </span>
             </th>
-            <th v-if="editButton" title="колонка редактировать"></th>
+            <th v-if="editButton" title="Колонка редактировать"></th>
           </tr>
         </thead>
         <tbody>
@@ -36,22 +42,23 @@
           <tr
             v-for="row in items"
             :key="row.id"
-            @click="$emit('row-click', row)"
+            @click="emit('row-click', row)"
             :class="{ locked: row.locked, 'table-success': row.goz }"
           >
+            <td v-if="showStatusColumn">
+              <StatusDisplay :row="row" />
+            </td>
             <td
               v-for="field in filteredFields"
               :key="field.name"
               :style="{ textAlign: getTextAlignment(field.type, field.name) }"
             >
-              <StatusDisplay v-if="field.name === 'statuses'" :row="row" />
               <span
-                v-else
                 v-html="formatValue(row[field.name], field.type, field.name)"
-              ></span>
+              />
             </td>
 
-            <td @click.stop="handleEditClick(row)" v-if="editButton">
+            <td @click.stop="openEditModal(row)" v-if="editButton">
               <button class="btn btn-sm">
                 <i class="bi bi-pencil-fill" style="color: gray"></i>
               </button>
@@ -72,74 +79,77 @@
   </div>
 </template>
 
-<script>
-import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue' // путь к компоненту
+<script setup>
+import { computed, defineEmits, defineProps, ref } from 'vue'
+import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
-import { computed, ref } from 'vue'
 
-export default {
-  components: { LoadingSpinner, StatusDisplay, EditModal },
-  props: {
-    headers: { type: Array, required: true },
-    items: { type: Array, required: true },
-    excluded: { type: Array, default: () => [] },
-    sortColumn: { type: String, required: true },
-    sortOrder: { type: String, required: true },
-    formatValue: { type: Function, required: true },
-    getTextAlignment: { type: Function, default: true },
-    editButton: { type: Boolean, default: false },
-  },
-  setup(props, { emit }) {
-    const loading = ref(false) // состояние загрузки
-    const filteredFields = computed(() =>
-      props.headers.filter((header) => !props.excluded.includes(header.name))
-    )
+const props = defineProps({
+  headers: { type: Array, required: true },
+  items: { type: Array, required: true },
+  excluded: { type: Array, default: () => [] },
+  sortColumn: { type: String, required: true },
+  sortItem: { type: String, required: true },
+  formatValue: { type: Function, required: true },
+  getTextAlignment: { type: Function, default: () => 'left' },
+  editButton: { type: Boolean, default: false },
+})
 
-    const isModalVisible = ref(false)
-    const selectedRow = ref(null)
+const emit = defineEmits(['row-click', 'sort-change'])
 
-    const handleEditClick = (row) => {
-      selectedRow.value = row // Текущая строка
-      isModalVisible.value = true // Показ модального окна
-    }
+const loading = ref(false)
+const isModalVisible = ref(false)
+const selectedRow = ref(null)
 
-    const saveRowChanges = (updatedRow) => {
-      // Логика сохранения изменений
-      console.log('Сохранено:', updatedRow)
-      isModalVisible.value = false
-    }
+const normalizedHeaders = computed(() =>
+  props.headers.map((header) => ({
+    ...header,
+    permissions: header.permissions || { read: true },
+  }))
+)
 
-    const closeModal = () => {
-      isModalVisible.value = false
-      selectedRow.value = null
-    }
+const filteredFields = computed(() => {
+  return normalizedHeaders.value.filter(
+    (header) => !props.excluded.includes(header.name) && header.permissions.read
+  )
+})
 
-    return {
-      loading,
-      filteredFields,
-      handleEditClick,
-      isModalVisible,
-      selectedRow,
-      closeModal,
-      saveRowChanges,
-    }
-  },
+const showStatusColumn = computed(() => {
+  const firstItem = props.items[0]
+  return (
+    firstItem &&
+    Object.keys(firstItem).some((key) => key.toLowerCase().includes('status'))
+  )
+})
+
+const handleSort = (column) => {
+  if (column.sortable) emit('sort-change', column.name)
+}
+
+const openEditModal = (row) => {
+  selectedRow.value = row
+  isModalVisible.value = true
+}
+
+const closeModal = () => {
+  isModalVisible.value = false
+  selectedRow.value = null
+}
+
+const saveRowChanges = (updatedRow) => {
+  console.log('Сохранено:', updatedRow)
+  closeModal()
 }
 </script>
 
 <style>
 .table th,
 .table td {
-  min-width: 8px; /* Минимальная ширина столбцов */
-  max-width: 300px; /* Максимальная ширина столбцов */
-  word-wrap: break-word; /* Перенос длинного текста */
-  overflow: hidden; /* Скрыть текст, который выходит за границы */
-  text-overflow: ellipsis; /* Добавить многоточие, если текст обрезается */
-}
-
-.table th,
-.table td {
-  word-wrap: break-word; /* предотвращает переполнение текста */
+  min-width: 8px;
+  max-width: 300px;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
