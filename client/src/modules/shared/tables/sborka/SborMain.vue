@@ -1,7 +1,6 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <!-- Сообщение при отсутствии данных -->
       <div v-if="tableData.length === 0" class="alert alert-warning">
         Нет данных.
       </div>
@@ -27,6 +26,7 @@
               v-for="sbor in tableData"
               :key="sbor.id"
               :sbor="sbor"
+              :fields="filteredFields"
               :depth="0"
               :detail="detail"
             />
@@ -38,9 +38,8 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import SborRow from './SborRow.vue'
-import { store } from './store.js'
 
 // Props
 const props = defineProps({
@@ -58,26 +57,10 @@ const props = defineProps({
   },
 })
 
-// Store
-const sborStore = store()
-
 // Computed
-const filteredFields = computed(() => sborStore.filteredFields)
-
-// Watchers
-watch(
-  () => props.tableData,
-  (newData) => {
-    sborStore.setTableData(newData)
-  },
-  { immediate: true }
-)
-
-watch(
-  () => props.tableFields,
-  (newFields) => {
-    sborStore.setTableFields(newFields)
-  },
-  { immediate: true }
+const filteredFields = computed(() =>
+  props.tableFields.filter(
+    (field) => field.permissions.read || field.permissions.update
+  )
 )
 </script>

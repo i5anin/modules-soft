@@ -25,7 +25,7 @@
 
     <!-- Поля -->
     <td
-      v-for="field in fieldsArray"
+      v-for="field in fields"
       :key="field.name"
       :style="{
         fontSize: '12px',
@@ -100,7 +100,6 @@
 <script setup>
 import { computed, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { store } from './store.js'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
@@ -111,7 +110,7 @@ import SborRow from './SborRow.vue'
 const props = defineProps({
   sbor: { type: Object, required: true },
   depth: { type: Number, default: 0 },
-  fields: { type: Array, default: () => [] },
+  fields: { type: Array, required: true },
   isLastChild: { type: Boolean, default: false },
   detail: {
     type: Object,
@@ -121,7 +120,6 @@ const props = defineProps({
 })
 
 const { sbor, detail } = toRefs(props)
-const sborStore = store()
 const router = useRouter()
 const isExpanded = ref(false)
 const otgruzkaAccepted = ref(false)
@@ -162,8 +160,6 @@ const handleRowClick = () => {
 const hasChildren = computed(
   () => sbor.value.sbor_tree && sbor.value.sbor_tree.length > 0
 )
-
-const fieldsArray = computed(() => sborStore.filteredFields)
 
 const generateTitle = (field) =>
   `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
