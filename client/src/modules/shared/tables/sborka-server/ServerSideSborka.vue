@@ -19,7 +19,7 @@
     <SborMain
       :tableData="items"
       :tableFields="filteredHeaders"
-      :detail="{ route: 'NomDetails', idKey: 'nom_id' }"
+      :detail="detail"
     />
 
     <Pagination
@@ -55,6 +55,10 @@ const props = defineProps({
   datepicker: { type: Boolean, default: false },
   startDate: { type: String, default: '' },
   endDate: { type: String, default: '' },
+  detail: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emit = defineEmits([

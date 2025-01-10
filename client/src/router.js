@@ -61,7 +61,7 @@ const clientsRoutes = [
     }),
   },
   {
-    path: '/client/:clientId/nom/:id',
+    path: '/client/:clientId/nom/:nom_id',
     name: 'NomDetails',
     component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали номенклатуры клиента' },
