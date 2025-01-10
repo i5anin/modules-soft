@@ -4,7 +4,7 @@
       <div class="row">
         <!-- Поля для редактирования -->
         <div class="col-12">
-          <div v-for="field in updateFormFields" :key="field.name" class="mb-3">
+          <div v-for="field in updateFormFields" :key="field.key" class="mb-3">
             <component
               :is="EditableField"
               :field="field"
@@ -19,12 +19,12 @@
             <div
               class="col-md-6"
               v-for="field in readonlyFormFields"
-              :key="field.name"
+              :key="field.key"
             >
               <ReadonlyField
                 :field="field"
                 :value="formattedFieldValues[field.key]"
-                @field-click="handleFieldClick(field.name)"
+                @field-click="handleFieldClick(field.key)"
               />
             </div>
           </div>
@@ -82,6 +82,7 @@ const formattedFieldValues = computed(() =>
 
 // Methods
 const handleFieldClick = (name) => {
+  console.log(`Клик по полю в родительском компоненте: ${name}`) // Лог проверки
   if (['zag_nom', 'zag_tech'].includes(name)) {
     modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
     modalKolvoAdd.value = formattedFieldValues.value.kolvo_add || 0
