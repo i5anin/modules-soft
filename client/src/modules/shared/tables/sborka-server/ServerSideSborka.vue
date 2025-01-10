@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, ref } from 'vue'
 import { formatISO } from 'date-fns'
 import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
@@ -41,117 +41,86 @@ import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSel
 import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
 import SborMain from '../sborka/SborMain.vue'
 
-export default {
-  name: 'ServerSideTable',
-  components: {
-    SborMain,
-    SearchBar,
-    Pagination,
-    PageSizeSelector,
-    DateRangeFilters,
-  },
-  props: {
-    items: { type: Array, required: true },
-    headers: { type: Array, required: true },
-    excluded: { type: Array, default: () => [] },
-    itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
-    totalPages: { type: Number, required: true },
-    totalCount: { type: Number, required: true },
-    currentPage: { type: Number, required: true },
-    sortColumn: { type: String, default: '' },
-    sortOrder: { type: String, default: 'asc' },
-    itemsPerPage: { type: Number, required: true },
-    datepicker: { type: Boolean, default: false },
-    startDate: { type: String, default: '' },
-    endDate: { type: String, default: '' },
-  },
-  emits: [
-    'row-click',
-    'page-change',
-    'sort-change',
-    'page-size-change',
-    'search-change',
-    'date-range-change',
-  ],
-  setup(props, { emit }) {
-    const localItemsPerPage = ref(props.itemsPerPage)
-    const localStartDate = ref(
-      props.startDate ? new Date(props.startDate) : null
-    )
-    const localEndDate = ref(props.endDate ? new Date(props.endDate) : null)
-    const loading = ref(false)
+const props = defineProps({
+  items: { type: Array, required: true },
+  headers: { type: Array, required: true },
+  excluded: { type: Array, default: () => [] },
+  itemsPerPageOptions: { type: Array, default: () => [15, 30, 50, 100] },
+  totalPages: { type: Number, required: true },
+  totalCount: { type: Number, required: true },
+  currentPage: { type: Number, required: true },
+  sortColumn: { type: String, default: '' },
+  sortOrder: { type: String, default: 'asc' },
+  itemsPerPage: { type: Number, required: true },
+  datepicker: { type: Boolean, default: false },
+  startDate: { type: String, default: '' },
+  endDate: { type: String, default: '' },
+})
 
-    const pageSizes = computed(() => props.itemsPerPageOptions)
+const emit = defineEmits([
+  'row-click',
+  'page-change',
+  'sort-change',
+  'page-size-change',
+  'search-change',
+  'date-range-change',
+])
 
-    const filteredHeaders = computed(() =>
-      props.headers.filter((header) => !props.excluded.includes(header.name))
-    )
+const localItemsPerPage = ref(props.itemsPerPage)
+const localStartDate = ref(props.startDate ? new Date(props.startDate) : null)
+const localEndDate = ref(props.endDate ? new Date(props.endDate) : null)
+const loading = ref(false)
 
-    const totalCnt = computed(() => props.totalCount)
-    const currentPg = computed(() => props.currentPage)
-    const totalPg = computed(() => props.totalPages)
+const pageSizes = computed(() => props.itemsPerPageOptions)
 
-    const sortBy = (column) => {
-      const isAsc = props.sortColumn === column && props.sortOrder === 'asc'
-      emit('sort-change', { column, order: isAsc ? 'desc' : 'asc' })
-    }
+const filteredHeaders = computed(() =>
+  props.headers.filter((header) => !props.excluded.includes(header.name))
+)
 
-    const handleRowClick = (row) => emit('row-click', row)
+const totalCnt = computed(() => props.totalCount)
+const currentPg = computed(() => props.currentPage)
+const totalPg = computed(() => props.totalPages)
 
-    const updateItemsPerPage = (value) => {
-      localItemsPerPage.value = value
-      emit('page-change', 1) // Устанавливаем текущую страницу на первую
-      emit('page-size-change', value)
-    }
+const sortBy = (column) => {
+  const isAsc = props.sortColumn === column && props.sortOrder === 'asc'
+  emit('sort-change', { column, order: isAsc ? 'desc' : 'asc' })
+}
 
-    const updateStartDate = (value) => {
-      localStartDate.value = value
-      emit('date-range-change', {
-        startDate: value ? formatISO(value, { representation: 'date' }) : '',
-        endDate: localEndDate.value
-          ? formatISO(localEndDate.value, { representation: 'date' })
-          : '',
-      })
-    }
+const handleRowClick = (row) => emit('row-click', row)
 
-    const updateEndDate = (value) => {
-      localEndDate.value = value
-      emit('date-range-change', {
-        startDate: localStartDate.value
-          ? formatISO(localStartDate.value, { representation: 'date' })
-          : '',
-        endDate: value ? formatISO(value, { representation: 'date' }) : '',
-      })
-    }
+const updateItemsPerPage = (value) => {
+  localItemsPerPage.value = value
+  emit('page-change', 1)
+  emit('page-size-change', value)
+}
 
-    const onSearch = (query) => {
-      loading.value = true
-      emit('search-change', query)
-      setTimeout(() => (loading.value = false), 500)
-    }
+const updateStartDate = (value) => {
+  localStartDate.value = value
+  emit('date-range-change', {
+    startDate: value ? formatISO(value, { representation: 'date' }) : '',
+    endDate: localEndDate.value
+      ? formatISO(localEndDate.value, { representation: 'date' })
+      : '',
+  })
+}
 
-    const goToPage = (page) => {
-      emit('page-change', page)
-    }
+const updateEndDate = (value) => {
+  localEndDate.value = value
+  emit('date-range-change', {
+    startDate: localStartDate.value
+      ? formatISO(localStartDate.value, { representation: 'date' })
+      : '',
+    endDate: value ? formatISO(value, { representation: 'date' }) : '',
+  })
+}
 
-    return {
-      pageSizes,
-      localItemsPerPage,
-      localStartDate,
-      localEndDate,
-      filteredHeaders,
-      loading,
-      totalCnt,
-      currentPg,
-      totalPg,
-      sortBy,
-      handleRowClick,
-      updateItemsPerPage,
-      updateStartDate,
-      updateEndDate,
-      onSearch,
-      goToPage,
-    }
-  },
+const onSearch = (query) => {
+  loading.value = true
+  emit('search-change', query)
+  setTimeout(() => (loading.value = false), 500)
+}
+
+const goToPage = (page) => {
+  emit('page-change', page)
 }
 </script>
