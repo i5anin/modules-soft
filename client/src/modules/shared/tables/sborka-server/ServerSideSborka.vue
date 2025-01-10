@@ -34,6 +34,7 @@
 
 <script>
 import { computed, ref } from 'vue'
+import { formatISO } from 'date-fns'
 import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
 import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
@@ -107,9 +108,9 @@ export default {
     const updateStartDate = (value) => {
       localStartDate.value = value
       emit('date-range-change', {
-        startDate: value ? value.toISOString().split('T')[0] : '',
+        startDate: value ? formatISO(value, { representation: 'date' }) : '',
         endDate: localEndDate.value
-          ? localEndDate.value.toISOString().split('T')[0]
+          ? formatISO(localEndDate.value, { representation: 'date' })
           : '',
       })
     }
@@ -118,9 +119,9 @@ export default {
       localEndDate.value = value
       emit('date-range-change', {
         startDate: localStartDate.value
-          ? localStartDate.value.toISOString().split('T')[0]
+          ? formatISO(localStartDate.value, { representation: 'date' })
           : '',
-        endDate: value ? value.toISOString().split('T')[0] : '',
+        endDate: value ? formatISO(value, { representation: 'date' }) : '',
       })
     }
 
