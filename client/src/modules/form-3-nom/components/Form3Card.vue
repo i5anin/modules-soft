@@ -54,6 +54,7 @@ const props = defineProps({
   updateFormFields: {
     type: Array,
     required: true,
+    default: () => [], // По умолчанию пустой массив
   },
   readonlyFormFields: {
     type: Array,

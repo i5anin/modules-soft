@@ -12,7 +12,7 @@
         <h6 class="m-0">Информация по номенклатуре</h6>
       </div>
       <Card
-        v-if="selectedItem?.header"
+        v-if="updateFormFields.length || readonlyFormFields.length"
         :updateFormFields="updateFormFields"
         :readonlyFormFields="readonlyFormFields"
         :fieldValues="fieldValues"
@@ -22,19 +22,19 @@
     <div class="table-section">
       <CaliberTable
         v-if="selectedItem?.table_cal?.data?.length"
-        :fields="uniqueTableFields"
+        :fields="readAndUpdateFields(selectedItem.table_cal?.fields)"
         :data="selectedItem.table_cal?.data"
         :tableTitle="selectedItem.table_cal?.title"
       />
       <StrategyTable
         v-if="selectedItem?.strat?.data?.length"
-        :fields="uniqueTableFieldsStrat"
+        :fields="readAndUpdateFields(selectedItem.strat?.fields)"
         :data="selectedItem.strat?.data"
         :tableTitle="selectedItem.strat?.title"
       />
       <TpdTable
         v-if="selectedItem?.tpd?.data?.length"
-        :fields="uniqueTableFieldsTpd"
+        :fields="readAndUpdateFields(selectedItem.tpd?.fields)"
         :data="selectedItem.tpd?.data"
         :tableTitle="selectedItem.tpd?.title"
       />
@@ -52,8 +52,6 @@ import { useRoleStore } from '@/modules/_main/store/index.js'
 import Card from '@/modules/form-3-nom/components/Form3Card.vue'
 import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
 
-import { processFields } from '@/utils/dev/fieldsProcessor.js'
-
 const CaliberTable = BaseTable
 const StrategyTable = BaseTable
 const TpdTable = BaseTable
@@ -63,7 +61,6 @@ const id = ref(route.params.nom_id)
 const selectedItem = ref(null)
 const routeProps = defineProps(['type'])
 
-// Загружаем данные заказа при монтировании компонента
 onMounted(async () => {
   if (id.value) {
     try {
@@ -79,65 +76,38 @@ onMounted(async () => {
   }
 })
 
-// Уникальные поля
-const uniqueFields = (fields) => {
-  const seen = new Set()
-  return Object.entries(fields || {})
-    .filter(([fieldName]) => {
-      if (seen.has(fieldName)) return false
-      seen.add(fieldName)
-      return true
-    })
-    .map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
+const filterFields = (fields, condition) => {
+  return Object.entries(fields || {}).filter(([, fieldProps]) =>
+    condition(fieldProps)
+  )
 }
 
-// Обработка полей через processFields
-const processedFields = (fields) => {
-  const unique = uniqueFields(fields)
-  return processFields(unique)
-}
+const readAndUpdateFields = (fields) =>
+  filterFields(
+    fields,
+    (field) => field.permissions.read || field.permissions.update
+  ).map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
 
-// Вычисляемые свойства для таблиц
-const uniqueTableFields = computed(() =>
-  processedFields(selectedItem.value?.table_cal?.fields)
+const filteredHeaderFields = computed(() =>
+  filterFields(
+    selectedItem.value?.header?.fields,
+    (field) => field.permissions.read || field.permissions.update
+  ).map(([key, fieldProps]) => ({ key, ...fieldProps }))
 )
-const uniqueTableFieldsStrat = computed(() =>
-  processedFields(selectedItem.value?.strat?.fields)
-)
-const uniqueTableFieldsTpd = computed(() =>
-  processedFields(selectedItem.value?.tpd?.fields)
-)
-
-// Поля заголовка
-const filteredHeaderFields = computed(() => {
-  const fields = selectedItem.value?.header?.fields || {}
-  return Object.entries(fields).map(([key, fieldProps]) => ({
-    key,
-    ...fieldProps,
-  }))
-})
 
 const updateFormFields = computed(() =>
-  filteredHeaderFields.value.filter(
-    (field) => field.permissions.update === true
-  )
+  filteredHeaderFields.value.filter((field) => field.permissions.update)
 )
 
 const readonlyFormFields = computed(() =>
-  filteredHeaderFields.value.filter(
-    (field) => field.permissions.update !== true
-  )
+  filteredHeaderFields.value.filter((field) => !field.permissions.update)
 )
 
-// Преобразование значений полей в объект
 const fieldValues = computed(() => {
   const fields = selectedItem.value?.header?.fields || {}
   const data = selectedItem.value?.header?.data || {}
   return Object.fromEntries(
-    Object.keys(fields).map((key) => [
-      key,
-      data[key] ?? '', // Заменяем null на пустую строку
-    ])
+    Object.keys(fields).map((key) => [key, data[key] ?? ''])
   )
 })
 </script>
