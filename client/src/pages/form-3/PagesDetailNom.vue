@@ -11,7 +11,6 @@
         />
         <h6 class="m-0">Информация по номенклатуре</h6>
       </div>
-
       <Card
         v-if="selectedItem?.header"
         :updateFormFields="updateFormFields"
@@ -131,14 +130,16 @@ const readonlyFormFields = computed(() =>
 )
 
 // Преобразование значений полей в объект
-const fieldValues = computed(() =>
-  Object.fromEntries(
-    filteredHeaderFields.value.map((field) => [
-      field.name,
-      selectedItem.value?.header?.data?.[0]?.[field.name] ?? '', // Заменяем null на пустую строку
+const fieldValues = computed(() => {
+  const fields = selectedItem.value?.header?.fields || {}
+  const data = selectedItem.value?.header?.data || {}
+  return Object.fromEntries(
+    Object.keys(fields).map((key) => [
+      key,
+      data[key] ?? '', // Заменяем null на пустую строку
     ])
   )
-)
+})
 </script>
 
 <style scoped>

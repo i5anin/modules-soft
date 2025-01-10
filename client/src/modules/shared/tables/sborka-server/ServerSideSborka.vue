@@ -38,7 +38,8 @@ import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
 import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
 import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
-import SborMain from './ServerSborMain.vue'
+
+import SborMain from '../sborka/SborMain.vue'
 
 export default {
   name: 'ServerSideTable',

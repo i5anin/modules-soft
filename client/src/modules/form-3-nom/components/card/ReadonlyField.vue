@@ -4,8 +4,8 @@
     <div class="field-label d-flex align-items-center">
       <span>{{ field.title }}</span>
       <font-awesome-icon
-        v-if="['zag_nom', 'zag_tech'].includes(field.name)"
-        @click.stop="handleIconClick(field.name)"
+        v-if="['zag_nom', 'zag_tech'].includes(field.key)"
+        @click.stop="handleIconClick(field.key)"
         :icon="['fas', 'circle-info']"
         :style="{ color: 'green', cursor: 'pointer' }"
         class="icon-sm ms-2 me-2"
@@ -26,7 +26,8 @@
           class="form-check-input"
           disabled
         />
-        <label class="form-check-label">{{ field.title }}</label>
+
+        <label class="form-check-label">{{ field.name }}</label>
       </div>
     </div>
   </div>
@@ -46,12 +47,12 @@ export default {
   setup(props, { emit }) {
     const isBoolean = computed(() => typeof props.value === 'boolean')
 
-    const handleIconClick = (name) => {
-      emit('icon-click', name)
+    const handleIconClick = (key) => {
+      emit('icon-click', key)
     }
 
     const handleFormClick = () => {
-      emit('field-click', props.field.name)
+      emit('field-click', props.field.key)
     }
 
     return { isBoolean, handleIconClick, handleFormClick }

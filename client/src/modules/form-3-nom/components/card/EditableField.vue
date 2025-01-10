@@ -45,6 +45,7 @@
 <script setup>
 import { computed } from 'vue'
 import { calculateHeight } from '../../utils/calculateHeight.js'
+import '@/assets/FormFloatingField.css'
 
 const props = defineProps({
   field: {

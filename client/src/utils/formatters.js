@@ -97,11 +97,12 @@ export function formatValue(value, type, key) {
       return ''
     default:
       console.warn(
-        `Неизвестный тип данных "${type}" для ключа "${key}".
-        value: ${value}
-        Стек вызова:
-        ${getCallerStack()}`
+        `Неизвестный тип данных "${type}" для ключа "${key}".\nvalue: ${value}`
       )
+      console.groupCollapsed('Показать стек вызова')
+      console.log(getCallerStack())
+      console.groupEnd()
+
       return value || ''
   }
 }
