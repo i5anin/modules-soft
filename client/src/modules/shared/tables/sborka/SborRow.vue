@@ -33,53 +33,63 @@
         textAlign: getTextAlignment(field.type, field.name),
       }"
     >
-      <div
-        class="tree-node"
-        @click.stop="handleRowClick"
-        v-if="field.name === 'name' || field.name === 'description'"
-        :style="{
-          paddingLeft: field.name === 'name' ? `${depth * 20}px` : '0px',
-          position: 'relative',
-          textDecoration:
-            otgruzkaAccepted &&
-            (field.name === 'name' || field.name === 'description')
-              ? 'line-through'
-              : 'none',
-          cursor: 'pointer',
-        }"
-        title="Нажмите для перехода"
-      >
-        <div
-          v-if="field.name === 'name' && depth > 0"
-          class="branch-line"
-          :class="{ 'last-child': isLastChild }"
-          :style="{ left: `${(depth - 1) * 20}px` }"
+      <div v-if="field.permissions.update">
+        <input
+          type="text"
+          v-model="sbor[field.name]"
+          :style="{ width: '100%', fontSize: '12px' }"
+          @click.stop
         />
-        <div>
-          <font-awesome-icon
-            v-if="field.name === 'name'"
-            :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
-            :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-            class="icon-sm me-2"
-          />
-          <span
-            v-html="formatValue(sbor[field.name], field.type, field.name)"
-          />
-        </div>
       </div>
+      <div v-else>
+        <div
+          class="tree-node"
+          @click.stop="handleRowClick"
+          v-if="field.name === 'name' || field.name === 'description'"
+          :style="{
+            paddingLeft: field.name === 'name' ? `${depth * 20}px` : '0px',
+            position: 'relative',
+            textDecoration:
+              otgruzkaAccepted &&
+              (field.name === 'name' || field.name === 'description')
+                ? 'line-through'
+                : 'none',
+            cursor: 'pointer',
+          }"
+          title="Нажмите для перехода"
+        >
+          <div
+            v-if="field.name === 'name' && depth > 0"
+            class="branch-line"
+            :class="{ 'last-child': isLastChild }"
+            :style="{ left: `${(depth - 1) * 20}px` }"
+          />
+          <div>
+            <font-awesome-icon
+              v-if="field.name === 'name'"
+              :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
+              :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
+              class="icon-sm me-2"
+            />
+            <span
+              v-html="formatValue(sbor[field.name], field.type, field.name)"
+            />
+          </div>
+        </div>
 
-      <StrategyDisplay
-        v-else-if="field.name === 'strat'"
-        :strategy="sbor[field.name]"
-        :depth="depth"
-      />
+        <StrategyDisplay
+          v-else-if="field.name === 'strat'"
+          :strategy="sbor[field.name]"
+          :depth="depth"
+        />
 
-      <span
-        v-else
-        v-html="formatValue(sbor[field.name], field.type, field.name)"
-        :title="generateTitle(field)"
-        style="font-size: 13px"
-      />
+        <span
+          v-else
+          v-html="formatValue(sbor[field.name], field.type, field.name)"
+          :title="generateTitle(field)"
+          style="font-size: 13px"
+        />
+      </div>
     </td>
   </tr>
 
