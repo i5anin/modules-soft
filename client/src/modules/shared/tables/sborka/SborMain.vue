@@ -1,4 +1,5 @@
 <template>
+  <PendingUpdatesOverlay />
   <div class="row">
     <div class="col-12">
       <div v-if="tableData.length === 0" class="alert alert-warning">
@@ -40,6 +41,7 @@
 <script setup>
 import { computed } from 'vue'
 import SborRow from './SborRow.vue'
+import PendingUpdatesOverlay from './PendingUpdatesOverlay.vue'
 
 // Props
 const props = defineProps({

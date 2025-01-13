@@ -37,8 +37,17 @@
         <input
           type="text"
           v-model="sbor[field.name]"
-          :style="{ width: '100%', fontSize: '12px' }"
+          class="form-control form-control-sm"
+          :style="{ fontSize: '14px' }"
           @click.stop
+          @blur="
+            tableStore.addPendingUpdate({
+              fieldName: field.name,
+              oldValue: sbor[field.name],
+              newValue: sbor[field.name],
+              updateTable: field.update_table,
+            })
+          "
         />
       </div>
       <div v-else>
@@ -110,6 +119,7 @@
 <script setup>
 import { computed, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTableStore } from './tableStore'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
@@ -131,6 +141,7 @@ const props = defineProps({
 
 const { sbor, detail } = toRefs(props)
 const router = useRouter()
+const tableStore = useTableStore()
 const isExpanded = ref(false)
 const otgruzkaAccepted = ref(false)
 
