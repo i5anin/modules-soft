@@ -6,12 +6,14 @@
         <ul>
           <li
             v-for="update in tableStore.pendingUpdates"
-            :key="update.fieldName"
+            :key="update.updateKey"
           >
+            <pre>{{ update }}</pre>
             <span>
-              <strong>Таблица:</strong> {{ update.updateTable }}
-              <strong>Поле:</strong> {{ update.fieldName }}
-              <strong>Стало:</strong> {{ update.newValue }}
+              <strong>ID:</strong> {{ update.id }} <strong>Таблица:</strong>
+              {{ update.updateTable }} <strong>Поле:</strong>
+              {{ update.fieldName }} <strong>Стало:</strong>
+              {{ update.newValue }}
             </span>
           </li>
         </ul>

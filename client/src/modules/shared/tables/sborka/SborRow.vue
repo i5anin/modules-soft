@@ -42,6 +42,7 @@
           @click.stop
           @blur="
             tableStore.addPendingUpdate({
+              rowId: sbor.sbor_orders__id || field.updateKey || 0,
               fieldName: field.name,
               oldValue: sbor[field.name],
               newValue: sbor[field.name],

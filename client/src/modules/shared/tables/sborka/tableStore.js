@@ -1,63 +1,63 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { sendBulkUpdate, handleError } from './update.js'
 
 export const useTableStore = defineStore('tableStore', {
   state: () => ({
-    tableData: [], // Данные таблицы
-    pendingUpdates: [], // Поля, ожидающие подтверждения изменений
+    tableData: [],
+    pendingUpdates: [],
     isLoading: false,
     error: null,
   }),
 
   actions: {
-    // Загрузка данных
-    async loadTableData(apiEndpoint) {
-      this.isLoading = true
-      this.error = null
-      try {
-        const response = await axios.get(apiEndpoint)
-        this.tableData = response.data
-      } catch (err) {
-        this.error = err.message || 'Ошибка загрузки данных'
-      } finally {
-        this.isLoading = false
-      }
-    },
-
-    // Фиксация изменений (без отправки на сервер)
-    addPendingUpdate({ fieldName, oldValue, newValue, updateTable }) {
+    addPendingUpdate({ rowId, fieldName, oldValue, newValue, updateTable }) {
+      const uniqueKey = `${rowId}_${fieldName}_${updateTable}`
       const existingIndex = this.pendingUpdates.findIndex(
-        (update) =>
-          update.fieldName === fieldName && update.newValue === newValue
+        (update) => update.updateKey === uniqueKey
       )
 
       if (existingIndex === -1) {
-        this.pendingUpdates.push({ fieldName, oldValue, newValue, updateTable })
+        this.pendingUpdates.push({
+          key: uniqueKey,
+          id: rowId,
+          fieldName,
+          oldValue,
+          newValue,
+          updateTable,
+        })
+      } else {
+        this.pendingUpdates[existingIndex] = {
+          key: uniqueKey,
+          id: rowId,
+          fieldName,
+          oldValue,
+          newValue,
+          updateTable,
+        }
       }
     },
 
-    // Подтверждение изменений (отправка на сервер)
     async confirmUpdates() {
       try {
-        for (const update of this.pendingUpdates) {
-          const payload = {
-            fieldName: update.fieldName,
-            value: update.newValue,
-            updateTable: update.updateTable, // Используем таблицу из изменения
-          }
-          await axios.post('/api/update', payload)
-        }
+        const payload = this.pendingUpdates.map((update) => ({
+          key: `${update.id}_${update.fieldName}_${update.updateTable}`,
+          id: update.id,
+          fieldName: update.fieldName,
+          value: update.newValue,
+          updateTable: update.updateTable,
+        }))
 
-        this.pendingUpdates = [] // Очищаем список после успешного подтверждения
+        await sendBulkUpdate(payload)
+
+        this.pendingUpdates = []
       } catch (err) {
         this.error = err.message || 'Ошибка подтверждения изменений'
-        throw err
+        handleError(err)
       }
     },
 
-    // Отмена изменений
     cancelUpdates() {
-      this.pendingUpdates = [] // Очищаем список изменений
+      this.pendingUpdates = []
     },
   },
 })
