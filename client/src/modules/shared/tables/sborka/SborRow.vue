@@ -5,9 +5,7 @@
     style="table-layout: fixed"
   >
     <!-- Иконка разворачивания/сворачивания -->
-    <td
-      :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
-    >
+    <td :style="cellStyle">
       <span v-if="hasChildren" title="Развернуть/Свернуть">
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
@@ -17,22 +15,12 @@
     </td>
 
     <!-- Статусы -->
-    <td
-      :style="{ width: '40px', textAlign: 'center', verticalAlign: 'middle' }"
-    >
+    <td :style="cellStyle">
       <StatusDisplay :row="sbor" @statusFound="handleStatusFound" />
     </td>
 
     <!-- Поля -->
-    <td
-      v-for="field in fields"
-      :key="field.name"
-      :style="{
-        fontSize: '12px',
-        verticalAlign: 'middle',
-        textAlign: getTextAlignment(field.type, field.name),
-      }"
-    >
+    <td v-for="field in fields" :key="field.name" :style="getFieldStyle(field)">
       <div v-if="field.permissions.update">
         <input
           type="text"
@@ -40,32 +28,16 @@
           class="form-control form-control-sm"
           :style="{ fontSize: '14px' }"
           @click.stop
-          @blur="
-            tableStore.addPendingUpdate({
-              rowId: sbor.sbor_orders__id || field.updateKey || 0,
-              fieldName: field.name,
-              oldValue: sbor[field.name],
-              newValue: sbor[field.name],
-              updateTable: field.update_table,
-            })
-          "
+          @blur="handleFieldBlur(field)"
         />
       </div>
+
       <div v-else>
         <div
           class="tree-node"
           @click.stop="handleRowClick"
           v-if="field.name === 'name' || field.name === 'description'"
-          :style="{
-            paddingLeft: field.name === 'name' ? `${depth * 20}px` : '0px',
-            position: 'relative',
-            textDecoration:
-              otgruzkaAccepted &&
-              (field.name === 'name' || field.name === 'description')
-                ? 'line-through'
-                : 'none',
-            cursor: 'pointer',
-          }"
+          :style="getTreeNodeStyle(field)"
           title="Нажмите для перехода"
         >
           <div
@@ -74,17 +46,15 @@
             :class="{ 'last-child': isLastChild }"
             :style="{ left: `${(depth - 1) * 20}px` }"
           />
-          <div>
-            <font-awesome-icon
-              v-if="field.name === 'name'"
-              :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
-              :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
-              class="icon-sm me-2"
-            />
-            <span
-              v-html="formatValue(sbor[field.name], field.type, field.name)"
-            />
-          </div>
+          <font-awesome-icon
+            v-if="field.name === 'name'"
+            :icon="sbor.is_sbor ? ['fas', 'cubes'] : ['fas', 'cube']"
+            :style="{ color: sbor.is_sbor ? '#dc6611' : '#cfa614' }"
+            class="icon-sm me-2"
+          />
+          <span
+            v-html="formatValue(sbor[field.name], field.type, field.name)"
+          />
         </div>
 
         <StrategyDisplay
@@ -92,7 +62,6 @@
           :strategy="sbor[field.name]"
           :depth="depth"
         />
-
         <span
           v-else
           v-html="formatValue(sbor[field.name], field.type, field.name)"
@@ -146,6 +115,12 @@ const tableStore = useTableStore()
 const isExpanded = ref(false)
 const otgruzkaAccepted = ref(false)
 
+const cellStyle = {
+  width: '40px',
+  textAlign: 'center',
+  verticalAlign: 'middle',
+}
+
 const handleStatusFound = (status) => {
   if (status.suffix === '_otgruzka' && status.value === true) {
     otgruzkaAccepted.value = true
@@ -185,4 +160,31 @@ const hasChildren = computed(
 
 const generateTitle = (field) =>
   `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
+
+const handleFieldBlur = (field) => {
+  tableStore.addPendingUpdate({
+    rowId: sbor.value.sbor_orders__id || field.updateKey || 0,
+    fieldName: field.name,
+    oldValue: sbor.value[field.name],
+    newValue: sbor.value[field.name],
+    updateTable: field.update_table,
+  })
+}
+
+const getFieldStyle = (field) => ({
+  fontSize: '12px',
+  verticalAlign: 'middle',
+  textAlign: getTextAlignment(field.type, field.name),
+})
+
+const getTreeNodeStyle = (field) => ({
+  paddingLeft: field.name === 'name' ? `${props.depth * 20}px` : '0px',
+  position: 'relative',
+  textDecoration:
+    otgruzkaAccepted.value &&
+    (field.name === 'name' || field.name === 'description')
+      ? 'line-through'
+      : 'none',
+  cursor: 'pointer',
+})
 </script>
