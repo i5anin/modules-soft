@@ -13,9 +13,6 @@
         <td
           v-if="rowSpanMap[rowIndex][0] > 0"
           :rowspan="rowSpanMap[rowIndex][0]"
-          :class="{ hovered: isHovered(rowIndex, 0) }"
-          @mouseover="highlightCells(rowIndex, 0)"
-          @mouseleave="clearHover()"
         >
           {{ rowIndex + 1 }}
         </td>
@@ -23,12 +20,7 @@
           v-for="(cell, colIndex) in row"
           :key="'td-' + rowIndex + '-' + colIndex"
           :rowspan="rowSpanMap[rowIndex][colIndex]"
-          :class="{
-            hidden: rowSpanMap[rowIndex][colIndex] === -1,
-            hovered: isHovered(rowIndex, colIndex),
-          }"
-          @mouseover="highlightCells(rowIndex, colIndex)"
-          @mouseleave="clearHover()"
+          :class="{ hidden: rowSpanMap[rowIndex][colIndex] === -1 }"
         >
           {{ cell !== undefined ? cell : '⚠️' }}
         </td>
@@ -38,7 +30,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { dataSets, tableHeaders } from './data.js'
 
 const columnHeaders = computed(() => tableHeaders || [])
@@ -74,35 +66,6 @@ const rowSpanMap = computed(() => {
   }
   return map
 })
-
-const hoveredCells = ref(new Set())
-
-const highlightCells = (row, col) => {
-  hoveredCells.value.clear()
-
-  // Найдём начальную строку rowspan-группы
-  let startRow = row
-  while (startRow > 0 && rowSpanMap.value[startRow - 1][col] === -1) {
-    startRow--
-  }
-
-  // Добавляем все ячейки из объединённой группы
-  for (let i = startRow; i < startRow + rowSpanMap.value[startRow][col]; i++) {
-    for (let j = 0; j < rowSpanMap.value[i].length; j++) {
-      if (rowSpanMap.value[i][j] !== -1) {
-        hoveredCells.value.add(`${i}-${j}`)
-      }
-    }
-  }
-}
-
-const isHovered = (row, col) => {
-  return hoveredCells.value.has(`${row}-${col}`)
-}
-
-const clearHover = () => {
-  hoveredCells.value.clear()
-}
 </script>
 
 <style>
@@ -112,8 +75,5 @@ const clearHover = () => {
 }
 .hidden {
   display: none;
-}
-.hovered {
-  background-color: #e9ecef !important;
 }
 </style>
