@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { sendBulkUpdate, handleError } from './update.js'
+import { sendBulkUpdate, handleError } from './api/update.js'
 
 export const useTableStore = defineStore('tableStore', {
   state: () => ({
