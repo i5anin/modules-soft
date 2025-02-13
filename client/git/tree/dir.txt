@@ -1,1 +1,1 @@
-a:\development\gpt_scripts\tree\
+D:\GitHub\modules-soft__pf-forum\client\src
