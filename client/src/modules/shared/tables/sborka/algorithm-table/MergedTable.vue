@@ -11,16 +11,16 @@
     <tbody>
       <tr v-for="(row, rowIndex) in dataSets" :key="rowIndex">
         <td
-          v-if="rowSpanMap[rowIndex][0] > 0"
-          :rowspan="rowSpanMap[rowIndex][0]"
+          v-if="rowSpanMatrix[rowIndex][0] > 0"
+          :rowspan="rowSpanMatrix[rowIndex][0]"
         >
           {{ rowIndex + 1 }}
         </td>
         <td
           v-for="(cell, colIndex) in row"
           :key="colIndex"
-          v-show="rowSpanMap[rowIndex][colIndex] !== -1"
-          :rowspan="rowSpanMap[rowIndex][colIndex]"
+          v-show="rowSpanMatrix[rowIndex][colIndex] !== -1"
+          :rowspan="rowSpanMatrix[rowIndex][colIndex]"
         >
           {{ cell ?? '⚠️' }}
         </td>
@@ -33,28 +33,35 @@
 import { computed } from 'vue'
 import { dataSets, tableHeaders } from './data.js'
 
-const rowSpanMap = computed(() => {
+const rowSpanMatrix = computed(() => {
   if (!dataSets.length) return []
 
-  const rowCount = dataSets.length
-  const colCount = dataSets[0].length
-  const map = Array.from({ length: rowCount }, () => Array(colCount).fill(1))
+  const totalRows = dataSets.length // Общее количество строк
+  const totalCols = dataSets[0].length // Общее количество колонок
 
-  for (let col = 0; col < colCount; col++) {
-    for (let row = 0; row < rowCount; row++) {
-      if (map[row][col] === -1) continue
-      let span = 1
+  // Матрица объединений ячеек (rowspan)
+  const matrix = Array.from({ length: totalRows }, () =>
+    Array(totalCols).fill(1)
+  )
+
+  for (let colIndex = 0; colIndex < totalCols; colIndex++) {
+    for (let rowIndex = 0; rowIndex < totalRows; rowIndex++) {
+      if (matrix[rowIndex][colIndex] === -1) continue
+
+      let spanCount = 1
       while (
-        row + span < rowCount &&
-        dataSets[row][col] === dataSets[row + span][col]
+        rowIndex + spanCount < totalRows &&
+        dataSets[rowIndex][colIndex] ===
+          dataSets[rowIndex + spanCount][colIndex]
       ) {
-        map[row + span][col] = -1
-        span++
+        matrix[rowIndex + spanCount][colIndex] = -1
+        spanCount++
       }
-      map[row][col] = span
+      matrix[rowIndex][colIndex] = spanCount
     }
   }
-  return map
+
+  return matrix
 })
 </script>
 
