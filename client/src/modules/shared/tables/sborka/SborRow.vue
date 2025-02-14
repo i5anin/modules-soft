@@ -4,7 +4,7 @@
     :class="{ 'table-info': isExpanded, 'fw-bold': isExpanded }"
     style="table-layout: fixed"
   >
-    <!-- Иконка разворачивания/сворачивания -->
+    <!--region Иконка разворачивания-->
     <td :style="cellStyle">
       <span v-if="hasChildren" title="Развернуть/Свернуть">
         <font-awesome-icon
@@ -13,14 +13,22 @@
         />
       </span>
     </td>
+    <!--endregion-->
 
-    <!-- Статусы -->
+    <!--region Статусы-->
     <td :style="cellStyle">
       <StatusDisplay :row="sbor" @statusFound="handleStatusFound" />
     </td>
+    <!--endregion-->
 
-    <!-- Поля -->
-    <td v-for="field in fields" :key="field.name" :style="getFieldStyle(field)">
+    <!--region Поля-->
+    <td
+      v-for="(field, colIndex) in fields"
+      :key="field.name"
+      v-show="rowSpanMatrix[rowIndex][colIndex] !== -1"
+      :rowspan="rowSpanMatrix[rowIndex][colIndex]"
+      :style="getFieldStyle(field)"
+    >
       <div v-if="field.permissions.update">
         <input
           type="text"
@@ -31,7 +39,6 @@
           @blur="handleFieldBlur(field)"
         />
       </div>
-
       <div v-else>
         <div
           class="tree-node"
@@ -70,9 +77,11 @@
         />
       </div>
     </td>
+    <!--endregion-->
   </tr>
 
   <!-- Рекурсивный вызов для дочерних узлов -->
+  <!--region Рекурсивный вызов-->
   <template v-if="isExpanded && hasChildren">
     <SborRow
       v-for="(child, index) in sbor.sbor_tree"
@@ -82,8 +91,11 @@
       :depth="depth + 1"
       :isLastChild="index === sbor.sbor_tree.length - 1"
       :detail="detail"
+      :rowIndex="index"
+      :rowSpanMatrix="rowSpanMatrix"
     />
   </template>
+  <!--endregion-->
 </template>
 
 <script setup>
@@ -94,50 +106,49 @@ import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
-import './SborRow.css'
-import SborRow from './SborRow.vue'
 
 const props = defineProps({
   sbor: { type: Object, required: true },
   depth: { type: Number, default: 0 },
   fields: { type: Array, required: true },
   isLastChild: { type: Boolean, default: false },
-  detail: {
-    type: Object,
-    required: true,
-    default: () => ({ route: '' }),
-  },
+  detail: { type: Object, required: true },
+  rowIndex: { type: Number, required: true },
+  rowSpanMatrix: { type: Array, required: true },
 })
 
 const { sbor, detail } = toRefs(props)
 const router = useRouter()
 const tableStore = useTableStore()
 const isExpanded = ref(false)
-const otgruzkaAccepted = ref(false)
 
+// Стили ячеек
 const cellStyle = {
   width: '40px',
   textAlign: 'center',
   verticalAlign: 'middle',
 }
 
-const handleStatusFound = (status) => {
-  if (status.suffix === '_otgruzka' && status.value === true) {
-    otgruzkaAccepted.value = true
-  }
+// Обработчик статуса
+const handleStatusFound = status => {
+  console.log('Найден статус:', status)
 }
 
+// Переключение строки
 const toggle = () => {
   if (hasChildren.value) {
     isExpanded.value = !isExpanded.value
   }
 }
 
+// Проверка наличия дочерних элементов
+const hasChildren = computed(() => sbor.value.sbor_tree?.length > 0)
+
+// Переход по строке
 const handleRowClick = () => {
   const id = sbor.value.link_id
-
   if (!id) {
-    console.error('Missing required parameter: id', {
+    console.error('Ошибка: отсутствует ID для перехода', {
       id,
       sbor: sbor.value,
     })
@@ -145,46 +156,27 @@ const handleRowClick = () => {
   }
 
   router
-    .push({
-      name: detail.value.route,
-      params: { nom_id: id },
-    })
-    .catch((error) => {
-      console.error('Error navigating to route:', error)
+    .push({ name: detail.value.route, params: { nom_id: id } })
+    .catch(error => {
+      console.error('Ошибка при навигации:', error)
     })
 }
 
-const hasChildren = computed(
-  () => sbor.value.sbor_tree && sbor.value.sbor_tree.length > 0
-)
-
-const generateTitle = (field) =>
+// Генерация заголовка
+const generateTitle = field =>
   `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
 
-const handleFieldBlur = (field) => {
-  tableStore.addPendingUpdate({
-    rowId: sbor.value.sbor_orders__id || field.updateKey || 0,
-    fieldName: field.name,
-    oldValue: sbor.value[field.name],
-    newValue: sbor.value[field.name],
-    updateTable: field.update_table,
-  })
-}
-
-const getFieldStyle = (field) => ({
+// Стили ячеек
+const getFieldStyle = field => ({
   fontSize: '12px',
   verticalAlign: 'middle',
   textAlign: getTextAlignment(field.type, field.name),
 })
 
-const getTreeNodeStyle = (field) => ({
+// Стили для `tree-node`
+const getTreeNodeStyle = field => ({
   paddingLeft: field.name === 'name' ? `${props.depth * 20}px` : '0px',
   position: 'relative',
-  textDecoration:
-    otgruzkaAccepted.value &&
-    (field.name === 'name' || field.name === 'description')
-      ? 'line-through'
-      : 'none',
   cursor: 'pointer',
 })
 </script>
