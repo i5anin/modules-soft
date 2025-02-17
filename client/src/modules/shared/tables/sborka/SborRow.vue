@@ -17,7 +17,7 @@
 
     <!--region Статусы-->
     <td :style="cellStyle">
-      <StatusDisplay :row="sbor" @statusFound="handleStatusFound" />
+      <StatusDisplay :row="sbor" />
     </td>
     <!--endregion-->
 
@@ -80,8 +80,7 @@
     <!--endregion-->
   </tr>
 
-  <!-- Рекурсивный вызов для дочерних узлов -->
-  <!--region Рекурсивный вызов-->
+  <!--region Рекурсивный вызов для дочерних узлов-->
   <template v-if="isExpanded && hasChildren">
     <SborRow
       v-for="(child, index) in sbor.sbor_tree"
@@ -106,6 +105,7 @@ import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
 import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
+import './SborRow.css'
 
 const props = defineProps({
   sbor: { type: Object, required: true },
@@ -128,12 +128,6 @@ const cellStyle = {
   textAlign: 'center',
   verticalAlign: 'middle',
 }
-
-// Обработчик статуса
-const handleStatusFound = status => {
-  console.log('Найден статус:', status)
-}
-
 // Переключение строки
 const toggle = () => {
   if (hasChildren.value) {
