@@ -59,7 +59,6 @@ const filteredFields = computed(() =>
   )
 )
 
-// Вычисление `rowSpanMatrix` с учетом `nom_code`
 const rowSpanMatrix = computed(() => {
   if (!props.tableData.length) return []
 
@@ -80,8 +79,10 @@ const rowSpanMatrix = computed(() => {
       let spanCount = 1
       while (
         rowIndex + spanCount < totalRows &&
+        props.tableData[rowIndex].nom_code !== undefined &&
         props.tableData[rowIndex].nom_code ===
           props.tableData[rowIndex + spanCount].nom_code &&
+        props.tableData[rowIndex][field.name] !== undefined &&
         props.tableData[rowIndex][field.name] ===
           props.tableData[rowIndex + spanCount][field.name]
       ) {
@@ -92,6 +93,7 @@ const rowSpanMatrix = computed(() => {
     }
   }
 
+  console.log('📌 Row Span Matrix:', matrix) // Отладка
   return matrix
 })
 </script>
