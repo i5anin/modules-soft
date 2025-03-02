@@ -1,6 +1,6 @@
 //region Генерация временного токена
 const getToken = () => {
-  let token = localStorage.getItem('token') || btoa('user:secureRandomString123')
+  let token = localStorage.getItem('token') || '18|gfTXsUcC7w9x7aRqpsqgVnNqhlJyz1Cq5Kp0HIql23bab626'
 
   if (!localStorage.getItem('token')) {
     localStorage.setItem('token', token)
