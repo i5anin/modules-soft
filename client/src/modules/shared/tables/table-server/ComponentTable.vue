@@ -43,7 +43,7 @@
             v-for="row in items"
             :key="row.id"
             @click="emit('row-click', row)"
-            :class="{ locked: row.locked, 'table-success': row.goz }"
+            :class="{ locked: row.locked }"
           >
             <td v-if="showStatusColumn">
               <StatusDisplay :row="row" />
@@ -52,12 +52,14 @@
               v-for="field in filteredFields"
               :key="field.name"
               :style="{ textAlign: getTextAlignment(field.type, field.name) }"
+              :class="{
+                'table-success': row.goz && field.name === 'clients__name',
+              }"
             >
               <span
                 v-html="formatValue(row[field.name], field.type, field.name)"
               />
             </td>
-
             <td @click.stop="openEditModal(row)" v-if="editButton">
               <button class="btn btn-sm">
                 <i class="bi bi-pencil-fill" style="color: gray"></i>
@@ -103,7 +105,7 @@ const isModalVisible = ref(false)
 const selectedRow = ref(null)
 
 const normalizedHeaders = computed(() =>
-  props.headers.map((header) => ({
+  props.headers.map(header => ({
     ...header,
     permissions: header.permissions || { read: true },
   }))
@@ -111,7 +113,7 @@ const normalizedHeaders = computed(() =>
 
 const filteredFields = computed(() => {
   return normalizedHeaders.value.filter(
-    (header) => !props.excluded.includes(header.name) && header.permissions.read
+    header => !props.excluded.includes(header.name) && header.permissions.read
   )
 })
 
@@ -119,15 +121,15 @@ const showStatusColumn = computed(() => {
   const firstItem = props.items[0]
   return (
     firstItem &&
-    Object.keys(firstItem).some((key) => key.toLowerCase().includes('status'))
+    Object.keys(firstItem).some(key => key.toLowerCase().includes('status'))
   )
 })
 
-const handleSort = (column) => {
+const handleSort = column => {
   if (column.sortable) emit('sort-change', column.name)
 }
 
-const openEditModal = (row) => {
+const openEditModal = row => {
   selectedRow.value = row
   isModalVisible.value = true
 }
@@ -137,7 +139,7 @@ const closeModal = () => {
   selectedRow.value = null
 }
 
-const saveRowChanges = (updatedRow) => {
+const saveRowChanges = updatedRow => {
   console.log('Сохранено:', updatedRow)
   closeModal()
 }
