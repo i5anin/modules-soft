@@ -1,10 +1,6 @@
 <template>
   <ul class="list-group">
-    <li
-      v-for="prop in propsList"
-      :key="prop.name"
-      class="list-group-item"
-    >
+    <li v-for="prop in propsList" :key="prop.name" class="list-group-item">
       <strong :title="JSON.stringify(prop)">{{ prop.name }}</strong>
       <span v-if="prop.type">(тип: {{ prop.type }})</span>
       <span v-if="prop.default" class="text-muted">
@@ -20,7 +16,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-});
+})
 </script>
 
 <style scoped>

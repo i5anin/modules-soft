@@ -27,8 +27,8 @@ const emit = defineEmits(['statusFound'])
 // Форматируем статусы, проверяя окончание ключей
 const formattedStatuses = computed(() => {
   return statuses
-    .map((statusObj) => {
-      const rowKey = Object.keys(props.row).find((key) =>
+    .map(statusObj => {
+      const rowKey = Object.keys(props.row).find(key =>
         key.endsWith(statusObj.suffix)
       )
       if (rowKey && statusObj.suffix === '_otgruzka') {
@@ -47,7 +47,7 @@ const formattedStatuses = computed(() => {
         : null
     })
     .filter(
-      (statusObj) =>
+      statusObj =>
         statusObj &&
         props.row[statusObj.key] &&
         String(props.row[statusObj.key]).trim() !== ''

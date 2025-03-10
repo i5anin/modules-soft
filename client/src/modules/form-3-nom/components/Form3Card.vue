@@ -81,7 +81,7 @@ const formattedFieldValues = computed(() =>
 )
 
 // Methods
-const handleFieldClick = (name) => {
+const handleFieldClick = name => {
   console.log(`Клик по полю в родительском компоненте: ${name}`) // Лог проверки
   if (['zag_nom', 'zag_tech'].includes(name)) {
     modalType.value = name === 'zag_nom' ? 'nom' : 'tech'

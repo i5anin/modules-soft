@@ -55,7 +55,7 @@ export function processFields(fields, config = exclusionConfig) {
     throw new Error('processFields: Expected an array of fields')
   }
 
-  return fields.map((field) => {
+  return fields.map(field => {
     if (typeof field !== 'object' || field === null) {
       console.error('Некорректное поле:', field)
       throw new Error('processFields: Field is not a valid object')
@@ -67,7 +67,7 @@ export function processFields(fields, config = exclusionConfig) {
     }
 
     // Проверка на совпадение с шаблонами
-    if (patterns.some((pattern) => pattern.test(field.key))) {
+    if (patterns.some(pattern => pattern.test(field.key))) {
       return { ...field, modified: false }
     }
 

@@ -96,28 +96,28 @@ const loadInstrumentData = async () => {
   }
 }
 
-const generateUniqueId = (item) => {
+const generateUniqueId = item => {
   return `${item.tool_group_id}-${JSON.stringify(item.property_description)}`
 }
 
 const filteredInstruments = computed(() => {
   if (!instrumentData.value) return []
-  return instrumentData.value.data.filter((item) => {
+  return instrumentData.value.data.filter(item => {
     const itemId = generateUniqueId(item)
     return !addedInstruments.value.some(
-      (addedItem) => generateUniqueId(addedItem) === itemId
+      addedItem => generateUniqueId(addedItem) === itemId
     )
   })
 })
 
-const addInstrument = (item) => {
+const addInstrument = item => {
   addedInstruments.value.push(item)
   collapseStates[generateUniqueId(item)] = false
 }
 
-const removeInstrument = (item) => {
+const removeInstrument = item => {
   addedInstruments.value = addedInstruments.value.filter(
-    (addedItem) => generateUniqueId(addedItem) !== generateUniqueId(item)
+    addedItem => generateUniqueId(addedItem) !== generateUniqueId(item)
   )
   delete collapseStates[generateUniqueId(item)]
 }

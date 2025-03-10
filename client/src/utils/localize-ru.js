@@ -4,7 +4,7 @@ const customRuLocale = {
   ...ru,
   localize: {
     ...ru.localize,
-    day: (day) => {
+    day: day => {
       const days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ']
       return days[day]
     },

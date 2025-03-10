@@ -102,14 +102,14 @@ export default {
       }
     }
 
-    const isObject = (value) =>
+    const isObject = value =>
       value && typeof value === 'object' && !Array.isArray(value)
 
     const closeModal = () => emit('close')
 
     watch(
       () => props.visible,
-      (newValue) => {
+      newValue => {
         if (newValue) fetchZagotovkaData()
       },
       { immediate: true }

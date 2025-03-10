@@ -44,13 +44,13 @@ export default {
       endDate.value ? moment(endDate.value).format('YYYY-MM-DD') : ''
     )
 
-    const onStartDateChange = (value) => {
+    const onStartDateChange = value => {
       const date = value ? moment(value).toDate() : null
       startDate.value = date
       emit('update:start', date)
     }
 
-    const onEndDateChange = (value) => {
+    const onEndDateChange = value => {
       const date = value ? moment(value).toDate() : null
       endDate.value = date
       emit('update:end', date)

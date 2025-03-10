@@ -82,32 +82,32 @@ const filterFields = (fields, condition) => {
   )
 }
 
-const readAndUpdateFields = (fields) =>
+const readAndUpdateFields = fields =>
   filterFields(
     fields,
-    (field) => field.permissions.read || field.permissions.update
+    field => field.permissions.read || field.permissions.update
   ).map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
 
 const filteredHeaderFields = computed(() =>
   filterFields(
     selectedItem.value?.header?.fields,
-    (field) => field.permissions.read || field.permissions.update
+    field => field.permissions.read || field.permissions.update
   ).map(([key, fieldProps]) => ({ key, ...fieldProps }))
 )
 
 const updateFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => field.permissions.update)
+  filteredHeaderFields.value.filter(field => field.permissions.update)
 )
 
 const readonlyFormFields = computed(() =>
-  filteredHeaderFields.value.filter((field) => !field.permissions.update)
+  filteredHeaderFields.value.filter(field => !field.permissions.update)
 )
 
 const fieldValues = computed(() => {
   const fields = selectedItem.value?.header?.fields || {}
   const data = selectedItem.value?.header?.data || {}
   return Object.fromEntries(
-    Object.keys(fields).map((key) => [key, data[key] ?? ''])
+    Object.keys(fields).map(key => [key, data[key] ?? ''])
   )
 })
 </script>

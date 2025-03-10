@@ -78,27 +78,27 @@ const loading = ref(false)
 const pageSizes = computed(() => props.itemsPerPageOptions)
 
 const filteredHeaders = computed(() =>
-  props.headers.filter((header) => !props.excluded.includes(header.name))
+  props.headers.filter(header => !props.excluded.includes(header.name))
 )
 
 const totalCnt = computed(() => props.totalCount)
 const currentPg = computed(() => props.currentPage)
 const totalPg = computed(() => props.totalPages)
 
-const sortBy = (column) => {
+const sortBy = column => {
   const isAsc = props.sortColumn === column && props.sortOrder === 'asc'
   emit('sort-change', { column, order: isAsc ? 'desc' : 'asc' })
 }
 
-const handleRowClick = (row) => emit('row-click', row)
+const handleRowClick = row => emit('row-click', row)
 
-const updateItemsPerPage = (value) => {
+const updateItemsPerPage = value => {
   localItemsPerPage.value = value
   emit('page-change', 1)
   emit('page-size-change', value)
 }
 
-const updateStartDate = (value) => {
+const updateStartDate = value => {
   localStartDate.value = value
   emit('date-range-change', {
     startDate: value ? formatISO(value, { representation: 'date' }) : '',
@@ -108,7 +108,7 @@ const updateStartDate = (value) => {
   })
 }
 
-const updateEndDate = (value) => {
+const updateEndDate = value => {
   localEndDate.value = value
   emit('date-range-change', {
     startDate: localStartDate.value
@@ -118,13 +118,13 @@ const updateEndDate = (value) => {
   })
 }
 
-const onSearch = (query) => {
+const onSearch = query => {
   loading.value = true
   emit('search-change', query)
   setTimeout(() => (loading.value = false), 500)
 }
 
-const goToPage = (page) => {
+const goToPage = page => {
   emit('page-change', page)
 }
 </script>

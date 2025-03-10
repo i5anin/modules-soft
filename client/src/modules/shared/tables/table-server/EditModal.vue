@@ -88,7 +88,7 @@ export default {
 
     watch(
       () => props.row,
-      (newRow) => {
+      newRow => {
         Object.assign(editableRow, newRow)
       }
     )

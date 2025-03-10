@@ -102,25 +102,25 @@ const props = defineProps({
 // Локальное состояние для управления раскрытием комментариев
 const localCollapseStates = reactive({ ...props.collapseStates })
 
-const generateUniqueId = (item) => {
+const generateUniqueId = item => {
   return `${item.tool_group_id}-${JSON.stringify(item.property_description)}`
 }
 
-const toggleCollapse = (item) => {
+const toggleCollapse = item => {
   const id = generateUniqueId(item)
   localCollapseStates[id] = !localCollapseStates[id]
 }
 
-const isExpanded = (item) => {
+const isExpanded = item => {
   const id = generateUniqueId(item)
   return localCollapseStates[id]
 }
 
-const initialComments = (item) => {
+const initialComments = item => {
   return item.comments_operators.slice(0, 5)
 }
 
-const additionalComments = (item) => {
+const additionalComments = item => {
   return item.comments_operators.slice(5)
 }
 </script>

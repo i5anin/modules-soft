@@ -55,7 +55,7 @@ export default {
       formatValue(props.value, props.field.type, props.field.key)
     )
 
-    const handleIconClick = (key) => {
+    const handleIconClick = key => {
       emit('icon-click', key)
     }
 

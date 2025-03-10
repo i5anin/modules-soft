@@ -54,7 +54,7 @@ export default defineComponent({
       const processedFields = processFields(fieldsArray)
 
       return processedFields
-        .filter((field) => field.permissions?.read) // Фильтруем только видимые поля
+        .filter(field => field.permissions?.read) // Фильтруем только видимые поля
         .reduce((acc, field) => {
           acc[field.key] = field
           return acc
@@ -73,7 +73,7 @@ export default defineComponent({
       Object.assign(
         fieldValues,
         Object.fromEntries(
-          Object.keys(props.header.fields || {}).map((name) => [
+          Object.keys(props.header.fields || {}).map(name => [
             name,
             formatValue(
               props.header.data?.[name] ?? null,

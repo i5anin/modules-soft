@@ -94,12 +94,12 @@ const fetchNoms = async () => {
   }
 }
 
-const updatePage = (page) => {
+const updatePage = page => {
   currentPage.value = page
   fetchNoms()
 }
 
-const handleSearchChange = (search) => {
+const handleSearchChange = search => {
   searchQuery.value = search
   currentPage.value = 1
   fetchNoms()
@@ -111,12 +111,12 @@ const updateSorting = ({ column, order }) => {
   fetchNoms()
 }
 
-const updateItemsPerPage = (value) => {
+const updateItemsPerPage = value => {
   itemsPerPage.value = value
   fetchNoms()
 }
 
-const handleDateRangeChange = (range) => {
+const handleDateRangeChange = range => {
   console.log('Изменение диапазона дат:', range)
 }
 

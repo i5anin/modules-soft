@@ -83,7 +83,7 @@ const selectedRow = ref(null)
 const selectedField = ref(null)
 
 const filteredFields = computed(() =>
-  props.fields.filter((field) => !props.excluded.includes(field.key))
+  props.fields.filter(field => !props.excluded.includes(field.key))
 )
 
 const openModal = (row, field) => {

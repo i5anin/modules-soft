@@ -113,7 +113,7 @@ export default {
       Default: '#aaaaaa',
     }
 
-    const getColor = (entry) => {
+    const getColor = entry => {
       return entry.color in colorMapping
         ? colorMapping[entry.color]
         : entry.color || colorMapping.Default

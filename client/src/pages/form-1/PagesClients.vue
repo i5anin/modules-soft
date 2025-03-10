@@ -92,14 +92,14 @@ const fetchClients = async () => {
 }
 
 // Обработчики событий
-const handleRowClick = (row) => {
+const handleRowClick = row => {
   router.push({
     name: 'Noms',
     params: { clientId: row.link_id },
   })
 }
 
-const handlePageChange = (page) => {
+const handlePageChange = page => {
   currentPage.value = page
   fetchClients()
 }
@@ -111,13 +111,13 @@ const handleSortChange = ({ column, order }) => {
   fetchClients()
 }
 
-const handlePageSizeChange = (size) => {
+const handlePageSizeChange = size => {
   itemsPerPage.value = size
   currentPage.value = 1
   fetchClients()
 }
 
-const handleSearchChange = (search) => {
+const handleSearchChange = search => {
   searchQuery.value = search
   currentPage.value = 1
   fetchClients()

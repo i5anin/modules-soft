@@ -113,7 +113,7 @@ export default {
       return pages
     })
 
-    const goToPage = (page) => {
+    const goToPage = page => {
       if (page < 1) page = 1
       if (page > props.totalPages) page = props.totalPages
       emit('page-change', page)

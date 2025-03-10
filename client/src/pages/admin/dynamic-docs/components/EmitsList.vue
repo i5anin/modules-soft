@@ -1,10 +1,6 @@
 <template>
   <ul class="list-group">
-    <li
-      v-for="event in emitsList"
-      :key="event"
-      class="list-group-item"
-    >
+    <li v-for="event in emitsList" :key="event" class="list-group-item">
       {{ event }}
     </li>
   </ul>
@@ -16,7 +12,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-});
+})
 </script>
 
 <style scoped>

@@ -94,21 +94,21 @@ export default {
     const pageSizes = computed(() => props.itemsPerPageOptions)
 
     const filteredHeaders = computed(() =>
-      props.headers.filter((header) => !props.excluded.includes(header.name))
+      props.headers.filter(header => !props.excluded.includes(header.name))
     )
 
     const totalCnt = computed(() => props.totalCount)
     const currentPg = computed(() => props.currentPage)
     const totalPg = computed(() => props.totalPages)
 
-    const sortBy = (column) => {
+    const sortBy = column => {
       const isAsc = props.sortColumn === column && props.sortItem === 'asc'
       emit('sort-change', { column, item: isAsc ? 'desc' : 'asc' })
     }
 
-    const handleRowClick = (row) => emit('row-click', row)
+    const handleRowClick = row => emit('row-click', row)
 
-    const updateItemsPerPage = (value) => {
+    const updateItemsPerPage = value => {
       localItemsPerPage.value = value
       emit('page-size-change', value)
     }
@@ -124,23 +124,23 @@ export default {
       })
     }
 
-    const updateStartDate = (value) => {
+    const updateStartDate = value => {
       localStartDate.value = value
       updateDateRange()
     }
 
-    const updateEndDate = (value) => {
+    const updateEndDate = value => {
       localEndDate.value = value
       updateDateRange()
     }
 
-    const onSearch = (query) => {
+    const onSearch = query => {
       loading.value = true
       emit('search-change', query)
       setTimeout(() => (loading.value = false), 500)
     }
 
-    const goToPage = (page) => emit('page-change', page)
+    const goToPage = page => emit('page-change', page)
 
     return {
       pageSizes,

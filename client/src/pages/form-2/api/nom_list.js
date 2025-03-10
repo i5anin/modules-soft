@@ -11,7 +11,7 @@ import { getToken } from '@/modules/api/tokenService.js'
  * @throws {Error} - выбрасывает ошибку, если поле отсутствует
  */
 const validateFields = (fields, requiredFields) => {
-  requiredFields.forEach((field) => {
+  requiredFields.forEach(field => {
     if (!fields[field]) {
       console.warn(`Поле "${field}" отсутствует или пустое.`)
       throw new Error(`Обязательное поле "${field}" не заполнено.`)
@@ -24,7 +24,7 @@ const validateFields = (fields, requiredFields) => {
  * @param {Object} params - параметры для запроса
  * @returns {Promise<Object>} - Объект заказа
  */
-export const getNomById = async (params) => {
+export const getNomById = async params => {
   try {
     // Проверка обязательных параметров
     validateFields(params, ['id', 'type', 'module'])

@@ -43,7 +43,7 @@ export default defineComponent({
   setup(props) {
     const hasNonEmptyComments = computed(() =>
       props.commentFields.some(
-        (field) =>
+        field =>
           props.fieldValues[field.name] &&
           props.fieldValues[field.name].trim() !== ''
       )

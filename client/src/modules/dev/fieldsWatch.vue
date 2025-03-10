@@ -21,7 +21,7 @@ const modules = ['managers', 'metrolog', 'omts', 'tech_calc']
 // Коррекция модулей для `nom_list`:
 const nomModules = {
   orders: modules, // Все модули
-  kp: modules.filter((mod) => mod !== 'tech_calc'), // Исключаем `tech_calc`
+  kp: modules.filter(mod => mod !== 'tech_calc'), // Исключаем `tech_calc`
   specs: modules, // Все модули
 }
 
@@ -102,7 +102,7 @@ const fetchAllData = async () => {
       fields = processFields(fields)
 
       results
-        .find((res) => res.module === module)
+        .find(res => res.module === module)
         .data.push({
           type,
           module,

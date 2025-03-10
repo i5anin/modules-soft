@@ -13,20 +13,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const props = defineProps({
   title: {
     type: String,
     required: true,
   },
-});
+})
 
-const isCollapsed = ref(false);
+const isCollapsed = ref(false)
 
 const toggle = () => {
-  isCollapsed.value = !isCollapsed.value;
-};
+  isCollapsed.value = !isCollapsed.value
+}
 </script>
 
 <style scoped>

@@ -3,11 +3,7 @@
     <div v-if="ownMethods.length" class="mb-3">
       <h5>*Собственные методы</h5>
       <ul class="list-group">
-        <li
-          v-for="method in ownMethods"
-          :key="method"
-          class="list-group-item"
-        >
+        <li v-for="method in ownMethods" :key="method" class="list-group-item">
           {{ method }}
         </li>
       </ul>
@@ -37,7 +33,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-});
+})
 </script>
 
 <style scoped>
