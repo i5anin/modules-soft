@@ -1,16 +1,17 @@
-//region Генерация временного токена
-const getToken = () => {
-  let token = localStorage.getItem('token') || '18|gfTXsUcC7w9x7aRqpsqgVnNqhlJyz1Cq5Kp0HIql23bab626'
+// region Работа с токеном
+const TOKEN_KEY = 'token'
 
-  if (!localStorage.getItem('token')) {
-    localStorage.setItem('token', token)
-    console.log('Создан новый token:', token)
-  } else {
-    console.log('Текущий token:', token)
+const getToken = () => localStorage.getItem(TOKEN_KEY) || null
+
+const setToken = token => {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token)
   }
-
-  return token
 }
-//endregion
 
-export { getToken }
+const removeToken = () => {
+  localStorage.removeItem(TOKEN_KEY)
+}
+// endregion
+
+export { getToken, setToken, removeToken }

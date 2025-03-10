@@ -55,7 +55,7 @@ const totalPages = computed(() =>
 )
 
 const tableColumns = computed(() =>
-  tableFields.value.map((field) => ({
+  tableFields.value.map(field => ({
     name: field.key,
     title: field.title,
     type: field.type,
@@ -76,7 +76,7 @@ const fetchItems = async () => {
       date1: startDate.value,
       date2: endDate.value,
       type: props.type,
-      module: roleStore.selectedRole,
+      // module: roleStore.selectedRole,
     })
 
     if (response?.table) {
@@ -103,11 +103,11 @@ const resetData = () => {
   totalCount.value = 0
 }
 
-const navigateToRow = (row) => {
+const navigateToRow = row => {
   router.push({ name: props.route, params: { id: row.link_id } })
 }
 
-const updatePage = (page) => {
+const updatePage = page => {
   currentPage.value = page
   fetchItems()
 }
@@ -119,13 +119,13 @@ const updateSort = ({ column, item }) => {
   fetchItems()
 }
 
-const updatePageSize = (size) => {
+const updatePageSize = size => {
   itemsPerPage.value = size
   currentPage.value = 1
   fetchItems()
 }
 
-const updateSearch = (query) => {
+const updateSearch = query => {
   searchQuery.value = query
   currentPage.value = 1
   fetchItems()
