@@ -54,6 +54,7 @@
               :style="{ textAlign: getTextAlignment(field.type, field.name) }"
               :class="{
                 'table-success': row.goz && field.name === 'clients__name',
+                'table-warning': row.exp && field.name === 'clients__name',
               }"
             >
               <span
