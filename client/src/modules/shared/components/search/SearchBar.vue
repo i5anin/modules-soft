@@ -65,9 +65,6 @@ export default {
   width: auto;
   min-width: 300px;
 }
-.input-group-text {
-  background-color: #f8f9fa;
-}
 .search-button {
   display: flex;
   align-items: center;

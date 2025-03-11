@@ -10,7 +10,7 @@
       }"
     >
       <h6 class="mt-3 text-capitalize">{{ groupName }}</h6>
-      <table class="table table-bordered table-striped mt-3">
+      <table class="table table-bordered mt-3">
         <thead>
           <tr>
             <th scope="col" style="width: 15%">Название маршрута</th>

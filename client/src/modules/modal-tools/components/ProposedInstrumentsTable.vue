@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-6">
     <h5>Предложенный инструмент:</h5>
-    <table class="table table-sm table-bordered table-hover table-striped">
+    <table class="table table-sm table-bordered table-hover">
       <thead>
         <tr class="text-center">
           <th style="width: 2%">Т шт.</th>

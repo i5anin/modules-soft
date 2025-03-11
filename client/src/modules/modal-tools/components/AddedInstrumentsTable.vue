@@ -2,7 +2,7 @@
   <div class="col-md-6">
     <div v-if="instruments.length > 0">
       <h5>Добавленные инструменты:</h5>
-      <table class="table table-sm table-bordered table-hover table-striped">
+      <table class="table table-sm table-bordered table-hover">
         <thead>
           <tr class="text-center">
             <th style="width: 2%">Т шт.</th>

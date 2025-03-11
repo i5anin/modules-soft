@@ -1,9 +1,7 @@
 <template>
   <div>
     <h6>{{ tableTitle }}</h6>
-    <table
-      class="table-base table table-striped table-sm mt-3 table-bordered table-hover"
-    >
+    <table class="table-base table table-sm mt-3 table-bordered table-hover">
       <thead>
         <tr>
           <th v-for="field in filteredFields" :key="field.key">

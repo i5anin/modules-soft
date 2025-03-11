@@ -6,9 +6,7 @@
         Нет данных.
       </div>
       <div v-else>
-        <table
-          class="table-sbor table table-bordered table-striped table-sm table-hover"
-        >
+        <table class="table-sbor table table-bordered table-sm table-hover">
           <thead>
             <tr style="font-size: 12px">
               <th scope="col" style="width: 30px" title="развернуть"></th>

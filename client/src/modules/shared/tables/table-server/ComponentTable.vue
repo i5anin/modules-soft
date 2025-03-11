@@ -5,7 +5,7 @@
 
     <!-- Таблица -->
     <div v-else>
-      <table class="table table-striped table-bordered table-hover">
+      <table class="table table-bordered table-hover">
         <thead>
           <tr>
             <th
