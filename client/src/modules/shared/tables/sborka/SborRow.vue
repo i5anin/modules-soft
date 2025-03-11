@@ -29,7 +29,7 @@
       :rowspan="rowSpanMatrix[rowIndex][colIndex]"
       :style="getFieldStyle(field)"
     >
-      <div v-if="field.permissions.update">
+      <div v-if="(field.permissions.update = 0)">
         <input
           type="text"
           v-model="sbor[field.name]"
