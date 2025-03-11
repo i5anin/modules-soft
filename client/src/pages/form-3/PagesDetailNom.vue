@@ -124,7 +124,6 @@ const fieldValues = computed(() => {
 }
 
 .card-body {
-  background-color: #f8f9fa;
   border-radius: 8px;
   padding: 16px;
 }

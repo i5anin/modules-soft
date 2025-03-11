@@ -109,6 +109,5 @@ const closeModal = () => {
 <style scoped>
 .card {
   border-radius: 8px;
-  background-color: #f8f9fa;
 }
 </style>
