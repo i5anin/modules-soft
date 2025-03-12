@@ -155,14 +155,6 @@ const devRoutes = [
     meta: { title: 'Обработка полей (Processor)' },
     props: true,
   },
-  {
-    path: '/dev/algorithm-table',
-    name: 'algorithm-table',
-    component: () =>
-      import('@/modules/shared/tables/sborka/algorithm-table/MergedTable.vue'),
-    meta: { title: 'Обработка (algorithm-table)' },
-    props: true,
-  },
 ]
 
 const routes = [
