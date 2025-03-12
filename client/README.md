@@ -38,120 +38,120 @@
 
 ```
 📦 src/
-┣ 📄 App.vue
+┣ 📗 App.vue
 ┣ 📂 assets/
-  ┣ 📄 FormFloatingField.css
-┣ 📄 main.js
+  ┣ 🎨 FormFloatingField.css
+┣ 📜 main.js
 ┣ 📂 modules/
   ┣ 📂 api/
-    ┣ 📄 apiClient.js
-    ┣ 📄 responseHandlers.js
-    ┣ 📄 tokenService.js
+    ┣ 📜 apiClient.js
+    ┣ 📜 responseHandlers.js
+    ┣ 📜 tokenService.js
   ┣ 📂 dev/
-    ┣ 📄 fieldsProcessor.vue
-    ┣ 📄 fieldsWatch.vue
+    ┣ 📗 fieldsProcessor.vue
+    ┣ 📗 fieldsWatch.vue
   ┣ 📂 form-2-card-noms/
     ┣ 📂 components/
-      ┣ 📄 CardComment.vue
-      ┣ 📄 Form2Card.vue
+      ┣ 📗 CardComment.vue
+      ┣ 📗 Form2Card.vue
   ┣ 📂 form-3-nom/
     ┣ 📂 components/
       ┣ 📂 card/
-        ┣ 📄 EditableField.vue
-        ┣ 📄 ReadonlyField.vue
-      ┣ 📄 Form3Card.vue
+        ┣ 📗 EditableField.vue
+        ┣ 📗 ReadonlyField.vue
+      ┣ 📗 Form3Card.vue
     ┣ 📂 utils/
-      ┣ 📄 calculateHeight.js
-  ┣ 📄 locales.js
+      ┣ 📜 calculateHeight.js
+  ┣ 📜 locales.js
   ┣ 📂 modal-tools/
     ┣ 📂 api/
-      ┣ 📄 tools.js
+      ┣ 📜 tools.js
     ┣ 📂 components/
-      ┣ 📄 AddedInstrumentsTable.vue
-      ┣ 📄 PagesModalTools.vue
-      ┣ 📄 ProposedInstrumentsTable.vue
+      ┣ 📗 AddedInstrumentsTable.vue
+      ┣ 📗 PagesModalTools.vue
+      ┣ 📗 ProposedInstrumentsTable.vue
   ┣ 📂 shared/
     ┣ 📂 components/
       ┣ 📂 common/
-        ┣ 📄 WarningMessage.vue
+        ┣ 📗 WarningMessage.vue
       ┣ 📂 forms/
-        ┣ 📄 DateRangeFilters.vue
+        ┣ 📗 DateRangeFilters.vue
       ┣ 📂 pagination/
-        ┣ 📄 PageSizeSelector.vue
-        ┣ 📄 Pagination.vue
+        ┣ 📗 PageSizeSelector.vue
+        ┣ 📗 Pagination.vue
       ┣ 📂 search/
-        ┣ 📄 SearchBar.vue
+        ┣ 📗 SearchBar.vue
       ┣ 📂 ui/
-        ┣ 📄 BackButton.vue
-        ┣ 📄 LoadingSpinner.vue
-        ┣ 📄 StatusDisplay.vue
-        ┣ 📄 StrategyDisplay.vue
-        ┣ 📄 ThinProgressBar.vue
+        ┣ 📗 BackButton.vue
+        ┣ 📗 LoadingSpinner.vue
+        ┣ 📗 StatusDisplay.vue
+        ┣ 📗 StrategyDisplay.vue
+        ┣ 📗 ThinProgressBar.vue
     ┣ 📂 logic/
-      ┣ 📄 statuses.js
+      ┣ 📜 statuses.js
     ┣ 📂 tables/
       ┣ 📂 sborka/
         ┣ 📂 api/
-          ┣ 📄 update.js
-        ┣ 📄 PendingUpdatesOverlay.vue
-        ┣ 📄 SborMain.vue
-        ┣ 📄 SborRow.css
-        ┣ 📄 SborRow.vue
-        ┣ 📄 tableStore.js
+          ┣ 📜 update.js
+        ┣ 📗 PendingUpdatesOverlay.vue
+        ┣ 📗 SborMain.vue
+        ┣ 🎨 SborRow.css
+        ┣ 📗 SborRow.vue
+        ┣ 📜 tableStore.js
       ┣ 📂 sborka-server/
-        ┣ 📄 ServerSideSborka.vue
+        ┣ 📗 ServerSideSborka.vue
       ┣ 📂 table/
-        ┣ 📄 BaseTable.vue
+        ┣ 📗 BaseTable.vue
       ┣ 📂 table-server/
-        ┣ 📄 DataTable.vue
-        ┣ 📄 EditModal.vue
-        ┣ 📄 PaginatedDataTable.vue
+        ┣ 📗 DataTable.vue
+        ┣ 📗 EditModal.vue
+        ┣ 📗 PaginatedDataTable.vue
     ┣ 📂 zagotovka/
       ┣ 📂 api/
-        ┣ 📄 zagotovka.js
-      ┣ 📄 ModalZagotovka.vue
+        ┣ 📜 zagotovka.js
+      ┣ 📗 ModalZagotovka.vue
   ┣ 📂 _main/
     ┣ 📂 components/
-      ┣ 📄 Navbar.vue
+      ┣ 📗 Navbar.vue
     ┣ 📂 store/
-      ┣ 📄 index.js
+      ┣ 📜 index.js
 ┣ 📂 pages/
   ┣ 📂 admin/
     ┣ 📂 dynamic-docs/
       ┣ 📂 components/
-        ┣ 📄 ChildrenList.vue
-        ┣ 📄 CollapsibleSection.vue
-        ┣ 📄 EmitsList.vue
-        ┣ 📄 MethodsList.vue
-        ┣ 📄 PropsList.vue
-      ┣ 📄 descriptionData.json
-      ┣ 📄 InfoComponent.vue
-      ┣ 📄 PagesViewer.vue
-    ┣ 📄 Home.vue
-    ┣ 📄 Structure.vue
+        ┣ 📗 ChildrenList.vue
+        ┣ 📗 CollapsibleSection.vue
+        ┣ 📗 EmitsList.vue
+        ┣ 📗 MethodsList.vue
+        ┣ 📗 PropsList.vue
+      ┣ ⚙ descriptionData.json
+      ┣ 📗 InfoComponent.vue
+      ┣ 📗 PagesViewer.vue
+    ┣ 📗 Home.vue
+    ┣ 📗 Structure.vue
   ┣ 📂 form-1/
     ┣ 📂 api/
-      ┣ 📄 clients.js
-      ┣ 📄 list.js
-    ┣ 📄 PagesClients.vue
-    ┣ 📄 PagesTableWrapper.vue
+      ┣ 📜 clients.js
+      ┣ 📜 list.js
+    ┣ 📗 PagesClients.vue
+    ┣ 📗 PagesTableWrapper.vue
   ┣ 📂 form-2/
     ┣ 📂 api/
-      ┣ 📄 nom_dir.js
-      ┣ 📄 nom_list.js
-    ┣ 📄 PagesCardNoms.vue
-    ┣ 📄 PagesClientNoms.vue
+      ┣ 📜 nom_dir.js
+      ┣ 📜 nom_list.js
+    ┣ 📗 PagesCardNoms.vue
+    ┣ 📗 PagesClientNoms.vue
   ┣ 📂 form-3/
     ┣ 📂 api/
-      ┣ 📄 nom_info.js
-    ┣ 📄 PagesDetailNom.vue
-┣ 📄 router.js
+      ┣ 📜 nom_info.js
+    ┣ 📗 PagesDetailNom.vue
+┣ 📜 router.js
 ┣ 📂 store/
-  ┣ 📄 home.module.js
+  ┣ 📜 home.module.js
 ┣ 📂 utils/
   ┣ 📂 dev/
-    ┣ 📄 fieldsProcessor.js
-  ┣ 📄 formatters.js
-  ┣ 📄 icons.js
-  ┣ 📄 localize-ru.js
+    ┣ 📜 fieldsProcessor.js
+  ┣ 📜 formatters.js
+  ┣ 📜 icons.js
+  ┣ 📜 localize-ru.js
 ```
