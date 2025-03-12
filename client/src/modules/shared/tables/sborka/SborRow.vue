@@ -103,8 +103,8 @@ import { useRouter } from 'vue-router'
 import { useTableStore } from './tableStore'
 import { FontAwesomeIcon } from '@/utils/icons.js'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
-import StrategyDisplay from '@/modules/shared/components/StrategyDisplay.vue'
+import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
+import StrategyDisplay from '@/modules/shared/components/ui/StrategyDisplay.vue'
 import './SborRow.css'
 
 const props = defineProps({

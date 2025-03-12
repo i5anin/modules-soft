@@ -49,7 +49,7 @@
 
 <script>
 import { useRoleStore } from '../store/index.js'
-import BackButton from '@/modules/shared/components/BackButton.vue'
+import BackButton from '@/modules/shared/components/ui/BackButton.vue'
 
 export default {
   components: { BackButton },

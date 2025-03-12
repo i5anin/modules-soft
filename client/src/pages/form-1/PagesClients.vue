@@ -30,7 +30,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getClients } from '../form-1/api/clients.js'
-import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
+import ServerSideTable from '@/modules/shared/tables/table-server/PaginatedDataTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
 // Реактивные переменные

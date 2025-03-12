@@ -83,10 +83,10 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref } from 'vue'
-import LoadingSpinner from '@/modules/shared/components/LoadingSpinner.vue'
-import StatusDisplay from '@/modules/shared/components/StatusDisplay.vue'
+import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
 import EditModal from './EditModal.vue'
+import LoadingSpinner from '@/modules/shared/components/ui/LoadingSpinner.vue'
 
 const props = defineProps({
   headers: { type: Array, required: true },
@@ -101,7 +101,7 @@ const props = defineProps({
 
 const emit = defineEmits(['row-click', 'sort-change'])
 
-const loading = ref(false)
+const loading = ref(true)
 const isModalVisible = ref(false)
 const selectedRow = ref(null)
 
@@ -112,11 +112,11 @@ const normalizedHeaders = computed(() =>
   }))
 )
 
-const filteredFields = computed(() => {
-  return normalizedHeaders.value.filter(
+const filteredFields = computed(() =>
+  normalizedHeaders.value.filter(
     header => !props.excluded.includes(header.name) && header.permissions.read
   )
-})
+)
 
 const showStatusColumn = computed(() => {
   const firstItem = props.items[0]
@@ -129,6 +129,15 @@ const showStatusColumn = computed(() => {
 const handleSort = column => {
   if (column.sortable) emit('sort-change', column.name)
 }
+
+// Следим за items: если данные появились, отключаем загрузку
+watch(
+  () => props.items,
+  newItems => {
+    loading.value = !(Array.isArray(newItems) && newItems.length > 0)
+  },
+  { immediate: true }
+)
 
 const openEditModal = row => {
   selectedRow.value = row

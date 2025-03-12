@@ -1,61 +1,69 @@
 <template>
   <div>
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <PageSizeSelector
-        :pageSizes="pageSizes"
-        :modelValue="localItemsPerPage"
-        @update:modelValue="updateItemsPerPage"
+    <!-- Индикатор загрузки -->
+    <ThinProgressBar :loading="loading" :progress="50" />
+
+    <!-- Контент таблицы -->
+    <div v-if="!loading">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <PageSizeSelector
+          :pageSizes="pageSizes"
+          :modelValue="localItemsPerPage"
+          @update:modelValue="updateItemsPerPage"
+        />
+        <DateRangeFilters
+          v-if="datepicker"
+          :start="localStartDate"
+          :end="localEndDate"
+          @update:start="updateStartDate"
+          @update:end="updateEndDate"
+        />
+        <SearchBar :loading="loading" @search-change="onSearch" />
+      </div>
+
+      <DataTable
+        :headers="headers"
+        :items="items"
+        :sortColumn="sortColumn"
+        :sortItem="sortItem"
+        :formatValue="formatValue"
+        :edit-button="editButton"
+        :getTextAlignment="getTextAlignment"
+        @row-click="handleRowClick"
+        @sort-change="sortBy"
       />
-      <DateRangeFilters
-        v-if="datepicker"
-        :start="localStartDate"
-        :end="localEndDate"
-        @update:start="updateStartDate"
-        @update:end="updateEndDate"
+
+      <Pagination
+        :totalCount="totalCnt"
+        :itemsPerPage="localItemsPerPage"
+        :currentPage="currentPg"
+        :totalPages="totalPg"
+        @page-change="goToPage"
       />
-      <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
-
-    <DataTable
-      :headers="headers"
-      :items="items"
-      :sortColumn="sortColumn"
-      :sortItem="sortItem"
-      :formatValue="formatValue"
-      :edit-button="editButton"
-      :getTextAlignment="getTextAlignment"
-      @row-click="handleRowClick"
-      @sort-change="sortBy"
-    />
-
-    <Pagination
-      :totalCount="totalCnt"
-      :itemsPerPage="localItemsPerPage"
-      :currentPage="currentPg"
-      :totalPages="totalPg"
-      @page-change="goToPage"
-    />
   </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import moment from 'moment'
 import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
 import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
 import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
-import DataTable from './ComponentTable.vue'
+import DataTable from './DataTable.vue'
 import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
+import ThinProgressBar from '@/modules/shared/components/ui/ThinProgressBar.vue'
 import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 
 export default {
-  name: 'ServerSideTable',
+  name: 'PaginatedDataTable',
   components: {
     DataTable,
     SearchBar,
     Pagination,
     PageSizeSelector,
     DateRangeFilters,
+    ThinProgressBar,
   },
   props: {
     items: { type: Array, required: true },
@@ -91,19 +99,40 @@ export default {
     )
     const loading = ref(false)
 
-    const pageSizes = computed(() => props.itemsPerPageOptions)
-
-    const filteredHeaders = computed(() =>
-      props.headers.filter(header => !props.excluded.includes(header.name))
-    )
-
     const totalCnt = computed(() => props.totalCount)
     const currentPg = computed(() => props.currentPage)
     const totalPg = computed(() => props.totalPages)
 
+    /**
+     * Имитация загрузки данных (заменить на реальный API вызов)
+     */
+    const fetchData = async () => {
+      loading.value = true
+      try {
+        await new Promise(resolve => setTimeout(resolve, 500))
+      } finally {
+        loading.value = false
+      }
+    }
+
+    // Следим за изменениями в пагинации, сортировке, фильтрах и обновляем данные
+    watch(
+      [
+        currentPg,
+        localItemsPerPage,
+        props.sortColumn,
+        props.sortItem,
+        localStartDate,
+        localEndDate,
+      ],
+      fetchData,
+      { immediate: true }
+    )
+
     const sortBy = column => {
       const isAsc = props.sortColumn === column && props.sortItem === 'asc'
       emit('sort-change', { column, item: isAsc ? 'desc' : 'asc' })
+      fetchData()
     }
 
     const handleRowClick = row => emit('row-click', row)
@@ -111,6 +140,7 @@ export default {
     const updateItemsPerPage = value => {
       localItemsPerPage.value = value
       emit('page-size-change', value)
+      fetchData()
     }
 
     const updateDateRange = () => {
@@ -122,6 +152,7 @@ export default {
           ? moment(localEndDate.value).format('YYYY-MM-DD')
           : '',
       })
+      fetchData()
     }
 
     const updateStartDate = value => {
@@ -135,32 +166,32 @@ export default {
     }
 
     const onSearch = query => {
-      loading.value = true
       emit('search-change', query)
-      setTimeout(() => (loading.value = false), 500)
+      fetchData()
     }
 
-    const goToPage = page => emit('page-change', page)
+    const goToPage = page => {
+      emit('page-change', page)
+      fetchData()
+    }
 
     return {
-      pageSizes,
       localItemsPerPage,
       localStartDate,
       localEndDate,
-      filteredHeaders,
-      loading,
       totalCnt,
       currentPg,
       totalPg,
+      goToPage,
       sortBy,
       handleRowClick,
       updateItemsPerPage,
       updateStartDate,
       updateEndDate,
       onSearch,
-      goToPage,
       formatValue,
       getTextAlignment,
+      loading,
     }
   },
 }

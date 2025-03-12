@@ -27,7 +27,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getItems } from '@/pages/form-1/api/list.js'
-import ServerSideTable from '@/modules/shared/tables/table-server/ServerSideTable.vue'
+import ServerSideTable from '@/modules/shared/tables/table-server/PaginatedDataTable.vue'
 import { useRoleStore } from '@/modules/_main/store/index.js'
 
 const props = defineProps({
