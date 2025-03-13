@@ -1,4 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/entities/auth/authStore'
+
+const authRoutes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/pages/auth/Login.vue'),
+    meta: { title: 'Вход', public: true },
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    beforeEnter: (to, from, next) => {
+      const authStore = useAuthStore() // ✅ Используем store
+      authStore.logout() // ✅ Вызываем метод logout()
+      next('/login')
+    },
+    meta: { public: true },
+  },
+]
 
 const ordersRoutes = [
   {
@@ -164,6 +184,7 @@ const routes = [
     component: () => import('@/pages/admin/Home.vue'),
     meta: { title: 'Список маршрутов' },
   },
+  ...authRoutes,
   ...commercialRoutes,
   ...ordersRoutes,
   ...clientsRoutes,
@@ -177,8 +198,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const defaultTitle = 'Админка'
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.isAuthenticated
+  const defaultTitle = 'Сервисный'
+
   document.title = to.meta.title || defaultTitle
+
+  if (!to.meta.public && !isAuthenticated) {
+    return next('/login')
+  }
+
   next()
 })
 
