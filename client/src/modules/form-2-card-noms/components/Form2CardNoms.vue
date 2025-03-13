@@ -16,7 +16,7 @@
           class="field-value"
           :style="{ color: fieldValues[name] ? '' : '#d8d8d8' }"
         >
-          {{ fieldValues[name] || 'Нет данных' }}
+          {{ fieldValues[name] || '-' }}
         </div>
       </div>
     </div>

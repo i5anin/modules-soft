@@ -90,8 +90,6 @@ const rowSpanMatrix = computed(() => {
       matrix[rowIndex][colIndex] = spanCount
     }
   }
-
-  console.log('📌 Row Span Matrix:', matrix) // Отладка
   return matrix
 })
 </script>

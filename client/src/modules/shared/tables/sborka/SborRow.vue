@@ -1,11 +1,10 @@
 <template>
   <tr
-    @click="toggle"
-    :class="{ 'table-info': isExpanded, 'fw-bold': isExpanded }"
+    :class="{ 'expanded-row': isExpanded, 'fw-bold': isExpanded }"
     style="table-layout: fixed"
   >
     <!--region Иконка разворачивания-->
-    <td :style="cellStyle">
+    <td :style="cellStyle" @click="toggle">
       <span v-if="hasChildren" title="Развернуть/Свернуть">
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"

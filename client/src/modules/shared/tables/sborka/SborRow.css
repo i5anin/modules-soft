@@ -37,3 +37,16 @@
   display: flex;
   align-items: center;
 }
+
+/* Стиль развернутой строки с прозрачным выделением */
+.expanded-row {
+  background-color: rgb(255, 255, 255) !important;  /* Нежный синий */
+  color: rgba(13, 110, 253, 0.5);
+}
+
+/* Улучшенное выделение текста */
+.expanded-row td {
+  font-weight: bold;
+  color: inherit;
+}
+
