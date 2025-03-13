@@ -36,15 +36,26 @@
 
         <nav v-if="menu.length">
           <div class="list-group">
-            <router-link
-              v-for="item in menu"
-              :key="item.name"
-              :to="item.url"
-              class="list-group-item list-group-item-action bg-dark text-light border-0"
-              active-class="active bg-primary text-white"
-            >
-              {{ item.label }}
-            </router-link>
+            <template v-for="item in menu" :key="item.name">
+              <!-- Доступный маршрут -->
+              <router-link
+                v-if="isRouteAvailable(item.url)"
+                :to="item.url"
+                class="list-group-item list-group-item-action border-0"
+                active-class="active bg-primary text-white"
+              >
+                {{ item.label }}
+              </router-link>
+
+              <!-- Недоступный маршрут -->
+              <div
+                v-else
+                class="list-group-item text-secondary border-0 disabled"
+                aria-disabled="true"
+              >
+                {{ item.label }}
+              </div>
+            </template>
           </div>
         </nav>
         <div v-else class="text-center text-muted">Меню пустое</div>
@@ -54,28 +65,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getMenu } from '@/modules/api/authApi.js'
 
-const menu = ref([]) // ✅ Меню всегда массив
+const menu = ref([])
 const loading = ref(true)
 const errorMessage = ref('')
+const router = useRouter()
+
+// Кешируем доступные маршруты
+const availableRoutes = computed(() => {
+  return new Set(router.getRoutes().map(route => route.path))
+})
+
+// Проверка наличия маршрута
+const isRouteAvailable = path => availableRoutes.value.has(path)
 
 // Запрос меню
 const fetchMenu = async () => {
   try {
     const response = await getMenu()
-    console.log('Полученное меню:', response)
+    const data = Array.isArray(response) ? response : (response?.data ?? [])
 
-    // Проверяем, является ли response массивом
-    if (Array.isArray(response)) {
-      menu.value = response
-    } else if (response && typeof response === 'object' && response.data) {
-      menu.value = response.data // Если API вернул объект с `data`
-    } else {
-      console.error('Неожиданный формат меню:', response)
-      menu.value = []
-    }
+    menu.value = data.filter(item => item?.url && typeof item.url === 'string')
   } catch (error) {
     errorMessage.value = 'Ошибка загрузки меню'
   } finally {
@@ -85,11 +98,3 @@ const fetchMenu = async () => {
 
 onMounted(fetchMenu)
 </script>
-
-<style scoped>
-/* Стиль активного пункта */
-.router-link-active {
-  background-color: var(--bs-primary) !important;
-  color: white !important;
-}
-</style>

@@ -162,13 +162,6 @@ const devRoutes = [
     props: true,
   },
   {
-    path: '/dev/fields-watch',
-    name: 'devFieldsProcessor',
-    component: () => import('@/modules/dev/fieldsWatch.vue'),
-    meta: { title: 'Обработка полей (Watch)' },
-    props: true,
-  },
-  {
     path: '/dev/fields-processor',
     name: 'devFieldsProcessor',
     component: () => import('@/modules/dev/fieldsProcessor.vue'),
