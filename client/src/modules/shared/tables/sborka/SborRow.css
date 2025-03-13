@@ -18,7 +18,6 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background-color: #989898;
 }
 
 .branch-line::after {
@@ -28,7 +27,6 @@
   top: 50%;
   width: 10px;
   height: 1px;
-  background-color: #989898;
 }
 
 .last-child .branch-line::before {

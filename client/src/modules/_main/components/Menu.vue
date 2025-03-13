@@ -9,6 +9,7 @@
     >
       ☰ Меню
     </button>
+    <Breadcrumbs class="ms-6" />
 
     <!-- Боковое меню (offcanvas) -->
     <div
@@ -68,6 +69,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMenu } from '@/modules/api/authApi.js'
+import Breadcrumbs from '@/modules/_main/components/Breadcrumbs.vue'
 
 const menu = ref([])
 const loading = ref(true)

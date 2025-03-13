@@ -1,6 +1,4 @@
-// nom_list.js
-
-import apiClient from '@/modules/api/apiClient.js'
+import authClient from '@/modules/api/apiClient.js'
 import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
 import { getToken } from '@/modules/api/tokenService.js'
 
@@ -24,19 +22,14 @@ const validateFields = (fields, requiredFields) => {
  * @param {Object} params - параметры для запроса
  * @returns {Promise<Object>} - Объект заказа
  */
-export const getNomById = async params => {
-  try {
-    // Проверка обязательных параметров
-    validateFields(params, ['id', 'type', 'module'])
+export const getNomById = params => {
+  validateFields(params, ['id', 'type', 'module'])
 
-    const response = await apiClient.get('nom_list', {
-      params,
+  return authClient
+    .get('/nom_list', {
+      params: { ...params, token: getToken() },
       headers: { Authorization: `Bearer ${getToken()}` },
     })
-
-    return handleResponse(response)
-  } catch (error) {
-    handleError(error)
-    throw error
-  }
+    .then(handleResponse)
+    .catch(handleError)
 }

@@ -4,7 +4,7 @@
       <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
       Информация о заказе
     </div>
-    <div class="card-body p-2 row g-3">
+    <div class="card-body row">
       <div
         v-for="(field, name) in allFields"
         :key="name"
@@ -101,12 +101,12 @@ export default defineComponent({
 <style scoped>
 .field-label {
   font-size: 0.8rem;
-  color: #212529;
+  color: #ff6868;
   font-weight: 600;
 }
 
 .field-value {
   font-size: 1rem;
-  color: #495057;
+  color: #68ffd2;
 }
 </style>

@@ -73,9 +73,6 @@ export default {
 .alert {
   font-size: 1rem;
   padding: 1rem;
-  border: 1px solid #17a2b8;
-  background-color: #d1ecf1;
-  color: #0c5460;
   border-radius: 0.25rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

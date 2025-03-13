@@ -3,13 +3,14 @@
     <div
       class="container-fluid d-flex justify-content-between align-items-center"
     >
+      <!-- Хлебные крошки с нормальным отступом -->
+
       <!-- BackButton отображается только если есть токен -->
       <router-link
         v-if="authStore.isAuthenticated"
         class="navbar-brand mb-0"
         to="/"
       >
-        <!--        <BackButton :showText="false" />-->
       </router-link>
 
       <!-- Данные пользователя -->
@@ -30,7 +31,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/entities/auth/authStore'
-import BackButton from '@/modules/shared/components/ui/BackButton.vue'
+import Breadcrumbs from './Breadcrumbs.vue' // 👈 Добавил импорт
 
 const authStore = useAuthStore()
 const router = useRouter()
