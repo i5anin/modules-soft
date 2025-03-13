@@ -1,6 +1,7 @@
 <template>
   <div data-bs-theme="dark" class="bg-dark text-light">
-    <Navbar />
+    <Header />
+    <Menu />
     <div class="container-fluid">
       <router-view />
     </div>
@@ -8,5 +9,6 @@
 </template>
 
 <script setup>
-import Navbar from '@/modules/_main/components/Navbar.vue'
+import Header from '@/modules/_main/components/Header.vue'
+import Menu from '@/modules/_main/components/Menu.vue'
 </script>
