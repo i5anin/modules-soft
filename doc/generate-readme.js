@@ -4,22 +4,23 @@ import { execSync } from "child_process";
 import { Root } from "./paths.js";
 import { scanDirectory } from "./treeBuilder.js";
 import { generateFileStats, getTopFiles } from "./fileStats.js";
+import {PROJECT_NAME, PROJECT_DESCRIPTION, WAKATIME_LINK, WAKATIME_BADGE} from "./projectConfig.js";
 
 // 📌 Определяем корень Git-проекта
 function getGitRoot() {
   try {
-    return execSync("git rev-parse --show-toplevel").toString().trim(); // Получаем корневую папку Git
+    return execSync("git rev-parse --show-toplevel").toString().trim();
   } catch (error) {
     console.error("🚨 Ошибка: Не удалось определить корень Git-проекта. Используется текущая директория.");
-    return process.cwd(); // Если Git не найден, используем текущую директорию
+    return process.cwd();
   }
 }
 
 const gitRoot = getGitRoot();
 
-// 📌 Функция для получения относительного пути (без абсолютного пути к проекту)
+// 📌 Функция получения относительного пути
 function getRelativePath(absolutePath) {
-  return path.relative(gitRoot, absolutePath).replace(/\\/g, "/"); // Заменяем `\` на `/`
+  return path.relative(gitRoot, absolutePath).replace(/\\/g, "/");
 }
 
 // 📌 Данные статистики для всех директорий
@@ -43,7 +44,9 @@ const totalFiles = stats.reduce((sum, stat) => sum + Object.values(stat.fileCoun
 const totalLines = stats.reduce((sum, stat) => sum + stat.totalLines, 0);
 
 // 📌 Генерация README.md
-const readmeContent = `# 📌 Система выдачи инструмента на производстве  
+const readmeContent = `# 📌 ${PROJECT_NAME}
+
+${PROJECT_DESCRIPTION}
 
 ---
 
@@ -67,9 +70,14 @@ ${generateFileStats(stat)}
 ${getTopFiles(stat)}
 `;
 }).join("\n")}
+
+---
+
+### ⏱️ Время разработки  
+Следить за прогрессом: [WakaTime](${WAKATIME_BADGE})
 `;
 
-// 📌 Запись в файл (в корень Git-проекта)
+// 📌 Запись в файл README.md
 const readmePath = path.join(gitRoot, "README.md");
 fs.writeFileSync(readmePath, readmeContent, "utf8");
 
