@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 import { Root } from "./paths.js";
 import { scanDirectory } from "./treeBuilder.js";
 import { generateFileStats, getTopFiles } from "./fileStats.js";
-import {PROJECT_NAME, PROJECT_DESCRIPTION, WAKATIME_LINK, WAKATIME_BADGE} from "./projectConfig.js";
+import { PROJECT_NAME, PROJECT_DESCRIPTION, WAKATIME_BADGE } from "./projectConfig.js";
 
 // 📌 Определяем корень Git-проекта
 function getGitRoot() {
@@ -44,7 +44,9 @@ const totalFiles = stats.reduce((sum, stat) => sum + Object.values(stat.fileCoun
 const totalLines = stats.reduce((sum, stat) => sum + stat.totalLines, 0);
 
 // 📌 Генерация README.md
-const readmeContent = `# 📌 ${PROJECT_NAME}
+const readmeContent = `# 📌 ${PROJECT_NAME}  
+
+${WAKATIME_BADGE}  
 
 ${PROJECT_DESCRIPTION}
 
@@ -71,13 +73,8 @@ ${getTopFiles(stat)}
 `;
 }).join("\n")}
 
----
-
-### ⏱️ Время разработки  
-Следить за прогрессом: [WakaTime](${WAKATIME_BADGE})
 `;
 
-// 📌 Запись в файл README.md
 const readmePath = path.join(gitRoot, "README.md");
 fs.writeFileSync(readmePath, readmeContent, "utf8");
 
