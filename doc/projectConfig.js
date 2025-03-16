@@ -6,4 +6,4 @@ export const PROJECT_DESCRIPTION =
     "иерархическая структура в сборках, адаптивные компоненты.";
 
 export const WAKATIME_BADGE =
-    "[![wakatime](https://wakatime.com/badge/github/i5anin/modules-soft__pf-forum.svg)](https://wakatime.com/badge/github/i5anin/modules-soft__pf-forum)" 
+    "[![wakatime](https://wakatime.com/badge/github/i5anin/modules-soft__pf-forum.svg)](https://wakatime.com/badge/github/i5anin/modules-soft__pf-forum)"
