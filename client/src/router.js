@@ -5,7 +5,7 @@ const authRoutes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/pages/auth/Login.vue'),
+    component: () => import('@/pages/auth/AuthLogin.vue'),
     meta: { title: 'Вход', public: true },
   },
   {
@@ -198,10 +198,10 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title || defaultTitle
 
   if (!to.meta.public && !isAuthenticated) {
-    return next('/login')
+    return next('/login') // ✅ Здесь `return` есть
   }
 
-  next()
+  return next() // ✅ Теперь `return` добавлен
 })
 
 export default router

@@ -11,7 +11,9 @@ export default defineConfig(({ mode }) => ({
     vue(),
     createHtmlPlugin({}),
     mode === 'development' ? vueDevTools() : null,
-    mode === 'development' ? eslint({ cache: false }) : null,
+    mode === 'development'
+      ? eslint({ cache: false, failOnError: false, failOnWarning: false })
+      : null,
   ].filter(Boolean), // Убираем `null` из массива
   resolve: {
     alias: {

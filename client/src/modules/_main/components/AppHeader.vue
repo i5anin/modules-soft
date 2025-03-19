@@ -17,8 +17,8 @@
         v-if="authStore.isAuthenticated"
         class="d-flex align-items-center"
       >
-        <span v-if="loading"></span>
-        <span v-else-if="user">{{ user.name }} {{ user.last_name }}</span>
+        <span v-if="loading" />
+        <span v-else-if="user"> {{ user.name }} {{ user.last_name }} </span>
 
         <!-- Кнопка "Выход" -->
         <button

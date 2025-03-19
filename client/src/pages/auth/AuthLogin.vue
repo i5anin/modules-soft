@@ -18,10 +18,10 @@
         <!-- Email -->
         <div class="form-floating mb-3">
           <input
-            type="email"
             id="email"
-            class="form-control"
             v-model="email"
+            type="email"
+            class="form-control"
             :class="{ 'is-invalid': errors.email }"
             placeholder="Email"
           />
@@ -37,10 +37,10 @@
         <!-- Пароль -->
         <div class="form-floating mb-3">
           <input
-            type="password"
             id="password"
-            class="form-control"
             v-model="password"
+            type="password"
+            class="form-control"
             :class="{ 'is-invalid': errors.password }"
             placeholder="Пароль"
           />

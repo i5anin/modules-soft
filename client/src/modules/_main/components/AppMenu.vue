@@ -13,16 +13,16 @@
 
     <!-- Боковое меню (offcanvas) -->
     <div
+      id="sidebarMenu"
       class="offcanvas offcanvas-start bg-dark text-light"
       tabindex="-1"
-      id="sidebarMenu"
       aria-labelledby="sidebarMenuLabel"
       data-bs-theme="dark"
     >
       <div class="offcanvas-header border-bottom">
         <h5
-          class="offcanvas-title"
           id="sidebarMenuLabel"
+          class="offcanvas-title"
         >
           Меню
         </h5>
@@ -90,7 +90,7 @@
   import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { getMenu } from '@/modules/api/authApi.js'
-  import Breadcrumbs from '@/modules/_main/components/Breadcrumbs.vue'
+  import Breadcrumbs from '@/modules/_main/components/AppBreadcrumbs.vue'
 
   const menu = ref([])
   const loading = ref(true)
@@ -115,7 +115,7 @@
         (item) => item?.url && typeof item.url === 'string'
       )
     } catch (error) {
-      console.log(error)
+      console.error(error)
       errorMessage.value = 'Ошибка загрузки меню'
     } finally {
       loading.value = false
