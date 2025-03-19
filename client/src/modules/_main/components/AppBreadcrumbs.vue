@@ -9,7 +9,7 @@
           to="/"
           class="text-white"
         >
-          🏠 Главная
+          Главная
         </router-link>
       </li>
       <li
@@ -53,6 +53,7 @@
   .breadcrumb-item a {
     text-decoration: none;
   }
+
   .breadcrumb-item.text-muted {
     font-weight: bold;
   }

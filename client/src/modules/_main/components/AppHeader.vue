@@ -1,28 +1,33 @@
 <template>
-  <header class="navbar navbar-expand-lg">
+  <header class="navbar navbar-expand-lg custom-gradient">
     <div
-      class="container-fluid d-flex justify-content-between align-items-center"
+      class="container d-flex justify-content-between align-items-center py-2"
     >
-      <!-- Хлебные крошки с нормальным отступом -->
+      <!-- Хлебные крошки -->
+      <Breadcrumbs class="ms-3 flex-grow-1" />
 
-      <!-- BackButton отображается только если есть токен -->
+      <!-- Кнопка "Назад", если пользователь авторизован -->
       <router-link
         v-if="authStore.isAuthenticated"
-        class="navbar-brand mb-0"
+        class="navbar-brand"
         to="/"
-      ></router-link>
+      >
+        🔙
+      </router-link>
 
       <!-- Данные пользователя -->
       <div
         v-if="authStore.isAuthenticated"
         class="d-flex align-items-center"
       >
-        <span v-if="loading" />
+        <span
+          v-if="loading"
+          class="spinner-border spinner-border-sm text-light"
+        ></span>
         <span v-else-if="user"> {{ user.name }} {{ user.last_name }} </span>
 
-        <!-- Кнопка "Выход" -->
         <button
-          class="btn btn-sm btn-outline-danger ms-3"
+          class="btn btn-sm btn-outline-light ms-3"
           @click="logout"
         >
           Выйти
@@ -36,15 +41,19 @@
   import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/entities/auth/authStore'
+  import Breadcrumbs from '@/modules/_main/components/AppBreadcrumbs.vue'
 
   const authStore = useAuthStore()
   const router = useRouter()
   const user = ref(null)
   const loading = ref(true)
 
-  // Загружаем данные пользователя (только если есть токен)
+  // Загружаем данные пользователя
   const fetchUser = async () => {
-    if (!authStore.isAuthenticated) return
+    if (!authStore.isAuthenticated) {
+      loading.value = false
+      return
+    }
 
     try {
       user.value = await authStore.getUser()
@@ -63,3 +72,16 @@
 
   onMounted(fetchUser)
 </script>
+
+<style scoped>
+  .navbar {
+    min-height: 56px;
+  }
+  .custom-gradient {
+    background: linear-gradient(
+      135deg,
+      #37474f,
+      #263238
+    ); /* Глубокий синий + серый */
+  }
+</style>
