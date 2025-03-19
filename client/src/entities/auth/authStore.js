@@ -5,11 +5,11 @@ import { getToken, setToken, removeToken } from '@/modules/api/tokenService.js'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: getToken(),
+    token: getToken() || null, // ✅ Добавил проверку, если токена нет
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token,
+    isAuthenticated: (state) => Boolean(state.token), // ✅ Упрощённый вариант
   },
 
   actions: {
@@ -21,12 +21,14 @@ export const useAuthStore = defineStore('auth', {
     async loginUser(email, password) {
       try {
         const { token, user } = await login(email, password)
-        this.token = token
+        if (!token) throw new Error('Ошибка: токен не получен')
+
+        setToken(token) // ✅ Сначала сохраняем токен
+        this.token = token // ✅ Затем обновляем `state`
         this.user = user
-        setToken(token)
       } catch (error) {
-        console.error('Ошибка авторизации:', error) // ✅ Логируем ошибку
-        throw new Error('Ошибка авторизации') // Без передачи второго аргумента
+        console.error('Ошибка авторизации:', error)
+        throw new Error('Ошибка авторизации')
       }
     },
 
@@ -39,10 +41,13 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         const response = await getUser()
+        if (!response.user) throw new Error('Ошибка: user не получен')
+
         this.user = response.user
         return this.user
       } catch (error) {
         console.error('Ошибка получения пользователя:', error)
+        this.logout() // ✅ Если ошибка — сбрасываем данные
         return null
       }
     },
@@ -51,9 +56,9 @@ export const useAuthStore = defineStore('auth', {
      * Выход из системы
      */
     logout() {
+      removeToken() // ✅ Сначала убираем токен из хранилища
       this.token = null
       this.user = null
-      removeToken()
     },
   },
 })

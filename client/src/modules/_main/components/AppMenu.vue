@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- Кнопка открытия меню -->
-    <button
-      class="btn btn-dark position-fixed top-0 start-0 m-3"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#sidebarMenu"
-      aria-controls="sidebarMenu"
-    >
-      ☰ Меню
-    </button>
-
     <!-- Боковое меню (offcanvas) -->
     <div
       id="sidebarMenu"

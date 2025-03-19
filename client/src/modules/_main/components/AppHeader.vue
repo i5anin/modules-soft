@@ -1,37 +1,55 @@
 <template>
   <header class="navbar navbar-expand-lg custom-gradient">
     <div
-      class="container d-flex justify-content-between align-items-center py-2"
+      class="container-fluid d-flex justify-content-between align-items-center py-1"
     >
-      <!-- Хлебные крошки -->
-      <Breadcrumbs class="ms-3 flex-grow-1" />
-
-      <!-- Кнопка "Назад", если пользователь авторизован -->
-      <router-link
-        v-if="authStore.isAuthenticated"
-        class="navbar-brand"
-        to="/"
-      >
-        🔙
-      </router-link>
-
-      <!-- Данные пользователя -->
+      <!-- Левая часть: Кнопка "Меню" (отображается только если пользователь авторизован) -->
       <div
         v-if="authStore.isAuthenticated"
         class="d-flex align-items-center"
       >
-        <span
-          v-if="loading"
-          class="spinner-border spinner-border-sm text-light"
-        ></span>
-        <span v-else-if="user"> {{ user.name }} {{ user.last_name }} </span>
-
         <button
-          class="btn btn-sm btn-outline-light ms-3"
-          @click="logout"
+          class="btn btn-dark"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
         >
-          Выйти
+          ☰ Меню
         </button>
+      </div>
+
+      <!-- Центр: Хлебные крошки -->
+      <div class="d-flex flex-grow-1 justify-content-center">
+        <Breadcrumbs />
+      </div>
+
+      <!-- Правая часть: Кнопка "Назад" и Данные пользователя -->
+      <div class="d-flex align-items-center">
+        <router-link
+          v-if="authStore.isAuthenticated"
+          class="btn btn-outline-light me-3"
+          to="/"
+        >
+          Назад
+        </router-link>
+
+        <div
+          v-if="authStore.isAuthenticated"
+          class="d-flex align-items-center"
+        >
+          <span
+            v-if="loading"
+            class="spinner-border spinner-border-sm text-light"
+          ></span>
+          <span v-else-if="user">{{ user.name }} {{ user.last_name }}</span>
+
+          <button
+            class="btn btn-sm btn-outline-light ms-3"
+            @click="logout"
+          >
+            Выйти
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -76,6 +94,8 @@
 <style scoped>
   .navbar {
     min-height: 56px;
+    display: flex;
+    align-items: center;
   }
   .custom-gradient {
     background: linear-gradient(
