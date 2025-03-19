@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "serve": "npx http-server dist -p 8080",
     "client": "vite",
     "build": "vite build",
     "preview": "vite preview",
