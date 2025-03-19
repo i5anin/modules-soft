@@ -6,7 +6,7 @@ const authRoutes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/pages/auth/AuthLogin.vue'),
-    meta: { title: 'Вход', public: true },
+    meta: { title: 'Вход в систему', public: true },
   },
   {
     path: '/logout',
