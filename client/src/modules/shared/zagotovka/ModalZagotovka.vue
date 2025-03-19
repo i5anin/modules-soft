@@ -30,7 +30,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="field in zagotovka.fields" :key="field.title">
+                <tr
+                  v-for="field in zagotovka.fields"
+                  :key="field.title"
+                >
                   <td>{{ field.title }}</td>
                   <td>
                     <span v-if="!isObject(zagotovka.data[field.key])">
@@ -56,71 +59,71 @@
 </template>
 
 <script>
-import { reactive, watch, ref } from 'vue'
-import { getZagotovkaInfo } from './api/zagotovka.js'
+  import { reactive, watch, ref } from 'vue'
+  import { getZagotovkaInfo } from './api/zagotovka.js'
 
-export default {
-  name: 'ModalZagInfo',
-  props: {
-    visible: { type: Boolean, required: true },
-    type: { type: String, required: true },
-    kolvoAdd: { type: [String, Number], required: true },
-    id: { type: [String, Number], required: true },
-  },
-  emits: ['close'],
-  setup(props, { emit }) {
-    const zagotovka = reactive({
-      title: '',
-      fields: [],
-      data: {},
-    })
+  export default {
+    name: 'ModalZagInfo',
+    props: {
+      visible: { type: Boolean, required: true },
+      type: { type: String, required: true },
+      kolvoAdd: { type: [String, Number], required: true },
+      id: { type: [String, Number], required: true },
+    },
+    emits: ['close'],
+    setup(props, { emit }) {
+      const zagotovka = reactive({
+        title: '',
+        fields: [],
+        data: {},
+      })
 
-    const loading = ref(false)
+      const loading = ref(false)
 
-    const fetchZagotovkaData = async () => {
-      if (!props.visible) return
+      const fetchZagotovkaData = async () => {
+        if (!props.visible) return
 
-      loading.value = true
-      try {
-        const response = await getZagotovkaInfo({
-          type: props.type,
-          kolvo_add: props.kolvoAdd,
-          id: props.id,
-        })
-        zagotovka.title = response.title || `Данные (${props.type})`
-        zagotovka.fields = Object.entries(response.fields).map(
-          ([key, field]) => ({
-            key,
-            ...field,
+        loading.value = true
+        try {
+          const response = await getZagotovkaInfo({
+            type: props.type,
+            kolvo_add: props.kolvoAdd,
+            id: props.id,
           })
-        )
-        zagotovka.data = response.data || {}
-      } catch (error) {
-        console.error('Ошибка загрузки данных заготовки:', error)
-      } finally {
-        loading.value = false
+          zagotovka.title = response.title || `Данные (${props.type})`
+          zagotovka.fields = Object.entries(response.fields).map(
+            ([key, field]) => ({
+              key,
+              ...field,
+            })
+          )
+          zagotovka.data = response.data || {}
+        } catch (error) {
+          console.error('Ошибка загрузки данных заготовки:', error)
+        } finally {
+          loading.value = false
+        }
       }
-    }
 
-    const isObject = value =>
-      value && typeof value === 'object' && !Array.isArray(value)
+      const isObject = (value) =>
+        value && typeof value === 'object' && !Array.isArray(value)
 
-    const closeModal = () => emit('close')
+      const closeModal = () => emit('close')
 
-    watch(
-      () => props.visible,
-      newValue => {
-        if (newValue) fetchZagotovkaData()
-      },
-      { immediate: true }
-    )
+      watch(
+        () => props.visible,
+        (newValue) => {
+          if (newValue) fetchZagotovkaData()
+        },
+        { immediate: true }
+      )
 
-    return {
-      zagotovka,
-      isObject,
-      closeModal,
-      loading,
-    }
-  },
-}
+      return {
+        zagotovka,
+        isObject,
+        closeModal,
+        loading,
+      }
+    },
+  }
 </script>

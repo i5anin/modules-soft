@@ -8,14 +8,14 @@ const authClient = axios.create({
 
 // 📌 Интерцептор запросов: автоматически добавляет токен
 authClient.interceptors.request.use(
-  config => {
+  (config) => {
     const token = getToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   }
 )

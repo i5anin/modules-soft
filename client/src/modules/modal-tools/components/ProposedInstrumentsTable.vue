@@ -12,7 +12,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in instruments" :key="generateUniqueId(item)">
+        <tr
+          v-for="item in instruments"
+          :key="generateUniqueId(item)"
+        >
           <td class="text-center align-middle">{{ item.t_op }}</td>
           <td>
             <ul class="list-group list-group-flush">
@@ -64,7 +67,8 @@
                 :key="key"
                 class="list-group-item"
               >
-                {{ key }}: <b>{{ value }}</b>
+                {{ key }}:
+                <b>{{ value }}</b>
               </li>
             </ul>
           </td>
@@ -74,7 +78,11 @@
               class="btn btn-circle"
               @click="$emit('add-instrument', item)"
             >
-              <svg-icon type="mdi" :path="mdiPlusCircle" color="green" />
+              <svg-icon
+                type="mdi"
+                :path="mdiPlusCircle"
+                color="green"
+              />
             </button>
           </td>
         </tr>
@@ -84,69 +92,69 @@
 </template>
 
 <script setup>
-import { mdiPlusCircle } from '@mdi/js'
-import SvgIcon from '@jamescoyle/vue-icon'
-import { reactive } from 'vue'
+  import { mdiPlusCircle } from '@mdi/js'
+  import SvgIcon from '@jamescoyle/vue-icon'
+  import { reactive } from 'vue'
 
-const props = defineProps({
-  instruments: {
-    type: Array,
-    required: true,
-  },
-  collapseStates: {
-    type: Object,
-    required: true,
-  },
-})
+  const props = defineProps({
+    instruments: {
+      type: Array,
+      required: true,
+    },
+    collapseStates: {
+      type: Object,
+      required: true,
+    },
+  })
 
-// Локальное состояние для управления раскрытием комментариев
-const localCollapseStates = reactive({ ...props.collapseStates })
+  // Локальное состояние для управления раскрытием комментариев
+  const localCollapseStates = reactive({ ...props.collapseStates })
 
-const generateUniqueId = item => {
-  return `${item.tool_group_id}-${JSON.stringify(item.property_description)}`
-}
+  const generateUniqueId = (item) => {
+    return `${item.tool_group_id}-${JSON.stringify(item.property_description)}`
+  }
 
-const toggleCollapse = item => {
-  const id = generateUniqueId(item)
-  localCollapseStates[id] = !localCollapseStates[id]
-}
+  const toggleCollapse = (item) => {
+    const id = generateUniqueId(item)
+    localCollapseStates[id] = !localCollapseStates[id]
+  }
 
-const isExpanded = item => {
-  const id = generateUniqueId(item)
-  return localCollapseStates[id]
-}
+  const isExpanded = (item) => {
+    const id = generateUniqueId(item)
+    return localCollapseStates[id]
+  }
 
-const initialComments = item => {
-  return item.comments_operators.slice(0, 5)
-}
+  const initialComments = (item) => {
+    return item.comments_operators.slice(0, 5)
+  }
 
-const additionalComments = item => {
-  return item.comments_operators.slice(5)
-}
+  const additionalComments = (item) => {
+    return item.comments_operators.slice(5)
+  }
 </script>
 
 <style scoped>
-.table th {
-  text-align: center;
-}
-
-.btn-circle {
-  background-color: transparent;
-  border: none;
-}
-
-.small {
-  font-size: 0.875rem;
-}
-
-.p-1 {
-  padding: 0.25rem;
-}
-
-@media (max-width: 767px) {
-  .col-md-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
+  .table th {
+    text-align: center;
   }
-}
+
+  .btn-circle {
+    background-color: transparent;
+    border: none;
+  }
+
+  .small {
+    font-size: 0.875rem;
+  }
+
+  .p-1 {
+    padding: 0.25rem;
+  }
+
+  @media (max-width: 767px) {
+    .col-md-6 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
 </style>

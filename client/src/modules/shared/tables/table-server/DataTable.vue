@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- Индикатор загрузки -->
-    <LoadingSpinner v-if="loading" :padding="'35vh 0'" />
+    <LoadingSpinner
+      v-if="loading"
+      :padding="'35vh 0'"
+    />
 
     <!-- Таблица -->
     <div v-else>
@@ -32,12 +35,20 @@
                 ></i>
               </span>
             </th>
-            <th v-if="editButton" title="Колонка редактировать"></th>
+            <th
+              v-if="editButton"
+              title="Колонка редактировать"
+            ></th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="!items.length">
-            <td colspan="100%" class="text-center">Нет данных</td>
+            <td
+              colspan="100%"
+              class="text-center"
+            >
+              Нет данных
+            </td>
           </tr>
           <tr
             v-for="row in items"
@@ -61,9 +72,15 @@
                 v-html="formatValue(row[field.name], field.type, field.name)"
               />
             </td>
-            <td @click.stop="openEditModal(row)" v-if="editButton">
+            <td
+              @click.stop="openEditModal(row)"
+              v-if="editButton"
+            >
               <button class="btn btn-sm">
-                <i class="bi bi-pencil-fill" style="color: gray"></i>
+                <i
+                  class="bi bi-pencil-fill"
+                  style="color: gray"
+                ></i>
               </button>
             </td>
           </tr>
@@ -83,85 +100,86 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
-import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
-import EditModal from './EditModal.vue'
-import LoadingSpinner from '@/modules/shared/components/ui/LoadingSpinner.vue'
+  import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+  import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
+  import EditModal from './EditModal.vue'
+  import LoadingSpinner from '@/modules/shared/components/ui/LoadingSpinner.vue'
 
-const props = defineProps({
-  headers: { type: Array, required: true },
-  items: { type: Array, required: true },
-  excluded: { type: Array, default: () => [] },
-  sortColumn: { type: String, required: true },
-  sortItem: { type: String, required: true },
-  formatValue: { type: Function, required: true },
-  getTextAlignment: { type: Function, default: () => 'left' },
-  editButton: { type: Boolean, default: false },
-})
+  const props = defineProps({
+    headers: { type: Array, required: true },
+    items: { type: Array, required: true },
+    excluded: { type: Array, default: () => [] },
+    sortColumn: { type: String, required: true },
+    sortItem: { type: String, required: true },
+    formatValue: { type: Function, required: true },
+    getTextAlignment: { type: Function, default: () => 'left' },
+    editButton: { type: Boolean, default: false },
+  })
 
-const emit = defineEmits(['row-click', 'sort-change'])
+  const emit = defineEmits(['row-click', 'sort-change'])
 
-const loading = ref(true)
-const isModalVisible = ref(false)
-const selectedRow = ref(null)
+  const loading = ref(true)
+  const isModalVisible = ref(false)
+  const selectedRow = ref(null)
 
-const normalizedHeaders = computed(() =>
-  props.headers.map(header => ({
-    ...header,
-    permissions: header.permissions || { read: true },
-  }))
-)
-
-const filteredFields = computed(() =>
-  normalizedHeaders.value.filter(
-    header => !props.excluded.includes(header.name) && header.permissions.read
+  const normalizedHeaders = computed(() =>
+    props.headers.map((header) => ({
+      ...header,
+      permissions: header.permissions || { read: true },
+    }))
   )
-)
 
-const showStatusColumn = computed(() => {
-  const firstItem = props.items[0]
-  return (
-    firstItem &&
-    Object.keys(firstItem).some(key => key.toLowerCase().includes('status'))
+  const filteredFields = computed(() =>
+    normalizedHeaders.value.filter(
+      (header) =>
+        !props.excluded.includes(header.name) && header.permissions.read
+    )
   )
-})
 
-const handleSort = column => {
-  if (column.sortable) emit('sort-change', column.name)
-}
+  const showStatusColumn = computed(() => {
+    const firstItem = props.items[0]
+    return (
+      firstItem &&
+      Object.keys(firstItem).some((key) => key.toLowerCase().includes('status'))
+    )
+  })
 
-// Следим за items: если данные появились, отключаем загрузку
-watch(
-  () => props.items,
-  newItems => {
-    loading.value = !(Array.isArray(newItems) && newItems.length > 0)
-  },
-  { immediate: true }
-)
+  const handleSort = (column) => {
+    if (column.sortable) emit('sort-change', column.name)
+  }
 
-const openEditModal = row => {
-  selectedRow.value = row
-  isModalVisible.value = true
-}
+  // Следим за items: если данные появились, отключаем загрузку
+  watch(
+    () => props.items,
+    (newItems) => {
+      loading.value = !(Array.isArray(newItems) && newItems.length > 0)
+    },
+    { immediate: true }
+  )
 
-const closeModal = () => {
-  isModalVisible.value = false
-  selectedRow.value = null
-}
+  const openEditModal = (row) => {
+    selectedRow.value = row
+    isModalVisible.value = true
+  }
 
-const saveRowChanges = updatedRow => {
-  console.log('Сохранено:', updatedRow)
-  closeModal()
-}
+  const closeModal = () => {
+    isModalVisible.value = false
+    selectedRow.value = null
+  }
+
+  const saveRowChanges = (updatedRow) => {
+    console.log('Сохранено:', updatedRow)
+    closeModal()
+  }
 </script>
 
 <style>
-.table th,
-.table td {
-  min-width: 8px;
-  max-width: 300px;
-  word-wrap: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .table th,
+  .table td {
+    min-width: 8px;
+    max-width: 300px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>

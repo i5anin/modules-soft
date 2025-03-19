@@ -203,3 +203,7 @@ function formatCurrency(value) {
 function isObject(value) {
   return value && typeof value === 'object' && !Array.isArray(value)
 }
+
+function formatStrategy(value) {
+  return JSON.stringify(value, null, 2) // Пример форматирования JSON
+}

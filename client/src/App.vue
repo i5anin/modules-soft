@@ -1,5 +1,8 @@
 <template>
-  <div data-bs-theme="dark" class="bg-dark text-light">
+  <div
+    data-bs-theme="dark"
+    class="bg-dark text-light"
+  >
     <Header />
     <Menu />
     <div class="container-fluid">
@@ -9,6 +12,6 @@
 </template>
 
 <script setup>
-import Header from '@/modules/_main/components/Header.vue'
-import Menu from '@/modules/_main/components/Menu.vue'
+  import Header from '@/modules/_main/components/BaseHeader.vue'
+  import Menu from '@/modules/_main/components/BaseMenu.vue'
 </script>

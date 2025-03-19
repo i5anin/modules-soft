@@ -13,7 +13,7 @@ export const useTableStore = defineStore('tableStore', {
     addPendingUpdate({ rowId, fieldName, oldValue, newValue, updateTable }) {
       const uniqueKey = `${rowId}_${fieldName}_${updateTable}`
       const existingIndex = this.pendingUpdates.findIndex(
-        update => update.updateKey === uniqueKey
+        (update) => update.updateKey === uniqueKey
       )
 
       if (existingIndex === -1) {
@@ -39,7 +39,7 @@ export const useTableStore = defineStore('tableStore', {
 
     async confirmUpdates() {
       try {
-        const payload = this.pendingUpdates.map(update => ({
+        const payload = this.pendingUpdates.map((update) => ({
           key: `${update.id}_${update.fieldName}_${update.updateTable}`,
           id: update.id,
           fieldName: update.fieldName,

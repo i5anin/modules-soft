@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: state => !!state.token,
+    isAuthenticated: (state) => !!state.token,
   },
 
   actions: {
@@ -25,7 +25,8 @@ export const useAuthStore = defineStore('auth', {
         this.user = user
         setToken(token)
       } catch (error) {
-        throw new Error('Ошибка авторизации')
+        console.error('Ошибка авторизации:', error) // ✅ Логируем ошибку
+        throw new Error('Ошибка авторизации') // Без передачи второго аргумента
       }
     },
 

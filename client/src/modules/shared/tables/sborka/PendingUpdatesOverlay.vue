@@ -1,5 +1,8 @@
 <template>
-  <div class="alert alert-info info-overlay" role="alert">
+  <div
+    class="alert alert-info info-overlay"
+    role="alert"
+  >
     <div class="info-content">
       <div>
         <strong>Изменённые данные:</strong>
@@ -10,9 +13,13 @@
           >
             <pre>{{ update }}</pre>
             <span>
-              <strong>ID:</strong> {{ update.id }} <strong>Таблица:</strong>
-              {{ update.updateTable }} <strong>Поле:</strong>
-              {{ update.fieldName }} <strong>Стало:</strong>
+              <strong>ID:</strong>
+              {{ update.id }}
+              <strong>Таблица:</strong>
+              {{ update.updateTable }}
+              <strong>Поле:</strong>
+              {{ update.fieldName }}
+              <strong>Стало:</strong>
               {{ update.newValue }}
             </span>
           </li>
@@ -39,55 +46,55 @@
 </template>
 
 <script>
-import { useTableStore } from './tableStore'
+  import { useTableStore } from './tableStore'
 
-export default {
-  name: 'InfoOverlay',
-  setup() {
-    const tableStore = useTableStore()
+  export default {
+    name: 'InfoOverlay',
+    setup() {
+      const tableStore = useTableStore()
 
-    const confirmUpdates = async () => {
-      try {
-        await tableStore.confirmUpdates()
-        console.log('Изменения подтверждены')
-      } catch (error) {
-        console.error('Ошибка подтверждения:', error)
+      const confirmUpdates = async () => {
+        try {
+          await tableStore.confirmUpdates()
+          console.log('Изменения подтверждены')
+        } catch (error) {
+          console.error('Ошибка подтверждения:', error)
+        }
       }
-    }
 
-    const cancelUpdates = () => {
-      tableStore.cancelUpdates()
-      console.log('Изменения отменены')
-    }
+      const cancelUpdates = () => {
+        tableStore.cancelUpdates()
+        console.log('Изменения отменены')
+      }
 
-    return {
-      tableStore,
-      confirmUpdates,
-      cancelUpdates,
-    }
-  },
-}
+      return {
+        tableStore,
+        confirmUpdates,
+        cancelUpdates,
+      }
+    },
+  }
 </script>
 
 <style scoped>
-.alert {
-  font-size: 1rem;
-  padding: 1rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  .alert {
+    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-.info-overlay {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 1050;
-  max-width: 500px;
-}
+  .info-overlay {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1050;
+    max-width: 500px;
+  }
 
-.info-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 </style>

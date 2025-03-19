@@ -88,62 +88,62 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+  import { computed, ref } from 'vue'
 
-export default {
-  name: 'StrategyDisplay',
-  props: {
-    strategy: {
-      type: Object,
-      required: true,
+  export default {
+    name: 'StrategyDisplay',
+    props: {
+      strategy: {
+        type: Object,
+        required: true,
+      },
+      depth: {
+        type: Number,
+        default: 0,
+      },
     },
-    depth: {
-      type: Number,
-      default: 0,
+    setup(props) {
+      const isExpanded = ref(false)
+
+      const colorMapping = {
+        LightGreen: '#198754',
+        Red: '#dc3545',
+        Orange: '#FFA500',
+        LimeGreen: '#90EE90',
+        Default: '#aaaaaa',
+      }
+
+      const getColor = (entry) => {
+        return entry.color in colorMapping
+          ? colorMapping[entry.color]
+          : entry.color || colorMapping.Default
+      }
+
+      const toggle = () => {
+        isExpanded.value = !isExpanded.value // Переключаем состояние
+      }
+
+      const strategyEntries = computed(() => Object.entries(props.strategy))
+
+      return {
+        strategyEntries,
+        isExpanded,
+        toggle,
+        getColor,
+      }
     },
-  },
-  setup(props) {
-    const isExpanded = ref(false)
-
-    const colorMapping = {
-      LightGreen: '#198754',
-      Red: '#dc3545',
-      Orange: '#FFA500',
-      LimeGreen: '#90EE90',
-      Default: '#aaaaaa',
-    }
-
-    const getColor = entry => {
-      return entry.color in colorMapping
-        ? colorMapping[entry.color]
-        : entry.color || colorMapping.Default
-    }
-
-    const toggle = () => {
-      isExpanded.value = !isExpanded.value // Переключаем состояние
-    }
-
-    const strategyEntries = computed(() => Object.entries(props.strategy))
-
-    return {
-      strategyEntries,
-      isExpanded,
-      toggle,
-      getColor,
-    }
-  },
-}
+  }
 </script>
 
 <style scoped>
-.mini-strategy {
-  display: flex;
-  flex-wrap: wrap;
-}
+  .mini-strategy {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-.full-strategy {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
+  .full-strategy {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 </style>

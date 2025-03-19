@@ -27,31 +27,31 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue'
+  import { defineComponent, computed } from 'vue'
 
-export default defineComponent({
-  props: {
-    commentFields: {
-      type: Array,
-      required: true,
+  export default defineComponent({
+    props: {
+      commentFields: {
+        type: Array,
+        required: true,
+      },
+      fieldValues: {
+        type: Object,
+        required: true,
+      },
     },
-    fieldValues: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup(props) {
-    const hasNonEmptyComments = computed(() =>
-      props.commentFields.some(
-        field =>
-          props.fieldValues[field.name] &&
-          props.fieldValues[field.name].trim() !== ''
+    setup(props) {
+      const hasNonEmptyComments = computed(() =>
+        props.commentFields.some(
+          (field) =>
+            props.fieldValues[field.name] &&
+            props.fieldValues[field.name].trim() !== ''
+        )
       )
-    )
 
-    return {
-      hasNonEmptyComments,
-    }
-  },
-})
+      return {
+        hasNonEmptyComments,
+      }
+    },
+  })
 </script>

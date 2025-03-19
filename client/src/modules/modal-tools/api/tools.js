@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
 })
 
-const handleError = error => {
+const handleError = (error) => {
   throw error
 }
 
@@ -13,6 +13,6 @@ export const fetchInstrumentData = (no, nomId) => {
     .get('instr_op_info', {
       params: { no, nom_id: nomId },
     })
-    .then(response => response.data)
+    .then((response) => response.data)
     .catch(handleError)
 }

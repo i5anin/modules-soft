@@ -1,5 +1,8 @@
 <template>
-  <div @click="handleFormClick" style="cursor: pointer">
+  <div
+    @click="handleFormClick"
+    style="cursor: pointer"
+  >
     <!-- Заголовок -->
     <div class="field-label d-flex align-items-center">
       <span>{{ field.title }}</span>
@@ -19,10 +22,16 @@
       class="field-value"
       :style="{ color: formattedValue ? '' : '#d8d8d8' }"
     >
-      <span v-if="!isBoolean" @click.stop="handleFormClick">
+      <span
+        v-if="!isBoolean"
+        @click.stop="handleFormClick"
+      >
         {{ formattedValue || 'Нет данных' }}
       </span>
-      <div v-else class="form-check form-switch d-inline-block me-3">
+      <div
+        v-else
+        class="form-check form-switch d-inline-block me-3"
+      >
         <input
           type="checkbox"
           :checked="value"
@@ -37,46 +46,46 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue } from '@/utils/formatters.js'
+  import { computed } from 'vue'
+  import { FontAwesomeIcon } from '@/utils/icons.js'
+  import { formatValue } from '@/utils/formatters.js'
 
-export default {
-  components: { FontAwesomeIcon },
-  props: {
-    field: { type: Object, required: true },
-    value: { type: [String, Boolean, Number, Date], required: true },
-  },
-  emits: ['field-click', 'icon-click'],
-  setup(props, { emit }) {
-    const isBoolean = computed(() => typeof props.value === 'boolean')
+  export default {
+    components: { FontAwesomeIcon },
+    props: {
+      field: { type: Object, required: true },
+      value: { type: [String, Boolean, Number, Date], required: true },
+    },
+    emits: ['field-click', 'icon-click'],
+    setup(props, { emit }) {
+      const isBoolean = computed(() => typeof props.value === 'boolean')
 
-    const formattedValue = computed(() =>
-      formatValue(props.value, props.field.type, props.field.key)
-    )
+      const formattedValue = computed(() =>
+        formatValue(props.value, props.field.type, props.field.key)
+      )
 
-    const handleIconClick = key => {
-      emit('icon-click', key)
-    }
+      const handleIconClick = (key) => {
+        emit('icon-click', key)
+      }
 
-    const handleFormClick = () => {
-      emit('field-click', props.field.key)
-    }
+      const handleFormClick = () => {
+        emit('field-click', props.field.key)
+      }
 
-    return { isBoolean, formattedValue, handleIconClick, handleFormClick }
-  },
-}
+      return { isBoolean, formattedValue, handleIconClick, handleFormClick }
+    },
+  }
 </script>
 
 <style scoped>
-.field-label {
-  font-size: 0.8rem;
-  color: #212529;
-  font-weight: 600;
-}
+  .field-label {
+    font-size: 0.8rem;
+    color: #212529;
+    font-weight: 600;
+  }
 
-.field-value {
-  font-size: 1rem;
-  color: #495057;
-}
+  .field-value {
+    font-size: 1rem;
+    color: #495057;
+  }
 </style>

@@ -2,7 +2,10 @@
   <section class="mb-4">
     <h4 class="mb-2 d-flex justify-content-between align-items-center">
       {{ title }}
-      <button class="btn btn-link" @click="toggle">
+      <button
+        class="btn btn-link"
+        @click="toggle"
+      >
         {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}
       </button>
     </h4>
@@ -13,22 +16,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-})
+  defineProps({
+    title: {
+      type: String,
+      required: true,
+    },
+  })
 
-const isCollapsed = ref(false)
+  const isCollapsed = ref(false)
 
-const toggle = () => {
-  isCollapsed.value = !isCollapsed.value
-}
+  const toggle = () => {
+    isCollapsed.value = !isCollapsed.value
+  }
 </script>
 
 <style scoped>
-/* Стили, если нужны */
+  /* Стили, если нужны */
 </style>

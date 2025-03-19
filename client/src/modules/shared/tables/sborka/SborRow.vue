@@ -4,8 +4,14 @@
     style="table-layout: fixed"
   >
     <!--region Иконка разворачивания-->
-    <td :style="cellStyle" @click="toggle">
-      <span v-if="hasChildren" title="Развернуть/Свернуть">
+    <td
+      :style="cellStyle"
+      @click="toggle"
+    >
+      <span
+        v-if="hasChildren"
+        title="Развернуть/Свернуть"
+      >
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
           class="icon-sm"
@@ -97,79 +103,77 @@
 </template>
 
 <script setup>
-import { computed, ref, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
-import { useTableStore } from './tableStore'
-import { FontAwesomeIcon } from '@/utils/icons.js'
-import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
-import StrategyDisplay from '@/modules/shared/components/ui/StrategyDisplay.vue'
-import './SborRow.css'
+  import { computed, ref, toRefs } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { FontAwesomeIcon } from '@/utils/icons.js'
+  import { formatValue, getTextAlignment } from '@/utils/formatters.js'
+  import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
+  import StrategyDisplay from '@/modules/shared/components/ui/StrategyDisplay.vue'
+  import './SborRow.css'
 
-const props = defineProps({
-  sbor: { type: Object, required: true },
-  depth: { type: Number, default: 0 },
-  fields: { type: Array, required: true },
-  isLastChild: { type: Boolean, default: false },
-  detail: { type: Object, required: true },
-  rowIndex: { type: Number, required: true },
-  rowSpanMatrix: { type: Array, required: true },
-})
+  const props = defineProps({
+    sbor: { type: Object, required: true },
+    depth: { type: Number, default: 0 },
+    fields: { type: Array, required: true },
+    isLastChild: { type: Boolean, default: false },
+    detail: { type: Object, required: true },
+    rowIndex: { type: Number, required: true },
+    rowSpanMatrix: { type: Array, required: true },
+  })
 
-const { sbor, detail } = toRefs(props)
-const router = useRouter()
-const tableStore = useTableStore()
-const isExpanded = ref(false)
+  const { sbor, detail } = toRefs(props)
+  const router = useRouter()
+  const isExpanded = ref(false)
 
-// Стили ячеек
-const cellStyle = {
-  width: '40px',
-  textAlign: 'center',
-  verticalAlign: 'middle',
-}
-// Переключение строки
-const toggle = () => {
-  if (hasChildren.value) {
-    isExpanded.value = !isExpanded.value
+  // Стили ячеек
+  const cellStyle = {
+    width: '40px',
+    textAlign: 'center',
+    verticalAlign: 'middle',
   }
-}
-
-// Проверка наличия дочерних элементов
-const hasChildren = computed(() => sbor.value.sbor_tree?.length > 0)
-
-// Переход по строке
-const handleRowClick = () => {
-  const id = sbor.value.link_id
-  if (!id) {
-    console.error('Ошибка: отсутствует ID для перехода', {
-      id,
-      sbor: sbor.value,
-    })
-    return
+  // Переключение строки
+  const toggle = () => {
+    if (hasChildren.value) {
+      isExpanded.value = !isExpanded.value
+    }
   }
 
-  router
-    .push({ name: detail.value.route, params: { nom_id: id } })
-    .catch(error => {
-      console.error('Ошибка при навигации:', error)
-    })
-}
+  // Проверка наличия дочерних элементов
+  const hasChildren = computed(() => sbor.value.sbor_tree?.length > 0)
 
-// Генерация заголовка
-const generateTitle = field =>
-  `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
+  // Переход по строке
+  const handleRowClick = () => {
+    const id = sbor.value.link_id
+    if (!id) {
+      console.error('Ошибка: отсутствует ID для перехода', {
+        id,
+        sbor: sbor.value,
+      })
+      return
+    }
 
-// Стили ячеек
-const getFieldStyle = field => ({
-  fontSize: '12px',
-  verticalAlign: 'middle',
-  textAlign: getTextAlignment(field.type, field.name),
-})
+    router
+      .push({ name: detail.value.route, params: { nom_id: id } })
+      .catch((error) => {
+        console.error('Ошибка при навигации:', error)
+      })
+  }
 
-// Стили для `tree-node`
-const getTreeNodeStyle = field => ({
-  paddingLeft: field.name === 'name' ? `${props.depth * 20}px` : '0px',
-  position: 'relative',
-  cursor: 'pointer',
-})
+  // Генерация заголовка
+  const generateTitle = (field) =>
+    `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
+
+  // Стили ячеек
+  const getFieldStyle = (field) => ({
+    fontSize: '12px',
+    verticalAlign: 'middle',
+    textAlign: getTextAlignment(field.type, field.name),
+  })
+
+  // Стили для `tree-node`
+  const getTreeNodeStyle = (field) => ({
+    paddingLeft: field.name === 'name' ? `${props.depth * 20}px` : '0px',
+    position: 'relative',
+    cursor: 'pointer',
+  })
 </script>

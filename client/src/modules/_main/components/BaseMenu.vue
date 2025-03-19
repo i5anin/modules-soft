@@ -20,7 +20,12 @@
       data-bs-theme="dark"
     >
       <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title" id="sidebarMenuLabel">Меню</h5>
+        <h5
+          class="offcanvas-title"
+          id="sidebarMenuLabel"
+        >
+          Меню
+        </h5>
         <button
           type="button"
           class="btn-close btn-close-white"
@@ -30,14 +35,25 @@
       </div>
 
       <div class="offcanvas-body">
-        <div v-if="loading" class="text-center text-secondary">Загрузка...</div>
-        <div v-else-if="errorMessage" class="alert alert-danger text-center">
+        <div
+          v-if="loading"
+          class="text-center text-secondary"
+        >
+          Загрузка...
+        </div>
+        <div
+          v-else-if="errorMessage"
+          class="alert alert-danger text-center"
+        >
           {{ errorMessage }}
         </div>
 
         <nav v-if="menu.length">
           <div class="list-group">
-            <template v-for="item in menu" :key="item.name">
+            <template
+              v-for="item in menu"
+              :key="item.name"
+            >
               <!-- Доступный маршрут -->
               <router-link
                 v-if="isRouteAvailable(item.url)"
@@ -59,44 +75,52 @@
             </template>
           </div>
         </nav>
-        <div v-else class="text-center text-muted">Меню пустое</div>
+        <div
+          v-else
+          class="text-center text-muted"
+        >
+          Меню пустое
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { getMenu } from '@/modules/api/authApi.js'
-import Breadcrumbs from '@/modules/_main/components/Breadcrumbs.vue'
+  import { ref, computed, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { getMenu } from '@/modules/api/authApi.js'
+  import Breadcrumbs from '@/modules/_main/components/Breadcrumbs.vue'
 
-const menu = ref([])
-const loading = ref(true)
-const errorMessage = ref('')
-const router = useRouter()
+  const menu = ref([])
+  const loading = ref(true)
+  const errorMessage = ref('')
+  const router = useRouter()
 
-// Кешируем доступные маршруты
-const availableRoutes = computed(() => {
-  return new Set(router.getRoutes().map(route => route.path))
-})
+  // Кешируем доступные маршруты
+  const availableRoutes = computed(() => {
+    return new Set(router.getRoutes().map((route) => route.path))
+  })
 
-// Проверка наличия маршрута
-const isRouteAvailable = path => availableRoutes.value.has(path)
+  // Проверка наличия маршрута
+  const isRouteAvailable = (path) => availableRoutes.value.has(path)
 
-// Запрос меню
-const fetchMenu = async () => {
-  try {
-    const response = await getMenu()
-    const data = Array.isArray(response) ? response : (response?.data ?? [])
+  // Запрос меню
+  const fetchMenu = async () => {
+    try {
+      const response = await getMenu()
+      const data = Array.isArray(response) ? response : (response?.data ?? [])
 
-    menu.value = data.filter(item => item?.url && typeof item.url === 'string')
-  } catch (error) {
-    errorMessage.value = 'Ошибка загрузки меню'
-  } finally {
-    loading.value = false
+      menu.value = data.filter(
+        (item) => item?.url && typeof item.url === 'string'
+      )
+    } catch (error) {
+      console.log(error)
+      errorMessage.value = 'Ошибка загрузки меню'
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-onMounted(fetchMenu)
+  onMounted(fetchMenu)
 </script>

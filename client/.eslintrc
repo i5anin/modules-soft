@@ -1,0 +1,140 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "globals": {
+    "process": "readonly"
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:prettier/recommended"
+  ],
+  "overrides": [
+    {
+      "env": {
+        "node": true
+      },
+      "files": [
+        ".eslintrc.{js,cjs}",
+        "**/*.test.js"
+      ],
+      "parserOptions": {
+        "sourceType": "script"
+      }
+    }
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2023,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "vue",
+    "prettier",
+    "jest"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "max-len": "off",
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "error"
+        ]
+      }
+    ],
+    "no-debugger": "error",
+    "no-var": "error",
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "all"
+      }
+    ],
+    "camelcase": [
+      "error",
+      {
+        "properties": "never",
+        "ignoreDestructuring": false
+      }
+    ],
+    "func-names": [
+      "error",
+      "always"
+    ],
+    "consistent-return": "error",
+    "no-empty": "error",
+    "vue/component-name-in-template-casing": [
+      "error",
+      "PascalCase",
+      {
+        "registeredComponentsOnly": true,
+        "ignores": [
+          "^v-"
+        ]
+      }
+    ],
+    "vue/multi-word-component-names": "error",
+    "vue/valid-v-slot": "error",
+    "vue/html-quotes": [
+      "error",
+      "double"
+    ],
+    "vue/html-indent": [
+      "error",
+      2,
+      {
+        "attribute": 1,
+        "baseIndent": 1,
+        "alignAttributesVertically": true
+      }
+    ],
+    "vue/singleline-html-element-content-newline": [
+      "warn",
+      {
+        "ignoreWhenNoAttributes": true,
+        "ignoreWhenEmpty": true,
+        "ignores": []
+      }
+    ],
+    "vue/max-len": [
+      "warn",
+      {
+        "code": 80,
+        "template": 80,
+        "tabWidth": 2,
+        "ignoreUrls": false,
+        "ignoreStrings": false,
+        "ignoreTemplateLiterals": false,
+        "ignoreRegExpLiterals": false
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "tabWidth": 2,
+        "singleQuote": true,
+        "semi": false,
+        "endOfLine": "lf",
+        "printWidth": 80,
+        "htmlWhitespaceSensitivity": "ignore",
+        "bracketSameLine": false
+      }
+    ]
+  }
+}

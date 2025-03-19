@@ -11,16 +11,16 @@
 </template>
 
 <script setup>
-import InfoComponent from '../InfoComponent.vue'
+  import InfoComponent from '../InfoComponent.vue'
 
-const props = defineProps({
-  childrenList: {
-    type: Array,
-    required: true,
-  },
-})
+  defineProps({
+    childrenList: {
+      type: Array,
+      required: true,
+    },
+  })
 </script>
 
 <style scoped>
-/* Стили, если нужны */
+  /* Стили, если нужны */
 </style>

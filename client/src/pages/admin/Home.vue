@@ -13,21 +13,62 @@
       <table class="table mt-3 table-hover">
         <thead>
           <tr>
-            <th scope="col" style="width: 15%">Название маршрута</th>
-            <th scope="col" style="width: 15%">Путь</th>
-            <th scope="col" style="width: 15%">Параметры</th>
-            <th scope="col" style="width: 10%">Тип</th>
-            <th scope="col" style="width: 10%">Route Vue</th>
-            <th scope="col" style="width: 10%">Редактирование</th>
-            <th scope="col" style="width: 5%">Ссылка</th>
+            <th
+              scope="col"
+              style="width: 15%"
+            >
+              Название маршрута
+            </th>
+            <th
+              scope="col"
+              style="width: 15%"
+            >
+              Путь
+            </th>
+            <th
+              scope="col"
+              style="width: 15%"
+            >
+              Параметры
+            </th>
+            <th
+              scope="col"
+              style="width: 10%"
+            >
+              Тип
+            </th>
+            <th
+              scope="col"
+              style="width: 10%"
+            >
+              Route Vue
+            </th>
+            <th
+              scope="col"
+              style="width: 10%"
+            >
+              Редактирование
+            </th>
+            <th
+              scope="col"
+              style="width: 5%"
+            >
+              Ссылка
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="route in group" :key="route.path">
+          <tr
+            v-for="route in group"
+            :key="route.path"
+          >
             <td>{{ route.name || '' }}</td>
             <td>{{ route.path }}</td>
             <td>
-              <div v-if="hasParams(route.path)" class="d-flex gap-2">
+              <div
+                v-if="hasParams(route.path)"
+                class="d-flex gap-2"
+              >
                 <div
                   v-for="param in extractParams(route.path)"
                   :key="param"
@@ -56,7 +97,11 @@
               >
                 Перейти
               </router-link>
-              <button v-else class="btn btn-light btn-sm" disabled>
+              <button
+                v-else
+                class="btn btn-light btn-sm"
+                disabled
+              >
                 Перейти
               </button>
             </td>
@@ -68,66 +113,68 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+  import { reactive } from 'vue'
+  import { useRouter } from 'vue-router'
 
-const getBasePrefix = path => {
-  const segments = path.split('/').filter(Boolean)
-  if (segments.length === 0) return 'root'
-  return segments[0].replace(/s$/, '')
-}
-
-const router = useRouter()
-
-const sortedRoutes = [...router.options.routes].sort((a, b) => {
-  const aIsTestOrDev = a.path.includes('test') || a.path.includes('dev')
-  const bIsTestOrDev = b.path.includes('test') || b.path.includes('dev')
-
-  if (aIsTestOrDev && !bIsTestOrDev) return 1
-  if (!aIsTestOrDev && bIsTestOrDev) return -1
-  return 0
-})
-
-const groupedRoutes = sortedRoutes.reduce((acc, route) => {
-  if (route.path === '/') return acc
-  const prefix = getBasePrefix(route.path)
-  const props =
-    typeof route.props === 'function' ? route.props({ params: {} }) : {}
-  if (!acc[prefix]) acc[prefix] = []
-  acc[prefix].push({
-    ...route,
-    props,
-  })
-  return acc
-}, {})
-
-const hasParams = path => /:\w+/.test(path)
-const extractParams = path => {
-  const matches = path.match(/:\w+/g)
-  return matches ? matches.map(param => param.slice(1)) : []
-}
-
-const params = reactive(
-  Object.fromEntries(
-    router.options.routes.map(route => [
-      route.path,
-      Object.fromEntries(extractParams(route.path).map(param => [param, ''])),
-    ])
-  )
-)
-
-const generatePath = path => {
-  let newPath = path
-  if (hasParams(path)) {
-    for (const param of extractParams(path)) {
-      newPath = newPath.replace(`:${param}`, params[path][param] || '')
-    }
+  const getBasePrefix = (path) => {
+    const segments = path.split('/').filter(Boolean)
+    if (segments.length === 0) return 'root'
+    return segments[0].replace(/s$/, '')
   }
-  return newPath
-}
 
-const canNavigate = path => {
-  if (!hasParams(path)) return true
-  return extractParams(path).every(param => params[path][param])
-}
+  const router = useRouter()
+
+  const sortedRoutes = [...router.options.routes].sort((a, b) => {
+    const aIsTestOrDev = a.path.includes('test') || a.path.includes('dev')
+    const bIsTestOrDev = b.path.includes('test') || b.path.includes('dev')
+
+    if (aIsTestOrDev && !bIsTestOrDev) return 1
+    if (!aIsTestOrDev && bIsTestOrDev) return -1
+    return 0
+  })
+
+  const groupedRoutes = sortedRoutes.reduce((acc, route) => {
+    if (route.path === '/') return acc
+    const prefix = getBasePrefix(route.path)
+    const props =
+      typeof route.props === 'function' ? route.props({ params: {} }) : {}
+    if (!acc[prefix]) acc[prefix] = []
+    acc[prefix].push({
+      ...route,
+      props,
+    })
+    return acc
+  }, {})
+
+  const hasParams = (path) => /:\w+/.test(path)
+  const extractParams = (path) => {
+    const matches = path.match(/:\w+/g)
+    return matches ? matches.map((param) => param.slice(1)) : []
+  }
+
+  const params = reactive(
+    Object.fromEntries(
+      router.options.routes.map((route) => [
+        route.path,
+        Object.fromEntries(
+          extractParams(route.path).map((param) => [param, ''])
+        ),
+      ])
+    )
+  )
+
+  const generatePath = (path) => {
+    let newPath = path
+    if (hasParams(path)) {
+      for (const param of extractParams(path)) {
+        newPath = newPath.replace(`:${param}`, params[path][param] || '')
+      }
+    }
+    return newPath
+  }
+
+  const canNavigate = (path) => {
+    if (!hasParams(path)) return true
+    return extractParams(path).every((param) => params[path][param])
+  }
 </script>

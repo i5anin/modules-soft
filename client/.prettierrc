@@ -3,8 +3,11 @@
   "tabWidth": 2,
   "singleQuote": true,
   "semi": false,
-  "endOfLine": "auto",
+  "endOfLine": "lf",
   "printWidth": 80,
-  "arrowParens": "avoid",
-  "bracketSameLine": false
+  "htmlWhitespaceSensitivity": "strict",
+  "bracketSameLine": false,
+  "vueIndentScriptAndStyle": true,
+  "proseWrap": "always",
+  "singleAttributePerLine": true
 }

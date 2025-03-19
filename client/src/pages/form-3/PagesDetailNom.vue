@@ -43,88 +43,88 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiBolt } from '@mdi/js'
-import { getNomDetailsById } from './api/nom_info.js'
-import { useRoleStore } from '@/modules/_main/store/index.js'
-import Card from '@/modules/form-3-nom/components/Form3Card.vue'
-import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
+  import { computed, onMounted, ref } from 'vue'
+  import { useRoute } from 'vue-router'
+  import SvgIcon from '@jamescoyle/vue-icon'
+  import { mdiBolt } from '@mdi/js'
+  import { getNomDetailsById } from './api/nom_info.js'
+  import { useRoleStore } from '@/modules/_main/store/index.js'
+  import Card from '@/modules/form-3-nom/components/Form3Card.vue'
+  import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
 
-const CaliberTable = BaseTable
-const StrategyTable = BaseTable
-const TpdTable = BaseTable
-const roleStore = useRoleStore()
-const route = useRoute()
-const id = ref(route.params.nom_id)
-const selectedItem = ref(null)
-const routeProps = defineProps(['type'])
+  const CaliberTable = BaseTable
+  const StrategyTable = BaseTable
+  const TpdTable = BaseTable
+  const roleStore = useRoleStore()
+  const route = useRoute()
+  const id = ref(route.params.nom_id)
+  const selectedItem = ref(null)
+  const routeProps = defineProps(['type'])
 
-onMounted(async () => {
-  if (id.value) {
-    try {
-      selectedItem.value = await getNomDetailsById(
-        id.value,
-        routeProps.type,
-        roleStore.selectedRole
-      )
-    } catch (error) {
-      console.error('Ошибка при загрузке деталей заказа:', error)
-      selectedItem.value = null
+  onMounted(async () => {
+    if (id.value) {
+      try {
+        selectedItem.value = await getNomDetailsById(
+          id.value,
+          routeProps.type,
+          roleStore.selectedRole
+        )
+      } catch (error) {
+        console.error('Ошибка при загрузке деталей заказа:', error)
+        selectedItem.value = null
+      }
     }
+  })
+
+  const filterFields = (fields, condition) => {
+    return Object.entries(fields || {}).filter(([, fieldProps]) =>
+      condition(fieldProps)
+    )
   }
-})
 
-const filterFields = (fields, condition) => {
-  return Object.entries(fields || {}).filter(([, fieldProps]) =>
-    condition(fieldProps)
+  const readAndUpdateFields = (fields) =>
+    filterFields(
+      fields,
+      (field) => field.permissions.read || field.permissions.update
+    ).map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
+
+  const filteredHeaderFields = computed(() =>
+    filterFields(
+      selectedItem.value?.header?.fields,
+      (field) => field.permissions.read || field.permissions.update
+    ).map(([key, fieldProps]) => ({ key, ...fieldProps }))
   )
-}
 
-const readAndUpdateFields = fields =>
-  filterFields(
-    fields,
-    field => field.permissions.read || field.permissions.update
-  ).map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
-
-const filteredHeaderFields = computed(() =>
-  filterFields(
-    selectedItem.value?.header?.fields,
-    field => field.permissions.read || field.permissions.update
-  ).map(([key, fieldProps]) => ({ key, ...fieldProps }))
-)
-
-const updateFormFields = computed(() =>
-  filteredHeaderFields.value.filter(field => field.permissions.update)
-)
-
-const readonlyFormFields = computed(() =>
-  filteredHeaderFields.value.filter(field => !field.permissions.update)
-)
-
-const fieldValues = computed(() => {
-  const fields = selectedItem.value?.header?.fields || {}
-  const data = selectedItem.value?.header?.data || {}
-  return Object.fromEntries(
-    Object.keys(fields).map(key => [key, data[key] ?? ''])
+  const updateFormFields = computed(() =>
+    filteredHeaderFields.value.filter((field) => field.permissions.update)
   )
-})
+
+  const readonlyFormFields = computed(() =>
+    filteredHeaderFields.value.filter((field) => !field.permissions.update)
+  )
+
+  const fieldValues = computed(() => {
+    const fields = selectedItem.value?.header?.fields || {}
+    const data = selectedItem.value?.header?.data || {}
+    return Object.fromEntries(
+      Object.keys(fields).map((key) => [key, data[key] ?? ''])
+    )
+  })
 </script>
 
 <style scoped>
-.grid-container {
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 4px;
-}
+  .grid-container {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 4px;
+  }
 
-.table-section {
-  width: 100%;
-}
+  .table-section {
+    width: 100%;
+  }
 
-.card-body {
-  border-radius: 8px;
-  padding: 16px;
-}
+  .card-body {
+    border-radius: 8px;
+    padding: 16px;
+  }
 </style>

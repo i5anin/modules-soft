@@ -26,7 +26,7 @@ const ordersRoutes = [
     name: 'Orders',
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     meta: { title: 'Заказы' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'orders',
       route: 'Order',
@@ -37,7 +37,7 @@ const ordersRoutes = [
     name: 'Order',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     meta: { title: 'Детали заказа' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'orders',
       route: 'OrderDetails',
@@ -48,7 +48,7 @@ const ordersRoutes = [
     name: 'OrderDetails',
     component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали позиции заказа' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'orders',
     }),
@@ -61,7 +61,7 @@ const clientsRoutes = [
     name: 'Clients',
     component: () => import('@/pages/form-1/PagesClients.vue'),
     meta: { title: 'Клиенты' },
-    props: route => ({
+    props: (route) => ({
       route: 'Noms',
       ...route.params,
       edit: true,
@@ -73,7 +73,7 @@ const clientsRoutes = [
     name: 'Noms',
     component: () => import('@/pages/form-2/PagesClientNoms.vue'),
     meta: { title: 'Номенклатура клиента' },
-    props: route => ({
+    props: (route) => ({
       route: 'NomDetails',
       ...route.params,
       edit: true,
@@ -85,7 +85,7 @@ const clientsRoutes = [
     name: 'NomDetails',
     component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали номенклатуры клиента' },
-    props: route => ({ ...route.params, type: 'nom' }),
+    props: (route) => ({ ...route.params, type: 'nom' }),
   },
 ]
 
@@ -95,7 +95,7 @@ const commercialRoutes = [
     name: 'Commercial',
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     meta: { title: 'Коммерческие предложения' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'kp',
       route: 'CommercialNomDetails',
@@ -106,7 +106,7 @@ const commercialRoutes = [
     name: 'CommercialNomDetails',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     meta: { title: 'Детали КП' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'kp',
     }),
@@ -119,7 +119,7 @@ const specificationsRoutes = [
     name: 'Specifications',
     component: () => import('@/pages/form-1/PagesTableWrapper.vue'),
     meta: { title: 'Спецификации' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'specs',
       route: 'SpecificationsNomDetails',
@@ -130,7 +130,7 @@ const specificationsRoutes = [
     name: 'SpecificationsNomDetails',
     component: () => import('@/pages/form-2/PagesCardNoms.vue'),
     meta: { title: 'Детали спецификации' },
-    props: route => ({
+    props: (route) => ({
       ...route.params,
       type: 'specs',
       route: 'SpecNomDetails',
@@ -141,7 +141,7 @@ const specificationsRoutes = [
     name: 'SpecNomDetails',
     component: () => import('@/pages/form-3/PagesDetailNom.vue'),
     meta: { title: 'Детали позиции спецификации' },
-    props: route => ({ ...route.params, type: 'specs' }),
+    props: (route) => ({ ...route.params, type: 'specs' }),
   },
 ]
 

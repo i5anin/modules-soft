@@ -7,7 +7,7 @@ import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
  * @param {Object} params - Параметры запроса.
  * @returns {Promise<Object>} - Промис с данными о заготовке.
  */
-export const getZagotovkaInfo = async params => {
+export const getZagotovkaInfo = async (params) => {
   try {
     const response = await apiClient.get('/zag_info', { params })
     return handleResponse(response)
