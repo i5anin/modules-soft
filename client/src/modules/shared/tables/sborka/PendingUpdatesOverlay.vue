@@ -13,13 +13,9 @@
           >
             <pre>{{ update }}</pre>
             <span>
-              <strong>ID:</strong>
-              {{ update.id }}
-              <strong>Таблица:</strong>
-              {{ update.updateTable }}
-              <strong>Поле:</strong>
-              {{ update.fieldName }}
-              <strong>Стало:</strong>
+              <strong>ID:</strong> {{ update.id }} <strong>Таблица:</strong>
+              {{ update.updateTable }} <strong>Поле:</strong>
+              {{ update.fieldName }} <strong>Стало:</strong>
               {{ update.newValue }}
             </span>
           </li>

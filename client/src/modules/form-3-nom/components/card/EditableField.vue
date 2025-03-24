@@ -14,7 +14,6 @@
       ></textarea>
       <label :for="`floatingTextarea-${field.name}`">{{ field.title }}</label>
     </div>
-
     <div
       v-else-if="isCheckbox"
       class="form-check form-switch d-inline-block me-3"
@@ -33,7 +32,6 @@
         {{ field.title }}
       </label>
     </div>
-
     <div
       v-else
       class="form-floating"

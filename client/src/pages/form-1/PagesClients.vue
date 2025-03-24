@@ -3,7 +3,6 @@
     <div class="col-12">
       <!-- Заголовок -->
       <h3 class="client-name mb-3">Список клиентов</h3>
-
       <!-- Таблица данных -->
       <ServerSideTable
         edit-button
@@ -31,7 +30,7 @@
   import { useRouter } from 'vue-router'
   import { getClients } from '../form-1/api/clients.js'
   import ServerSideTable from '@/modules/shared/tables/table-server/PaginatedDataTable.vue'
-  import { useRoleStore } from '@/modules/_main/store/index.js'
+  import { useRoleStore } from '@/modules/_main/store/store.js'
 
   // Реактивные переменные
   const clients = ref([])

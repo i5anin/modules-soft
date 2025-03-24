@@ -40,12 +40,25 @@
   const route = useRoute()
 
   const breadcrumbs = computed(() => {
-    return route.matched
-      .filter((r) => r.meta?.title)
-      .map((r) => ({
-        title: r.meta.title,
-        path: r.path,
-      }))
+    const segments = route.path.split('/').filter(Boolean)
+    const crumbs = []
+    let path = ''
+
+    for (const segment of segments) {
+      path += `/${segment}`
+
+      const matchedRoute = route.matched.find((r) => r.path === path)
+      const title = matchedRoute?.meta?.title
+
+      if (title) {
+        crumbs.push({ title, path })
+      }
+    }
+
+    // Вставляем "Главная" в начало
+    crumbs.unshift({ title: 'Главная', path: '/' })
+
+    return crumbs
   })
 </script>
 

@@ -16,7 +16,6 @@
         @click.stop="handleIconClick(field.key)"
       />
     </div>
-
     <!-- Значение -->
     <div
       class="field-value"
@@ -38,7 +37,6 @@
           class="form-check-input"
           disabled
         />
-
         <label class="form-check-label">{{ field.name }}</label>
       </div>
     </div>

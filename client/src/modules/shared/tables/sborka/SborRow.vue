@@ -19,13 +19,9 @@
       </span>
     </td>
     <!--endregion-->
-
     <!--region Статусы-->
-    <td :style="cellStyle">
-      <StatusDisplay :row="sbor" />
-    </td>
+    <td :style="cellStyle"> <StatusDisplay :row="sbor" /> </td>
     <!--endregion-->
-
     <!--region Поля-->
     <td
       v-for="(field, colIndex) in fields"
@@ -68,7 +64,6 @@
             v-html="formatValue(sbor[field.name], field.type, field.name)"
           />
         </div>
-
         <StrategyDisplay
           v-else-if="field.name === 'strat'"
           :strategy="sbor[field.name]"
@@ -84,7 +79,6 @@
     </td>
     <!--endregion-->
   </tr>
-
   <!--region Рекурсивный вызов для дочерних узлов-->
   <template v-if="isExpanded && hasChildren">
     <SborRow

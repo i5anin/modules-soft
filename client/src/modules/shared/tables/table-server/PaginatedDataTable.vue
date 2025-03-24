@@ -5,7 +5,6 @@
       :loading="loading"
       :progress="50"
     />
-
     <div v-if="!loading">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <PageSizeSelector
@@ -25,7 +24,6 @@
           @search-change="onSearch"
         />
       </div>
-
       <DataTable
         :headers="headers"
         :items="items"
@@ -37,7 +35,6 @@
         @row-click="handleRowClick"
         @sort-change="sortBy"
       />
-
       <Pagination
         :total-count="totalCnt"
         :items-per-page="localItemsPerPage"

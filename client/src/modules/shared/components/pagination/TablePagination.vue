@@ -3,7 +3,6 @@
     <p class="text-muted mb-0">
       {{ startRecord }}–{{ endRecord }} из {{ totalCount }}
     </p>
-
     <nav aria-label="Page navigation">
       <ul class="pagination mb-0">
         <!-- Кнопка перехода к первой странице -->
@@ -19,7 +18,6 @@
             «
           </button>
         </li>
-
         <!-- Кнопка перехода на предыдущую страницу -->
         <li
           class="page-item"
@@ -33,7 +31,6 @@
             ‹
           </button>
         </li>
-
         <!-- Отображение страниц -->
         <li
           v-for="page in visiblePages"
@@ -49,7 +46,6 @@
             {{ page }}
           </button>
         </li>
-
         <!-- Кнопка перехода на следующую страницу -->
         <li
           class="page-item"
@@ -63,7 +59,6 @@
             ›
           </button>
         </li>
-
         <!-- Кнопка перехода к последней странице -->
         <li
           class="page-item"

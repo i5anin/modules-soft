@@ -9,9 +9,7 @@
         {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}
       </button>
     </h4>
-    <div v-show="!isCollapsed">
-      <slot></slot>
-    </div>
+    <div v-show="!isCollapsed"> <slot></slot> </div>
   </section>
 </template>
 

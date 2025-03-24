@@ -2,18 +2,9 @@
   <div class="component-summary">
     <h2>Сводка о компоненте</h2>
     <div v-if="component">
-      <p>
-        <strong>Имя компонента:</strong>
-        {{ componentName }}
-      </p>
-      <p>
-        <strong>Пропсы:</strong>
-        {{ props.join(', ') }}
-      </p>
-      <p>
-        <strong>Методы:</strong>
-        {{ methods.join(', ') }}
-      </p>
+      <p> <strong>Имя компонента:</strong> {{ componentName }} </p>
+      <p> <strong>Пропсы:</strong> {{ props.join(', ') }} </p>
+      <p> <strong>Методы:</strong> {{ methods.join(', ') }} </p>
     </div>
     <p v-else>Загрузка компонента...</p>
   </div>

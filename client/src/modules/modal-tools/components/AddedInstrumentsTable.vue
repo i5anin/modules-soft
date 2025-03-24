@@ -68,8 +68,7 @@
                   :key="key"
                   class="list-group-item"
                 >
-                  {{ key }}:
-                  <b>{{ value }}</b>
+                  {{ key }}: <b>{{ value }}</b>
                 </li>
               </ul>
             </td>

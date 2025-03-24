@@ -5,7 +5,6 @@
       v-if="loading"
       :padding="'35vh 0'"
     />
-
     <!-- Таблица -->
     <div v-else>
       <table class="table table-bordered table-hover">

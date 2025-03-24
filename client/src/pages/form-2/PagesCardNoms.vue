@@ -4,7 +4,6 @@
       <div :class="{ collapsed: isCollapsed }">
         <OrderInfoCard :header="headerData" />
       </div>
-
       <div class="sbor-main">
         <SborMain
           v-if="nomTableData.length > 0"
@@ -23,7 +22,7 @@
 
   import { getNomById } from './api/nom_list.js'
   import OrderInfoCard from '@/modules/form-2-card-noms/components/Form2CardNoms.vue'
-  import { useRoleStore } from '@/modules/_main/store/index.js'
+  import { useRoleStore } from '@/modules/_main/store/store.js'
   import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
   import { processFields } from '@/utils/dev/fieldsProcessor.js'
 

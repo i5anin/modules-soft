@@ -9,9 +9,7 @@
         color: ['test', 'dev'].includes(groupName) ? 'blue' : 'inherit',
       }"
     >
-      <h6 class="mt-3 text-capitalize">
-        {{ groupName }}
-      </h6>
+      <h6 class="mt-3 text-capitalize"> {{ groupName }} </h6>
       <table class="table mt-3 table-hover">
         <thead>
           <tr>
@@ -64,8 +62,7 @@
             v-for="route in group"
             :key="route.path"
           >
-            <td>{{ route.name || '' }}</td>
-            <td>{{ route.path }}</td>
+            <td>{{ route.name || '' }}</td> <td>{{ route.path }}</td>
             <td>
               <div
                 v-if="hasParams(route.path)"
@@ -87,9 +84,7 @@
               <span v-else></span>
             </td>
             <td>{{ route.props && route.props.type }}</td>
-            <td>
-              {{ route.props.route }}
-            </td>
+            <td> {{ route.props.route }} </td>
             <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
             <td>
               <router-link

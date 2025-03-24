@@ -22,7 +22,6 @@
           aria-label="Закрыть"
         ></button>
       </div>
-
       <div class="offcanvas-body">
         <div
           v-if="loading"
@@ -36,7 +35,6 @@
         >
           {{ errorMessage }}
         </div>
-
         <nav v-if="menu.length">
           <div class="list-group">
             <template
@@ -52,7 +50,6 @@
               >
                 {{ item.label }}
               </router-link>
-
               <!-- Недоступный маршрут -->
               <div
                 v-else

@@ -72,8 +72,7 @@
                 flex: '1',
               }"
             >
-              {{ entry[1].type || '-' }}
-              {{ entry[1].cnc_name || '-' }}
+              {{ entry[1].type || '-' }} {{ entry[1].cnc_name || '-' }}
               {{
                 entry[1].t_op_left
                   ? `[Ост: ${parseFloat(entry[1].t_op_left).toFixed(2)}ч]`

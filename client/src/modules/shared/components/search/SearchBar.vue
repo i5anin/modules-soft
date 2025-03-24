@@ -3,9 +3,7 @@
     <div class="position-relative">
       <!-- Prepend с иконкой поиска -->
       <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-search"></i>
-        </span>
+        <span class="input-group-text"> <i class="bi bi-search"></i> </span>
         <!-- Поле ввода -->
         <input
           v-model="searchQuery"
@@ -15,7 +13,6 @@
           :disabled="loading"
           @keyup.enter="onSearch"
         />
-
         <!-- Кнопка очистки -->
       </div>
       <span

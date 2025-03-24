@@ -18,13 +18,11 @@
         @search-change="onSearch"
       />
     </div>
-
     <SborMain
       :table-data="items"
       :table-fields="filteredHeaders"
       :detail="detail"
     />
-
     <Pagination
       :total-count="totalCnt"
       :items-per-page="localItemsPerPage"

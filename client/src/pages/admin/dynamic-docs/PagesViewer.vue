@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <InfoComponent :target-component="PagesClients" />
-  </div>
+  <div> <InfoComponent :target-component="PagesClients" /> </div>
 </template>
 
 <script setup>

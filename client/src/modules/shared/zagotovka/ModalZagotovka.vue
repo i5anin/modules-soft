@@ -18,16 +18,11 @@
           ></button>
         </div>
         <div class="modal-body">
-          <template v-if="loading">
-            <p>Загрузка данных...</p>
-          </template>
+          <template v-if="loading"> <p>Загрузка данных...</p> </template>
           <template v-else>
             <table class="table table-bordered">
               <thead>
-                <tr>
-                  <th>Название</th>
-                  <th>Значение</th>
-                </tr>
+                <tr> <th>Название</th> <th>Значение</th> </tr>
               </thead>
               <tbody>
                 <tr

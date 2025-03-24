@@ -4,7 +4,6 @@
       <div class="d-flex align-items-center mb-1">
         <h3 class="client-name m-0">{{ clientName }}</h3>
       </div>
-
       <SborkaServerSideTable
         :items="noms"
         :headers="tableFields"
@@ -30,7 +29,7 @@
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import { getClientNom } from './api/nom_dir.js'
-  import { useRoleStore } from '@/modules/_main/store/index.js'
+  import { useRoleStore } from '@/modules/_main/store/store.js'
   import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideSborka.vue'
 
   const route = useRoute()

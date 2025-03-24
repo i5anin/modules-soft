@@ -18,7 +18,6 @@
         :field-values="fieldValues"
       />
     </div>
-
     <div class="table-section">
       <CaliberTable
         v-if="selectedItem?.table_cal?.data?.length"
@@ -48,7 +47,7 @@
   import SvgIcon from '@jamescoyle/vue-icon'
   import { mdiBolt } from '@mdi/js'
   import { getNomDetailsById } from './api/nom_info.js'
-  import { useRoleStore } from '@/modules/_main/store/index.js'
+  import { useRoleStore } from '@/modules/_main/store/store.js'
   import Card from '@/modules/form-3-nom/components/Form3Card.vue'
   import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
 

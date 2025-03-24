@@ -33,7 +33,6 @@
             {{ errors.email }}
           </div>
         </div>
-
         <!-- Пароль -->
         <div class="form-floating mb-3">
           <input
@@ -52,7 +51,6 @@
             {{ errors.password }}
           </div>
         </div>
-
         <!-- Кнопка входа -->
         <button
           type="submit"
@@ -61,7 +59,6 @@
           Войти
         </button>
       </form>
-
       <!-- Ошибка авторизации -->
       <div
         v-if="errorMessage"

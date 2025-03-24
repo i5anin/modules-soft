@@ -1,12 +1,10 @@
 <template>
   <div class="container">
     <div class="left">
-      <h3>До преобразования</h3>
-      <pre>{{ rawFields }}</pre>
+      <h3>До преобразования</h3> <pre>{{ rawFields }}</pre>
     </div>
     <div class="right">
-      <h3>После преобразования</h3>
-      <pre>{{ processedFields }}</pre>
+      <h3>После преобразования</h3> <pre>{{ processedFields }}</pre>
     </div>
   </div>
 </template>

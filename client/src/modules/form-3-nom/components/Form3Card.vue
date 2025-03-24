@@ -16,7 +16,6 @@
             />
           </div>
         </div>
-
         <!-- Только для чтения -->
         <div class="col-12 mt-3">
           <div class="row g-3">
@@ -35,7 +34,6 @@
         </div>
       </div>
     </div>
-
     <!-- Модалка -->
     <ModalZagInfo
       :id="modalId"

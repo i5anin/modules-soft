@@ -23,12 +23,10 @@
           ☰ Меню
         </button>
       </div>
-
       <!-- Центр: Хлебные крошки -->
       <div class="d-flex flex-grow-1 justify-content-center">
         <Breadcrumbs />
       </div>
-
       <!-- Правая часть: Кнопка "Назад" и Данные пользователя -->
       <div class="d-flex align-items-center">
         <router-link
@@ -38,7 +36,6 @@
         >
           Назад
         </router-link>
-
         <div
           v-if="authStore.isAuthenticated"
           class="d-flex align-items-center"
@@ -48,7 +45,6 @@
             class="spinner-border spinner-border-sm text-light"
           ></span>
           <span v-else-if="user">{{ user.name }} {{ user.last_name }}</span>
-
           <button
             class="btn btn-sm btn-outline-light ms-3"
             @click="logout"

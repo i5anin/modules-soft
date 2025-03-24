@@ -12,6 +12,7 @@
     "prettier": "npx prettier --write ./src",
     "eslint": "npx eslint ./src",
     "eslint:fix": "npx eslint ./src --fix",
+    "format": "npx prettier --write \"./src/**/*.{vue,js,ts}\"",
     "cypress": "npx cypress open"
   },
   "dependencies": {

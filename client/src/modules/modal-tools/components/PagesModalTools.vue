@@ -33,7 +33,6 @@
                 :collapse-states="collapseStates"
                 @remove-instrument="removeInstrument"
               />
-
               <ProposedInstrumentsTable
                 :instruments="filteredInstruments"
                 :collapse-states="collapseStates"
@@ -41,9 +40,7 @@
               />
             </div>
           </div>
-          <div v-else>
-            <p>Загрузка данных...</p>
-          </div>
+          <div v-else> <p>Загрузка данных...</p> </div>
         </div>
         <div class="modal-footer">
           <button
