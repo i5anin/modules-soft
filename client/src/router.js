@@ -4,18 +4,13 @@ import { useAuthStore } from '@/entities/auth/authStore'
 const authRoutes = [
   {
     path: '/login',
-    name: 'Login',
+    name: 'AuthLogin',
     component: () => import('@/pages/auth/AuthLogin.vue'),
     meta: { title: 'Вход в систему', public: true },
   },
   {
     path: '/logout',
-    name: 'Logout',
-    beforeEnter: (to, from, next) => {
-      const authStore = useAuthStore() // ✅ Используем store
-      authStore.logout() // ✅ Вызываем метод logout()
-      next('/login')
-    },
+    name: 'AuthLogout',
     meta: { public: true },
   },
 ]
@@ -177,12 +172,13 @@ const routes = [
     component: () => import('@/pages/admin/AdminHome.vue'),
     meta: { title: 'Список маршрутов' },
   },
-  ...authRoutes,
+
   ...commercialRoutes,
   ...ordersRoutes,
   ...clientsRoutes,
   ...devRoutes,
   ...specificationsRoutes,
+  ...authRoutes,
 ]
 
 const router = createRouter({
