@@ -37,14 +37,14 @@
   "rules": {
     "vue/attributes-order": "error",
     // Упорядочивание атрибутов
-    "vue/singleline-html-element-content-newline": [
-      "warn",
-      {
-        "ignoreWhenNoAttributes": true,
-        "ignoreWhenEmpty": true,
-        "ignores": []
-      }
-    ],
+    //    "vue/singleline-html-element-content-newline": [
+    //      "warn",
+    //      {
+    //        "ignoreWhenNoAttributes": true,
+    //        "ignoreWhenEmpty": true,
+    //        "ignores": []
+    //      }
+    //    ],
     // Требование переноса строк
     "@typescript-eslint/no-unused-vars": "off",
     "max-len": "off",
@@ -64,7 +64,10 @@
       "warn",
       {
         "allow": [
-          "error"
+          "warn",
+          "error",
+          "groupCollapsed",
+          "groupEnd"
         ]
       }
     ],
@@ -95,7 +98,8 @@
       {
         "registeredComponentsOnly": true,
         "ignores": [
-          "^v-"
+          "^v-",
+          "^font-"
         ]
       }
     ],
@@ -120,10 +124,11 @@
         "code": 80,
         "template": 80,
         "tabWidth": 2,
-        "ignoreUrls": false,
-        "ignoreStrings": false,
-        "ignoreTemplateLiterals": false,
-        "ignoreRegExpLiterals": false
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true,
+        "ignoreComments": true
       }
     ],
     "prettier/prettier": [
@@ -135,8 +140,9 @@
         "semi": false,
         "endOfLine": "lf",
         "printWidth": 80,
-        "htmlWhitespaceSensitivity": "ignore",
-        "bracketSameLine": false
+        "htmlWhitespaceSensitivity": "strict",
+        "bracketSameLine": false,
+        "vueIndentScriptAndStyle": true
       }
     ]
   }
