@@ -1,9 +1,9 @@
 <template>
   <div
     class="tree-node"
-    @click="toggle"
     :style="{ paddingLeft: `${depth * 20}px`, position: 'relative' }"
     style="cursor: pointer"
+    @click="toggle"
   >
     <div class="node-content">
       <span v-if="!isExpanded">

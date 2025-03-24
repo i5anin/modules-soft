@@ -17,7 +17,14 @@
           <h5 class="modal-title">{{ title }}</h5>
           <button
             type="button"
-            class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center"
+            :class="[
+              'btn',
+              'btn-danger',
+              'rounded-circle',
+              'd-flex',
+              'align-items-center',
+              'justify-content-center',
+            ]"
             style="width: 2.5rem; height: 2.5rem"
             aria-label="Close"
             @click="closeModal"
@@ -32,10 +39,10 @@
             class="form-floating mb-3"
           >
             <input
-              type="text"
-              class="form-control"
               :id="key"
               v-model="editableRow[key]"
+              type="text"
+              class="form-control"
               placeholder="Введите значение"
             />
             <label :for="key">{{ headersMap[key] || key }}</label>

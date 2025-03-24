@@ -29,15 +29,15 @@
     <!--region Поля-->
     <td
       v-for="(field, colIndex) in fields"
-      :key="field.name"
       v-show="rowSpanMatrix[rowIndex][colIndex] !== -1"
+      :key="field.name"
       :rowspan="rowSpanMatrix[rowIndex][colIndex]"
       :style="getFieldStyle(field)"
     >
-      <div v-if="(field.permissions.update = 0)">
+      <div v-if="field.permissions.update = 0">
         <input
-          type="text"
           v-model="sbor[field.name]"
+          type="text"
           class="form-control form-control-sm"
           :style="{ fontSize: '14px' }"
           @click.stop
@@ -46,11 +46,11 @@
       </div>
       <div v-else>
         <div
-          class="tree-node"
-          @click.stop="handleRowClick"
           v-if="field.name === 'name' || field.name === 'description'"
+          class="tree-node"
           :style="getTreeNodeStyle(field)"
           title="Нажмите для перехода"
+          @click.stop="handleRowClick"
         >
           <div
             v-if="field.name === 'name' && depth > 0"
@@ -76,9 +76,9 @@
         />
         <span
           v-else
-          v-html="formatValue(sbor[field.name], field.type, field.name)"
           :title="generateTitle(field)"
           style="font-size: 13px"
+          v-html="formatValue(sbor[field.name], field.type, field.name)"
         />
       </div>
     </td>
@@ -93,10 +93,10 @@
       :sbor="child"
       :fields="fields"
       :depth="depth + 1"
-      :isLastChild="index === sbor.sbor_tree.length - 1"
+      :is-last-child="index === sbor.sbor_tree.length - 1"
       :detail="detail"
-      :rowIndex="index"
-      :rowSpanMatrix="rowSpanMatrix"
+      :row-index="index"
+      :row-span-matrix="rowSpanMatrix"
     />
   </template>
   <!--endregion-->

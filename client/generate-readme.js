@@ -19,13 +19,13 @@ function getFileEmoji(fileName) {
     '.less': '🎨',
     '.html': '📄',
     '.md': '📄',
-    '.json': '⚙',
-    '.yaml': '⚙',
-    '.yml': '⚙',
+    '.json': '⚙️',
+    '.yaml': '⚙️',
+    '.yml': '⚙️',
     '.env': '🔧',
     '.config.js': '🔧',
-    '.gitignore': '🗂',
-    '.editorconfig': '🗂',
+    '.gitignore': '🚫',
+    '.editorconfig': '📐',
   }
   return icons[ext] || '📃' // По умолчанию 📃 для остальных файлов
 }
@@ -54,7 +54,7 @@ function getDirectoryStructure(dir, depth = 0) {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
 
   return entries
-    .map(entry => {
+    .map((entry) => {
       const prefix = ' '.repeat(depth * 2) + '┣ '
       const filePath = path.join(dir, entry.name)
 
@@ -152,7 +152,7 @@ ${topFiles}
 fs.writeFileSync('README.md', readmeContent, 'utf8')
 console.log('✅ README.md создан на основе реальной структуры `src/`!')
 console.log(
-  `📊 Всего файлов: ${Object.values(fileCount).reduce((a, b) => a + b, 0)}`
+  `📊 Всего файлов: ${Object.values(fileCount).reduce((a, b) => a + b, 0)}`,
 )
 console.log(`📜 Всего строк кода: ${totalLines}`)
 console.log('📊 Количество файлов и строк по типам:')

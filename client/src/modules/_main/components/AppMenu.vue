@@ -79,7 +79,9 @@
   import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { getMenu } from '@/modules/api/authApi.js'
+  import { useAuthStore } from '@/entities/auth/authStore' // ✅ Подключаем authStore
 
+  const authStore = useAuthStore()
   const menu = ref([])
   const loading = ref(true)
   const errorMessage = ref('')
@@ -93,12 +95,16 @@
   // Проверка наличия маршрута
   const isRouteAvailable = (path) => availableRoutes.value.has(path)
 
-  // Запрос меню
+  // Запрос меню (только если пользователь авторизован)
   const fetchMenu = async () => {
+    if (!authStore.isAuthenticated) {
+      loading.value = false
+      return
+    }
+
     try {
       const response = await getMenu()
       const data = Array.isArray(response) ? response : (response?.data ?? [])
-
       menu.value = data.filter(
         (item) => item?.url && typeof item.url === 'string'
       )

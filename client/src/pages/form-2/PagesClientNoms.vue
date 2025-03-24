@@ -116,10 +116,6 @@
     fetchNoms()
   }
 
-  const handleDateRangeChange = (range) => {
-    console.log('Изменение диапазона дат:', range)
-  }
-
   onMounted(() => {
     fetchNoms()
   })

@@ -5,12 +5,12 @@
       class="form-floating"
     >
       <textarea
+        :id="`floatingTextarea-${field.name}`"
         :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
         :placeholder="field.title"
         class="form-control form-control-sm"
         :style="{ height: calculateHeight(String(modelValue)) + 'px' }"
-        :id="`floatingTextarea-${field.name}`"
+        @input="$emit('update:modelValue', $event.target.value)"
       ></textarea>
       <label :for="`floatingTextarea-${field.name}`">{{ field.title }}</label>
     </div>
@@ -20,11 +20,11 @@
       class="form-check form-switch d-inline-block me-3"
     >
       <input
+        :id="`switch-${field.name}`"
         type="checkbox"
         :checked="modelValue"
-        @change="$emit('update:modelValue', $event.target.checked)"
         class="form-check-input"
-        :id="`switch-${field.name}`"
+        @change="$emit('update:modelValue', $event.target.checked)"
       />
       <label
         class="form-check-label"
@@ -39,12 +39,12 @@
       class="form-floating"
     >
       <input
+        :id="`floatingInput-${field.name}`"
         type="text"
         :value="String(modelValue)"
-        @input="$emit('update:modelValue', $event.target.value)"
         :placeholder="field.title"
         class="form-control form-control-sm"
-        :id="`floatingInput-${field.name}`"
+        @input="$emit('update:modelValue', $event.target.value)"
       />
       <label :for="`floatingInput-${field.name}`">{{ field.title }}</label>
     </div>

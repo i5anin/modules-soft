@@ -68,7 +68,7 @@ export function formatValue(value, type, key) {
 
   if (!key) {
     console.warn(
-      `В функцию форматтера передан некорректный ключ. Ключ отсутствует или пустой.
+      `форматтер: передан некорректный ключ. Ключ отсутствует или пустой.
       value: ${value}, type: ${type}
       Стек вызова:
       ${getCallerStack()}`
@@ -100,7 +100,7 @@ export function formatValue(value, type, key) {
         `Неизвестный тип данных "${type}" для ключа "${key}".\nvalue: ${value}`
       )
       console.groupCollapsed('Показать стек вызова')
-      console.log(getCallerStack())
+      console.warn(getCallerStack())
       console.groupEnd()
 
       return value || ''
@@ -197,7 +197,8 @@ function formatTimestamp(value) {
  * @returns {string} - Значение в формате "1 234,00 ₽".
  */
 function formatCurrency(value) {
-  return `${formatNumber(value, true)}\u00A0₽` // Используем `formatNumber` с isPrice = true
+  // Используем `formatNumber` с isPrice = true
+  return `${formatNumber(value, true)}\u00A0₽`
 }
 
 function isObject(value) {

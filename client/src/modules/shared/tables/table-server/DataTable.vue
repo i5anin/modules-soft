@@ -20,8 +20,8 @@
             <th
               v-for="column in filteredFields"
               :key="column.name"
-              @click="handleSort(column)"
               :style="{ fontSize: '0.90rem' }"
+              @click="handleSort(column)"
             >
               {{ column.title }}
               <span v-if="column.sortable">
@@ -53,8 +53,8 @@
           <tr
             v-for="row in items"
             :key="row.id"
-            @click="emit('row-click', row)"
             :class="{ locked: row.locked }"
+            @click="emit('row-click', row)"
           >
             <td v-if="showStatusColumn">
               <StatusDisplay :row="row" />
@@ -73,8 +73,8 @@
               />
             </td>
             <td
-              @click.stop="openEditModal(row)"
               v-if="editButton"
+              @click.stop="openEditModal(row)"
             >
               <button class="btn btn-sm">
                 <i
@@ -167,8 +167,7 @@
     selectedRow.value = null
   }
 
-  const saveRowChanges = (updatedRow) => {
-    console.log('Сохранено:', updatedRow)
+  const saveRowChanges = () => {
     closeModal()
   }
 </script>

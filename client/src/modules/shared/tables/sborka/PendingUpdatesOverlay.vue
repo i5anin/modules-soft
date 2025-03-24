@@ -56,21 +56,14 @@
       const confirmUpdates = async () => {
         try {
           await tableStore.confirmUpdates()
-          console.log('Изменения подтверждены')
         } catch (error) {
           console.error('Ошибка подтверждения:', error)
         }
       }
 
-      const cancelUpdates = () => {
-        tableStore.cancelUpdates()
-        console.log('Изменения отменены')
-      }
-
       return {
         tableStore,
         confirmUpdates,
-        cancelUpdates,
       }
     },
   }

@@ -7,7 +7,7 @@
       class="spinner-border"
       role="status"
     >
-      <span class="visually-hidden">Загрузка...</span>
+      <span class="visually-hidden"> Загрузка... </span>
     </div>
   </div>
 </template>

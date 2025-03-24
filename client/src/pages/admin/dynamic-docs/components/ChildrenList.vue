@@ -5,7 +5,7 @@
       :key="child.name || child.__file"
       class="list-group-item"
     >
-      <InfoComponent :targetComponent="child" />
+      <InfoComponent :target-component="child" />
     </li>
   </ul>
 </template>

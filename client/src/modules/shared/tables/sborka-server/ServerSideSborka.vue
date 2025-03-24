@@ -2,9 +2,9 @@
   <div>
     <div class="d-flex align-items-center justify-content-between mb-3">
       <PageSizeSelector
-        :pageSizes="pageSizes"
-        :modelValue="localItemsPerPage"
-        @update:modelValue="updateItemsPerPage"
+        :page-sizes="pageSizes"
+        :model-value="localItemsPerPage"
+        @update:model-value="updateItemsPerPage"
       />
       <DateRangeFilters
         v-if="datepicker"
@@ -20,16 +20,16 @@
     </div>
 
     <SborMain
-      :tableData="items"
-      :tableFields="filteredHeaders"
+      :table-data="items"
+      :table-fields="filteredHeaders"
       :detail="detail"
     />
 
     <Pagination
-      :totalCount="totalCnt"
-      :itemsPerPage="localItemsPerPage"
-      :currentPage="currentPg"
-      :totalPages="totalPg"
+      :total-count="totalCnt"
+      :items-per-page="localItemsPerPage"
+      :current-page="currentPg"
+      :total-pages="totalPg"
       @page-change="goToPage"
     />
   </div>
@@ -39,7 +39,7 @@
   import { computed, ref } from 'vue'
   import { formatISO } from 'date-fns'
   import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
-  import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
+  import Pagination from '@/modules/shared/components/pagination/TablePagination.vue'
   import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
   import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
   import SborMain from '../sborka/SborMain.vue'

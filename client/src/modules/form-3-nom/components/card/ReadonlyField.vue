@@ -1,19 +1,19 @@
 <template>
   <div
-    @click="handleFormClick"
     style="cursor: pointer"
+    @click="handleFormClick"
   >
     <!-- Заголовок -->
     <div class="field-label d-flex align-items-center">
       <span>{{ field.title }}</span>
       <font-awesome-icon
         v-if="['zag_nom', 'zag_tech'].includes(field.key)"
-        @click.stop="handleIconClick(field.key)"
         :icon="['fas', 'circle-info']"
         :style="{ color: 'green', cursor: 'pointer' }"
         class="icon-sm ms-2 me-2"
         data-bs-toggle="tooltip"
         title="Дополнительная информация заготовки"
+        @click.stop="handleIconClick(field.key)"
       />
     </div>
 

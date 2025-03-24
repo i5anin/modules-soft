@@ -12,19 +12,4 @@ export const useHomeStore = defineStore('home', {
     itemsPerPage: 15,
     searchQuery: '',
   }),
-  actions: {
-    nextPage() {
-      this.currentPage++
-      console.log('Текущая страница в store:', this.currentPage)
-    },
-    prevPage() {
-      if (this.currentPage > 0) {
-        this.currentPage--
-        console.log('Текущая страница в store:', this.currentPage)
-      }
-    },
-    updateSearchQuery(query) {
-      this.searchQuery = query // Обновление поискового запроса
-    },
-  },
 })

@@ -44,12 +44,12 @@
     (newLoading) => {
       if (newLoading) {
         progress.value = 0
-        if (animationFrame) cancelAnimationFrame(animationFrame) // Очищаем предыдущую анимацию
+        if (animationFrame) cancelAnimationFrame(animationFrame)
         animationFrame = requestAnimationFrame(() =>
           animateProgress(performance.now())
         )
       } else {
-        if (animationFrame) cancelAnimationFrame(animationFrame) // Останавливаем анимацию
+        if (animationFrame) cancelAnimationFrame(animationFrame)
         progress.value = 0 // Сбрасываем прогресс
       }
     },

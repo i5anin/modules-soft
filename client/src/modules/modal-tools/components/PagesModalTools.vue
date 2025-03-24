@@ -1,18 +1,18 @@
 <template>
   <div
-    class="modal fade"
     id="orderModal"
+    ref="modalContainer"
+    class="modal fade"
     tabindex="-1"
     aria-labelledby="orderModalLabel"
     aria-hidden="true"
-    ref="modalContainer"
   >
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
           <h5
-            class="modal-title"
             id="orderModalLabel"
+            class="modal-title"
           >
             Инструмент (операция {{ operationNumber }}, уникальный id операции
             {{ operationId }})

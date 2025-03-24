@@ -14,8 +14,8 @@
               title="Можно редактировать"
             >
               <SvgIcon
-                color="gray"
                 v-if="field.permissions.update"
+                color="gray"
                 type="mdi"
                 :path="mdiPencil"
                 style="width: 12px; height: 12px"
@@ -40,17 +40,17 @@
               <template v-if="typeof row[field.key] === 'boolean'">
                 <!-- Checkbox для булевых значений -->
                 <input
+                  v-model="row[field.key]"
                   type="checkbox"
                   class="form-check-input"
-                  v-model="row[field.key]"
                 />
               </template>
               <template v-else>
                 <!-- Текстовый инпут для остальных типов -->
                 <input
+                  v-model="row[field.key]"
                   type="text"
                   class="form-control"
-                  v-model="row[field.key]"
                 />
               </template>
             </template>

@@ -82,7 +82,6 @@ export function processFields(fields, config = exclusionConfig) {
         modified: true,
       }
     }
-    console.log({ ...field, modified: false })
     return { ...field, modified: false }
   })
 }

@@ -4,10 +4,10 @@
     class="status-display"
   >
     <span
-      :title="statusObj.description"
       v-for="(statusObj, index) in formattedStatuses"
       :key="index"
       :class="['badge', statusObj.badgeClass || 'bg-black']"
+      :title="statusObj.description"
     >
       {{ statusObj.label }}
     </span>
@@ -45,7 +45,7 @@
           ? {
               ...statusObj,
               key: rowKey,
-              badgeClass: statusObj.badgeClass || 'bg-black', // Устанавливаем чёрный цвет по умолчанию
+              badgeClass: statusObj.badgeClass || 'bg-black',
             }
           : null
       })

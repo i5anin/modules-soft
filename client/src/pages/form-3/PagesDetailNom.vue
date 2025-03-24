@@ -13,9 +13,9 @@
       </div>
       <Card
         v-if="updateFormFields.length || readonlyFormFields.length"
-        :updateFormFields="updateFormFields"
-        :readonlyFormFields="readonlyFormFields"
-        :fieldValues="fieldValues"
+        :update-form-fields="updateFormFields"
+        :readonly-form-fields="readonlyFormFields"
+        :field-values="fieldValues"
       />
     </div>
 
@@ -24,19 +24,19 @@
         v-if="selectedItem?.table_cal?.data?.length"
         :fields="readAndUpdateFields(selectedItem.table_cal?.fields)"
         :data="selectedItem.table_cal?.data"
-        :tableTitle="selectedItem.table_cal?.title"
+        :table-title="selectedItem.table_cal?.title"
       />
       <StrategyTable
         v-if="selectedItem?.strat?.data?.length"
         :fields="readAndUpdateFields(selectedItem.strat?.fields)"
         :data="selectedItem.strat?.data"
-        :tableTitle="selectedItem.strat?.title"
+        :table-title="selectedItem.strat?.title"
       />
       <TpdTable
         v-if="selectedItem?.tpd?.data?.length"
         :fields="readAndUpdateFields(selectedItem.tpd?.fields)"
         :data="selectedItem.tpd?.data"
-        :tableTitle="selectedItem.tpd?.title"
+        :table-title="selectedItem.tpd?.title"
       />
     </div>
   </div>

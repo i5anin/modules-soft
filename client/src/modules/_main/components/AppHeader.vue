@@ -1,7 +1,13 @@
 <template>
   <header class="navbar navbar-expand-lg custom-gradient">
     <div
-      class="container-fluid d-flex justify-content-between align-items-center py-1"
+      :class="[
+        'container-fluid',
+        'd-flex',
+        'justify-content-between',
+        'align-items-center',
+        'py-1',
+      ]"
     >
       <!-- Левая часть: Кнопка "Меню" (отображается только если пользователь авторизован) -->
       <div
@@ -97,6 +103,7 @@
     display: flex;
     align-items: center;
   }
+
   .custom-gradient {
     background: linear-gradient(
       135deg,

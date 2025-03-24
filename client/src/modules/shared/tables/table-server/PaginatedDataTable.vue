@@ -9,9 +9,9 @@
     <div v-if="!loading">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <PageSizeSelector
-          :pageSizes="itemsPerPageOptions"
           v-model="localItemsPerPage"
-          @update:modelValue="updateItemsPerPage"
+          :page-sizes="itemsPerPageOptions"
+          @update:model-value="updateItemsPerPage"
         />
         <DateRangeFilters
           v-if="datepicker"
@@ -29,20 +29,20 @@
       <DataTable
         :headers="headers"
         :items="items"
-        :sortColumn="sortColumn"
-        :sortItem="sortItem"
-        :formatValue="formatValue"
+        :sort-column="sortColumn"
+        :sort-item="sortItem"
+        :format-value="formatValue"
         :edit-button="editButton"
-        :getTextAlignment="getTextAlignment"
+        :get-text-alignment="getTextAlignment"
         @row-click="handleRowClick"
         @sort-change="sortBy"
       />
 
       <Pagination
-        :totalCount="totalCnt"
-        :itemsPerPage="localItemsPerPage"
-        :currentPage="currentPg"
-        :totalPages="totalPg"
+        :total-count="totalCnt"
+        :items-per-page="localItemsPerPage"
+        :current-page="currentPg"
+        :total-pages="totalPg"
         @page-change="goToPage"
       />
     </div>
@@ -53,7 +53,7 @@
   import { computed, ref, watch } from 'vue'
   import moment from 'moment'
   import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
-  import Pagination from '@/modules/shared/components/pagination/Pagination.vue'
+  import Pagination from '@/modules/shared/components/pagination/TablePagination.vue'
   import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
   import DataTable from './DataTable.vue'
   import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'

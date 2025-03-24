@@ -174,7 +174,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/pages/admin/Home.vue'),
+    component: () => import('@/pages/admin/AdminHome.vue'),
     meta: { title: 'Список маршрутов' },
   },
   ...authRoutes,

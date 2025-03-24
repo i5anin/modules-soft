@@ -11,8 +11,8 @@
           >
             <component
               :is="EditableField"
-              :field="field"
               v-model="localFieldValues[field.key]"
+              :field="field"
             />
           </div>
         </div>
@@ -21,9 +21,9 @@
         <div class="col-12 mt-3">
           <div class="row g-3">
             <div
-              class="col-md-6"
               v-for="field in readonlyFormFields"
               :key="field.key"
+              class="col-md-6"
             >
               <ReadonlyField
                 :field="field"
@@ -38,10 +38,10 @@
 
     <!-- Модалка -->
     <ModalZagInfo
+      :id="modalId"
       :visible="modalVisible"
       :type="modalType"
       :kolvo-add="modalKolvoAdd"
-      :id="modalId"
       @close="closeModal"
     />
   </div>
@@ -89,7 +89,7 @@
 
   // Methods
   const handleFieldClick = (name) => {
-    console.log(`Клик по полю в родительском компоненте: ${name}`) // Лог проверки
+    // console.log(`Клик по полю в родительском компоненте: ${name}`) // Лог проверки
     if (['zag_nom', 'zag_tech'].includes(name)) {
       modalType.value = name === 'zag_nom' ? 'nom' : 'tech'
       modalKolvoAdd.value = formattedFieldValues.value.kolvo_add || 0

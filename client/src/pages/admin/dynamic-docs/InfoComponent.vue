@@ -15,7 +15,7 @@
       v-if="componentProps.length"
       title="Пропсы"
     >
-      <PropsList :propsList="componentProps" />
+      <PropsList :props-list="componentProps" />
     </CollapsibleSection>
 
     <!-- Методы -->
@@ -24,8 +24,8 @@
       title="Методы"
     >
       <MethodsList
-        :ownMethods="componentMethods.ownMethods"
-        :externalMethods="componentMethods.externalMethods"
+        :own-methods="componentMethods.ownMethods"
+        :external-methods="componentMethods.externalMethods"
       />
     </CollapsibleSection>
 
@@ -34,7 +34,7 @@
       v-if="componentEmits.length"
       title="События"
     >
-      <EmitsList :emitsList="componentEmits" />
+      <EmitsList :emits-list="componentEmits" />
     </CollapsibleSection>
 
     <!-- Дочерние компоненты -->
@@ -42,7 +42,7 @@
       v-if="componentChildren.length"
       title="Дочерние компоненты"
     >
-      <ChildrenList :childrenList="componentChildren" />
+      <ChildrenList :children-list="componentChildren" />
     </CollapsibleSection>
   </div>
 </template>
@@ -122,7 +122,7 @@
           (key) => !key.startsWith('_')
         )
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
 

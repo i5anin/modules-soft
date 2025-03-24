@@ -1,6 +1,6 @@
 <template>
   <div>
-    <InfoComponent :targetComponent="PagesClients" />
+    <InfoComponent :target-component="PagesClients" />
   </div>
 </template>
 

@@ -15,8 +15,8 @@
     </router-link>
     <button
       v-else
-      @click="goBack"
       :class="[btnClasses]"
+      @click="goBack"
     >
       <SvgIcon
         type="mdi"

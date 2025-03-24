@@ -29,8 +29,8 @@
     </div>
     <CommentSection
       class="card-footer bg-transparent border-success"
-      :commentFields="commentFields"
-      :fieldValues="fieldValuesComputed"
+      :comment-fields="commentFields"
+      :field-values="fieldValuesComputed"
     />
   </div>
 </template>

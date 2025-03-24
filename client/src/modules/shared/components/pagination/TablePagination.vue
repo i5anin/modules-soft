@@ -86,7 +86,7 @@
   import { computed } from 'vue'
 
   export default {
-    name: 'Pagination',
+    name: 'TablePagination',
     props: {
       totalCount: {
         type: Number,

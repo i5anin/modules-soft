@@ -8,8 +8,8 @@
         </span>
         <!-- Поле ввода -->
         <input
-          type="text"
           v-model="searchQuery"
+          type="text"
           class="form-control search-input"
           placeholder="Введите текст для поиска"
           :disabled="loading"

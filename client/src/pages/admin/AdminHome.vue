@@ -9,7 +9,9 @@
         color: ['test', 'dev'].includes(groupName) ? 'blue' : 'inherit',
       }"
     >
-      <h6 class="mt-3 text-capitalize">{{ groupName }}</h6>
+      <h6 class="mt-3 text-capitalize">
+        {{ groupName }}
+      </h6>
       <table class="table mt-3 table-hover">
         <thead>
           <tr>

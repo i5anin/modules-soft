@@ -39,8 +39,8 @@
               :fields="filteredFields"
               :depth="0"
               :detail="detail"
-              :rowIndex="rowIndex"
-              :rowSpanMatrix="rowSpanMatrix"
+              :row-index="rowIndex"
+              :row-span-matrix="rowSpanMatrix"
             />
           </tbody>
         </table>
