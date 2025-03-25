@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid-container">
+    <div class="grid-container mt-3">
       <div :class="{ collapsed: isCollapsed }">
         <OrderInfoCard :header="headerData" />
       </div>
