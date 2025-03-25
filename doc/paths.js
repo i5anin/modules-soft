@@ -7,5 +7,5 @@ const __dirname = path.dirname(__filename);
 
 // 📌 Универсальный массив директорий
 export const Root = [
-    "../client/src",
+    "../src",
 ].map((relativePath) => path.resolve(__dirname, relativePath));
