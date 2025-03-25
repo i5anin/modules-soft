@@ -29,7 +29,6 @@
         <button
           type="button"
           class="btn btn-danger btn-sm"
-          @click="cancelUpdates"
         >
           Отменить
         </button>
