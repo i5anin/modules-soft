@@ -1,2 +1,0 @@
-A:\development\telegram-bot__pf-forum\bot\src\api
-A:\development\telegram-bot__pf-forum\bot\package.json
