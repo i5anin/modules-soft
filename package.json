@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "serve": "npx http-server dist -p 8080",
-    "client": "vite && ./git/git-changes-report.module.js",
+    "client": "node ./doc/generate-readme.js && vite && ./git/git-changes-report.module.js",
     "build": "vite build",
     "preview": "vite preview",
     "dist": "http-server dist",
