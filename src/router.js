@@ -150,13 +150,6 @@ const devRoutes = [
     props: true,
   },
   {
-    path: '/dev/docs',
-    name: 'Docs',
-    component: () => import('@/pages/admin/dynamic-docs/PagesViewer.vue'),
-    meta: { title: 'Документация' },
-    props: true,
-  },
-  {
     path: '/dev/fields-processor',
     name: 'devFieldsProcessor',
     component: () => import('@/modules/dev/fieldsProcessor.vue'),
