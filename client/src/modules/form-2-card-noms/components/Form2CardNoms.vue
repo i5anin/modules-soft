@@ -1,7 +1,11 @@
 <template>
-  <div v-if="header" class="card border-light mb-2">
-    <div class="card-header bg-transparent border-success border-light p-2">
-      <svg-icon type="mdi" :path="mdiFormatListBulletedType" color="red" />
+  <div v-if="header" class="card mb-2">
+    <div class="p-3">
+      <svg-icon
+        type="mdi"
+        :path="mdiFormatListBulletedType"
+        class="color-red"
+      />
       Информация о заказе
     </div>
     <div class="card-body row">
@@ -21,7 +25,6 @@
       </div>
     </div>
     <CommentSection
-      class="card-footer bg-transparent border-success"
       :comment-fields="commentFields"
       :field-values="fieldValuesComputed"
     />
@@ -99,6 +102,10 @@
 </script>
 
 <style scoped>
+  .color-red {
+    color: #ff6868;
+  }
+
   .field-label {
     font-size: 0.8rem;
     color: #ff6868;
@@ -107,6 +114,6 @@
 
   .field-value {
     font-size: 1rem;
-    color: #68ffd2;
+    //color: #68ffd2;
   }
 </style>
