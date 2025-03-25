@@ -28,7 +28,7 @@
       <div class="d-flex align-items-center">
         <router-link
           v-if="authStore.isAuthenticated"
-          class="btn btn-outline-light me-3"
+          class="btn btn-dark me-3"
           to="/"
         >
           Назад
@@ -39,7 +39,7 @@
             class="spinner-border spinner-border-sm text-light"
           ></span>
           <span v-else-if="user">{{ user.name }} {{ user.last_name }}</span>
-          <button class="btn btn-sm btn-outline-light ms-3" @click="logout">
+          <button class="btn btn-sm btn-dark ms-3" @click="logout">
             Выйти
           </button>
         </div>
