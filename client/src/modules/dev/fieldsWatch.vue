@@ -124,11 +124,7 @@
 <template>
   <div class="container mt-4">
     <h3 class="mb-4">Данные JSON по модулям и типам</h3>
-    <div
-      v-for="moduleGroup in allData"
-      :key="moduleGroup.module"
-      class="mb-5"
-    >
+    <div v-for="moduleGroup in allData" :key="moduleGroup.module" class="mb-5">
       <h4 class="text-primary">Модуль: {{ moduleGroup.module }}</h4>
       <div
         v-for="dataSet in moduleGroup.data"
@@ -140,10 +136,7 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th
-                v-for="column in tableConfig"
-                :key="column.key"
-              >
+              <th v-for="column in tableConfig" :key="column.key">
                 {{ column.label }}
               </th>
             </tr>
@@ -157,10 +150,7 @@
                 'table-danger': row.modified,
               }"
             >
-              <td
-                v-for="column in tableConfig"
-                :key="column.key"
-              >
+              <td v-for="column in tableConfig" :key="column.key">
                 {{ getValueByPath(row, column.key) }}
               </td>
             </tr>

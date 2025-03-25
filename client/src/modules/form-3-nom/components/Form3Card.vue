@@ -4,11 +4,7 @@
       <div class="row">
         <!-- Поля для редактирования -->
         <div class="col-12">
-          <div
-            v-for="field in updateFormFields"
-            :key="field.key"
-            class="mb-3"
-          >
+          <div v-for="field in updateFormFields" :key="field.key" class="mb-3">
             <component
               :is="EditableField"
               v-model="localFieldValues[field.key]"

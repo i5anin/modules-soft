@@ -1,10 +1,7 @@
 <template>
   <div>
     <!-- Индикатор загрузки -->
-    <LoadingSpinner
-      v-if="loading"
-      :padding="'35vh 0'"
-    />
+    <LoadingSpinner v-if="loading" :padding="'35vh 0'" />
     <!-- Таблица -->
     <div v-else>
       <table class="table table-bordered table-hover">
@@ -34,20 +31,12 @@
                 ></i>
               </span>
             </th>
-            <th
-              v-if="editButton"
-              title="Колонка редактировать"
-            ></th>
+            <th v-if="editButton" title="Колонка редактировать"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="!items.length">
-            <td
-              colspan="100%"
-              class="text-center"
-            >
-              Нет данных
-            </td>
+            <td colspan="100%" class="text-center"> Нет данных </td>
           </tr>
           <tr
             v-for="row in items"
@@ -71,15 +60,9 @@
                 v-html="formatValue(row[field.name], field.type, field.name)"
               />
             </td>
-            <td
-              v-if="editButton"
-              @click.stop="openEditModal(row)"
-            >
+            <td v-if="editButton" @click.stop="openEditModal(row)">
               <button class="btn btn-sm">
-                <i
-                  class="bi bi-pencil-fill"
-                  style="color: gray"
-                ></i>
+                <i class="bi bi-pencil-fill" style="color: gray"></i>
               </button>
             </td>
           </tr>

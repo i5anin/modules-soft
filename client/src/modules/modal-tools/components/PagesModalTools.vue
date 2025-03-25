@@ -10,10 +10,7 @@
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
-          <h5
-            id="orderModalLabel"
-            class="modal-title"
-          >
+          <h5 id="orderModalLabel" class="modal-title">
             Инструмент (операция {{ operationNumber }}, уникальный id операции
             {{ operationId }})
           </h5>

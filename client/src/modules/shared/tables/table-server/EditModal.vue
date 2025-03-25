@@ -6,10 +6,7 @@
     role="dialog"
     style="display: block; background-color: rgba(0, 0, 0, 0.5)"
   >
-    <div
-      class="modal-dialog"
-      role="document"
-    >
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div
           class="modal-header d-flex justify-content-between align-items-center"

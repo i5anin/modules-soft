@@ -2,26 +2,15 @@
   <PendingUpdatesOverlay />
   <div class="row">
     <div class="col-12">
-      <div
-        v-if="tableData.length === 0"
-        class="alert alert-warning"
-      >
+      <div v-if="tableData.length === 0" class="alert alert-warning">
         Нет данных.
       </div>
       <div v-else>
         <table class="table-sbor table table-bordered table-sm table-hover">
           <thead>
             <tr style="font-size: 12px">
-              <th
-                scope="col"
-                style="width: 30px"
-                title="развернуть"
-              ></th>
-              <th
-                scope="col"
-                style="width: 30px"
-                title="статусы"
-              ></th>
+              <th scope="col" style="width: 30px" title="развернуть"></th>
+              <th scope="col" style="width: 30px" title="статусы"></th>
               <th
                 v-for="field in filteredFields"
                 :key="field.name"

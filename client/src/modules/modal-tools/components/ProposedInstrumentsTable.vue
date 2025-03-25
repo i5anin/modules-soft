@@ -12,10 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="item in instruments"
-          :key="generateUniqueId(item)"
-        >
+        <tr v-for="item in instruments" :key="generateUniqueId(item)">
           <td class="text-center align-middle">{{ item.t_op }}</td>
           <td>
             <ul class="list-group list-group-flush">
@@ -77,11 +74,7 @@
               class="btn btn-circle"
               @click="$emit('add-instrument', item)"
             >
-              <svg-icon
-                type="mdi"
-                :path="mdiPlusCircle"
-                color="green"
-              />
+              <svg-icon type="mdi" :path="mdiPlusCircle" color="green" />
             </button>
           </td>
         </tr>

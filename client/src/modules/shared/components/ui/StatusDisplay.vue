@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="hasStatuses"
-    class="status-display"
-  >
+  <div v-if="hasStatuses" class="status-display">
     <span
       v-for="(statusObj, index) in formattedStatuses"
       :key="index"

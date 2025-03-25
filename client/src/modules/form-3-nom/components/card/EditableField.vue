@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      v-if="isTextarea"
-      class="form-floating"
-    >
+    <div v-if="isTextarea" class="form-floating">
       <textarea
         :id="`floatingTextarea-${field.name}`"
         :value="modelValue"
@@ -25,17 +22,11 @@
         class="form-check-input"
         @change="$emit('update:modelValue', $event.target.checked)"
       />
-      <label
-        class="form-check-label"
-        :for="`switch-${field.name}`"
-      >
+      <label class="form-check-label" :for="`switch-${field.name}`">
         {{ field.title }}
       </label>
     </div>
-    <div
-      v-else
-      class="form-floating"
-    >
+    <div v-else class="form-floating">
       <input
         :id="`floatingInput-${field.name}`"
         type="text"

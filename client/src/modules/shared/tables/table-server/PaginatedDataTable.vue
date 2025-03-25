@@ -1,12 +1,9 @@
 <template>
   <div>
     <!-- Индикатор загрузки -->
-    <ThinProgressBar
-      :loading="loading"
-      :progress="50"
-    />
+    <ThinProgressBar :loading="loading" :progress="50" />
     <div v-if="!loading">
-      <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="d-flex align-items-center justify-content-between mb-3 my-3">
         <PageSizeSelector
           v-model="localItemsPerPage"
           :page-sizes="itemsPerPageOptions"
@@ -19,10 +16,7 @@
           @update:start="updateDateRange"
           @update:end="updateDateRange"
         />
-        <SearchBar
-          :loading="loading"
-          @search-change="onSearch"
-        />
+        <SearchBar :loading="loading" @search-change="onSearch" />
       </div>
       <DataTable
         :headers="headers"

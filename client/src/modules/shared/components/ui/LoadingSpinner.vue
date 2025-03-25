@@ -1,12 +1,6 @@
 <template>
-  <div
-    class="loading-spinner"
-    :style="{ padding }"
-  >
-    <div
-      class="spinner-border"
-      role="status"
-    >
+  <div class="loading-spinner" :style="{ padding }">
+    <div class="spinner-border" role="status">
       <span class="visually-hidden"> Загрузка... </span>
     </div>
   </div>

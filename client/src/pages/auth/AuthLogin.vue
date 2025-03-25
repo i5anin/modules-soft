@@ -2,16 +2,9 @@
   <div
     class="container d-flex justify-content-center align-items-center vh-100"
   >
-    <div
-      class="card shadow-sm p-4"
-      style="max-width: 400px; width: 100%"
-    >
+    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%">
       <div class="text-center mb-3">
-        <img
-          src="@/assets/logo-pf-forum.svg"
-          alt="Логотип"
-          class="logo"
-        />
+        <img src="@/assets/logo-pf-forum.svg" alt="Логотип" class="logo" />
       </div>
       <h2 class="text-center mb-4">Вход в систему</h2>
       <form @submit.prevent="handleLogin">
@@ -26,10 +19,7 @@
             placeholder="Email"
           />
           <label for="email">Email</label>
-          <div
-            v-if="errors.email"
-            class="invalid-feedback"
-          >
+          <div v-if="errors.email" class="invalid-feedback">
             {{ errors.email }}
           </div>
         </div>
@@ -44,26 +34,15 @@
             placeholder="Пароль"
           />
           <label for="password">Пароль</label>
-          <div
-            v-if="errors.password"
-            class="invalid-feedback"
-          >
+          <div v-if="errors.password" class="invalid-feedback">
             {{ errors.password }}
           </div>
         </div>
         <!-- Кнопка входа -->
-        <button
-          type="submit"
-          class="btn btn-primary w-100"
-        >
-          Войти
-        </button>
+        <button type="submit" class="btn btn-primary w-100"> Войти </button>
       </form>
       <!-- Ошибка авторизации -->
-      <div
-        v-if="errorMessage"
-        class="alert alert-danger mt-3 text-center"
-      >
+      <div v-if="errorMessage" class="alert alert-danger mt-3 text-center">
         {{ errorMessage }}
       </div>
     </div>

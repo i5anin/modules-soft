@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="alert alert-warning warning-overlay"
-    role="alert"
-  >
+  <div class="alert alert-warning warning-overlay" role="alert">
     {{ message }}
   </div>
 </template>

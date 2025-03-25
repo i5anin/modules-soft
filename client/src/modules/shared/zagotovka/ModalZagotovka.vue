@@ -25,10 +25,7 @@
                 <tr> <th>Название</th> <th>Значение</th> </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="field in zagotovka.fields"
-                  :key="field.title"
-                >
+                <tr v-for="field in zagotovka.fields" :key="field.title">
                   <td>{{ field.title }}</td>
                   <td>
                     <span v-if="!isObject(zagotovka.data[field.key])">

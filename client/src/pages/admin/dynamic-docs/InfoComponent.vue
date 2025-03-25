@@ -11,18 +11,12 @@
     </p>
 
     <!-- Пропсы -->
-    <CollapsibleSection
-      v-if="componentProps.length"
-      title="Пропсы"
-    >
+    <CollapsibleSection v-if="componentProps.length" title="Пропсы">
       <PropsList :props-list="componentProps" />
     </CollapsibleSection>
 
     <!-- Методы -->
-    <CollapsibleSection
-      v-if="hasMethods"
-      title="Методы"
-    >
+    <CollapsibleSection v-if="hasMethods" title="Методы">
       <MethodsList
         :own-methods="componentMethods.ownMethods"
         :external-methods="componentMethods.externalMethods"
@@ -30,10 +24,7 @@
     </CollapsibleSection>
 
     <!-- События -->
-    <CollapsibleSection
-      v-if="componentEmits.length"
-      title="События"
-    >
+    <CollapsibleSection v-if="componentEmits.length" title="События">
       <EmitsList :emits-list="componentEmits" />
     </CollapsibleSection>
 

@@ -9,12 +9,7 @@
       data-bs-theme="dark"
     >
       <div class="offcanvas-header border-bottom">
-        <h5
-          id="sidebarMenuLabel"
-          class="offcanvas-title"
-        >
-          Меню
-        </h5>
+        <h5 id="sidebarMenuLabel" class="offcanvas-title"> Меню </h5>
         <button
           type="button"
           class="btn-close btn-close-white"
@@ -23,24 +18,15 @@
         ></button>
       </div>
       <div class="offcanvas-body">
-        <div
-          v-if="loading"
-          class="text-center text-secondary"
-        >
+        <div v-if="loading" class="text-center text-secondary">
           Загрузка...
         </div>
-        <div
-          v-else-if="errorMessage"
-          class="alert alert-danger text-center"
-        >
+        <div v-else-if="errorMessage" class="alert alert-danger text-center">
           {{ errorMessage }}
         </div>
         <nav v-if="menu.length">
           <div class="list-group">
-            <template
-              v-for="item in menu"
-              :key="item.name"
-            >
+            <template v-for="item in menu" :key="item.name">
               <!-- Доступный маршрут -->
               <router-link
                 v-if="isRouteAvailable(item.url)"
@@ -61,12 +47,7 @@
             </template>
           </div>
         </nav>
-        <div
-          v-else
-          class="text-center text-muted"
-        >
-          Меню пустое
-        </div>
+        <div v-else class="text-center text-muted"> Меню пустое </div>
       </div>
     </div>
   </div>

@@ -4,15 +4,9 @@
     <table class="table-base table table-sm mt-3 table-bordered table-hover">
       <thead>
         <tr>
-          <th
-            v-for="field in filteredFields"
-            :key="field.key"
-          >
+          <th v-for="field in filteredFields" :key="field.key">
             {{ field.title }}
-            <span
-              v-if="field.permissions.update"
-              title="Можно редактировать"
-            >
+            <span v-if="field.permissions.update" title="Можно редактировать">
               <SvgIcon
                 v-if="field.permissions.update"
                 color="gray"
@@ -55,10 +49,7 @@
               </template>
             </template>
             <template v-else>
-              <StatusDisplay
-                v-if="field.key === 'statuses'"
-                :row="row"
-              />
+              <StatusDisplay v-if="field.key === 'statuses'" :row="row" />
               <span v-else>
                 {{ formatValue(row[field.key], field.type, field.key) }}
               </span>

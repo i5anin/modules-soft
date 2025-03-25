@@ -6,23 +6,11 @@
       :to="{ name: targetRoute }"
       :class="[btnClasses]"
     >
-      <SvgIcon
-        type="mdi"
-        :path="mdiArrowLeft"
-        class="me-1"
-      />
+      <SvgIcon type="mdi" :path="mdiArrowLeft" class="me-1" />
       <span v-if="showText">Назад</span>
     </router-link>
-    <button
-      v-else
-      :class="[btnClasses]"
-      @click="goBack"
-    >
-      <SvgIcon
-        type="mdi"
-        :path="mdiArrowLeft"
-        class="me-1"
-      />
+    <button v-else :class="[btnClasses]" @click="goBack">
+      <SvgIcon type="mdi" :path="mdiArrowLeft" class="me-1" />
       <span v-if="showText">Назад</span>
     </button>
   </div>

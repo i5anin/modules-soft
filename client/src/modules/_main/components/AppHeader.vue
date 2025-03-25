@@ -10,10 +10,7 @@
       ]"
     >
       <!-- Левая часть: Кнопка "Меню" (отображается только если пользователь авторизован) -->
-      <div
-        v-if="authStore.isAuthenticated"
-        class="d-flex align-items-center"
-      >
+      <div v-if="authStore.isAuthenticated" class="d-flex align-items-center">
         <button
           class="btn btn-dark"
           data-bs-toggle="offcanvas"
@@ -36,19 +33,13 @@
         >
           Назад
         </router-link>
-        <div
-          v-if="authStore.isAuthenticated"
-          class="d-flex align-items-center"
-        >
+        <div v-if="authStore.isAuthenticated" class="d-flex align-items-center">
           <span
             v-if="loading"
             class="spinner-border spinner-border-sm text-light"
           ></span>
           <span v-else-if="user">{{ user.name }} {{ user.last_name }}</span>
-          <button
-            class="btn btn-sm btn-outline-light ms-3"
-            @click="logout"
-          >
+          <button class="btn btn-sm btn-outline-light ms-3" @click="logout">
             Выйти
           </button>
         </div>

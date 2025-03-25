@@ -13,61 +13,21 @@
       <table class="table mt-3 table-hover">
         <thead>
           <tr>
-            <th
-              scope="col"
-              style="width: 15%"
-            >
-              Название маршрута
-            </th>
-            <th
-              scope="col"
-              style="width: 15%"
-            >
-              Путь
-            </th>
-            <th
-              scope="col"
-              style="width: 15%"
-            >
-              Параметры
-            </th>
-            <th
-              scope="col"
-              style="width: 10%"
-            >
-              Тип
-            </th>
-            <th
-              scope="col"
-              style="width: 10%"
-            >
-              Route Vue
-            </th>
-            <th
-              scope="col"
-              style="width: 10%"
-            >
-              Редактирование
-            </th>
-            <th
-              scope="col"
-              style="width: 5%"
-            >
-              Ссылка
-            </th>
+            <th scope="col" style="width: 15%"> Название маршрута</th>
+            <th scope="col" style="width: 15%"> Путь</th>
+            <th scope="col" style="width: 15%"> Параметры</th>
+            <th scope="col" style="width: 10%"> Тип</th>
+            <th scope="col" style="width: 10%"> Route Vue</th>
+            <th scope="col" style="width: 10%"> Редактирование</th>
+            <th scope="col" style="width: 5%"> Ссылка</th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="route in group"
-            :key="route.path"
-          >
-            <td>{{ route.name || '' }}</td> <td>{{ route.path }}</td>
+          <tr v-for="route in group" :key="route.path">
+            <td>{{ route.name || '' }}</td>
+            <td>{{ route.path }}</td>
             <td>
-              <div
-                v-if="hasParams(route.path)"
-                class="d-flex gap-2"
-              >
+              <div v-if="hasParams(route.path)" class="d-flex gap-2">
                 <div
                   v-for="param in extractParams(route.path)"
                   :key="param"
@@ -84,7 +44,7 @@
               <span v-else></span>
             </td>
             <td>{{ route.props && route.props.type }}</td>
-            <td> {{ route.props.route }} </td>
+            <td> {{ route.props.route }}</td>
             <td>{{ route.props && route.props.edit ? 'Да' : '' }}</td>
             <td>
               <router-link
@@ -94,11 +54,7 @@
               >
                 Перейти
               </router-link>
-              <button
-                v-else
-                class="btn btn-light btn-sm"
-                disabled
-              >
+              <button v-else class="btn btn-light btn-sm" disabled>
                 Перейти
               </button>
             </td>

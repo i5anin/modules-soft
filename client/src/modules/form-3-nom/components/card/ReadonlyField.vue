@@ -1,8 +1,5 @@
 <template>
-  <div
-    style="cursor: pointer"
-    @click="handleFormClick"
-  >
+  <div style="cursor: pointer" @click="handleFormClick">
     <!-- Заголовок -->
     <div class="field-label d-flex align-items-center">
       <span>{{ field.title }}</span>
@@ -21,16 +18,10 @@
       class="field-value"
       :style="{ color: formattedValue ? '' : '#d8d8d8' }"
     >
-      <span
-        v-if="!isBoolean"
-        @click.stop="handleFormClick"
-      >
+      <span v-if="!isBoolean" @click.stop="handleFormClick">
         {{ formattedValue || 'Нет данных' }}
       </span>
-      <div
-        v-else
-        class="form-check form-switch d-inline-block me-3"
-      >
+      <div v-else class="form-check form-switch d-inline-block me-3">
         <input
           type="checkbox"
           :checked="value"

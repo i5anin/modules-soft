@@ -51,6 +51,7 @@ export default [
           htmlWhitespaceSensitivity: 'strict',
           vueIndentScriptAndStyle: true,
           bracketSameLine: false,
+          singleAttributePerLine: false,
         },
       ],
     },

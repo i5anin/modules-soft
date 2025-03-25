@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="alert alert-info info-overlay"
-    role="alert"
-  >
+  <div class="alert alert-info info-overlay" role="alert">
     <div class="info-content">
       <div>
         <strong>Изменённые данные:</strong>

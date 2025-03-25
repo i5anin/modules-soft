@@ -2,10 +2,7 @@
   <section class="mb-4">
     <h4 class="mb-2 d-flex justify-content-between align-items-center">
       {{ title }}
-      <button
-        class="btn btn-link"
-        @click="toggle"
-      >
+      <button class="btn btn-link" @click="toggle">
         {{ isCollapsed ? 'Развернуть' : 'Свернуть' }}
       </button>
     </h4>

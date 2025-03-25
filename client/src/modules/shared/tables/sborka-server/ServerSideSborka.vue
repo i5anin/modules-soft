@@ -13,10 +13,7 @@
         @update:start="updateStartDate"
         @update:end="updateEndDate"
       />
-      <SearchBar
-        :loading="loading"
-        @search-change="onSearch"
-      />
+      <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
     <SborMain
       :table-data="items"

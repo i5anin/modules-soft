@@ -11,12 +11,7 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(1)"
         >
-          <button
-            class="page-link"
-            type="button"
-          >
-            «
-          </button>
+          <button class="page-link" type="button"> « </button>
         </li>
         <!-- Кнопка перехода на предыдущую страницу -->
         <li
@@ -24,12 +19,7 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(currentPage - 1)"
         >
-          <button
-            class="page-link"
-            type="button"
-          >
-            ‹
-          </button>
+          <button class="page-link" type="button"> ‹ </button>
         </li>
         <!-- Отображение страниц -->
         <li
@@ -39,10 +29,7 @@
           :class="{ active: page === currentPage }"
           @click="goToPage(page)"
         >
-          <button
-            class="page-link"
-            type="button"
-          >
+          <button class="page-link" type="button">
             {{ page }}
           </button>
         </li>
@@ -52,12 +39,7 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(currentPage + 1)"
         >
-          <button
-            class="page-link"
-            type="button"
-          >
-            ›
-          </button>
+          <button class="page-link" type="button"> › </button>
         </li>
         <!-- Кнопка перехода к последней странице -->
         <li
@@ -65,12 +47,7 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(totalPages)"
         >
-          <button
-            class="page-link"
-            type="button"
-          >
-            »
-          </button>
+          <button class="page-link" type="button"> » </button>
         </li>
       </ul>
     </nav>
