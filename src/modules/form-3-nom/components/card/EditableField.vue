@@ -56,6 +56,6 @@
     },
   })
 
-  const isTextarea = computed(() => String(props.modelValue).length >= 40)
+  const isTextarea = computed(() => String(props.modelValue).length >= 40) // todo: http://localhost:5173/client/1189/nom/36770
   const isCheckbox = computed(() => typeof props.modelValue === 'boolean')
 </script>

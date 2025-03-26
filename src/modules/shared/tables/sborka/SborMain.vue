@@ -1,5 +1,5 @@
 <template>
-<!--  <PendingUpdatesOverlay />-->
+  <!--  <PendingUpdatesOverlay />-->
   <div class="row">
     <div class="col-12">
       <div v-if="tableData.length === 0" class="alert alert-warning">
@@ -105,3 +105,9 @@
     calculateRowSpanMatrix(props.tableData, filteredFields.value)
   )
 </script>
+<style>
+  .table-sbor th {
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>

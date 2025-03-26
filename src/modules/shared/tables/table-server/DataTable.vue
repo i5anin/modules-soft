@@ -36,7 +36,7 @@
         </thead>
         <tbody>
           <tr v-if="!items.length">
-            <td colspan="100%" class="text-center"> Нет данных </td>
+            <td colspan="100%" class="text-center"> Нет данных</td>
           </tr>
           <tr
             v-for="row in items"
@@ -157,10 +157,9 @@
 <style>
   .table th,
   .table td {
-    min-width: 8px;
-    max-width: 300px;
-    word-wrap: break-word;
     overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    text-align: center;
+    vertical-align: middle;
   }
 </style>
