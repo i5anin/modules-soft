@@ -1,48 +1,70 @@
 import fs from "fs";
 import path from "path";
 import {
-    IGNORED_FOLDERS,
-    IGNORED_EXTENSIONS,
-    FILE_ICONS,
-    FOLDER_DESCRIPTIONS,
-    FILE_DESCRIPTIONS
+  IGNORED_FOLDERS,
+  IGNORED_EXTENSIONS,
+  FILE_ICONS,
+  FOLDER_DESCRIPTIONS,
+  FILE_DESCRIPTIONS
 } from "./config.js";
 
-// 📌 Функция получения эмодзи по расширению файла
+/**
+ * Возвращает эмодзи по расширению файла
+ * @param {string} fileName
+ * @returns {string}
+ */
 function getFileEmoji(fileName) {
-    return FILE_ICONS[path.extname(fileName).toLowerCase()] || "📃";
+  return FILE_ICONS[path.extname(fileName).toLowerCase()] || "📃";
 }
 
-// 📌 Функция подсчета строк в файле
+/**
+ * Подсчитывает количество строк в файле
+ * @param {string} filePath
+ * @returns {number}
+ */
 function countFileLines(filePath) {
-    try {
-        return fs.readFileSync(filePath, "utf-8").split("\n").length;
-    } catch {
-        return 0;
-    }
+  try {
+    return fs.readFileSync(filePath, "utf-8").split("\n").length;
+  } catch {
+    return 0;
+  }
 }
 
-// 📌 Функция получения описания папки или файла
+/**
+ * Возвращает описание файла или папки
+ * @param {string} name
+ * @param {string} filePath
+ * @param {boolean} [isDir=false]
+ * @returns {string}
+ */
 function getDescription(name, filePath, isDir = false) {
-    if (isDir) {
-        return FOLDER_DESCRIPTIONS[name] ? `⭐ ${FOLDER_DESCRIPTIONS[name]}` : "";
-    }
+  if (isDir) {
+    return FOLDER_DESCRIPTIONS[name] ? `⭐ ${FOLDER_DESCRIPTIONS[name]}` : "";
+  }
 
-    if (name === "index.js") {
-        const parentFolder = path.basename(path.dirname(filePath));
-        return `Точка входа модуля "${parentFolder}"`;
-    }
+  if (name === "index.js") {
+    const parentFolder = path.basename(path.dirname(filePath));
+    return `Точка входа модуля "${parentFolder}"`;
+  }
 
-    return FILE_DESCRIPTIONS[name] || "";
+  return FILE_DESCRIPTIONS[name] || "";
 }
 
-// 📌 Функция рекурсивного обхода директорий
+/**
+ * Рекурсивно сканирует директорию и возвращает дерево файлов
+ * @param {string} dir
+ * @param {string} baseDir
+ * @param {number} depth
+ * @param {object} stats
+ * @param {string} prefix
+ * @returns {string}
+ */
 export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = "") {
   if (!fs.existsSync(dir)) return "";
 
   const entries = fs
     .readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => {
+    .filter(entry => {
       if (IGNORED_FOLDERS.has(entry.name)) return false;
       if (!entry.isDirectory() && IGNORED_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) return false;
       return true;
@@ -66,7 +88,11 @@ export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = "") {
       if (entry.isDirectory()) {
         const description = getDescription(fileName, filePath, true);
         const subTree = scanDirectory(filePath, baseDir, depth + 1, stats, newPrefix);
-        return `${prefix}${connector}📂 ${fileName}${description ? ` — ${description}` : ""}${subTree ? `\n${subTree}` : ""}`;
+        const entryLine = `${prefix}${connector}📂 ${fileName}${description ? ` — ${description}` : ""}`;
+
+        // 📌 Отступ после директорий первого уровня
+        const spacing = depth === 1 ? `\n${prefix}` : "";
+        return `${entryLine}${spacing}${subTree ? `\n${subTree}` : ""}`;
       } else {
         const ext = path.extname(fileName).toLowerCase();
         stats.fileCount[ext] = (stats.fileCount[ext] || 0) + 1;
@@ -82,4 +108,3 @@ export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = "") {
     .filter(Boolean)
     .join("\n");
 }
-
