@@ -11,7 +11,7 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(1)"
         >
-          <button class="page-link" type="button"> « </button>
+          <button class="page-link" type="button"> «</button>
         </li>
         <!-- Кнопка перехода на предыдущую страницу -->
         <li
@@ -19,7 +19,7 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(currentPage - 1)"
         >
-          <button class="page-link" type="button"> ‹ </button>
+          <button class="page-link" type="button"> ‹</button>
         </li>
         <!-- Отображение страниц -->
         <li
@@ -39,7 +39,7 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(currentPage + 1)"
         >
-          <button class="page-link" type="button"> › </button>
+          <button class="page-link" type="button"> ›</button>
         </li>
         <!-- Кнопка перехода к последней странице -->
         <li
@@ -47,7 +47,7 @@
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(totalPages)"
         >
-          <button class="page-link" type="button"> » </button>
+          <button class="page-link" type="button"> »</button>
         </li>
       </ul>
     </nav>
@@ -132,8 +132,8 @@
   }
 
   .pagination .page-item.active .page-link {
-    background-color: #007bff;
+    background-color: #256862;
     color: white;
-    border-color: #007bff;
+    border-color: #285a73;
   }
 </style>
