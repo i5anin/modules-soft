@@ -3,9 +3,9 @@ export function generateFileStats(stats) {
   return Object.entries(stats.fileCount)
     .map(
       ([ext, count]) =>
-        `  - ${ext || "📃 Другое"}: ${count} файлов, ${stats.fileLines[ext] || 0} строк`,
+        `  - ${ext || '📃 Другое'}: ${count} файлов, ${stats.fileLines[ext] || 0} строк`,
     )
-    .join("\n");
+    .join('\n')
 }
 
 // 📌 Функция определения топ-5 файлов с наибольшим числом строк
@@ -14,5 +14,5 @@ export function getTopFiles(stats) {
     .sort((a, b) => b.lines - a.lines)
     .slice(0, 5)
     .map(({ file, lines }) => `- 🔍 ${file} — ${lines} строк`)
-    .join("\n");
+    .join('\n')
 }
