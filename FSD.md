@@ -40,102 +40,127 @@ Feature-Sliced Design (FSD) — это методология, ориентир�
 
 ```
 📦 src/
-┣ 📂 app/ 
-┃ ┣ 📜 providers.js (инициализация Pinia, Router)
-┃ ┣ 📜 router.js (маршруты)
-┃ ┣ 📜 store.js (глобальное хранилище)
-┃ ┗ 📜 main.js (инициализация Vue-приложения)
-┣ 📂 shared/  # Общие переиспользуемые модули
-┃ ┣ 📂 ui/  
-┃ ┃ ┣ 📗 BackButton.vue (59 строк)
-┃ ┃ ┣ 📗 LoadingSpinner.vue (29 строк)
-┃ ┃ ┣ 📗 StatusDisplay.vue (80 строк)
-┃ ┃ ┣ 📗 StrategyDisplay.vue (150 строк)
-┃ ┃ ┗ 📗 ThinProgressBar.vue (69 строк)
-┃ ┣ 📂 api/ 
-┃ ┃ ┣ 📜 apiClient.js (8 строк)
-┃ ┃ ┣ 📜 tokenService.js (18 строк)
-┃ ┃ ┗ 📜 responseHandlers.js (10 строк)
-┃ ┣ 📂 lib/ 
-┃ ┃ ┣ 📜 formatters.js (206 строк)
-┃ ┃ ┣ 📜 localize-ru.js (15 строк)
-┃ ┃ ┣ 📜 icons.js (32 строк)
-┃ ┃ ┗ 📜 statuses.js (83 строк)
-┃ ┣ 📂 config/  
-┃ ┃ ┗ 📜 locales.js (23 строки)
-┣ 📂 entities/  # Сущности
-┃ ┣ 📂 user/
-┃ ┃ ┣ 📜 model.js (Pinia store)
-┃ ┃ ┗ 📜 api.js (запросы пользователя)
-┃ ┣ 📂 table/
-┃ ┃ ┣ 📜 tableStore.js (64 строки)
-┃ ┃ ┗ 📜 update.js (17 строк)
-┣ 📂 features/  # Фичи проекта
-┃ ┣ 📂 fieldsProcessing/
-┃ ┃ ┣ 📗 fieldsProcessor.vue (83 строки)
-┃ ┃ ┣ 📗 fieldsWatch.vue (214 строк)
-┃ ┃ ┗ 📜 fieldsProcessor.js (89 строк)
-┃ ┣ 📂 form2/
-┃ ┃ ┣ 📜 nom_dir.js (20 строк)
-┃ ┃ ┣ 📜 nom_list.js (43 строки)
-┃ ┃ ┣ 📗 Form2Card.vue (113 строк)
-┃ ┃ ┗ 📗 CardComment.vue (58 строк)
-┃ ┣ 📂 form3/
-┃ ┃ ┣ 📜 nom_info.js (21 строк)
-┃ ┃ ┣ 📗 Form3Card.vue (114 строк)
-┃ ┃ ┗ 📂 card/
-┃ ┃ ┃ ┣ 📗 EditableField.vue (64 строк)
-┃ ┃ ┃ ┗ 📗 ReadonlyField.vue (83 строки)
-┣ 📂 widgets/  # Готовые блоки интерфейса
-┃ ┣ 📂 modal-tools/
-┃ ┃ ┣ 📂 api/
-┃ ┃ ┃ ┗ 📜 tools.js (19 строк)
-┃ ┃ ┣ 📂 components/
-┃ ┃ ┃ ┣ 📗 AddedInstrumentsTable.vue (155 строк)
-┃ ┃ ┃ ┣ 📗 PagesModalTools.vue (161 строк)
-┃ ┃ ┃ ┗ 📗 ProposedInstrumentsTable.vue (153 строк)
-┃ ┗ 📂 tables/
-┃ ┃ ┣ 📂 sborka/
-┃ ┃ ┃ ┣ 📗 SborMain.vue (98 строк)
-┃ ┃ ┃ ┣ 📗 SborRow.vue (177 строк)
-┃ ┃ ┃ ┣ 📜 tableStore.js (64 строк)
-┃ ┃ ┃ ┗ 🎨 SborRow.css (42 строк)
-┃ ┃ ┣ 📂 sborka-server/
-┃ ┃ ┃ ┗ 📗 ServerSideSborka.vue (131 строк)
-┃ ┃ ┣ 📂 table/
-┃ ┃ ┃ ┗ 📗 BaseTable.vue (98 строк)
-┃ ┃ ┗ 📂 table-server/
-┃ ┃ ┃ ┣ 📗 DataTable.vue (168 строк)
-┃ ┃ ┃ ┣ 📗 EditModal.vue (124 строк)
-┃ ┃ ┃ ┗ 📗 PaginatedDataTable.vue (199 строк)
-┣ 📂 pages/  # Отдельные страницы
-┃ ┣ 📂 admin/
-┃ ┃ ┣ 📂 dynamic-docs/
-┃ ┃ ┃ ┣ 📂 components/
-┃ ┃ ┃ ┃ ┣ 📗 ChildrenList.vue (27 строк)
-┃ ┃ ┃ ┃ ┣ 📗 CollapsibleSection.vue (35 строк)
-┃ ┃ ┃ ┃ ┣ 📗 EmitsList.vue (21 строк)
-┃ ┃ ┃ ┃ ┣ 📗 MethodsList.vue (42 строк)
-┃ ┃ ┃ ┃ ┗ 📗 PropsList.vue (25 строк)
-┃ ┃ ┃ ┣ ⚙ descriptionData.json (47 строк)
-┃ ┃ ┃ ┗ 📗 InfoComponent.vue (141 строк)
-┃ ┃ ┣ 📗 Home.vue (134 строк)
-┃ ┃ ┗ 📗 Structure.vue (50 строк)
-┃ ┣ 📂 form-1/
-┃ ┃ ┣ 📂 api/
-┃ ┃ ┃ ┣ 📜 clients.js (15 строк)
-┃ ┃ ┃ ┗ 📜 list.js (21 строк)
-┃ ┃ ┣ 📗 PagesClients.vue (135 строк)
-┃ ┃ ┗ 📗 PagesTableWrapper.vue (157 строк)
-┃ ┣ 📂 form-2/
-┃ ┃ ┗ 📗 PagesCardNoms.vue (106 строк)
-┃ ┣ 📂 form-3/
-┃ ┃ ┗ 📗 PagesDetailNom.vue (131 строк)
-┣ 📂 processes/  # Бизнес-процессы (если появятся)
-┃ ┗ 📜 example.js (пример)
-┣ 📂 assets/
-┃ ┗ 🎨 FormFloatingField.css (33 строки)
-┣ 📜 App.vue (13 строк)
+├── 📂 app/
+│   ├── 📜 providers.js
+│   ├── 📜 router.js
+│   ├── 📜 store.js
+│   └── 📜 main.js
+│
+├── 📂 shared/
+│   ├── 📂 ui/
+│   │   ├── 📗 BackButton.vue
+│   │   ├── 📗 LoadingSpinner.vue
+│   │   ├── 📗 StatusDisplay.vue
+│   │   ├── 📗 StrategyDisplay.vue
+│   │   └── 📗 ThinProgressBar.vue
+│   │
+│   ├── 📂 api/
+│   │   ├── 📜 apiClient.js
+│   │   ├── 📜 tokenService.js
+│   │   └── 📜 responseHandlers.js
+│   │
+│   ├── 📂 lib/
+│   │   ├── 📜 formatters.js
+│   │   ├── 📜 localize-ru.js
+│   │   ├── 📜 icons.js
+│   │   └── 📜 statuses.js
+│   │
+│   ├── 📂 config/
+│   │   └── 📜 locales.js
+│
+├── 📂 entities/
+│   ├── 📂 user/
+│   │   ├── 📜 model.js
+│   │   └── 📜 api.js
+│   │
+│   ├── 📂 table/
+│   │   ├── 📜 tableStore.js
+│   │   └── 📜 update.js
+│
+├── 📂 features/
+│   ├── 📂 fieldsProcessing/
+│   │   ├── 📗 fieldsProcessor.vue
+│   │   ├── 📗 fieldsWatch.vue
+│   │   └── 📜 fieldsProcessor.js
+│   │
+│   ├── 📂 form2/
+│   │   ├── 📜 nom_dir.js
+│   │   ├── 📜 nom_list.js
+│   │   ├── 📗 Form2Card.vue
+│   │   └── 📗 CardComment.vue
+│   │
+│   ├── 📂 form3/
+│   │   ├── 📜 nom_info.js
+│   │   ├── 📗 Form3Card.vue
+│   │   └── 📂 card/
+│   │       ├── 📗 EditableField.vue
+│   │       └── 📗 ReadonlyField.vue
+│
+├── 📂 widgets/
+│   ├── 📂 modal-tools/
+│   │   ├── 📂 api/
+│   │   │   └── 📜 tools.js
+│   │   │
+│   │   ├── 📂 components/
+│   │   │   ├── 📗 AddedInstrumentsTable.vue
+│   │   │   ├── 📗 PagesModalTools.vue
+│   │   │   └── 📗 ProposedInstrumentsTable.vue
+│
+│   ├── 📂 tables/
+│   │   ├── 📂 sborka/
+│   │   │   ├── 📗 SborMain.vue
+│   │   │   ├── 📗 SborRow.vue
+│   │   │   ├── 📜 tableStore.js
+│   │   │   └── 🎨 SborRow.css
+│   │   │
+│   │   ├── 📂 sborka-server/
+│   │   │   └── 📗 ServerSideSborka.vue
+│   │   │
+│   │   ├── 📂 table/
+│   │   │   └── 📗 BaseTable.vue
+│   │   │
+│   │   └── 📂 table-server/
+│   │       ├── 📗 DataTable.vue
+│   │       ├── 📗 EditModal.vue
+│   │       └── 📗 PaginatedDataTable.vue
+│
+├── 📂 pages/
+│   ├── 📂 admin/
+│   │   ├── 📂 dynamic-docs/
+│   │   │   ├── 📂 components/
+│   │   │   │   ├── 📗 ChildrenList.vue
+│   │   │   │   ├── 📗 CollapsibleSection.vue
+│   │   │   │   ├── 📗 EmitsList.vue
+│   │   │   │   ├── 📗 MethodsList.vue
+│   │   │   │   └── 📗 PropsList.vue
+│   │   │   │
+│   │   │   ├── ⚙️ descriptionData.json
+│   │   │   └── 📗 InfoComponent.vue
+│   │   │
+│   │   ├── 📗 Home.vue
+│   │   └── 📗 Structure.vue
+│   │
+│   ├── 📂 form-1/
+│   │   ├── 📂 api/
+│   │   │   ├── 📜 clients.js
+│   │   │   └── 📜 list.js
+│   │   │
+│   │   ├── 📗 PagesClients.vue
+│   │   └── 📗 PagesTableWrapper.vue
+│   │
+│   ├── 📂 form-2/
+│   │   └── 📗 PagesCardNoms.vue
+│   │
+│   ├── 📂 form-3/
+│   │   └── 📗 PagesDetailNom.vue
+│
+├── 📂 processes/
+│   └── 📜 example.js
+│
+├── 📂 assets/
+│   └── 🎨 FormFloatingField.css
+│
+└── 📜 App.vue
 ```
 
 ---
