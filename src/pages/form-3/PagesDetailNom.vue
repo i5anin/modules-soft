@@ -46,9 +46,9 @@
   import { useRoute } from 'vue-router'
   import SvgIcon from '@jamescoyle/vue-icon'
   import { mdiBolt } from '@mdi/js'
-  import { getNomDetailsById } from './api/nom_info.js'
+  import { getNomDetailsById } from '@/modules/shared/api/nom_info.js'
   import { useRoleStore } from '@/modules/_main/store/store.js'
-  import Card from '@/modules/form-3-nom/components/Form3Card.vue'
+  import Card from '@/features/form-3-nom/components/Form3Card.vue'
   import BaseTable from '@/modules/shared/tables/table/BaseTable.vue'
 
   const CaliberTable = BaseTable

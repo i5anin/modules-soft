@@ -20,8 +20,8 @@
   import { computed, defineProps, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
 
-  import { getNomById } from './api/nom_list.js'
-  import OrderInfoCard from '@/modules/form-2-card-noms/components/Form2CardNoms.vue'
+  import { getNomById } from '@/modules/shared/api/nom_list.js'
+  import OrderInfoCard from '@/features/form-2-card-noms/components/Form2CardNoms.vue'
   import { useRoleStore } from '@/modules/_main/store/store.js'
   import SborMain from '@/modules/shared/tables/sborka/SborMain.vue'
   import { processFields } from '@/utils/dev/fieldsProcessor.js'

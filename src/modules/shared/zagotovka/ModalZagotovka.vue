@@ -52,7 +52,7 @@
 
 <script>
   import { reactive, watch, ref } from 'vue'
-  import { getZagotovkaInfo } from './api/zagotovka.js'
+  import { getZagotovkaInfo } from '../api/zagotovka.js'
 
   export default {
     name: 'ModalZagInfo',
