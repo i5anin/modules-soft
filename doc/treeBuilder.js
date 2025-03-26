@@ -91,7 +91,7 @@ export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = "") {
         const entryLine = `${prefix}${connector}📂 ${fileName}${description ? ` — ${description}` : ""}`;
 
         // 📌 Отступ после директорий первого уровня
-        const spacing = depth === 1 ? `\n${prefix}` : "";
+        const spacing = depth === 1 ? `\n│` : "";
         return `${entryLine}${spacing}${subTree ? `\n${subTree}` : ""}`;
       } else {
         const ext = path.extname(fileName).toLowerCase();
