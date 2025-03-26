@@ -14,7 +14,9 @@
     </td>
     <!--endregion-->
     <!--region Статусы-->
-    <td :style="cellStyle"> <StatusDisplay :row="sbor" /> </td>
+    <td :style="cellStyle">
+      <StatusDisplay :row="sbor" />
+    </td>
     <!--endregion-->
     <!--region Поля-->
     <td
@@ -97,7 +99,6 @@
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
   import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
   import StrategyDisplay from '@/modules/shared/components/ui/StrategyDisplay.vue'
-  import './SborRow.css'
 
   const props = defineProps({
     sbor: { type: Object, required: true },
@@ -165,3 +166,57 @@
     cursor: 'pointer',
   })
 </script>
+
+<style>
+  .tree-node {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .branch-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+  }
+
+  .branch-line::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+
+  .branch-line::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 10px;
+    height: 1px;
+  }
+
+  .last-child .branch-line::before {
+    height: 50%;
+  }
+
+  .node-content {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Стиль развернутой строки с прозрачным выделением */
+  .expanded-row {
+    background-color: rgb(255, 255, 255) !important; /* Нежный синий */
+    color: rgba(13, 110, 253, 0.5);
+  }
+
+  /* Улучшенное выделение текста */
+  .expanded-row td {
+    font-weight: bold;
+    color: inherit;
+  }
+</style>
