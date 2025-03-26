@@ -26,13 +26,6 @@
       </div>
       <!-- Правая часть: Кнопка "Назад" и Данные пользователя -->
       <div class="d-flex align-items-center">
-        <router-link
-          v-if="authStore.isAuthenticated"
-          class="btn btn-dark me-3"
-          to="/"
-        >
-          Назад
-        </router-link>
         <div v-if="authStore.isAuthenticated" class="d-flex align-items-center">
           <span
             v-if="loading"
