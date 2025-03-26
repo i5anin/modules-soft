@@ -26,12 +26,7 @@
         >
           Подтвердить
         </button>
-        <button
-          type="button"
-          class="btn btn-danger btn-sm"
-        >
-          Отменить
-        </button>
+        <button type="button" class="btn btn-danger btn-sm"> Отменить </button>
       </div>
     </div>
   </div>
