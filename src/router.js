@@ -5,7 +5,7 @@ const authRoutes = [
   {
     path: '/login',
     name: 'AuthLogin',
-    component: () => import('@/pages/auth/AuthLogin.vue'),
+    component: () => import('@/pages/auth/PagesLogin.vue'),
     meta: { title: 'Вход в систему', public: true },
   },
   {
@@ -145,15 +145,8 @@ const devRoutes = [
     path: '/dev/modal-tools/:no/:nomId',
     name: 'ModalTools',
     component: () =>
-      import('@/modules/modal-tools/components/PagesModalTools.vue'),
+      import('@/widgets/modal-tools/components/PagesModalTools.vue'),
     meta: { title: 'Инструменты модальных окон' },
-    props: true,
-  },
-  {
-    path: '/dev/fields-processor',
-    name: 'devFieldsProcessor',
-    component: () => import('@/modules/dev/fieldsProcessor.vue'),
-    meta: { title: 'Обработка полей (Processor)' },
     props: true,
   },
 ]
@@ -162,16 +155,19 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/pages/admin/AdminHome.vue'),
+    component: () => import('@/modules/dev/RouteExplorer.vue'),
     meta: { title: 'Список маршрутов' },
   },
-
   ...commercialRoutes,
   ...ordersRoutes,
   ...clientsRoutes,
   ...devRoutes,
   ...specificationsRoutes,
   ...authRoutes,
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
+  },
 ]
 
 const router = createRouter({
