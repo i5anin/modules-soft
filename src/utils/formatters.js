@@ -116,7 +116,7 @@ export function formatValue(value, type, key) {
  * @returns {string} - '✅' для true, пустая строка для false.
  */
 function formatBoolean(value) {
-  return value ? '✔' : '✕'
+  return value ? '✔' : ''
 }
 
 /**
