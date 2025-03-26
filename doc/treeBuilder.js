@@ -77,34 +77,52 @@ export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = "") {
 
   if (entries.length === 0) return "";
 
-  return entries
-    .map((entry, index) => {
-      const isLast = index === entries.length - 1;
-      const connector = isLast ? "└── " : "├── ";
-      const newPrefix = prefix + (isLast ? "    " : "│   ");
-      const filePath = path.join(dir, entry.name);
-      const fileName = entry.name;
+  const result = [];
 
-      if (entry.isDirectory()) {
-        const description = getDescription(fileName, filePath, true);
-        const subTree = scanDirectory(filePath, baseDir, depth + 1, stats, newPrefix);
-        const entryLine = `${prefix}${connector}📂 ${fileName}${description ? ` — ${description}` : ""}`;
+  entries.forEach((entry, index) => {
+    const isLast = index === entries.length - 1;
+    const connector = isLast ? "└── " : "├── ";
+    const newPrefix = prefix + (isLast ? "    " : "│   ");
+    const filePath = path.join(dir, entry.name);
+    const fileName = entry.name;
+    const isDir = entry.isDirectory();
 
-        // 📌 Отступ после директорий первого уровня
-        const spacing = depth === 1 ? `\n${prefix}` : "";
-        return `${entryLine}${spacing}${subTree ? `\n${subTree}` : ""}`;
-      } else {
-        const ext = path.extname(fileName).toLowerCase();
-        stats.fileCount[ext] = (stats.fileCount[ext] || 0) + 1;
-        const lines = countFileLines(filePath);
-        stats.fileLines[ext] = (stats.fileLines[ext] || 0) + lines;
-        stats.totalLines += lines;
-        stats.fileLineCounts.push({ file: fileName, lines });
+    if (isDir) {
+      const description = getDescription(fileName, filePath, true);
+      const entryLine = `${prefix}${connector}📂 ${fileName}${description ? ` — ${description}` : ""}`;
+      const subTree = scanDirectory(filePath, baseDir, depth + 1, stats, newPrefix);
 
-        const description = getDescription(fileName, filePath);
-        return `${prefix}${connector}${getFileEmoji(fileName)} ${fileName} (${lines} строк)${description ? ` — ${description}` : ""}`;
+      result.push(entryLine);
+      if (subTree) result.push(subTree);
+    } else {
+      const ext = path.extname(fileName).toLowerCase();
+      stats.fileCount[ext] = (stats.fileCount[ext] || 0) + 1;
+      const lines = countFileLines(filePath);
+      stats.fileLines[ext] = (stats.fileLines[ext] || 0) + lines;
+      stats.totalLines += lines;
+      stats.fileLineCounts.push({ file: fileName, lines });
+
+      const description = getDescription(fileName, filePath);
+      result.push(`${prefix}${connector}${getFileEmoji(fileName)} ${fileName} (${lines} строк)${description ? ` — ${description}` : ""}`);
+    }
+
+    const nextEntry = entries[index + 1];
+    if (!isLast) {
+      const isCurrentDir = isDir;
+      const isNextDir = nextEntry?.isDirectory?.();
+
+      // Добавляем разделитель, если текущий или следующий элемент — директория
+      if (isCurrentDir || isNextDir) {
+        result.push(`${prefix}│`);
       }
-    })
-    .filter(Boolean)
-    .join("\n");
+    }
+  });
+
+  return result.join("\n");
 }
+
+
+
+
+
+
