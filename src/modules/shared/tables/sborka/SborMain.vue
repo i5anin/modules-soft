@@ -41,7 +41,6 @@
 <script setup>
   import { computed } from 'vue'
   import SborRow from './SborRow.vue'
-  import PendingUpdatesOverlay from './PendingUpdatesOverlay.vue'
 
   // Props
   const props = defineProps({
