@@ -1,6 +1,10 @@
 <template>
   <div data-bs-theme="dark" class="bg-dark text-light">
-    <Header /> <Menu /> <div class="container-fluid"> <router-view /> </div>
+    <Header />
+    <Menu />
+    <div class="container-fluid">
+      <router-view />
+    </div>
   </div>
 </template>
 

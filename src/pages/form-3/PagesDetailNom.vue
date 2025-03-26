@@ -1,7 +1,7 @@
 <template>
-  <div class="grid-container bg">
+  <div class="grid-container bg mb-3 my-3">
     <div>
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center">
         <svg-icon
           type="mdi"
           :path="mdiBolt"
