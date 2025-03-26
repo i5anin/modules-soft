@@ -1,9 +1,6 @@
 <template>
   <nav aria-label="breadcrumb" class="ms-3">
     <ol class="breadcrumb bg-transparent p-0 m-0">
-      <li class="breadcrumb-item">
-        <router-link to="/" class="text-white"> Главная </router-link>
-      </li>
       <li
         v-for="(crumb, index) in breadcrumbs"
         :key="crumb.path"
@@ -28,23 +25,26 @@
   const route = useRoute()
 
   const breadcrumbs = computed(() => {
-    const segments = route.path.split('/').filter(Boolean)
     const crumbs = []
-    let path = ''
 
-    for (const segment of segments) {
-      path += `/${segment}`
+    for (const record of route.matched) {
+      let title = record.meta?.title
+      if (!title) continue
 
-      const matchedRoute = route.matched.find((r) => r.path === path)
-      const title = matchedRoute?.meta?.title
-
-      if (title) {
-        crumbs.push({ title, path })
+      // Заменяем параметры в заголовке, если они есть
+      if (route.params) {
+        for (const [key, value] of Object.entries(route.params)) {
+          title = title.replace(`:${key}`, value)
+        }
       }
-    }
 
-    // Вставляем "Главная" в начало
-    crumbs.unshift({ title: 'Главная', path: '/' })
+      let path = record.path
+      for (const [key, value] of Object.entries(route.params)) {
+        path = path.replace(`:${key}`, value)
+      }
+
+      crumbs.push({ title, path })
+    }
 
     return crumbs
   })
