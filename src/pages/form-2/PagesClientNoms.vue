@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center my-3">
         <h3 class="client-name m-0">{{ clientName }}</h3>
       </div>
       <SborkaServerSideTable
@@ -45,6 +45,7 @@
   const sortColumn = ref('id')
   const sortOrder = ref('desc')
   const searchQuery = ref('')
+  const dateRange = ref({ from: null, to: null })
 
   const clientId = computed(() => route.params.clientId)
 
@@ -95,6 +96,12 @@
 
   const updatePage = (page) => {
     currentPage.value = page
+    fetchNoms()
+  }
+
+  const handleDateRangeChange = (range) => {
+    dateRange.value = range
+    currentPage.value = 1
     fetchNoms()
   }
 
