@@ -3,7 +3,7 @@
     <span
       v-for="(statusObj, index) in formattedStatuses"
       :key="index"
-      :class="['badge', statusObj.badgeClass || 'bg-black']"
+      :class="['badge', statusObj.badgeClass || 'bg-secondary']"
       :title="statusObj.description"
     >
       {{ statusObj.label }}

@@ -94,8 +94,8 @@
   .custom-gradient {
     background: linear-gradient(
       135deg,
-      #37474f,
-      #263238
+      #285a73,
+      #256862
     ); /* Глубокий синий + серый */
   }
 </style>
