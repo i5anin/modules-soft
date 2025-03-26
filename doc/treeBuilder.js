@@ -103,7 +103,7 @@ export function scanDirectory(dir, baseDir, depth = 1, stats, prefix = '') {
       stats.fileLineCounts.push({ file: fileName, lines })
 
       const description = getDescription(fileName, filePath)
-      result.push(`${prefix}${connector}${getFileEmoji(fileName)} ${fileName} (${lines} строк)${description ? ` — ${description}` : ''}`)
+      result.push(`${prefix}${connector}${getFileEmoji(fileName)} ${fileName} ${description ? ` — ${description}` : ''}`)
     }
 
     const nextEntry = entries[index + 1]
