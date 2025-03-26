@@ -1,29 +1,36 @@
 <template>
   <div v-if="header" class="card mb-2">
-    <div class="p-3">
+    <div class="p-3 d-flex align-items-center gap-2">
       <svg-icon
         type="mdi"
         :path="mdiFormatListBulletedType"
         class="color-red"
       />
-      Информация о заказе
+      <strong>Информация о заказе</strong>
     </div>
-    <div class="card-body row">
-      <div
-        v-for="(field, name) in allFields"
-        :key="name"
-        class="col-md-6"
-        :title="`${field?.type}&#10;${name || ''}`"
-      >
-        <div class="field-label">{{ field.title }}</div>
-        <div
-          class="field-value"
-          :style="{ color: fieldValues[name] ? '' : '#d8d8d8' }"
-        >
-          {{ fieldValues[name] || '-' }}
-        </div>
-      </div>
+
+    <div class="card-body p-0">
+      <table class="table table-sm w-100 mb-0">
+        <tbody>
+          <tr
+            v-for="(field, name) in allFields"
+            :key="name"
+            :title="`${field?.type}&#10;${name || ''}`"
+          >
+            <th class="color-red align-middle font-size ps-3">
+              {{ field.title }}
+            </th>
+            <td
+              class="text-end align-middle pe-3"
+              :style="{ color: fieldValues[name] ? '' : '#d8d8d8' }"
+            >
+              {{ fieldValues[name] || '-' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
     <CommentSection
       :comment-fields="commentFields"
       :field-values="fieldValuesComputed"
@@ -111,9 +118,16 @@
     color: #ff6868;
     font-weight: 600;
   }
-
   .field-value {
     font-size: 1rem;
     //color: #68ffd2;
+  }
+  .font-size {
+    font-size: 10px;
+  }
+
+  .d-flex {
+    gap: 0.28rem;
+    flex-wrap: wrap;
   }
 </style>
