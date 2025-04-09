@@ -17,7 +17,7 @@
               >
                 <font-awesome-icon
                   :icon="['fas', 'cubes']"
-                  :style="{ color: '#bfbfbf' }"
+                  :style="{ color: '#5a5a5a' }"
                 />
               </th>
               <th
@@ -25,6 +25,7 @@
                 scope="col"
                 style="width: 30px"
                 title="статусы"
+                :style="{ color: '#5a5a5a' }"
               >
                 🛈
               </th>

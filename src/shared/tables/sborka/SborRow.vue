@@ -8,7 +8,6 @@
       <span v-if="hasChildren" title="Развернуть/Свернуть">
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
-          class="icon-sm"
         />
       </span>
     </td>
