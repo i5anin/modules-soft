@@ -83,9 +83,9 @@
 
 <script setup>
   import { computed, defineEmits, defineProps, ref, watch } from 'vue'
-  import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
+  import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
   import EditModal from './EditModal.vue'
-  import LoadingSpinner from '@/modules/shared/components/ui/LoadingSpinner.vue'
+  import LoadingSpinner from '@/shared/components/ui/LoadingSpinner.vue'
 
   const props = defineProps({
     headers: { type: Array, required: true },

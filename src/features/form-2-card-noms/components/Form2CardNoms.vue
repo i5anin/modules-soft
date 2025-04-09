@@ -1,34 +1,39 @@
 <template>
   <div v-if="header" class="card mb-2">
-    <div class="p-3 d-flex align-items-center gap-2">
+    <div class="p-3 d-flex align-items-center header-icons">
       <svg-icon
         type="mdi"
         :path="mdiFormatListBulletedType"
-        class="color-red"
+        class="section-title"
       />
-      <strong>Информация о заказе</strong>
+      <strong class="section-title">Информация о заказе</strong>
     </div>
 
-    <div class="card-body p-0">
-      <table class="table table-sm w-100 mb-0">
-        <tbody>
-          <tr
-            v-for="(field, name) in allFields"
-            :key="name"
-            :title="`${field?.type}&#10;${name || ''}`"
-          >
-            <th class="color-red align-middle font-size ps-2">
-              {{ field.title }}
-            </th>
-            <td
-              class="text-end align-middle pe-2 font-size-min"
-              :style="{ color: fieldValues[name] ? '' : '#d8d8d8' }"
-            >
-              {{ fieldValues[name] || '-' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div
+      v-for="(field, name) in allFields"
+      :key="name"
+      :title="`${field?.type}&#10;${name || ''}`"
+      class="row gx-0 border-bottom"
+    >
+      <div
+        class="col-6 d-flex align-items-center py-1 px-2 text-start field-label"
+      >
+        {{ field.title }}
+      </div>
+      <div
+        :class="[
+          'col-6',
+          'd-flex',
+          'align-items-center',
+          'justify-content-end',
+          'py-1',
+          'px-2',
+          'field-value',
+        ]"
+        :style="{ color: fieldValues[name] ? '' : '#ff4f4f' }"
+      >
+        {{ fieldValues[name] || '-' }}
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +43,7 @@
   import SvgIcon from '@jamescoyle/vue-icon'
   import { mdiFormatListBulletedType } from '@mdi/js'
   import { formatValue } from '@/utils/formatters.js'
-  import { processFields } from '@/utils/dev/fieldsProcessor.js'
+  import { processFields } from '@/utils/dev/applyFieldPermissions.js'
 
   const props = defineProps({
     header: {
@@ -85,21 +90,29 @@
 </script>
 
 <style scoped>
-  .color-red {
+  /* Заголовок секции */
+  .section-title {
     color: #9cdcff;
     font-size: 0.8rem;
     font-weight: 600;
   }
 
-  .font-size {
-    font-size: 10px;
+  /* Лейбл в строке данных */
+  .field-label {
+    color: #9cdcff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    word-break: break-word;
   }
 
-  .font-size-min {
-    font-size: 12px;
+  /* Значение в строке данных */
+  .field-value {
+    font-size: 0.75rem;
+    word-break: break-word;
   }
 
-  .d-flex {
+  /* Заголовочная иконка + текст */
+  .header-icons {
     gap: 0.28rem;
     flex-wrap: wrap;
   }

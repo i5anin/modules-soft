@@ -13,7 +13,7 @@
 
 <script setup>
   import { computed, defineProps, defineEmits } from 'vue'
-  import { statuses } from '@/modules/shared/logic/statuses.js'
+  import { statuses } from '@/shared/logic/statuses.js'
 
   const props = defineProps({
     row: {

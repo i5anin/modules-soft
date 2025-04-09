@@ -45,7 +45,7 @@
   import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/entities/auth/authStore'
-  import Breadcrumbs from '@/modules/_main/components/AppBreadcrumbs.vue'
+  import Breadcrumbs from '@/modules/main/components/AppBreadcrumbs.vue'
 
   const authStore = useAuthStore()
   const router = useRouter()

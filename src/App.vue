@@ -9,6 +9,6 @@
 </template>
 
 <script setup>
-  import Header from '@/modules/_main/components/AppHeader.vue'
-  import Menu from '@/modules/_main/components/AppMenu.vue'
+  import Header from '@/modules/main/components/AppHeader.vue'
+  import Menu from '@/modules/main/components/AppMenu.vue'
 </script>

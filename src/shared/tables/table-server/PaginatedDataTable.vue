@@ -43,12 +43,12 @@
 <script setup>
   import { computed, ref, watch } from 'vue'
   import moment from 'moment'
-  import SearchBar from '@/modules/shared/components/search/SearchBar.vue'
-  import Pagination from '@/modules/shared/components/pagination/TablePagination.vue'
-  import PageSizeSelector from '@/modules/shared/components/pagination/PageSizeSelector.vue'
+  import SearchBar from '@/shared/components/search/SearchBar.vue'
+  import Pagination from '@/shared/components/pagination/TablePagination.vue'
+  import PageSizeSelector from '@/shared/components/pagination/PageSizeSelector.vue'
   import DataTable from './DataTable.vue'
-  import DateRangeFilters from '@/modules/shared/components/forms/DateRangeFilters.vue'
-  import ThinProgressBar from '@/modules/shared/components/ui/ThinProgressBar.vue'
+  import DateRangeFilters from '@/shared/components/forms/DateRangeFilters.vue'
+  import ThinProgressBar from '@/shared/components/ui/ThinProgressBar.vue'
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
 
   const props = defineProps({

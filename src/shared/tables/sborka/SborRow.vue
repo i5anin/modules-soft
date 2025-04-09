@@ -4,7 +4,7 @@
     style="table-layout: fixed"
   >
     <!--region Иконка разворачивания-->
-    <td :style="cellStyle" @click="toggle">
+    <td v-if="isSborField" :style="cellStyle" @click="toggle">
       <span v-if="hasChildren" title="Развернуть/Свернуть">
         <font-awesome-icon
           :icon="isExpanded ? ['fas', 'minus'] : ['fas', 'plus']"
@@ -14,7 +14,7 @@
     </td>
     <!--endregion-->
     <!--region Статусы-->
-    <td :style="cellStyle">
+    <td v-if="statusField" :style="cellStyle">
       <StatusDisplay :row="sbor" />
     </td>
     <!--endregion-->
@@ -87,6 +87,8 @@
       :detail="detail"
       :row-index="index"
       :row-span-matrix="rowSpanMatrix"
+      :status-field="statusField"
+      :is-sbor-field="isSborField"
     />
   </template>
   <!--endregion-->
@@ -97,8 +99,8 @@
   import { useRouter } from 'vue-router'
   import { FontAwesomeIcon } from '@/utils/icons.js'
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-  import StatusDisplay from '@/modules/shared/components/ui/StatusDisplay.vue'
-  import StrategyDisplay from '@/modules/shared/components/ui/StrategyDisplay.vue'
+  import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
+  import StrategyDisplay from '@/shared/components/ui/StrategyDisplay.vue'
 
   const props = defineProps({
     sbor: { type: Object, required: true },
@@ -108,6 +110,8 @@
     detail: { type: Object, required: true },
     rowIndex: { type: Number, required: true },
     rowSpanMatrix: { type: Array, required: true },
+    statusField: { type: Object, required: true },
+    isSborField: { type: Object, required: true },
   })
 
   const { sbor, detail } = toRefs(props)
@@ -174,6 +178,22 @@
     position: relative;
   }
 
+  .node-content {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Стиль развернутой строки с прозрачным выделением */
+  .expanded-row {
+    background-color: rgb(255, 255, 255) !important; /* Нежный синий */
+    color: #9cdcff;
+  }
+
+  /* Улучшенное выделение текста */
+  .expanded-row td {
+    color: inherit;
+  }
+
   .branch-line {
     position: absolute;
     top: 0;
@@ -201,22 +221,5 @@
 
   .last-child .branch-line::before {
     height: 50%;
-  }
-
-  .node-content {
-    display: flex;
-    align-items: center;
-  }
-
-  /* Стиль развернутой строки с прозрачным выделением */
-  .expanded-row {
-    background-color: rgb(255, 255, 255) !important; /* Нежный синий */
-    color: rgba(13, 110, 253, 0.5);
-  }
-
-  /* Улучшенное выделение текста */
-  .expanded-row td {
-    font-weight: bold;
-    color: inherit;
   }
 </style>

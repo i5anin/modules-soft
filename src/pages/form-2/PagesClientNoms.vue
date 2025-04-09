@@ -28,9 +28,9 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import { getClientNom } from '@/modules/shared/api/nom_dir.js'
-  import { useRoleStore } from '@/modules/_main/store/store.js'
-  import SborkaServerSideTable from '@/modules/shared/tables/sborka-server/ServerSideSborka.vue'
+  import { getClientNom } from '@/shared/api/nom_dir.js'
+  import { useRoleStore } from '@/modules/main/store/store.js'
+  import SborkaServerSideTable from '@/shared/tables/sborka-server/ServerSideSborka.vue'
 
   const route = useRoute()
   const roleStore = useRoleStore()

@@ -9,8 +9,25 @@
         <table class="table-sbor table table-bordered table-sm table-hover">
           <thead>
             <tr style="font-size: 12px">
-              <th scope="col" style="width: 30px" title="развернуть"></th>
-              <th scope="col" style="width: 30px" title="статусы"></th>
+              <th
+                v-if="isSborField"
+                scope="col"
+                style="width: 30px"
+                title="развернуть"
+              >
+                <font-awesome-icon
+                  :icon="['fas', 'cubes']"
+                  :style="{ color: '#bfbfbf' }"
+                />
+              </th>
+              <th
+                v-if="statusField"
+                scope="col"
+                style="width: 30px"
+                title="статусы"
+              >
+                🛈
+              </th>
               <th
                 v-for="field in filteredFields"
                 :key="field.name"
@@ -30,6 +47,8 @@
               :detail="detail"
               :row-index="rowIndex"
               :row-span-matrix="rowSpanMatrix"
+              :status-field="statusField"
+              :is-sbor-field="isSborField"
             />
           </tbody>
         </table>
@@ -41,12 +60,15 @@
 <script setup>
   import { computed } from 'vue'
   import SborRow from './SborRow.vue'
+  import { FontAwesomeIcon } from '@/utils/icons.js'
 
   // Props
   const props = defineProps({
     tableData: { type: Array, required: true },
     tableFields: { type: Array, required: true },
     detail: { type: Object, required: true },
+    statusField: { type: Object, required: false },
+    isSborField: { type: Object, required: false },
   })
 
   // Фильтруем доступные поля

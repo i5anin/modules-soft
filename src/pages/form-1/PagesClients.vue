@@ -28,9 +28,9 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getClients } from '@/modules/shared/api/clients.js'
-  import ServerSideTable from '@/modules/shared/tables/table-server/PaginatedDataTable.vue'
-  import { useRoleStore } from '@/modules/_main/store/store.js'
+  import { getClients } from '@/shared/api/clients.js'
+  import ServerSideTable from '@/shared/tables/table-server/PaginatedDataTable.vue'
+  import { useRoleStore } from '@/modules/main/store/store.js'
 
   // Реактивные переменные
   const clients = ref([])

@@ -45,7 +45,7 @@
   import { computed, ref } from 'vue'
   import EditableField from './card/EditableField.vue'
   import ReadonlyField from './card/ReadonlyField.vue'
-  import ModalZagInfo from '@/modules/shared/zagotovka/ModalZagotovka.vue'
+  import ModalZagInfo from '@/shared/zagotovka/ModalZagotovka.vue'
 
   // Props
   const props = defineProps({

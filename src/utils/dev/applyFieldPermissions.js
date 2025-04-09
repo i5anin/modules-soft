@@ -4,36 +4,8 @@
  * - patterns: Шаблоны для частичного совпадения ключей.
  */
 const exclusionConfig = {
-  excludedKeys: [
-    'specs_op_id',
-    'color',
-    'comments',
-    'exp',
-    'goz',
-    'is_sbor',
-    'kp_data__id',
-    'kp_data__total_price_det',
-    'kp_list__id',
-    'ordersnom__metall_price_total_det',
-    'ordersnom__status_cal',
-    'ordersnom_id',
-    'sbor_orders__id',
-    'specs__spec_no',
-    'zag_tech_material_id',
-    'ordersnom__id',
-    'zag_buy_p1',
-    'zag_buy_p2',
-    'zag_buy_p3',
-    'zag_buy_p4',
-    'zag_buy_weight',
-    'nom_id_nom',
-    'kp_list__id',
-    'kp_data__id',
-    'orders__comments',
-    'link_id',
-    'instr_price_sum',
-  ],
-  patterns: [/status/, /specs_nom__status_/, /comment/, /ordersnom__status_/], // Регулярные выражения для поиска в ключах
+  excludedKeys: [],
+  patterns: [], // Регулярные выражения для поиска в ключах
 }
 
 /**

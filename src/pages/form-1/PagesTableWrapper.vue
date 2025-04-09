@@ -26,8 +26,8 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getItems } from '@/modules/shared/api/list.js'
-  import ServerSideTable from '@/modules/shared/tables/table-server/PaginatedDataTable.vue'
+  import { getItems } from '@/shared/api/list.js'
+  import ServerSideTable from '@/shared/tables/table-server/PaginatedDataTable.vue'
 
   const props = defineProps({
     type: { type: String, required: true },
