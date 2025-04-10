@@ -23,7 +23,7 @@
       v-show="rowSpanMatrix[rowIndex][colIndex] !== -1"
       :key="field.name"
       :rowspan="rowSpanMatrix[rowIndex][colIndex]"
-      :style="getFieldStyle(field)"
+      :style="getFieldStyle(field, isExpanded)"
     >
       <div v-if="field.permissions.update === 0">
         <input
@@ -100,6 +100,7 @@
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
   import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
   import StrategyDisplay from '@/shared/components/ui/StrategyDisplay.vue'
+  import './SborRow.css'
 
   const props = defineProps({
     sbor: { type: Object, required: true },
@@ -159,10 +160,11 @@
     `Поле: ${field.title || 'Нет данных'}\nПеременная: ${field.name || 'Нет данных'}`
 
   // Стили ячеек
-  const getFieldStyle = (field) => ({
+  const getFieldStyle = (field, isExpanded) => ({
     fontSize: '12px',
     verticalAlign: 'middle',
     textAlign: getTextAlignment(field.type, field.name),
+    backgroundColor: isExpanded ? 'rgb(53,53,53)' : '',
   })
 
   // Стили для `tree-node`
