@@ -68,8 +68,8 @@
     tableData: { type: Array, required: true },
     tableFields: { type: Array, required: true },
     detail: { type: Object, required: true },
-    statusField: { type: Object, required: false },
-    isSborField: { type: Object, required: false },
+    statusField: { type: Boolean, required: false },
+    isSborField: { type: Boolean, required: false },
   })
 
   // Фильтруем доступные поля
