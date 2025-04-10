@@ -25,7 +25,7 @@
       :rowspan="rowSpanMatrix[rowIndex][colIndex]"
       :style="getFieldStyle(field)"
     >
-      <div v-if="field.permissions.update = 0">
+      <div v-if="field.permissions.update === 0">
         <input
           v-model="sbor[field.name]"
           type="text"
@@ -84,7 +84,7 @@
       :depth="depth + 1"
       :is-last-child="index === sbor.sbor_tree.length - 1"
       :detail="detail"
-      :row-index="index"
+      :row-index="0"
       :row-span-matrix="rowSpanMatrix"
       :status-field="statusField"
       :is-sbor-field="isSborField"
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-  import { computed, ref, toRefs } from 'vue'
+  import { computed, toRefs } from 'vue'
   import { useRouter } from 'vue-router'
   import { FontAwesomeIcon } from '@/utils/icons.js'
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
@@ -109,13 +109,16 @@
     detail: { type: Object, required: true },
     rowIndex: { type: Number, required: true },
     rowSpanMatrix: { type: Array, required: true },
-    statusField: { type: Object, required: true },
-    isSborField: { type: Object, required: true },
+    statusField: { type: Boolean, required: true },
+    isSborField: { type: Boolean, required: true },
   })
 
   const { sbor, detail } = toRefs(props)
   const router = useRouter()
-  const isExpanded = ref(false)
+  const isExpanded = computed({
+    get: () => sbor.value.isExpanded ?? false,
+    set: (val) => (sbor.value.isExpanded = val),
+  })
 
   // Стили ячеек
   const cellStyle = {
@@ -126,7 +129,7 @@
   // Переключение строки
   const toggle = () => {
     if (hasChildren.value) {
-      isExpanded.value = !isExpanded.value
+      sbor.value.isExpanded = !sbor.value.isExpanded
     }
   }
 
