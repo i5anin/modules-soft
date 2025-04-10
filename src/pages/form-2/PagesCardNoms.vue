@@ -29,8 +29,7 @@
   // Пропсы
   const props = defineProps({
     type: { type: String, required: true },
-    route: { type: String, required: true },
-    statusField: { type: Object, required: true, default: true },
+    route: { type: String, required: false, default: '' },
   })
 
   // Маршруты и стор
