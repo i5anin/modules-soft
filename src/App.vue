@@ -1,5 +1,6 @@
 <template>
   <div data-bs-theme="dark" class="bg-dark text-light">
+    <BaseToast />
     <Header />
     <Menu />
     <div class="container-fluid">
@@ -11,4 +12,5 @@
 <script setup>
   import Header from '@/modules/main/components/AppHeader.vue'
   import Menu from '@/modules/main/components/AppMenu.vue'
+  import BaseToast from '@/app/error/BaseToast.vue'
 </script>
