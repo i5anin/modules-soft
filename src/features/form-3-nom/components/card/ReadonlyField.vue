@@ -69,12 +69,11 @@
 <style scoped>
   .field-label {
     font-size: 0.8rem;
-    color: #212529;
     font-weight: 600;
+    color: #7e7e7e;
   }
 
   .field-value {
     font-size: 1rem;
-    color: #495057;
   }
 </style>
