@@ -9,12 +9,7 @@
         <table class="table-sbor table table-bordered table-sm table-hover">
           <thead>
             <tr style="font-size: 12px">
-              <th
-                v-if="isSborField"
-                scope="col"
-                style="width: 30px"
-                title="развернуть"
-              >
+              <th v-if="isSborField" style="width: 30px" title="развернуть">
                 <font-awesome-icon
                   :icon="['fas', 'cubes']"
                   :style="{ color: '#5a5a5a' }"
@@ -22,7 +17,6 @@
               </th>
               <th
                 v-if="statusField"
-                scope="col"
                 style="width: 30px"
                 title="статусы"
                 :style="{ color: '#5a5a5a' }"
