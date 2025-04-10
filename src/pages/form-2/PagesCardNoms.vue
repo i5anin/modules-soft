@@ -56,11 +56,7 @@
   })
 
   const isSborPresent = computed(() => {
-    const hasStatusField = Object.keys(tableFields.value).some((key) =>
-      key.toLowerCase().includes('status')
-    )
-    const hasSborData = nomTableData.value.some((item) => item.is_sbor === true)
-    return hasStatusField && hasSborData
+    return nomTableData.value.some((item) => item.is_sbor === true)
   })
 
   const fetchOrderData = async () => {
