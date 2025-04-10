@@ -100,6 +100,7 @@
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
   import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
   import StrategyDisplay from '@/shared/components/ui/StrategyDisplay.vue'
+  import { useToastStore } from '@/app/error/store.js'
   import './SborRow.css'
 
   const props = defineProps({
@@ -140,17 +141,17 @@
   // Переход по строке
   const handleRowClick = () => {
     const id = sbor.value.link_id
+    const toast = useToastStore()
+
     if (!id) {
-      console.error('Ошибка: отсутствует ID для перехода', {
-        id,
-        sbor: sbor.value,
-      })
+      toast.show('Ошибка: отсутствует ID для перехода', 'warning')
       return
     }
 
     router
       .push({ name: detail.value.route, params: { nom_id: id } })
       .catch((error) => {
+        toast.show(`❌ Ошибка при навигации: ${error.message}`, 'danger')
         console.error('Ошибка при навигации:', error)
       })
   }

@@ -1,3 +1,4 @@
+<!-- Родительский шаблон -->
 <template>
   <div class="grid-container bg mb-3 my-3">
     <div>
@@ -11,13 +12,15 @@
         />
         <h6 class="m-0">Информация по номенклатуре</h6>
       </div>
+
       <Card
-        v-if="updateFormFields.length || readonlyFormFields.length"
+        v-if="hasAnyFields"
         :update-form-fields="updateFormFields"
         :readonly-form-fields="readonlyFormFields"
         :field-values="fieldValues"
       />
     </div>
+
     <div class="table-section">
       <CaliberTable
         v-if="selectedItem?.table_cal?.data?.length"
@@ -54,6 +57,7 @@
   const CaliberTable = BaseTable
   const StrategyTable = BaseTable
   const TpdTable = BaseTable
+
   const roleStore = useRoleStore()
   const route = useRoute()
   const id = ref(route.params.nom_id)
@@ -61,45 +65,38 @@
   const routeProps = defineProps(['type'])
 
   onMounted(async () => {
-    if (id.value) {
-      try {
-        selectedItem.value = await getNomDetailsById(
-          id.value,
-          routeProps.type,
-          roleStore.selectedRole
-        )
-      } catch (error) {
-        console.error('Ошибка при загрузке деталей заказа:', error)
-        selectedItem.value = null
-      }
+    if (!id.value) return
+    try {
+      selectedItem.value = await getNomDetailsById(
+        id.value,
+        routeProps.type,
+        roleStore.selectedRole
+      )
+    } catch (error) {
+      console.error('Ошибка при загрузке деталей заказа:', error)
+      selectedItem.value = null
     }
   })
 
-  const filterFields = (fields, condition) => {
-    return Object.entries(fields || {}).filter(([, fieldProps]) =>
-      condition(fieldProps)
-    )
-  }
+  const filterFields = (fields, condition) =>
+    Object.entries(fields || {}).filter(([, f]) => condition(f))
 
   const readAndUpdateFields = (fields) =>
     filterFields(
       fields,
-      (field) => field.permissions.read || field.permissions.update
-    ).map(([fieldName, fieldProps]) => ({ key: fieldName, ...fieldProps }))
+      (f) => f.permissions?.read || f.permissions?.update
+    ).map(([key, field]) => ({ key, ...field }))
 
   const filteredHeaderFields = computed(() =>
-    filterFields(
-      selectedItem.value?.header?.fields,
-      (field) => field.permissions.read || field.permissions.update
-    ).map(([key, fieldProps]) => ({ key, ...fieldProps }))
+    readAndUpdateFields(selectedItem.value?.header?.fields || {})
   )
 
   const updateFormFields = computed(() =>
-    filteredHeaderFields.value.filter((field) => field.permissions.update)
+    filteredHeaderFields.value.filter((f) => f.permissions?.update)
   )
 
   const readonlyFormFields = computed(() =>
-    filteredHeaderFields.value.filter((field) => !field.permissions.update)
+    filteredHeaderFields.value.filter((f) => !f.permissions?.update)
   )
 
   const fieldValues = computed(() => {
@@ -109,6 +106,12 @@
       Object.keys(fields).map((key) => [key, data[key] ?? ''])
     )
   })
+
+  const hasAnyFields = computed(
+    () =>
+      (updateFormFields.value?.length || 0) > 0 ||
+      (readonlyFormFields.value?.length || 0) > 0
+  )
 </script>
 
 <style scoped>
@@ -117,13 +120,7 @@
     grid-template-columns: 400px 1fr;
     gap: 4px;
   }
-
   .table-section {
     width: 100%;
-  }
-
-  .card-body {
-    border-radius: 8px;
-    padding: 16px;
   }
 </style>
