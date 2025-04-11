@@ -1,4 +1,14 @@
 <template>
+  <div class="d-flex align-items-center mb-2">
+    <span class="icon-wrapper">
+      <font-awesome-icon
+        :icon="['fas', 'cube']"
+        class="mx-2"
+        :style="{ fontSize: '18px', color: '#cfa614' }"
+      />
+    </span>
+    <h6 class="mb-0">Информация по номенклатуре</h6>
+  </div>
   <div class="card mb-2">
     <div class="card-body p-2">
       <div class="row">
@@ -45,6 +55,7 @@
   import EditableField from './card/EditableField.vue'
   import ReadonlyField from './card/ReadonlyField.vue'
   import ModalZagInfo from '@/shared/zagotovka/ModalZagotovka.vue'
+  import { FontAwesomeIcon } from '@/utils/icons.js'
 
   const props = defineProps({
     updateFormFields: {
@@ -100,6 +111,11 @@
 
 <style scoped>
   .card {
-    border-radius: 8px;
+    border-radius: 0;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
   }
 </style>

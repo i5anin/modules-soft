@@ -1,7 +1,7 @@
 <template>
   <div>
     <h6>{{ tableTitle }}</h6>
-    <table class="table-base table table-sm mt-3 table-bordered table-hover">
+    <table class="table-base table table-sm table-bordered table-hover">
       <thead>
         <tr>
           <th v-for="field in filteredFields" :key="field.key">
@@ -93,5 +93,10 @@
 <style>
   .table-base {
     border-radius: 12px !important;
+  }
+
+  .table-base th {
+    text-align: center;
+    vertical-align: middle;
   }
 </style>
