@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex justify-content-between align-items-center">
+  <div
+    v-if="totalCount > 0 && totalPages > 0"
+    class="d-flex justify-content-between align-items-center"
+  >
     <p class="text-muted mb-0">
       {{ startRecord }}–{{ endRecord }} из {{ totalCount }}
     </p>
@@ -11,17 +14,17 @@
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(1)"
         >
-          <button class="page-link" type="button"> «</button>
+          <button class="page-link" type="button">«</button>
         </li>
-        <!-- Кнопка перехода на предыдущую страницу -->
+        <!-- Кнопка назад -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === 1 }"
           @click="goToPage(currentPage - 1)"
         >
-          <button class="page-link" type="button"> ‹</button>
+          <button class="page-link" type="button">‹</button>
         </li>
-        <!-- Отображение страниц -->
+        <!-- Номера страниц -->
         <li
           v-for="page in visiblePages"
           :key="page"
@@ -29,25 +32,23 @@
           :class="{ active: page === currentPage }"
           @click="goToPage(page)"
         >
-          <button class="page-link" type="button">
-            {{ page }}
-          </button>
+          <button class="page-link" type="button">{{ page }}</button>
         </li>
-        <!-- Кнопка перехода на следующую страницу -->
+        <!-- Кнопка вперёд -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(currentPage + 1)"
         >
-          <button class="page-link" type="button"> ›</button>
+          <button class="page-link" type="button">›</button>
         </li>
-        <!-- Кнопка перехода к последней странице -->
+        <!-- Кнопка последней страницы -->
         <li
           class="page-item"
           :class="{ disabled: currentPage === totalPages }"
           @click="goToPage(totalPages)"
         >
-          <button class="page-link" type="button"> »</button>
+          <button class="page-link" type="button">»</button>
         </li>
       </ul>
     </nav>
