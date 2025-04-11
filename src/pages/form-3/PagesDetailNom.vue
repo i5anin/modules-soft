@@ -2,17 +2,6 @@
 <template>
   <div class="grid-container bg mb-3 my-3">
     <div>
-      <div class="d-flex align-items-center">
-        <svg-icon
-          type="mdi"
-          :path="mdiBolt"
-          class="me-1"
-          color="red"
-          :size="32"
-        />
-        <h6 class="m-0">Информация по номенклатуре</h6>
-      </div>
-
       <Card
         v-if="hasAnyFields"
         :update-form-fields="updateFormFields"
@@ -47,8 +36,6 @@
 <script setup>
   import { computed, onMounted, ref } from 'vue'
   import { useRoute } from 'vue-router'
-  import SvgIcon from '@jamescoyle/vue-icon'
-  import { mdiBolt } from '@mdi/js'
   import { getNomDetailsById } from '@/shared/api/nom_info.js'
   import { useRoleStore } from '@/modules/main/store/store.js'
   import Card from '@/features/form-3-nom/components/Form3Card.vue'
