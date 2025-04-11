@@ -15,12 +15,21 @@
       />
       <SearchBar :loading="loading" @search-change="onSearch" />
     </div>
+
+    <!-- 🔄 Скелетон во время загрузки -->
+    <TableSkeleton v-if="loading" :column-count="7" />
+
+    <!-- ✅ Основная таблица после загрузки -->
     <SborMain
+      v-else
       :table-data="items"
       :table-fields="filteredHeaders"
       :detail="detail"
     />
+
+    <!-- 📄 Пагинация тоже показывается только после загрузки -->
     <Pagination
+      v-if="!loading"
       :total-count="totalCnt"
       :items-per-page="localItemsPerPage"
       :current-page="currentPg"
@@ -38,6 +47,7 @@
   import PageSizeSelector from '@/shared/components/pagination/PageSizeSelector.vue'
   import DateRangeFilters from '@/shared/components/forms/DateRangeFilters.vue'
   import SborMain from '../sborka/SborMain.vue'
+  import TableSkeleton from '@/shared/tables/sborka/TableSkeleton.vue'
 
   const props = defineProps({
     items: { type: Array, required: true },
