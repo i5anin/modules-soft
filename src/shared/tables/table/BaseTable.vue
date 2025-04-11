@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-  import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
+  import StatusDisplay from '@/shared/ui/DisplayStatus.vue'
   import { computed, ref } from 'vue'
   import { formatValue } from '@/utils/formatters.js'
   import { mdiPencil } from '@mdi/js'

@@ -33,7 +33,7 @@
   import OrderInfoCard from '@/features/form-2-card-noms/components/Form2CardNoms.vue'
   import { useRoleStore } from '@/modules/main/store/store.js'
   import SborMain from '@/shared/tables/sborka/SborMain.vue'
-  import TableSkeleton from '@/shared/tables/sborka/TableSkeleton.vue'
+  import TableSkeleton from '@/shared/ui/LoadingTableSkeleton.vue'
 
   // Пропсы
   const props = defineProps({

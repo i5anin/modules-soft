@@ -98,8 +98,8 @@
   import { useRouter } from 'vue-router'
   import { FontAwesomeIcon } from '@/utils/icons.js'
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
-  import StatusDisplay from '@/shared/components/ui/StatusDisplay.vue'
-  import StrategyDisplay from '@/shared/components/ui/StrategyDisplay.vue'
+  import StatusDisplay from '@/shared/ui/DisplayStatus.vue'
+  import StrategyDisplay from '@/shared/ui/DisplayStrategy.vue'
   import { useToastStore } from '@/app/error/store.js'
   import './SborRow.css'
 
