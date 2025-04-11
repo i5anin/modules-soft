@@ -2,8 +2,15 @@
   <div class="row">
     <div class="col-12">
       <div class="d-flex align-items-center my-3">
-        <h3 class="client-name m-0">{{ clientName }}</h3>
+        <h3 v-if="!loading" class="client-name m-0">{{ clientName }}</h3>
+        <span v-else class="placeholder-glow w-25">
+          <span
+            class="placeholder col-6"
+            style="height: 1.6rem; display: inline-block"
+          ></span>
+        </span>
       </div>
+
       <SborkaServerSideTable
         :items="noms"
         :headers="tableFields"
@@ -46,6 +53,7 @@
   const sortOrder = ref('desc')
   const searchQuery = ref('')
   const dateRange = ref({ from: null, to: null })
+  const loading = ref(false)
 
   const clientId = computed(() => route.params.clientId)
 
@@ -55,6 +63,7 @@
   }))
 
   const fetchNoms = async () => {
+    loading.value = true
     try {
       const response = await getClientNom({
         client_id: clientId.value,
@@ -91,6 +100,8 @@
       noms.value = []
       totalCount.value = 0
       totalPages.value = 0
+    } finally {
+      loading.value = false
     }
   }
 
@@ -122,9 +133,7 @@
     fetchNoms()
   }
 
-  onMounted(() => {
-    fetchNoms()
-  })
+  onMounted(fetchNoms)
 </script>
 
 <style scoped>
