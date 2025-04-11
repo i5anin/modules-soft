@@ -2,7 +2,7 @@
   <!--  <PendingUpdatesOverlay />-->
   <div class="row">
     <div class="col-12">
-      <div v-if="tableData.length === 0" class="alert alert-warning">
+      <div v-if="tableData.length === 0" class="alert alert-info">
         Нет данных.
       </div>
       <div v-else>
