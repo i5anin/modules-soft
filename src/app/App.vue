@@ -4,7 +4,7 @@
     <Header />
     <Menu />
     <div class="container-fluid">
-      <router-view />
+      <router-view :key="$route.name" />
     </div>
   </div>
 </template>
