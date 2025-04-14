@@ -4,11 +4,12 @@ import pluginVue from 'eslint-plugin-vue'
 import pluginUnusedImports from 'eslint-plugin-unused-imports'
 import pluginPrettier from 'eslint-plugin-prettier'
 import vueParser from 'vue-eslint-parser'
+import pluginBoundaries from 'eslint-plugin-boundaries'
 
 export default [
   // Общие правила для JS/TS/Vue
   {
-    files: ['**/*.{js,ts,vue}'],
+    files: ['src/**/*.{js,ts,vue}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -17,11 +18,53 @@ export default [
       },
       globals: globals.browser,
     },
+    settings: {
+      'boundaries/elements': [
+        { type: 'app', pattern: 'src/app/*' },
+        { type: 'pages', pattern: 'src/pages/*' },
+        { type: 'widgets', pattern: 'src/widgets/*' },
+        { type: 'features', pattern: 'src/features/*' },
+        { type: 'entities', pattern: 'src/entities/*' },
+        { type: 'shared', pattern: 'src/shared/*' },
+      ],
+    },
     plugins: {
       'unused-imports': pluginUnusedImports,
       prettier: pluginPrettier,
+      boundaries: pluginBoundaries,
     },
     rules: {
+      // Запрещаем файлы, не соответствующие ни одному типу элемента
+      'boundaries/no-unknown-files': 'error',
+      // Контролируем импорты между слоями
+      'boundaries/element-types': [
+        'error',
+        {
+          default: 'disallow',
+          message:
+            '${file.type} is not allowed to import ${dependency.type}',
+          rules: [
+            {
+              from: [
+                'app',
+                'pages',
+                'widgets',
+                'features',
+                'entities',
+                'shared',
+              ],
+              allow: [
+                'app',
+                'pages',
+                'widgets',
+                'features',
+                'entities',
+                'shared',
+              ],
+            },
+          ],
+        },
+      ],
       'no-debugger': 'error',
       'no-console': [
         'warn',
