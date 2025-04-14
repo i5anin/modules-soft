@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <!-- Заголовок -->
-      <h3 class="client-name mb-3">Список клиентов</h3>
+      <h3 class="client-name mt-3 mb-3">Список клиентов</h3>
       <!-- Таблица данных -->
       <ServerSideTable
         edit-button
@@ -30,7 +30,6 @@
   import { useRouter } from 'vue-router'
   import { getClients } from '@/shared/api/clients.js'
   import ServerSideTable from '@/shared/tables/table-server/PaginatedDataTable.vue'
-  import { useRoleStore } from '@/modules/main/store/store.js'
 
   // Реактивные переменные
   const clients = ref([])
@@ -48,7 +47,6 @@
   )
 
   // Стор и роутер
-  const roleStore = useRoleStore()
   const router = useRouter()
 
   // Получение данных клиентов
@@ -59,8 +57,6 @@
         limit: itemsPerPage.value,
         sortCol: sortColumn.value,
         sortDir: sortOrder.value,
-        type: roleStore.selectedTypes,
-        module: roleStore.selectedRole,
         search: searchQuery.value,
       })
 
