@@ -1,6 +1,9 @@
-import apiClient from '@/modules/api/apiClient.js'
-import { handleResponse, handleError } from '@/modules/api/responseHandlers.js'
-import { getToken } from '@/modules/api/tokenService.js'
+import apiClient from '@/shared/api/base/apiClient.js'
+import {
+  handleResponse,
+  handleError,
+} from '@/shared/api/base/responseHandlers.js'
+import { getToken } from '@/shared/api/base/tokenService.js'
 
 /**
  * Получение списка заказов с использованием API.

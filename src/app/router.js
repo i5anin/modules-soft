@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/entities/auth/authStore'
+import { useAuthStore } from '@/entities/auth/authStore.js'
 
 const authRoutes = [
   {
@@ -155,7 +155,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/modules/dev/RouteExplorer.vue'),
+    component: () => import('@/pages/dev/RouteExplorer.vue'),
     meta: { title: 'Список маршрутов' },
   },
   ...commercialRoutes,

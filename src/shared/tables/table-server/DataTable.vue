@@ -56,7 +56,8 @@
                 'table-warning': row.exp && field.name === 'clients__name',
               }"
             >
-              <span
+              <div
+                class="table-cell-content"
                 v-html="formatValue(row[field.name], field.type, field.name)"
               />
             </td>
@@ -161,5 +162,25 @@
     overflow-wrap: break-word;
     text-align: center;
     vertical-align: middle;
+  }
+
+  .table-cell-content {
+    max-height: 3.6em;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease;
+    white-space: normal;
+    line-height: 1.2em;
+  }
+
+  /* При наведении — разворачиваем содержимое */
+  .table-cell-content:hover {
+    max-height: 100vh;
+    z-index: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-cell-wrapper:hover .table-cell-content {
+    max-height: 100vh;
   }
 </style>

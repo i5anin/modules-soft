@@ -1,8 +1,11 @@
 // nom_list.js
 
-import authClient from '@/modules/api/apiClient.js'
-import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
-import { getToken } from '@/modules/api/tokenService.js'
+import authClient from '@/shared/api/base/apiClient.js'
+import {
+  handleError,
+  handleResponse,
+} from '@/shared/api/base/responseHandlers.js'
+import { getToken } from '@/shared/api/base/tokenService.js'
 
 /**
  * Получение данных номенклатурного заказа по параметрам

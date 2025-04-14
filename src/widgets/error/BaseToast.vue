@@ -32,7 +32,7 @@
 
 <script setup>
   import { computed } from 'vue'
-  import { useToastStore } from '@/app/error/store.js'
+  import { useToastStore } from '@/widgets/error/store.js'
 
   const toastStore = useToastStore()
 

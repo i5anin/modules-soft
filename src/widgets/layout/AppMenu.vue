@@ -56,8 +56,8 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getMenu } from '@/modules/api/authApi.js'
-  import { useAuthStore } from '@/entities/auth/authStore' // ✅ Подключаем authStore
+  import { getMenu } from '@/shared/api/base/authApi.js'
+  import { useAuthStore } from '@/entities/auth/authStore.js' // ✅ Подключаем authStore
 
   const authStore = useAuthStore()
   const menu = ref([])

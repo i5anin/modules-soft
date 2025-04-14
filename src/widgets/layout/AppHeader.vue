@@ -44,8 +44,8 @@
 <script setup>
   import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { useAuthStore } from '@/entities/auth/authStore'
-  import Breadcrumbs from '@/modules/main/components/AppBreadcrumbs.vue'
+  import { useAuthStore } from '@/entities/auth/authStore.js'
+  import Breadcrumbs from '@/widgets/layout/AppBreadcrumbs.vue'
 
   const authStore = useAuthStore()
   const router = useRouter()

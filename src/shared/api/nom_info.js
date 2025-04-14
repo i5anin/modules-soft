@@ -1,8 +1,11 @@
 // nom_info.js
 
-import apiClient from '@/modules/api/apiClient.js'
-import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
-import { getToken } from '@/modules/api/tokenService.js'
+import apiClient from '@/shared/api/base/apiClient.js'
+import {
+  handleError,
+  handleResponse,
+} from '@/shared/api/base/responseHandlers.js'
+import { getToken } from '@/shared/api/base/tokenService.js'
 
 /**
  * Получение детализации номенклатуры по ID

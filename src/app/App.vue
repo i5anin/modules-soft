@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-  import Header from '@/modules/main/components/AppHeader.vue'
-  import Menu from '@/modules/main/components/AppMenu.vue'
-  import BaseToast from '@/app/error/BaseToast.vue'
+  import Header from '@/widgets/layout/AppHeader.vue'
+  import Menu from '@/widgets/layout/AppMenu.vue'
+  import BaseToast from '@/widgets/error/BaseToast.vue'
 </script>

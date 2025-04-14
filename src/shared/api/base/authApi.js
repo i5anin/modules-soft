@@ -1,5 +1,8 @@
-import authClient from '@/modules/api/authClient.js'
-import { handleError, handleResponse } from '@/modules/api/responseHandlers.js'
+import authClient from '@/shared/api/base/authClient.js'
+import {
+  handleError,
+  handleResponse,
+} from '@/shared/api/base/responseHandlers.js'
 
 /**
  * Аутентификация пользователя

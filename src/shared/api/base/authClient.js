@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/modules/api/tokenService.js'
+import { getToken } from '@/shared/api/base/tokenService.js'
 
 const authClient = axios.create({
   baseURL: 'http://auth.pfforum/api/v1',

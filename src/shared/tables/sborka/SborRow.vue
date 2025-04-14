@@ -100,7 +100,7 @@
   import { formatValue, getTextAlignment } from '@/utils/formatters.js'
   import StatusDisplay from '@/shared/ui/DisplayStatus.vue'
   import StrategyDisplay from '@/shared/ui/DisplayStrategy.vue'
-  import { useToastStore } from '@/app/error/store.js'
+  import { useToastStore } from '@/widgets/error/store.js'
   import './SborRow.css'
 
   const props = defineProps({
