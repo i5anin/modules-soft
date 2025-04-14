@@ -1,6 +1,14 @@
 <template>
   <table
-    class="table table-bordered table-sm table-hover table-sbor mb-0 align-middle"
+    :class="[
+      'table',
+      'table-bordered',
+      'table-sm',
+      'table-hover',
+      'table-sbor',
+      'mb-0',
+      'align-middle',
+    ]"
   >
     <thead>
       <tr>
