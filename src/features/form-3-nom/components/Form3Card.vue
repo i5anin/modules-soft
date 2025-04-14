@@ -55,7 +55,7 @@
   import EditableField from './card/EditableField.vue'
   import ReadonlyField from './card/ReadonlyField.vue'
   import ModalZagInfo from '@/shared/zagotovka/ModalZagotovka.vue'
-  import { FontAwesomeIcon } from '@/utils/icons.js'
+  import { FontAwesomeIcon } from '@/shared/ui/icons.js'
 
   const props = defineProps({
     updateFormFields: {

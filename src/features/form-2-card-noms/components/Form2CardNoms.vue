@@ -42,8 +42,8 @@
   import { computed, reactive, watch } from 'vue'
   import SvgIcon from '@jamescoyle/vue-icon'
   import { mdiFormatListBulletedType } from '@mdi/js'
-  import { formatValue } from '@/utils/formatters.js'
-  import { processFields } from '@/utils/dev/applyFieldPermissions.js'
+  import { formatValue } from '@/shared/lib/formatters.js'
+  import { processFields } from '@/shared/lib/dev/applyFieldPermissions.js'
 
   const props = defineProps({
     header: {

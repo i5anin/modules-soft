@@ -96,8 +96,8 @@
 <script setup>
   import { computed, toRefs } from 'vue'
   import { useRouter } from 'vue-router'
-  import { FontAwesomeIcon } from '@/utils/icons.js'
-  import { formatValue, getTextAlignment } from '@/utils/formatters.js'
+  import { FontAwesomeIcon } from '@/shared/ui/icons.js'
+  import { formatValue, getTextAlignment } from '@/shared/lib/formatters.js'
   import StatusDisplay from '@/shared/ui/DisplayStatus.vue'
   import StrategyDisplay from '@/shared/ui/DisplayStrategy.vue'
   import { useToastStore } from '@/widgets/error/store.js'

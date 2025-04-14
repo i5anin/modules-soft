@@ -55,7 +55,7 @@
 <script setup>
   import { computed } from 'vue'
   import SborRow from './SborRow.vue'
-  import { FontAwesomeIcon } from '@/utils/icons.js'
+  import { FontAwesomeIcon } from '@/shared/ui/icons.js'
 
   // Props
   const props = defineProps({

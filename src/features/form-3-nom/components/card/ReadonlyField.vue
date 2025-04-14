@@ -36,8 +36,8 @@
 
 <script>
   import { computed } from 'vue'
-  import { FontAwesomeIcon } from '@/utils/icons.js'
-  import { formatValue } from '@/utils/formatters.js'
+  import { FontAwesomeIcon } from '@/shared/ui/icons.js'
+  import { formatValue } from '@/shared/lib/formatters.js'
 
   export default {
     components: { FontAwesomeIcon },

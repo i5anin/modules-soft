@@ -49,7 +49,7 @@
   import DataTable from './DataTable.vue'
   import DateRangeFilters from '@/shared/forms/DateRangeFilters.vue'
   import ThinProgressBar from '@/shared/ui/LoadingProgressBar.vue'
-  import { formatValue, getTextAlignment } from '@/utils/formatters.js'
+  import { formatValue, getTextAlignment } from '@/shared/lib/formatters.js'
 
   const props = defineProps({
     items: { type: Array, required: true },
