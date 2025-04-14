@@ -20,7 +20,11 @@ export default [
     },
     settings: {
       'boundaries/elements': [
-        { type: 'app', pattern: 'src/app/*' },
+        {
+          type: 'app',
+          pattern: 'src/app/*',
+          mode: 'file',
+        },
         { type: 'pages', pattern: 'src/pages/*' },
         { type: 'widgets', pattern: 'src/widgets/*' },
         { type: 'features', pattern: 'src/features/*' },
@@ -41,8 +45,7 @@ export default [
         'error',
         {
           default: 'disallow',
-          message:
-            '${file.type} is not allowed to import ${dependency.type}',
+          message: '${file.type} is not allowed to import ${dependency.type}',
           rules: [
             {
               from: [
