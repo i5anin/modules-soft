@@ -37,7 +37,6 @@
   import { computed, onMounted, ref } from 'vue'
   import { useRoute } from 'vue-router'
   import { getNomDetailsById } from '@/shared/api/nom_info.js'
-  import { useRoleStore } from '@/modules/main/store/store.js'
   import Card from '@/features/form-3-nom/components/Form3Card.vue'
   import BaseTable from '@/shared/tables/table/BaseTable.vue'
 
@@ -45,7 +44,6 @@
   const StrategyTable = BaseTable
   const TpdTable = BaseTable
 
-  const roleStore = useRoleStore()
   const route = useRoute()
   const id = ref(route.params.nom_id)
   const selectedItem = ref(null)
@@ -54,11 +52,7 @@
   onMounted(async () => {
     if (!id.value) return
     try {
-      selectedItem.value = await getNomDetailsById(
-        id.value,
-        routeProps.type,
-        roleStore.selectedRole
-      )
+      selectedItem.value = await getNomDetailsById(id.value, routeProps.type)
     } catch (error) {
       console.error('Ошибка при загрузке деталей заказа:', error)
       selectedItem.value = null
@@ -107,6 +101,7 @@
     grid-template-columns: 400px 1fr;
     gap: 4px;
   }
+
   .table-section {
     width: 100%;
   }

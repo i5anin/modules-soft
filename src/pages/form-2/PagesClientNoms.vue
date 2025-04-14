@@ -36,11 +36,9 @@
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import { getClientNom } from '@/shared/api/nom_dir.js'
-  import { useRoleStore } from '@/modules/main/store/store.js'
   import SborkaServerSideTable from '@/shared/tables/sborka-server/ServerSideSborka.vue'
 
   const route = useRoute()
-  const roleStore = useRoleStore()
 
   const clientName = ref('')
   const noms = ref([])
@@ -71,8 +69,6 @@
         limit: itemsPerPage.value,
         sortCol: sortColumn.value,
         sortDir: sortOrder.value,
-        type: roleStore.selectedTypes,
-        role: roleStore.selectedRole,
         search: searchQuery.value,
       })
 
