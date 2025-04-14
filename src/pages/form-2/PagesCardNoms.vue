@@ -31,7 +31,7 @@
 
   import { getNomById } from '@/shared/api/nom_list.js'
   import OrderInfoCard from '@/features/form-2-card-noms/components/Form2CardNoms.vue'
-  import { useRoleStore } from '@/modules/main/store/store.js'
+
   import SborMain from '@/shared/tables/sborka/SborMain.vue'
   import TableSkeleton from '@/shared/ui/LoadingTableSkeleton.vue'
 
@@ -43,7 +43,6 @@
 
   // Маршруты и стор
   const router = useRouter()
-  const roleStore = useRoleStore()
 
   // Реактивные переменные
   const loading = ref(true) // ✅ добавлено
