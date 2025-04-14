@@ -43,7 +43,6 @@
   import SvgIcon from '@jamescoyle/vue-icon'
   import { mdiFormatListBulletedType } from '@mdi/js'
   import { formatValue } from '@/shared/lib/formatters.js'
-  import { processFields } from '@/shared/lib/dev/applyFieldPermissions.js'
 
   const props = defineProps({
     header: {
@@ -58,9 +57,7 @@
       key,
       ...value,
     }))
-    const processedFields = processFields(fieldsArray)
-
-    return processedFields
+    return fieldsArray
       .filter((field) => field.permissions?.read)
       .reduce((acc, field) => {
         acc[field.key] = field
